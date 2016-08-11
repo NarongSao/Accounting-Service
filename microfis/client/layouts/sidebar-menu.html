@@ -1,0 +1,124 @@
+<template name="Microfis_sidebarMenu">
+    <li class="{{isActiveRoute name='microfis.home'}}">
+        <a href="{{pathFor 'microfis.home'}}">
+            <i class="fa fa-home"></i> <span>Home</span>
+        </a>
+    </li>
+
+    <!--Data-->
+    {{#if isInRole 'data-insert,data-update,data-remove' 'Microfis'}}
+        <li class="treeview active">
+            <a href="#">
+                <i class="fa fa-database"></i>
+                <span>DATA</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.client'}}">
+                    <a href="{{pathFor 'microfis.client'}}">
+                        <i class="fa fa-circle-o"></i> <span>Client</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.repayment'}}">
+                    <a href="{{pathFor 'microfis.repayment'}}">
+                        <i class="fa fa-circle-o"></i> <span>Repayment</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.guarantor'}}">
+                    <a href="{{pathFor 'microfis.guarantor'}}">
+                        <i class="fa fa-circle-o"></i> <span>Guarantor</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.creditOfficer'}}">
+                    <a href="{{pathFor 'microfis.creditOfficer'}}">
+                        <i class="fa fa-circle-o"></i> <span>Credit Officer</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
+    <!--Report-->
+    {{#if isInRole 'reporter' 'Microfis'}}
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-file-o"></i>
+                <span>REPORT</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.repaymentScheduleReport'}}">
+                    <a href="{{pathFor 'microfis.repaymentScheduleReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Repayment Schedule</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
+    <!--Settings-->
+    {{#if isInRole 'setting' 'Microfis'}}
+        <li class="treeview active">
+            <a href="#">
+                <i class="fa fa-cogs"></i>
+                <span>SETTING</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='core.exchange'}}">
+                    <a href="{{pathFor 'core.exchange'}}">
+                        <i class="fa fa-circle-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.product'}}">
+                    <a href="{{pathFor 'microfis.product'}}">
+                        <i class="fa fa-circle-o"></i> <span>Product</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.penaltyClosing'}}">
+                    <a href="{{pathFor 'microfis.penaltyClosing'}}">
+                        <i class="fa fa-circle-o"></i> <span>Penalty Closing</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.penalty'}}">
+                    <a href="{{pathFor 'microfis.penalty'}}">
+                        <i class="fa fa-circle-o"></i> <span>Penalty</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.holiday'}}">
+                    <a href="{{pathFor 'microfis.holiday'}}">
+                        <i class="fa fa-circle-o"></i> <span>Holiday</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.fund'}}">
+                    <a href="{{pathFor 'microfis.fund'}}">
+                        <i class="fa fa-circle-o"></i> <span>Fund</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.fee'}}">
+                    <a href="{{pathFor 'microfis.fee'}}">
+                        <i class="fa fa-circle-o"></i> <span>Fee</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.location'}}">
+                    <a href="{{pathFor 'microfis.location'}}">
+                        <i class="fa fa-circle-o"></i> <span>Location</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.setting'}}">
+                    <a href="{{pathFor 'microfis.setting'}}">
+                        <i class="fa fa-circle-o"></i> <span>Setting</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.lookupValue'}}">
+                    <a href="{{pathFor 'microfis.lookupValue'}}">
+                        <i class="fa fa-circle-o"></i> <span>Lookup Value</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+</template>

@@ -1,0 +1,88 @@
+<!--Index-->
+<template name="Microfis_penalty">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Reactive Table-->
+        {{> reactiveTable settings=tableSettings}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Microfis_penaltyAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Insert-->
+<template name="Microfis_penaltyNew">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_penaltyNew" type="insert"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="calculateType" select2="true"}}
+                    {{> afQuickField name="amount"}}
+                    {{> afQuickField name="graceDay"}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Update-->
+<template name="Microfis_penaltyEdit">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm collection=collection id="Microfis_penaltyEdit" doc=data type="update"}}
+                <div class="row">
+                    <div class="col-md-12">
+                        {{> afQuickField name="name"}}
+                        {{> afQuickField name="calculateType" select2="true"}}
+                        {{> afQuickField name="amount"}}
+                        {{> afQuickField name="graceDay"}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Microfis_penaltyShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <dt>Id</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Name</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Calculate Type</dt>
+                    <dd>{{calculateType}}</dd>
+                    <dt>Amount on microfis disburse (USD/%)</dt>
+                    <dd>{{numFormat amount "0,0.00"}}</dd>
+                    <dt>Grace Day</dt>
+                    <dd>{{graceDay}}</dd>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>

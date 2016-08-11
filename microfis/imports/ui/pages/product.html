@@ -1,0 +1,196 @@
+<!--Index-->
+<template name="Microfis_product">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Reactive Table-->
+        {{> reactiveTable settings=tableSettings}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Tabular Action-->
+<template name="Microfis_productAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="Microfis_productForm">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_productForm" doc=this type=formType}}
+            <fieldset>
+                <legend>General</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{> afQuickField name="name"}}
+                        {{> afQuickField name="shortName"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="startDate"}}
+                        {{> afQuickField name="endDate"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="des" rows=3}}
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Account</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{> afQuickField name="accountType"}}
+                        {{> afQuickField name="currencyId"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="exchange"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="microfisAmount"}}
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Payment</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{> afQuickField name="paymentMethod"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="term.min" label=true}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="term.max" label=true}}
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Interest</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{> afQuickField name="interestMethod"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="interestRate.min" label=true}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="interestRate.max" label=true}}
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Charge</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{> afQuickField name="feeId"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="penaltyId"}}
+                    </div>
+                    <div class="col-md-4">
+                        {{> afQuickField name="penaltyClosingId"}}
+                    </div>
+                </div>
+            </fieldset>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Microfis_productShow">
+    <div class="box-body">
+        {{#with data}}
+            <dl class="dl-horizontal">
+                <fieldset>
+                    <legend>General</legend>
+                    <dt>Id</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Name</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Short Name</dt>
+                    <dd>{{shortName}}</dd>
+                    <dt>Start Date</dt>
+                    <dd>{{moFormat startDate "DD/MM/YYYY"}}</dd>
+                    <dt>End Date</dt>
+                    <dd>{{moFormat endDate "DD/MM/YYYY"}}</dd>
+                    <dt>Description</dt>
+                    <dd>{{des}}</dd>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Account</legend>
+                    <dt>Type</dt>
+                    <dd>{{accountType}}</dd>
+                    <dt>Currency</dt>
+                    <dd>{{currencyId}}</dd>
+                    <dt>Amount</dt>
+                    <dd>
+                        Min: {{numFormat microfisAmount.min "$ 0,0.00"}} |
+                        <!--Default: {{numFormat microfisAmount.default "$ 0,0.00"}} |-->
+                        Max: {{numFormat microfisAmount.max "$ 0,0.00"}}
+                    </dd>
+                    <dt>Exchange</dt>
+                    <dd>
+                        {{numFormat exchange.USD "$ 0,0.00"}} =
+                        {{numFormat exchange.KHR "R 0,0.00"}} =
+                        {{numFormat exchange.THB "B 0,0.00"}}
+                    </dd>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Payment</legend>
+                    <dt>Method</dt>
+                    <dd>{{paymentMethod}}</dd>
+                    <dt>Term</dt>
+                    <dd>
+                        Min: {{term.min}} |
+                        <!--Default: {{term.default}} |-->
+                        Max: {{term.max}}
+                    </dd>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Interest</legend>
+                    <dt>Method</dt>
+                    <dd>{{interestMethod}}</dd>
+                    <dt>Rate</dt>
+                    <dd>
+                        Min: {{interestRate.min}} |
+                        <!--Default: {{interestRate.default}} |-->
+                        Max: {{interestRate.max}}
+                    </dd>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Charge</legend>
+                    <dt>Fee</dt>
+                    <dd>
+                        {{> jsonView json=feeDoc options=jsonViewOpts}}
+                    </dd>
+                    <dt>Penalty</dt>
+                    <dd>
+                        {{> jsonView json=penaltyDoc options=jsonViewOpts}}
+                    </dd>
+                    <dt>Penalty Closing</dt>
+                    <dd>
+                        {{> jsonView json=penaltyClosingDoc options=jsonViewOpts}}
+                    </dd>
+                </fieldset>
+            </dl>
+        {{/with}}
+    </div>
+</template>

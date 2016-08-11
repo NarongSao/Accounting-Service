@@ -1,0 +1,57 @@
+<!--Index-->
+<template name="Microfis_lookupValue">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Reactive Table-->
+        {{> reactiveTable settings=tableSettings}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Microfis_lookupValueAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="Microfis_lookupValueForm">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_lookupValueForm" doc=this type=formType}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="private"}}
+                    {{> afQuickField name="options" class="input-sm"}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Microfis_lookupValueShow">
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>{{name}}</dd>
+            <dt>Private</dt>
+            <dd>{{private}}</dd>
+            <dt>Options</dt>
+            <dd>
+                {{> jsonView json=options options=jsonViewOpts}}
+            </dd>
+        </dl>
+    </div>
+</template>

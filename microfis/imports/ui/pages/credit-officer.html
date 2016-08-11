@@ -1,0 +1,79 @@
+<!--Index-->
+<template name="Microfis_creditOfficer">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <!--Reactive Table-->
+        {{> reactiveTable settings=tableSettings}}
+    </div>
+</template>
+
+<!--Action-->
+<template name="Microfis_creditOfficerAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="Microfis_creditOfficerForm">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm collection=collection id="Microfis_creditOfficerForm" doc=data.doc type=data.type}}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="khName"}}
+                        {{> afQuickField name="enName"}}
+                        {{> afQuickField name="gender"}}
+                        {{> afQuickField name="dob"}}
+                        {{> afQuickField name="address" rows=2}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="telephone"}}
+                        {{> afQuickField name="email"}}
+                        {{> afQuickField name="photo"}}
+                        {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Microfis_creditOfficerShow">
+    <div class="box-body">
+        {{#with data}}
+            <dl class="dl-horizontal">
+                <dt>Id</dt>
+                <dd>{{_id}}</dd>
+                <dt>Kh Name</dt>
+                <dd>{{khName}}</dd>
+                <dt>En Name</dt>
+                <dd>{{enName}}</dd>
+                <dt>Gender</dt>
+                <dd>{{gender}}</dd>
+                <dt>Birth Date</dt>
+                <dd>{{birthDate}}</dd>
+                <dt>Address</dt>
+                <dd>{{address}}</dd>
+                <dt>Telephone</dt>
+                <dd>{{telephone}}</dd>
+                <dt>Email</dt>
+                <dd>{{email}}</dd>
+                <dt>Photo</dt>
+                <dd>{{lightbox url=photoUrl title=name}}</dd>
+            </dl>
+        {{/with}}
+    </div>
+</template>
