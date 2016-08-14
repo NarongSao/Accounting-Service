@@ -33,30 +33,38 @@ Calculate.interest = new ValidatedMethod({
         method: {
             type: String
         },
+        dayInMethod: {
+            type: Number,
+            optional: true
+        },
         currencyId: {
             type: String,
             optional: true
         },
     }).validator(),
     run(opts) {
-        let ratePerDay, dayOfRates = 1, interest;
+        let ratePerDay, dayInMethod, interest;
 
         // Get setting
         let setting = Setting.findOne();
 
         // Rate per day
-        switch (opts.method) {
-            case 'W': // Weekly
-                dayOfRates = setting.dayOfRates.weekly;
-                break;
-            case 'M': // Monthly
-                dayOfRates = setting.dayOfRates.monthly;
-                break;
-            case 'Y': // Yearly
-                dayOfRates = setting.dayOfRates.yearly;
-                break;
+        if (opts.dayInMethod) {
+            dayInMethod = opts.dayInMethod;
+        } else {
+            switch (opts.method) {
+                case 'W': // Weekly
+                    dayInMethod = setting.dayOfRates.weekly;
+                    break;
+                case 'M': // Monthly
+                    dayInMethod = setting.dayOfRates.monthly;
+                    break;
+                case 'Y': // Yearly
+                    dayInMethod = setting.dayOfRates.yearly;
+                    break;
+            }
         }
-        ratePerDay = (opts.interestRate / 100) / dayOfRates;
+        ratePerDay = (opts.interestRate / 100) / dayInMethod;
 
         interest = opts.amount * opts.numOfDay * ratePerDay;
 

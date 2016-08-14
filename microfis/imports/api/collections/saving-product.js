@@ -1,14 +1,16 @@
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {_} from 'meteor/erasaur:meteor-lodash';
+import {AutoForm} from 'meteor/aldeed:autoform';
 
 // Lib
 import {SelectOpts} from '../../ui/libs/select-opts.js';
 import {SelectOptMethods} from '../../../common/methods/select-opts.js';
 
-export const Product = new Mongo.Collection("microfis_savingProduct");
+export const SavingProduct = new Mongo.Collection("microfis_savingProduct");
 
 // General
-Product.generalSchema = new SimpleSchema({
+SavingProduct.generalSchema = new SimpleSchema({
     name: {
         type: String,
         label: 'Name',
@@ -30,7 +32,7 @@ Product.generalSchema = new SimpleSchema({
 });
 
 // Account
-Product.accountSchema = new SimpleSchema({
+SavingProduct.accountSchema = new SimpleSchema({
     accountType: {
         type: [String],
         label: 'Account type',
@@ -41,34 +43,39 @@ Product.accountSchema = new SimpleSchema({
                 uniPlaceholder: 'Please select',
                 optionsPlaceholder: 'Unselect all',
                 options: function () {
-                    var list = [];
-                    list.push({label: "(Select One)", value: ""});
-                    list.push({label: 'Single', value: 'S'});
-                    list.push({label: 'Join', value: 'J'});
-
-                    return list;
+                    return [
+                        {label: 'Single', value: 'S'},
+                        {label: 'Join', value: 'J'}
+                    ];
                 }
             }
         }
     },
-    operationType: {
-        type: String,
-        label: 'Operation type',
-        autoform: {
-            type: 'select',
-            afFieldInput: {
-                options: function () {
-                    var list = [];
-                    list.push({label: "(Select One)", value: ""});
-                    list.push({label: 'Any', value: 'Any'});
-                    list.push({label: 'Tow', value: 'Tow'});
-                    list.push({label: 'All', value: 'All'});
-
-                    return list;
-                }
-            }
-        }
-    },
+    // operationType: {
+    //     type: [String],
+    //     label: 'Operation type',
+    //     autoform: {
+    //         type: 'universe-select',
+    //         afFieldInput: {
+    //             multiple: true,
+    //             uniPlaceholder: 'Please select',
+    //             optionsPlaceholder: 'Unselect all',
+    //             options: function () {
+    //                 if (Meteor.isClient) {
+    //                     let accountType = AutoForm.getFieldValue('accountType');
+    //                     if (accountType == 'S') {
+    //                         return [{label: 'None', value: 'None'}]
+    //                     }
+    //                     return [
+    //                         {label: 'Any', value: 'Any'},
+    //                         {label: 'Tow', value: 'Tow'},
+    //                         {label: 'All', value: 'All'}
+    //                     ];
+    //                 }
+    //             }
+    //         }
+    //     }
+    // },
     currencyId: {
         type: [String],
         label: 'Currency',
@@ -133,21 +140,9 @@ Product.accountSchema = new SimpleSchema({
             label: false
         }
     },
-    miniOpeningAmount: {
+    minOpeningAmount: {
         type: Number,
-        label: 'Minimum opening amount (USD)',
-        decimal: true,
-        min: 0,
-        autoform: {
-            type: 'inputmask',
-            afFieldInput: {
-                inputmaskOptions: inputmaskOptions.currency()
-            }
-        }
-    },
-    miniBalanceAmount: {
-        type: Number,
-        label: 'Minimum balance amount (USD)',
+        label: 'Minimum opening amount',
         decimal: true,
         min: 0,
         autoform: {
@@ -160,13 +155,13 @@ Product.accountSchema = new SimpleSchema({
 });
 
 // Term
-Product.termSchema = new SimpleSchema({
+SavingProduct.termSchema = new SimpleSchema({
     accountClass: {
         type: String,
         label: 'Account class',
+        defaultValue: 'E',
         autoform: {
             type: "select-radio-inline",
-            defaultValue:,
             options: function () {
                 return [
                     {label: 'Easy', value: 'E'},
@@ -177,39 +172,116 @@ Product.termSchema = new SimpleSchema({
     },
     term: {
         type: Number,
-        label: 'Term',
-        optional: true // if account class = Term
+        label: 'Term in month',
+        min: function () {
+            if (Meteor.isClient) {
+                let accountClass = AutoForm.getFieldValue('accountClass');
+                if (accountClass == 'T') {
+                    return 1;
+                }
+
+                return 0;
+            }
+        },
+        autoform: {
+            type: 'inputmask',
+            afFieldInput: {
+                inputmaskOptions: inputmaskOptions.integer()
+            }
+        }
+    },
+    penaltyForTermClosing: {
+        type: Number,
+        label: 'Penalty for term closing',
+        decimal: true,
+        min: 0,
+        max: 100,
+        autoform: {
+            type: 'inputmask',
+            afFieldInput: {
+                inputmaskOptions: inputmaskOptions.percentage()
+            }
+        }
+    },
+    interestTax: {
+        type: Number,
+        label: 'Interest tax (%)',
+        decimal: true,
+        min: 0,
+        max: 100,
+        autoform: {
+            type: 'inputmask',
+            afFieldInput: {
+                inputmaskOptions: inputmaskOptions.percentage()
+            }
+        },
+    },
+    interestMethod: {
+        type: String,
+        label: 'Interest method',
+        defaultValue: 'Y',
+        autoform: {
+            type: "select-radio-inline",
+            afFieldInput: {
+                options: function () {
+                    return [
+                        {label: 'Yearly', value: 'Y'},
+                        {label: 'Monthly', value: 'M'}
+                    ];
+                }
+            }
+        }
+    },
+    daysInMethod: {
+        type: Number,
+        label: 'Days in method',
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                if (Meteor.isClient) {
+                    let interestMethod = AutoForm.getFieldValue('interestMethod');
+
+                    if (interestMethod == 'M') {
+                        return [
+                            {label: '30', value: 30},
+                            {label: '31', value: 31}
+                        ];
+                    }
+
+                    return [
+                        {label: '365', value: 365},
+                        {label: '360', value: 360}
+                    ];
+                }
+            }
+        }
     },
     interestRate: {
         type: Object,
-        label: 'Interest rate'
+        label: 'Interest rate (%)'
     },
     'interestRate.min': {
         type: Number,
-        label: 'Min of interest rate (%)',
+        label: 'Min',
         decimal: true,
         min: 0,
         autoform: {
             type: 'inputmask',
             afFieldInput: {
-                // placeholder: 'Min',
                 inputmaskOptions: inputmaskOptions.currency({prefix: ''})
-            },
-            label: false
+            }
         }
     },
     'interestRate.max': {
         type: Number,
-        label: 'Max of interest rate (%)',
+        label: 'Max',
         decimal: true,
         min: 0,
         autoform: {
             type: 'inputmask',
             afFieldInput: {
-                // placeholder: 'Max',
                 inputmaskOptions: inputmaskOptions.currency({prefix: ''})
-            },
-            label: false
+            }
         },
         custom: function () {
             let min = this.field('interestRate.min').value;
@@ -219,49 +291,18 @@ Product.termSchema = new SimpleSchema({
                 return 'cusMaxAmount';
             }
         }
-    },
-    interestTax: {
-        type: Number,
-        label: 'Interest tax',
-        decimal: true,
-        min: 0,
-        max: 100,
-        autoform: {
-            type: 'inputmask',
-            afFieldInput: {
-                inputmaskOptions: inputmaskOptions.percentage()
-            },
-            label: false
-        },
-    },
-    daysInYear: {
-        type: Number,
-        label: 'Days in year',
-        autoform: {
-            type: "select-radio-inline",
-            defaultValue: 365,
-            options: function () {
-                return [
-                    {label: '365', value: 365},
-                    {label: '360', value: 360}
-                ];
-            }
-        }
-    },
-    maturityDate: {
-        type: Date,
-        label: 'Maturity date',
-        optional: true
-    },
-    tenor: { // Total of day number
-        type: Number,
-        label: 'Tenor',
-        optional: true
     }
 });
 
-Product.attachSchema([
-    Product.generalSchema,
-    Product.accountSchema,
-    Product.interestSchema
+SavingProduct.attachSchema([
+    SavingProduct.generalSchema,
+    SavingProduct.accountSchema,
+    SavingProduct.termSchema
 ]);
+
+// Custom validate
+SimpleSchema.messages({
+    cusMaxDate: '[label] must be on or after Start Date',
+    cusMaxAmount: '[label] must be equal or greater than Min Amount',
+    cusOperationTypeIsRequired: '[label] is required'
+});

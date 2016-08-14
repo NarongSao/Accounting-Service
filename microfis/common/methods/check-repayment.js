@@ -94,7 +94,7 @@ export let checkRepayment = new ValidatedMethod({
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
-                    numOfDayLate = moment(checkDate).startOf('day').startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                    numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
                     if (numOfDayLate > penaltyDoc.graceDay) {
                         // Check penalty type
                         penaltyDue = penaltyDoc.amount;
@@ -266,10 +266,10 @@ export let checkRepayment = new ValidatedMethod({
 
             // Cal addition
             if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to) {
-                closing.numOfDayAddition = moment(checkDate).startOf('day').startOf('day').diff(moment(totalSchedulePrevious.dueDate.to).startOf('day'), 'days');
+                closing.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalSchedulePrevious.dueDate.to).startOf('day'), 'days');
             }
             if (totalScheduleDue && totalScheduleDue.dueDate.to) {
-                closing.numOfDayAddition = moment(checkDate).startOf('day').startOf('day').diff(moment(totalScheduleDue.dueDate.to).startOf('day'), 'days');
+                closing.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalScheduleDue.dueDate.to).startOf('day'), 'days');
             }
 
             if (closing.numOfDayAddition > 0) {

@@ -41,6 +41,10 @@ MicrofisRoutes.route('/home', {
     }
 });
 
+/**********************
+ * Loan
+ *********************/
+
 // Lookup value
 import '../imports/ui/pages/lookup-value.js';
 MicrofisRoutes.route('/lookup-value', {
@@ -239,9 +243,29 @@ MicrofisRoutes.route('/client', {
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: 'client',
+        title: 'Client',
         // icon: 'sitemap',
         parent: 'microfis.home'
+    }
+});
+
+// Client Account
+import '../imports/ui/pages/client-acc.js';
+MicrofisRoutes.route('/client-acc/:clientId', {
+    name: 'microfis.clientAcc',
+    title: 'Client Account',
+    subscriptions: function (params, queryParams) {
+        this.register('microfis.clientById', Meteor.subscribe('microfis.clientById', params.clientId));
+    },
+    action: function (params, queryParams) {
+        Layout.main('Microfis_clientAcc');
+    },
+    breadcrumb: {
+        params: ['clientId'],
+        //queryParams: ['show', 'color'],
+        title: 'Client Account',
+        // icon: 'sitemap',
+        parent: 'microfis.client'
     }
 });
 
@@ -284,5 +308,46 @@ MicrofisRoutes.route('/repayment/:clientId/:disbursementId', {
         title: 'Repayment',
         // icon: 'sitemap',
         parent: 'microfis.disbursement'
+    }
+});
+
+/**********************
+ * Saving
+ *********************/
+
+// Product
+import '../imports/ui/pages/saving-product.js';
+MicrofisRoutes.route('/saving-product', {
+    name: 'microfis.savingProduct',
+    title: 'Saving Product',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_savingProduct');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Product',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
+// Transaction
+import '../imports/ui/pages/saving-transaction.js';
+MicrofisRoutes.route('/saving-transaction/:clientId/:savingAccId', {
+    name: 'microfis.savingTransaction',
+    title: 'Saving',
+    subscriptions: function (params, queryParams) {
+        this.register('microfis.savingAccById', Meteor.subscribe('microfis.savingAccId', {_id: params.savingAccId}));
+    },
+    action: function (params, queryParams) {
+        Layout.main('Microfis_savingTransaction');
+    },
+    breadcrumb: {
+        params: ['clientId', 'savingAccId'],
+        //queryParams: ['show', 'color'],
+        title: 'Saving',
+        // icon: 'sitemap',
+        parent: 'microfis.clientAcc'
     }
 });

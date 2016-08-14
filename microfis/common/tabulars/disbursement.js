@@ -44,8 +44,8 @@ tabularOpts.columns = [
     },
     // {data: 'currencyId', title: 'Currency',},
     {
-        data: 'microfisAmount',
-        title: 'Microfis Amount',
+        data: 'loanAmount',
+        title: 'Loan Amount',
         render: function (val, type, doc) {
             return doc.currencyId + ' ' + numeral(val).format('0,0.00');
         }

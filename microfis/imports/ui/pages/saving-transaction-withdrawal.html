@@ -1,0 +1,58 @@
+<!--General Payment Form-->
+<template name="Microfis_savingTransactionWithdrawalForm">
+    <div class="box-header with-border">
+        <h3 class="box-title text-blue">
+            {{#with savingAccDoc}}
+                <b>Product:</b> {{productId}},
+                <b>Acc Date:</b> {{moFormat accDate "DD/MM/YYYY"}},
+                <b>Currency:</b> {{currencyId}}
+                <b>Interest Rate:</b> {{numFormat interestRate "0.00"}}% ({{productDoc.interestMethod}})
+            {{/with}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-6">
+                <!--Current Due-->
+                <fieldset>
+                    <legend>Current</legend>
+                    {{#with checkSavingTransaction}}
+                        <dl class="dl-horizontal">
+                            <dt>Last date</dt>
+                            <dd>{{moFormat lastTransactionDate "DD/MM/YYYY"}}</dd>
+                            <dt>Num of day</dt>
+                            <dd>{{numOfDay}}</dd>
+                            <dt>Principal Opening</dt>
+                            <dd>{{numFormat principalOpening "0,0.00"}}</dd>
+                            <dt>Interest Opening</dt>
+                            <dd>{{numFormat interestOpening "0,0.00"}}</dd>
+                            <dt>Interest Amount</dt>
+                            <dd>{{numFormat currentInterestAmount "0,0.00"}}</dd>
+                            <dt>Interest Bal</dt>
+                            <dd>{{numFormat interestBal "0,0.00"}}</dd>
+                            <dt class="text-blue">Total Bal</dt>
+                            <dd>{{numFormat totalBal "0,0.00"}}</dd>
+                        </dl>
+                    {{/with}}
+                </fieldset>
+            </div>
+
+            <div class="col-md-6">
+                {{#autoForm collection=collection id="Microfis_savingTransactionWithdrawalForm" type="insert"}}
+                    {{> afQuickField type="hidden" name="savingAccId" value=(param "savingAccId") readonly=true}}
+                    {{> afQuickField name="transactionDate"}}
+                    {{> afQuickField name="amount"}}
+                    {{> afQuickField name="voucherId"}}
+                    {{> afQuickField name="memo"}}
+
+                    {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+
+                    {{> formFooterWithButton}}
+                {{/autoForm}}
+            </div>
+
+        </div>
+    </div>
+</template>

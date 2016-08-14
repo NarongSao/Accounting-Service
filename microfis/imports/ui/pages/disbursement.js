@@ -50,17 +50,6 @@ indexTmpl.onCreated(function () {
 });
 
 indexTmpl.helpers({
-    data(){
-        let clientId = FlowRouter.getParam('clientId');
-        let data = Client.findOne(clientId);
-        data.photoUrl = null;
-        if (data.photo) {
-            let photo = Files.findOne(data.photo);
-            data.photoUrl = photo.url();
-        }
-
-        return data;
-    },
     tabularTable(){
         return DisbursementTabular;
     },
@@ -70,7 +59,7 @@ indexTmpl.helpers({
 });
 
 indexTmpl.events({
-    'click .js-create-microfis' (event, instance) {
+    'click .js-create-loan-acc' (event, instance) {
         alertify.disbursementProduct(fa('plus', 'Disbursement Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {

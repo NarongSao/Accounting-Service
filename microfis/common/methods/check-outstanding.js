@@ -108,7 +108,7 @@ export let checkOutstanding = new ValidatedMethod({
                         let numOfDayLate, penaltyDue = 0;
 
                         // Cal penalty
-                        numOfDayLate = moment(checkDate).startOf('day').startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                        numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
                         if (numOfDayLate > opts.penalty.graceDay) {
                             // Check penalty type
                             penaltyDue = opts.penalty.amount;

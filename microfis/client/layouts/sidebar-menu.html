@@ -58,12 +58,12 @@
         </li>
     {{/if}}
 
-    <!--Settings-->
+    <!--Loan Settings-->
     {{#if isInRole 'setting' 'Microfis'}}
         <li class="treeview active">
             <a href="#">
                 <i class="fa fa-cogs"></i>
-                <span>SETTING</span>
+                <span>LOAN SETTING</span>
                 <i class="fa fa-angle-left pull-right"></i>
             </a>
 
@@ -116,6 +116,25 @@
                 <li class="{{isActiveRoute name='microfis.lookupValue'}}">
                     <a href="{{pathFor 'microfis.lookupValue'}}">
                         <i class="fa fa-circle-o"></i> <span>Lookup Value</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
+    <!--Saving Settings-->
+    {{#if isInRole 'setting' 'Microfis'}}
+        <li class="treeview active">
+            <a href="#">
+                <i class="fa fa-cogs"></i>
+                <span>SAVING SETTING</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.savingProduct'}}">
+                    <a href="{{pathFor 'microfis.savingProduct'}}">
+                        <i class="fa fa-circle-o"></i> <span>Product</span>
                     </a>
                 </li>
             </ul>

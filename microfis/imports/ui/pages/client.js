@@ -142,7 +142,7 @@ indexTmpl.events({
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(event.currentTarget).data();
 
-        FlowRouter.go('microfis.disbursement', {clientId: rowData._id});
+        FlowRouter.go('microfis.clientAcc', {clientId: rowData._id});
     }
 });
 

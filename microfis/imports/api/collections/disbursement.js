@@ -18,19 +18,6 @@ import {SelectOptMethods} from '../../../common/methods/select-opts.js';
 import {lookupProduct} from '../../../common/methods/lookup-product.js';
 
 let state = new ReactiveDict();
-// state.setDefault({
-//     productId: null,
-//     startDate: moment().format('DD/MM/YYYY'),
-//     endDate: moment().format('DD/MM/YYYY'),
-//     accountType: [],
-//     currencyId: [],
-//     microfisAmount: null,
-//     exchange: null,
-//     paymentMethod: '',
-//     term: null,
-//     interestMethod: [],
-//     interestRate: null,
-// });
 
 // Tracker
 if (Meteor.isClient) {
@@ -40,10 +27,6 @@ if (Meteor.isClient) {
         if (productDoc) {
             // Product ID
             state.set('productId', productDoc._id);
-
-            // Date
-            state.set('startDate', moment(productDoc.startDate).format('DD/MM/YYYY'));
-            state.set('endDate', moment(productDoc.endDate).format('DD/MM/YYYY'));
 
             // Account type
             let accountType = productDoc.accountType.map(function (value) {
@@ -196,8 +179,7 @@ Disbursement.generalSchema = new SimpleSchema({
                 optionsMethod: 'microfis.selectOpts.creditOfficer'
             }
         }
-    }
-    ,
+    },
     attachFile: {
         type: String,
         label: 'Attach file',
@@ -209,8 +191,7 @@ Disbursement.generalSchema = new SimpleSchema({
                 //accept: 'image/*'
             }
         }
-    }
-    ,
+    },
     branchId: {
         type: String
     }

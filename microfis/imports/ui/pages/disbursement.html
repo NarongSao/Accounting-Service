@@ -1,33 +1,15 @@
 <!--Index-->
 <template name="Microfis_disbursement">
-    <div class="box-header with-border">
-        <h3 class="box-title" style="display: inline">
-            <button type="button" class="btn btn-primary js-create-microfis"><i class="fa fa-plus"></i> Microfis Acc
-            </button>
-
-            <!--Client Info-->
-            <div class="text-bold pull-right">
-                {{#if subsReady "microfis.clientById"}}
-                    {{#with data}}
-                        <a href="#" class="js-display-disbursement">
-                            {{_id}} : {{khSurname}} {{khGivenName}}</a>
-                    {{/with}}
-                {{else}}
-                    {{> iconLoading}}
-                {{/if}}
-            </div>
-        </h3>
-    </div>
-    <!-- /.box-header -->
-
     <div class="box-body">
+        <p>
+            <button type="button" class="btn btn-primary js-create-loan-acc"><i class="fa fa-plus"></i> Loan Account
+            </button>
+        </p>
+
         <!--Tabular-->
         {{> tabular table=tabularTable selector=tabularSelector class="table table-striped table-bordered table-condensed table-hover-pointer"}}
     </div>
     <!-- /.box-body -->
-
-    <!--Reactive Table-->
-    <!--{{> reactiveTable settings=tableSettings}}-->
 </template>
 
 <!--Action-->
