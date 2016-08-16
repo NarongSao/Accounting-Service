@@ -14,17 +14,17 @@ import {roundCurrency} from '../../imports/api/libs/round-currency.js';
 
 // Method
 import {Calculate} from './libs/calculate.js';
-import {lookupDisbursement} from './lookup-disbursement.js';
+import {lookupLoanAcc} from './lookup-loan-acc.js';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement';
+import {LoanAcc} from '../../imports/api/collections/loan-acc';
 import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
 
 export let checkRepayment = new ValidatedMethod({
     name: 'microfis.checkRepayment',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
-        disbursementId: {
+        loanAccId: {
             type: String
         },
         checkDate: {
@@ -36,15 +36,15 @@ export let checkRepayment = new ValidatedMethod({
             blackbox: true
         },
     }).validator(),
-    run({disbursementId, checkDate, opts}) {
+    run({loanAccId, checkDate, opts}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
-            // Get disbursement and schedule
-            let disbursementDoc = lookupDisbursement.call({_id: disbursementId}),
-                scheduleDoc = RepaymentSchedule.find({disbursementId: disbursementId}),
-                penaltyDoc = disbursementDoc.productDoc.penaltyDoc,
-                penaltyClosingDoc = disbursementDoc.productDoc.penaltyClosingDoc;
+            // Get loan acc and schedule
+            let loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
+                scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId}),
+                penaltyDoc = loanAccDoc.productDoc.penaltyDoc,
+                penaltyClosingDoc = loanAccDoc.productDoc.penaltyClosingDoc;
 
             //---------------------------
 
@@ -53,7 +53,7 @@ export let checkRepayment = new ValidatedMethod({
                 type: 'general',
                 precision: -2 // KHR
             };
-            switch (disbursementDoc.currencyId) {
+            switch (loanAccDoc.currencyId) {
                 case 'USD':
                     _round.precision = 2;
                     break;
@@ -105,7 +105,7 @@ export let checkRepayment = new ValidatedMethod({
                                 numOfDay: numOfDayLate,
                                 interestRate: penaltyDoc.amount,
                                 method: 'D',
-                                currencyId: disbursementDoc.currencyId
+                                currencyId: loanAccDoc.currencyId
                             });
                         }
                     }
@@ -276,9 +276,9 @@ export let checkRepayment = new ValidatedMethod({
                 closing.interestAddition = Calculate.interest.call({
                     amount: closing.principalReminder,
                     numOfDay: closing.numOfDayAddition,
-                    interestRate: disbursementDoc.interestRate,
-                    method: disbursementDoc.paymentMethod,
-                    currencyId: disbursementDoc.currencyId
+                    interestRate: loanAccDoc.interestRate,
+                    method: loanAccDoc.paymentMethod,
+                    currencyId: loanAccDoc.currencyId
                 });
 
                 closing.interestReminder = round2(closing.interestReminder - closing.interestAddition, _round.precision, _round.type);
@@ -286,12 +286,12 @@ export let checkRepayment = new ValidatedMethod({
 
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
-                if (totalScheduleDue.installment.to < disbursementDoc.installmentAllowClosing) {
+                if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing) {
                     console.log('hi due');
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             } else {
-                let checkInstallmentTermPrevious = totalSchedulePrevious.installment.to && totalSchedulePrevious.installment.to < disbursementDoc.installmentAllowClosing;
+                let checkInstallmentTermPrevious = totalSchedulePrevious.installment.to && totalSchedulePrevious.installment.to < loanAccDoc.installmentAllowClosing;
                 if (!totalSchedulePrevious.installment.to || checkInstallmentTermPrevious) {
                     console.log('hi pre');
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);

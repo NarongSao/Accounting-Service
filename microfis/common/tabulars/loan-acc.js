@@ -12,15 +12,15 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement.js';
+import {LoanAcc} from '../../imports/api/collections/loan-acc';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/disbursement.html');
+Meteor.isClient && require('../../imports/ui/pages/loan-acc.html');
 
-tabularOpts.name = 'microfis.disbursement';
-tabularOpts.collection = Disbursement;
+tabularOpts.name = 'microfis.loanAcc';
+tabularOpts.collection = LoanAcc;
 tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_disbursementAction},
+    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_loanAccAction},
     {data: '_id', title: 'ID'},
     {data: 'productId', title: 'Product'},
     {
@@ -53,4 +53,4 @@ tabularOpts.columns = [
 ];
 tabularOpts.extraFields = ['currencyId'];
 
-export const DisbursementTabular = new Tabular.Table(tabularOpts);
+export const LoanAccTabular = new Tabular.Table(tabularOpts);

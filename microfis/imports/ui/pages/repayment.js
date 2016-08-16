@@ -21,7 +21,7 @@ import '../../../../core/client/components/column-action.js';
 import '../../../../core/client/components/form-footer.js';
 
 // Method
-import {lookupDisbursement} from '../../../common/methods/lookup-disbursement.js';
+import {lookupLoanAcc} from '../../../common/methods/lookup-loan-acc.js';
 
 // API Lib
 import {MakeRepayment} from '../../api/libs/make-repayment.js';
@@ -62,21 +62,21 @@ indexTmpl.onCreated(function () {
 
     // Default stat
     state.setDefault({
-        disbursementDoc: null,
+        loanAccDoc: null,
         scheduleDoc: null
     });
 
     this.autorun(function () {
-        let disbursementId = FlowRouter.getParam('disbursementId');
+        let loanAccId = FlowRouter.getParam('loanAccId');
 
-        if (disbursementId) {
+        if (loanAccId) {
             $.blockUI();
 
-            // Get disbursement doc
-            lookupDisbursement.callPromise({
-                _id: disbursementId
+            // Get loan account doc
+            lookupLoanAcc.callPromise({
+                _id: loanAccId
             }).then(function (result) {
-                state.set('disbursementDoc', result);
+                state.set('loanAccDoc', result);
 
                 Meteor.setTimeout(()=> {
                     $.unblockUI();
@@ -89,19 +89,19 @@ indexTmpl.onCreated(function () {
 });
 
 indexTmpl.helpers({
-    disbursementDoc(){
-        return state.get('disbursementDoc');
+    loanAccDoc(){
+        return state.get('loanAccDoc');
     },
     scheduleDoc(){
-        let disbursementId = FlowRouter.getParam('disbursementId');
-        let scheduleDoc = RepaymentSchedule.find({disbursementId: disbursementId});
+        let loanAccId = FlowRouter.getParam('loanAccId');
+        let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId});
 
         state.set('scheduleDoc', scheduleDoc.fetch());
 
         return scheduleDoc;
     },
     tabularTable(){
-        let selector = {disbursementId: FlowRouter.getParam('disbursementId')};
+        let selector = {loanAccId: FlowRouter.getParam('loanAccId')};
         return {
             tabularTable: RepaymentTabular,
             selector: selector
@@ -111,27 +111,27 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create-payment' (event, instance) {
-        let data = {disbursementDoc: state.get('disbursementDoc'),};
+        let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment General'), renderTemplate(generalFormTmpl, data));
     },
     'click .js-create-prepay' (event, instance) {
-        let data = {disbursementDoc: state.get('disbursementDoc'),};
+        let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
     },
     'click .js-create-reschedule' (event, instance) {
         //     alertify.repayment(fa('pencil', 'Repayment'), renderTemplate(generalFormTmpl, this));
     },
     'click .js-create-waive-interest' (event, instance) {
-        let data = {disbursementDoc: state.get('disbursementDoc'),};
+        let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment Waive Interest'), renderTemplate(waiveInteFormTmpl, data));
     },
     'click .js-create-write-off' (event, instance) {
-        let data = {disbursementDoc: state.get('disbursementDoc'),};
+        let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment Waive Interest'), renderTemplate(waiveInteFormTmpl, data));
     },
     'click .js-create-close' (event, instance) {
         let data = {
-            disbursementDoc: state.get('disbursementDoc'),
+            loanAccDoc: state.get('loanAccDoc'),
             scheduleDoc: state.get('scheduleDoc'),
         };
 

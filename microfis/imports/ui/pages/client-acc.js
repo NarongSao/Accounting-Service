@@ -12,7 +12,7 @@ import {Client} from '../../api/collections/client.js';
 
 // Page
 import './client-acc.html';
-import './disbursement';
+import './loan-acc';
 import './saving-acc';
 
 // Declare template

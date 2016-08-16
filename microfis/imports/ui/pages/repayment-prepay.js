@@ -44,19 +44,19 @@ let state = new ReactiveDict();
 //-------- Form ------------
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
-        disbursementDoc = currentData.disbursementDoc;
+        loanAccDoc = currentData.loanAccDoc;
 
     // Set state
     state.setDefault({
-        disbursementDoc: disbursementDoc,
-        lastTransactionDate: disbursementDoc.disbursementDate,
+        loanAccDoc: loanAccDoc,
+        lastTransactionDate: loanAccDoc.disbursementDate,
         repaidDate: null,
         checkRepayment: null
     });
 
     // Set min/max amount to simple schema
     let minMaxAmount;
-    switch (disbursementDoc.currencyId) {
+    switch (loanAccDoc.currencyId) {
         case 'KHR':
             minMaxAmount = 100;
             break;
@@ -80,7 +80,7 @@ formTmpl.onCreated(function () {
 
             // Call check repayment from method
             checkRepayment.callPromise({
-                disbursementId: disbursementDoc._id,
+                loanAccId: loanAccDoc._id,
                 checkDate: repaidDate
             }).then(function (result) {
                 console.log(result);
@@ -109,7 +109,7 @@ formTmpl.onCreated(function () {
 
     // Get last repayment
     let lastRepaid = Repayment.findOne({
-        disbursementId: disbursementDoc._id
+        loanAccId: loanAccDoc._id
     }, {sort: {_id: -1}});
     if (lastRepaid) {
         state.set('lastTransactionDate', lastRepaid.repaidDate);
@@ -179,7 +179,7 @@ formTmpl.onDestroyed(function () {
 let hooksObject = {
     before: {
         insert: function (doc) {
-            let disbursementDoc = state.get('disbursementDoc'),
+            let loanAccDoc = state.get('loanAccDoc'),
                 checkRepayment = state.get('checkRepayment');
 
             doc.type = 'prepay';

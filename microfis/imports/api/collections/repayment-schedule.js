@@ -84,7 +84,7 @@ RepaymentSchedule.schema = new SimpleSchema({
         type: Number,
         decimal: true
     },
-    disbursementId: {
+    loanAccId: {
         type: String
     },
     repaymentDoc: {

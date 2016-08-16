@@ -8,13 +8,13 @@ import  {lookupProduct} from '../../common/methods/lookup-product.js';
 import  {MakeSchedule} from '../../common/methods/make-schedule.js';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement.js';
+import {LoanAcc} from '../../imports/api/collections/loan-acc.js';
 import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
 
 // Before insert
-Disbursement.before.insert(function (userId, doc) {
+LoanAcc.before.insert(function (userId, doc) {
     let prefix = `${doc.clientId}-${doc.productId}`;
-    doc._id = idGenerator2.genWithPrefix(Disbursement, {
+    doc._id = idGenerator2.genWithPrefix(LoanAcc, {
         prefix: prefix,
         length: 3
     });
@@ -28,14 +28,14 @@ Disbursement.before.insert(function (userId, doc) {
 });
 
 // After insert (repayment schedule)
-Disbursement.after.insert(function (userId, doc) {
+LoanAcc.after.insert(function (userId, doc) {
     Meteor.defer(function () {
         _makeSchedule(doc);
     });
 });
 
 // Before update
-Disbursement.before.update(function (userId, doc, fieldNames, modifier, options) {
+LoanAcc.before.update(function (userId, doc, fieldNames, modifier, options) {
     modifier.$set = modifier.$set || {};
 
     // Cal installment allow closing
@@ -47,24 +47,24 @@ Disbursement.before.update(function (userId, doc, fieldNames, modifier, options)
 });
 
 // After update
-Disbursement.after.update(function (userId, doc, fieldNames, modifier, options) {
+LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
     Meteor.defer(function () {
         modifier.$set = modifier.$set || {};
         modifier.$set._id = doc._id;
 
-        RepaymentSchedule.remove({disbursementId: modifier.$set._id});
+        RepaymentSchedule.remove({loanAccId: modifier.$set._id});
         _makeSchedule(modifier.$set);
     });
 });
 
 // After remove
-Disbursement.after.remove(function (userId, doc) {
-    RepaymentSchedule.remove({disbursementId: doc._id});
+LoanAcc.after.remove(function (userId, doc) {
+    RepaymentSchedule.remove({loanAccId: doc._id});
 });
 
 // Create repayment schedule
 function _makeSchedule(doc) {
-    let schedule = MakeSchedule.declinig.call({disbursementId: doc._id});
+    let schedule = MakeSchedule.declinig.call({loanAccId: doc._id});
 
     let maturityDate, tenor = 0;
 
@@ -76,10 +76,10 @@ function _makeSchedule(doc) {
 
         // Save to repayment schedule collection
         value.scheduleDate = doc.disbursementDate;
-        value.disbursementId = doc._id;
+        value.loanAccId = doc._id;
         RepaymentSchedule.insert(value);
     });
 
-    // Update tenor, maturityDate on disbursement
-    Disbursement.direct.update({_id: doc._id}, {$set: {maturityDate: maturityDate, tenor: tenor}});
+    // Update tenor, maturityDate on loan acc
+    LoanAcc.direct.update({_id: doc._id}, {$set: {maturityDate: maturityDate, tenor: tenor}});
 }

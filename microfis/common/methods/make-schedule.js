@@ -12,7 +12,7 @@ import {roundCurrency} from '../../imports/api/libs/round-currency.js';
 
 // Method
 import {Calculate} from './libs/calculate.js';
-import {lookupDisbursement} from './lookup-disbursement.js';
+import {lookupLoanAcc} from './lookup-loan-acc.js';
 
 // Collection
 import {Setting} from '../../imports/api/collections/setting.js';
@@ -24,20 +24,20 @@ MakeSchedule.declinig = new ValidatedMethod({
     name: 'microfis.makeSchedule.declining',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
-        disbursementId: {
+        loanAccId: {
             type: String
         }
     }).validator(),
-    run({disbursementId}) {
+    run({loanAccId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
-            // Get disbursement
+            // Get loan acc
             let setting = Setting.findOne(),
                 dayOfWeekToEscape = setting.dayOfWeekToEscape,
                 holiday = Holiday.find().fetch(),
-                disbursementDoc = lookupDisbursement.call({_id: disbursementId}),
-                principalInstallmentDoc = disbursementDoc.principalInstallment;
+                loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
+                principalInstallmentDoc = loanAccDoc.principalInstallment;
 
             // Declare default value
             let schedules = [];
@@ -45,14 +45,14 @@ MakeSchedule.declinig = new ValidatedMethod({
 
             // Check principal installment calculate type
             if (principalInstallmentDoc.calculateType == 'P') {
-                let numOfPrincipalInstallmentFrequency = _.ceil(disbursementDoc.term / principalInstallmentDoc.frequency);
-                principalInstallmentAmountPerLine = (disbursementDoc.microfisAmount / numOfPrincipalInstallmentFrequency) * (principalInstallmentDoc.amount / 100);
-                principalInstallmentAmountPerLine = roundCurrency(principalInstallmentAmountPerLine, disbursementDoc.currencyId);
+                let numOfPrincipalInstallmentFrequency = _.ceil(loanAccDoc.term / principalInstallmentDoc.frequency);
+                principalInstallmentAmountPerLine = (loanAccDoc.loanAmount / numOfPrincipalInstallmentFrequency) * (principalInstallmentDoc.amount / 100);
+                principalInstallmentAmountPerLine = roundCurrency(principalInstallmentAmountPerLine, loanAccDoc.currencyId);
             }
 
             // Config moment addingTime for next due date
             let addingTime;
-            switch (disbursementDoc.paymentMethod) {
+            switch (loanAccDoc.paymentMethod) {
                 case 'D': // Daily
                     addingTime = 'd';
                     break;
@@ -70,38 +70,38 @@ MakeSchedule.declinig = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: disbursementDoc.disbursementDate,
+                dueDate: loanAccDoc.disbursementDate,
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
                 totalDue: 0,
-                balance: disbursementDoc.microfisAmount,
+                balance: loanAccDoc.loanAmount,
                 allowClosing: false
             });
 
             // Schedule loop
-            for (let i = 1; i <= disbursementDoc.term; i++) {
+            for (let i = 1; i <= loanAccDoc.term; i++) {
                 let previousLine, dueDate, numOfDay, principalDue = 0, interestDue, totalDue;
 
                 previousLine = schedules[i - 1];
 
                 dueDate = findDueDate({
                     installment: i,
-                    disbursementDate: disbursementDoc.disbursementDate,
+                    disbursementDate: loanAccDoc.disbursementDate,
                     previousDate: previousLine.dueDate,
-                    repaidFrequency: disbursementDoc.repaidFrequency,
+                    repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
-                    escapeDayMethod: disbursementDoc.escapeDayMethod, // [6, 0]
-                    escapeDayFrequency: disbursementDoc.escapeDayFrequency, // 1,2,3 ... times
+                    escapeDayMethod: loanAccDoc.escapeDayMethod, // [6, 0]
+                    escapeDayFrequency: loanAccDoc.escapeDayFrequency, // 1,2,3 ... times
                     dayOfWeekToEscape: dayOfWeekToEscape, // [6, 0]
                     holiday: holiday,
-                    paymentMethod: disbursementDoc.paymentMethod,
-                    dueDateOn: disbursementDoc.dueDateOn
+                    paymentMethod: loanAccDoc.paymentMethod,
+                    dueDateOn: loanAccDoc.dueDateOn
                 });
 
                 // Check first repayment date
-                if (i == 1 && disbursementDoc.firstRepaymentDate) {
-                    dueDate = disbursementDoc.firstRepaymentDate;
+                if (i == 1 && loanAccDoc.firstRepaymentDate) {
+                    dueDate = loanAccDoc.firstRepaymentDate;
                 }
                 numOfDay = moment(dueDate).diff(previousLine.dueDate, 'days');
 
@@ -111,23 +111,23 @@ MakeSchedule.declinig = new ValidatedMethod({
                 }
 
                 // Check principal due for last line
-                if (i == disbursementDoc.term) {
+                if (i == loanAccDoc.term) {
                     principalDue = previousLine.balance;
                 }
 
                 interestDue = Calculate.interest.call({
                     amount: previousLine.balance,
                     numOfDay: numOfDay,
-                    interestRate: disbursementDoc.interestRate,
-                    method: disbursementDoc.paymentMethod,
-                    currencyId: disbursementDoc.currencyId
+                    interestRate: loanAccDoc.interestRate,
+                    method: loanAccDoc.paymentMethod,
+                    currencyId: loanAccDoc.currencyId
                 });
-                totalDue = roundCurrency(principalDue + interestDue, disbursementDoc.currencyId);
-                balane = roundCurrency(previousLine.balance - principalDue, disbursementDoc.currencyId);
+                totalDue = roundCurrency(principalDue + interestDue, loanAccDoc.currencyId);
+                balane = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
 
                 // Check installment can close without penalty
                 let allowClosing = false;
-                if (i >= disbursementDoc.installmentAllowClosing) {
+                if (i >= loanAccDoc.installmentAllowClosing) {
                     allowClosing = true;
                 }
                 schedules.push({

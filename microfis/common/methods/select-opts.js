@@ -15,7 +15,7 @@ import {PenaltyClosing} from '../../imports/api/collections/penalty-closing.js';
 import {Client} from '../../imports/api/collections/client.js';
 import {Product} from '../../imports/api/collections/product.js';
 import {CreditOfficer} from '../../imports/api/collections/credit-officer.js';
-import {Disbursement} from '../../imports/api/collections/disbursement.js';
+import {LoanAcc} from '../../imports/api/collections/loan-acc';
 
 export let SelectOptMethods = {};
 
@@ -302,9 +302,9 @@ SelectOptMethods.creditOfficer = new ValidatedMethod({
     }
 });
 
-// Location on disbursement
+// Location on loanAcc
 SelectOptMethods.location = new ValidatedMethod({
-    name: 'microfis.selectOpts.locationOnDisbursement',
+    name: 'microfis.selectOpts.locationOnLoanAcc',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
@@ -338,9 +338,9 @@ SelectOptMethods.location = new ValidatedMethod({
     }
 });
 
-// Disbursement
-SelectOptMethods.disbursement = new ValidatedMethod({
-    name: 'microfis.selectOpts.disbursementByClient',
+// LoanAcc
+SelectOptMethods.loanAcc = new ValidatedMethod({
+    name: 'microfis.selectOpts.loanAccByClient',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
@@ -360,7 +360,7 @@ SelectOptMethods.disbursement = new ValidatedMethod({
                 selector = {_id: {$in: values}};
             }
 
-            let data = Disbursement.find(selector, {limit: 10});
+            let data = LoanAcc.find(selector, {limit: 10});
             data.forEach(function (value) {
                 let label = `${value._id} | Dis Date: ` + moment(value.disbursementDate).format('DD/MM/YYYY') + ` | Amount: ${value.currencyId} ` + numeral(value.microfisAmount).format('0,0.00');
                 list.push({label: label, value: value._id});

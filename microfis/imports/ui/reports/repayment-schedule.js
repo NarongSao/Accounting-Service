@@ -43,7 +43,7 @@ indexTmpl.onCreated(function () {
             this.rptDataState.set(null);
 
             let params = {
-                disbursementId: formDataState.get().disbursementId
+                loanAccId: formDataState.get().loanAccId
             };
 
             repaymentScheduleReport.callPromise(params)

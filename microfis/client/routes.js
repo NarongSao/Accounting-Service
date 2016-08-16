@@ -269,45 +269,25 @@ MicrofisRoutes.route('/client-acc/:clientId', {
     }
 });
 
-// Disbursement
-import '../imports/ui/pages/disbursement.js';
-MicrofisRoutes.route('/disbursement/:clientId', {
-    name: 'microfis.disbursement',
-    title: 'Disbursement',
-    subscriptions: function (params, queryParams) {
-        this.register('microfis.clientById', Meteor.subscribe('microfis.clientById', params.clientId));
-    },
-    action: function (params, queryParams) {
-        Layout.main('Microfis_disbursement');
-    },
-    breadcrumb: {
-        params: ['clientId'],
-        //queryParams: ['show', 'color'],
-        title: 'Disbursement',
-        // icon: 'sitemap',
-        parent: 'microfis.client'
-    }
-});
-
 // Repayment
 import '../imports/ui/pages/repayment.js';
-MicrofisRoutes.route('/repayment/:clientId/:disbursementId', {
+MicrofisRoutes.route('/repayment/:clientId/:loanAccId', {
     name: 'microfis.repayment',
     title: 'Repayment',
     subscriptions: function (params, queryParams) {
-        this.register('microfis.disbursementById', Meteor.subscribe('microfis.disbursement', {_id: params.disbursementId}));
-        // this.register('microfis.disbursementAggregateById', Meteor.subscribe('microfis.disbursementAggregateById', params.disbursementId));
-        this.register('microfis.scheduleByDisbursementId', Meteor.subscribe('microfis.scheduleByDisbursementId', params.disbursementId));
+        this.register('microfis.loanAccById', Meteor.subscribe('microfis.loanAcc', {_id: params.loanAccId}));
+        // this.register('microfis.loanAccAggregateById', Meteor.subscribe('microfis.loanAccAggregateById', params.loanAccId));
+        this.register('microfis.scheduleByLoanAccId', Meteor.subscribe('microfis.scheduleByLoanAccId', params.loanAccId));
     },
     action: function (params, queryParams) {
         Layout.main('Microfis_repayment');
     },
     breadcrumb: {
-        params: ['clientId', 'disbursementId'],
+        params: ['clientId', 'loanAccId'],
         //queryParams: ['show', 'color'],
         title: 'Repayment',
         // icon: 'sitemap',
-        parent: 'microfis.disbursement'
+        parent: 'microfis.loanAcc'
     }
 });
 

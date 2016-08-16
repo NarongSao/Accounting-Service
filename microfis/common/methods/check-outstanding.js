@@ -14,10 +14,10 @@ import {roundCurrency} from '../../imports/api/libs/round-currency.js';
 
 // Method
 import {Calculate} from './libs/calculate.js';
-import {lookupDisbursement} from './lookup-disbursement.js';
+import {lookupLoanAcc} from './lookup-loan-acc.js';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement';
+import {LoanAcc} from '../../imports/api/collections/loan-acc';
 import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
 
 export let checkOutstanding = new ValidatedMethod({

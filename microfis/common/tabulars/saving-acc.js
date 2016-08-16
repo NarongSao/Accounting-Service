@@ -31,6 +31,7 @@ tabularOpts.columns = [
         }
     },
     {data: 'accountType', title: 'Acc Type'},
+    {data: 'status.value', title: 'Status'},
 ];
 // tabularOpts.extraFields = ['parentId'];
 export const SavingAccTabular = new Tabular.Table(tabularOpts);

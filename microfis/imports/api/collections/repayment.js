@@ -10,9 +10,9 @@ import {SelectOptMethods} from '../../../common/methods/select-opts.js';
 export const Repayment = new Mongo.Collection("microfis_repayment");
 
 Repayment.schema = new SimpleSchema({
-    disbursementId: {
+    loanAccId: {
         type: String,
-        label: 'Disbursement ID'
+        label: 'Loan ID'
     },
     repaidDate: {
         type: Date,

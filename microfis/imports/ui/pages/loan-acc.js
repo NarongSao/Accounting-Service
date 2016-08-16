@@ -21,37 +21,37 @@ import '../../../../core/client/components/add-new-button.js';
 
 // Collection
 import {Client} from '../../api/collections/client.js';
-import {Disbursement} from '../../api/collections/disbursement.js';
+import {LoanAcc} from '../../api/collections/loan-acc.js';
 
 // Method
 import {lookupProduct} from '../../../common/methods/lookup-product.js';
-import {lookupDisbursement} from '../../../common/methods/lookup-disbursement.js';
+import {lookupLoanAcc} from '../../../common/methods/lookup-loan-acc.js';
 
 // Tabular
-import {DisbursementTabular} from '../../../common/tabulars/disbursement.js';
+import {LoanAccTabular} from '../../../common/tabulars/loan-acc.js';
 
 // Page
-import './disbursement.html';
+import './loan-acc.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_disbursement,
-    actionTmpl = Template.Microfis_disbursementAction,
-    productFormTmpl = Template.Microfis_disbursementProductForm,
-    formTmpl = Template.Microfis_disbursementForm,
-    showTmpl = Template.Microfis_disbursementShow;
+let indexTmpl = Template.Microfis_loanAcc,
+    actionTmpl = Template.Microfis_loanAccAction,
+    productFormTmpl = Template.Microfis_loanAccProductForm,
+    formTmpl = Template.Microfis_loanAccForm,
+    showTmpl = Template.Microfis_loanAccShow;
 
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('disbursementProduct');
-    createNewAlertify('disbursement', {size: 'lg'});
-    createNewAlertify('disbursementShow');
+    createNewAlertify('loanAccProduct');
+    createNewAlertify('loanAcc', {size: 'lg'});
+    createNewAlertify('loanAccShow');
 });
 
 indexTmpl.helpers({
     tabularTable(){
-        return DisbursementTabular;
+        return LoanAccTabular;
     },
     tabularSelector(){
         return {clientId: FlowRouter.getParam('clientId')};
@@ -60,7 +60,7 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create-loan-acc' (event, instance) {
-        alertify.disbursementProduct(fa('plus', 'Disbursement Product'), renderTemplate(productFormTmpl));
+        alertify.loanAccProduct(fa('plus', 'LoanAcc Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
         // $.blockUI();
@@ -72,7 +72,7 @@ indexTmpl.events({
             Session.set('productDoc', result);
 
             // Meteor.setTimeout(function () {
-            alertify.disbursement(fa('pencil', 'Disbursement'), renderTemplate(formTmpl, {disbursementId: self._id})).maximize();
+            alertify.loanAcc(fa('pencil', 'LoanAcc'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
 
             // $.unblockUI();
             // }, 100);
@@ -84,13 +84,13 @@ indexTmpl.events({
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
-            Disbursement,
+            LoanAcc,
             {_id: this._id},
-            {title: 'Disbursement', itemTitle: this._id}
+            {title: 'LoanAcc', itemTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.disbursementShow(fa('eye', 'Disbursement'), renderTemplate(showTmpl, this));
+        alertify.loanAccShow(fa('eye', 'LoanAcc'), renderTemplate(showTmpl, this));
     },
     'dblclick tbody > tr': function (event) {
         var dataTable = $(event.target).closest('table').DataTable();
@@ -98,7 +98,7 @@ indexTmpl.events({
 
         let params = {
             clientId: FlowRouter.getParam('clientId'),
-            disbursementId: rowData._id
+            loanAccId: rowData._id
         };
         FlowRouter.go('microfis.repayment', params);
     }
@@ -107,7 +107,7 @@ indexTmpl.events({
 // Product Form
 productFormTmpl.helpers({
     productSchema(){
-        return Disbursement.productSchema;
+        return LoanAcc.productSchema;
     },
 });
 
@@ -135,7 +135,7 @@ productFormTmpl.events({
 
     },
     'click .btn-default'(event, instance){
-        alertify.disbursementProduct().close();
+        alertify.loanAccProduct().close();
     }
 });
 
@@ -144,13 +144,13 @@ productFormTmpl.onDestroyed(function () {
 });
 
 AutoForm.hooks({
-    Microfis_disbursementProductForm: {
+    Microfis_loanAccProductForm: {
         onSubmit: function (insertDoc, updateDoc, currentDoc) {
             this.event.preventDefault();
             this.done();
         },
         onSuccess: function (formType, result) {
-            alertify.disbursement(fa('plus', 'Disbursement'), renderTemplate(formTmpl)).maximize();
+            alertify.loanAcc(fa('plus', 'LoanAcc'), renderTemplate(formTmpl)).maximize();
         },
         onError: function (formType, error) {
             displayError(error.message);
@@ -164,7 +164,7 @@ formTmpl.onCreated(function () {
         let currentData = Template.currentData();
 
         if (currentData) {
-            this.subscribe('microfis.disbursementById', currentData.disbursementId);
+            this.subscribe('microfis.loanAccById', currentData.loanAccId);
         }
     });
 });
@@ -178,9 +178,8 @@ formTmpl.onRendered(function () {
     $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
     $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
-    // Disbursement date change
+    // LoanAcc date change
     $disbursementDate.on("dp.change", function (e) {
-        console.log('hi date change');
         $submitDate.data("DateTimePicker").maxDate(moment(e.date).startOf('day'));
         $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
     });
@@ -191,14 +190,14 @@ formTmpl.helpers({
         return Session.get('productDoc');
     },
     collection(){
-        return Disbursement;
+        return LoanAcc;
     },
     data(){
         let doc = {}, formType = 'insert';
         let currentData = Template.currentData();
 
         if (currentData) {
-            doc = Disbursement.findOne({_id: currentData.disbursementId});
+            doc = LoanAcc.findOne({_id: currentData.loanAccId});
             formType = 'update';
         }
 
@@ -207,14 +206,14 @@ formTmpl.helpers({
 });
 
 formTmpl.onDestroyed(function () {
-    AutoForm.resetForm("Microfis_disbursementForm");
+    AutoForm.resetForm("Microfis_loanAccForm");
 });
 
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        alertify.disbursement().close();
-        alertify.disbursementProduct().close();
+        alertify.loanAcc().close();
+        alertify.loanAccProduct().close();
         displaySuccess();
     },
     onError (formType, error) {
@@ -223,7 +222,7 @@ let hooksObject = {
 };
 
 AutoForm.addHooks([
-    'Microfis_disbursementForm'
+    'Microfis_loanAccForm'
 ], hooksObject);
 
 // Show
@@ -234,7 +233,7 @@ showTmpl.onCreated(function () {
     self.autorun(function () {
         let currentData = Template.currentData();
 
-        lookupDisbursement.callPromise({
+        lookupLoanAcc.callPromise({
             _id: currentData._id
         }).then(function (result) {
             self.dataLookup.set(result);

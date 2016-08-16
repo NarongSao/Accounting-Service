@@ -7,10 +7,10 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import  {lookupProduct} from './lookup-product.js';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement.js';
+import {LoanAcc} from '../../imports/api/collections/loan-acc';
 
-export const lookupDisbursement = new ValidatedMethod({
-    name: 'microfis.lookupDisbursement',
+export const lookupLoanAcc = new ValidatedMethod({
+    name: 'microfis.lookupLoanAcc',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         _id: {type: String}
@@ -19,7 +19,7 @@ export const lookupDisbursement = new ValidatedMethod({
         if (!this.isSimulation) {
             Meteor._sleepForMs(100);
             
-            let data = Disbursement.aggregate([
+            let data = LoanAcc.aggregate([
                 {$match: {_id: _id}},
                 {
                     $lookup: {

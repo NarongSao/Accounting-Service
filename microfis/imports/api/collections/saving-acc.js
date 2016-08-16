@@ -241,6 +241,24 @@ SavingAcc.generalSchema = new SimpleSchema({
             }
         }
     },
+    status: {
+        type: Object
+    },
+    'status.value': {
+        type: String,
+    },
+    'status.activeDate': {
+        type: Date,
+        optional: true
+    },
+    'status.suspendDate': {
+        type: Date,
+        optional: true
+    },
+    'status.closeDate': {
+        type: Date,
+        optional: true
+    },
     maturityDate: {
         type: Date,
         label: 'Maturity date',
@@ -273,7 +291,7 @@ SavingAcc.inheritorSchema = new SimpleSchema({
     inheritor: {
         type: Array,
         minCount: 0,
-        maxCount: 5
+        maxCount: 50
     },
     'inheritor.$': {
         type: Object

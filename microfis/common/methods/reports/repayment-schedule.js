@@ -8,11 +8,11 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/imports/api/collections/company.js';
 import {Branch} from '../../../../core/imports/api/collections/branch.js';
-import {Disbursement} from '../../../imports/api/collections/disbursement.js';
+import {Disbursement} from '../../../imports/api/collections/loan-acc.js';
 import {RepaymentSchedule} from '../../../imports/api/collections/repayment-schedule.js';
 
 // Method
-import  {lookupDisbursement} from '../lookup-disbursement.js';
+import  {lookupDisbursement} from '../lookup-loan-acc.js';
 
 export const repaymentScheduleReport = new ValidatedMethod({
     name: 'simplePos.repaymentScheduleReport',

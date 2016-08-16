@@ -24,9 +24,15 @@ if (Meteor.isClient) {
     Tracker.autorun(function () {
         let productDoc = Session.get('productDoc');
 
+        console.log(productDoc);
+
         if (productDoc) {
             // Product ID
             state.set('productId', productDoc._id);
+
+            // Date
+            state.set('startDate', moment(productDoc.startDate).format('DD/MM/YYYY'));
+            state.set('endDate', moment(productDoc.endDate).format('DD/MM/YYYY'));
 
             // Account type
             let accountType = productDoc.accountType.map(function (value) {
@@ -62,10 +68,10 @@ if (Meteor.isClient) {
     });
 }
 
-export const Disbursement = new Mongo.Collection("microfis_disbursement");
+export const LoanAcc = new Mongo.Collection("microfis_loanAcc");
 
 // Product
-Disbursement.productSchema = new SimpleSchema({
+LoanAcc.productSchema = new SimpleSchema({
     productId: {
         type: String,
         label: 'Product',
@@ -81,7 +87,7 @@ Disbursement.productSchema = new SimpleSchema({
 });
 
 // General
-Disbursement.generalSchema = new SimpleSchema({
+LoanAcc.generalSchema = new SimpleSchema({
     clientId: {
         type: String,
         label: 'Client'
@@ -139,7 +145,7 @@ Disbursement.generalSchema = new SimpleSchema({
                 let disbursementDate = moment(this.value);
 
                 if (!disbursementDate.isBetween(startDate, endDate, 'day', '[]')) {
-                    return 'cusBetweenDateForDisbursementDate';
+                    return 'cusBetweenDateForLoanAccDate';
                 }
             }
         }
@@ -199,7 +205,7 @@ Disbursement.generalSchema = new SimpleSchema({
 ;
 
 // Account
-Disbursement.accountSchema = new SimpleSchema({
+LoanAcc.accountSchema = new SimpleSchema({
     accountType: {
         type: String,
         label: 'Account type',
@@ -304,7 +310,7 @@ Disbursement.accountSchema = new SimpleSchema({
 });
 
 // Repayment
-Disbursement.repaymentSchema = new SimpleSchema({
+LoanAcc.repaymentSchema = new SimpleSchema({
     paymentMethod: {
         type: String,
         label: 'Payment method',
@@ -587,7 +593,7 @@ Disbursement.repaymentSchema = new SimpleSchema({
 
 
 // Interest
-Disbursement.interestSchema = new SimpleSchema({
+LoanAcc.interestSchema = new SimpleSchema({
     interestMethod: {
         type: String,
         label: 'Interest method',
@@ -632,7 +638,7 @@ Disbursement.interestSchema = new SimpleSchema({
 });
 
 // Location
-Disbursement.locationSchema = new SimpleSchema({
+LoanAcc.locationSchema = new SimpleSchema({
     locationId: {
         type: String,
         label: 'Location',
@@ -641,7 +647,7 @@ Disbursement.locationSchema = new SimpleSchema({
             afFieldInput: {
                 uniPlaceholder: '(Select One)',
                 optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.locationOnDisbursement'
+                optionsMethod: 'microfis.selectOpts.locationOnLoanAcc'
             }
         }
     },
@@ -662,7 +668,7 @@ Disbursement.locationSchema = new SimpleSchema({
 });
 
 // Financial
-// Disbursement.financialSchema = new SimpleSchema({
+// LoanAcc.financialSchema = new SimpleSchema({
 //     totalIncome: {
 //         type: Number,
 //         label: 'Total income',
@@ -721,7 +727,7 @@ Disbursement.locationSchema = new SimpleSchema({
 // });
 
 // Other
-Disbursement.otherSchema = new SimpleSchema({
+LoanAcc.otherSchema = new SimpleSchema({
     cycle: {
         type: Number,
         label: 'Cycle',
@@ -813,18 +819,18 @@ Disbursement.otherSchema = new SimpleSchema({
     },
 });
 
-Disbursement.attachSchema([
-    Disbursement.generalSchema,
-    Disbursement.accountSchema,
-    Disbursement.repaymentSchema,
-    Disbursement.interestSchema,
-    Disbursement.locationSchema,
-    Disbursement.otherSchema,
+LoanAcc.attachSchema([
+    LoanAcc.generalSchema,
+    LoanAcc.accountSchema,
+    LoanAcc.repaymentSchema,
+    LoanAcc.interestSchema,
+    LoanAcc.locationSchema,
+    LoanAcc.otherSchema,
 ]);
 
 // Custom validate
 SimpleSchema.messages({
-    cusMaxDateForSubmitDate: '[label] cannot be after [Disbursement Date]',
-    cusMinDateForFirstRepaymentDate: '[label] must be on or after [Disbursement Date]',
-    cusBetweenDateForDisbursementDate: `Disbursement date must be between [Start - End Date]`
+    cusMaxDateForSubmitDate: '[label] cannot be after [LoanAcc Date]',
+    cusMinDateForFirstRepaymentDate: '[label] must be on or after [LoanAcc Date]',
+    cusBetweenDateForLoanAccDate: `LoanAcc date must be between [Start - End Date]`
 });

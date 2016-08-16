@@ -6,16 +6,16 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {Repayment} from '../../imports/api/collections/repayment.js';
 
-export const getLastRepaymentByDisbursementId = new ValidatedMethod({
-    name: 'microfis.getLastRepaymentByDisbursementId',
+export const getLastRepaymentByLoanAccId = new ValidatedMethod({
+    name: 'microfis.getLastRepaymentByLoanAccId',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
-        disbursementId: {type: String}
+        loanAccId: {type: String}
     }).validator(),
-    run({disbursementId}) {
+    run({loanAccId}) {
         if (!this.isSimulation) {
             let data = Repayment.findOne(
-                {disbursementId: disbursementId},
+                {loanAccId: loanAccId},
                 {$sort: {_id: -1}}
             );
             

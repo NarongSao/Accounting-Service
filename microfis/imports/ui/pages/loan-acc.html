@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="Microfis_disbursement">
+<template name="Microfis_loanAcc">
     <div class="box-body">
         <p>
             <button type="button" class="btn btn-primary js-create-loan-acc"><i class="fa fa-plus"></i> Loan Account
@@ -13,7 +13,7 @@
 </template>
 
 <!--Action-->
-<template name="Microfis_disbursementAction">
+<template name="Microfis_loanAccAction">
     {{#columnAction}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
@@ -22,9 +22,9 @@
 </template>
 
 <!--Form-->
-<template name="Microfis_disbursementProductForm">
+<template name="Microfis_loanAccProductForm">
     <div class="box-body">
-        {{#autoForm schema=productSchema id="Microfis_disbursementProductForm" resetOnSuccess=false}}
+        {{#autoForm schema=productSchema id="Microfis_loanAccProductForm" resetOnSuccess=false}}
             <div class="row">
                 <div class="col-md-12">
                     {{> afQuickField name="productId"}}
@@ -46,7 +46,7 @@
     </div>
 </template>
 
-<template name="Microfis_disbursementForm">
+<template name="Microfis_loanAccForm">
     <div class="box-header with-border">
         <h3 class="box-title text-blue">
             {{#with dataHeader}}
@@ -58,7 +58,7 @@
 
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="Microfis_disbursementForm" doc=data.doc type=data.formType}}
+            {{#autoForm collection=collection id="Microfis_loanAccForm" doc=data.doc type=data.formType}}
                 <fieldset>
                     <legend>General</legend>
                     <div class="row">
@@ -89,7 +89,7 @@
                             {{> afQuickField name="currencyId"}}
                         </div>
                         <div class="col-md-4">
-                            {{> afQuickField name="microfisAmount"}}
+                            {{> afQuickField name="loanAmount"}}
                         </div>
                     </div>
                 </fieldset>
@@ -168,7 +168,7 @@
 </template>
 
 <!--Show-->
-<template name="Microfis_disbursementShow">
+<template name="Microfis_loanAccShow">
     <div class="box-body">
         {{#if data}}
             {{#with data}}
@@ -198,7 +198,7 @@
                         <dt>Currency</dt>
                         <dd>{{currencyId}}</dd>
                         <dt>Microfis Amount</dt>
-                        <dd>{{microfisAmount}}</dd>
+                        <dd>{{loanAmount}}</dd>
                     </fieldset>
 
                     <fieldset>

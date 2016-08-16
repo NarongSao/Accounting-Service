@@ -1,16 +1,16 @@
 import './_init.js';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement.js';
+import {LoanAcc} from '../../imports/api/collections/loan-acc.js';
 
-Disbursement.permit(['insert'])
+LoanAcc.permit(['insert'])
     .Microfis_ifDataInsert()
     .allowInClientCode();
 
-Disbursement.permit(['update'])
+LoanAcc.permit(['update'])
     .Microfis_ifDataUpdate()
     .allowInClientCode();
 
-Disbursement.permit(['remove'])
+LoanAcc.permit(['remove'])
     .Microfis_ifDataRemove()
     .allowInClientCode();

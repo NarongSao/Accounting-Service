@@ -3,13 +3,13 @@ import {idGenerator2} from 'meteor/theara:id-generator';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
-import {Disbursement} from '../../imports/api/collections/disbursement.js';
+import {LoanAcc} from '../../imports/api/collections/loan-acc';
 import {Repayment} from '../../imports/api/collections/repayment.js';
 import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
 
 // Before insert
 Repayment.before.insert(function (userId, doc) {
-    let prefix = doc.disbursementId + '-';
+    let prefix = doc.loanAccId + '-';
     doc._id = idGenerator2.genWithPrefix(Repayment, {
         prefix: prefix,
         length: 6
@@ -36,10 +36,10 @@ Repayment.after.insert(function (userId, doc) {
             });
         });
 
-        // Update disbursement for close type
+        // Update loan acc for close type
         if (doc.type == 'close') {
-            // Set close status on disbursement
-            Disbursement.direct.update({_id: doc.disbursementId}, {$set: {closeDate: doc.repaidDate}});
+            // Set close status on loan acc
+            LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {closeDate: doc.repaidDate}});
         }
 
     });
@@ -63,10 +63,10 @@ Repayment.after.remove(function (userId, doc) {
             });
         });
 
-        // Update disbursement for close type
+        // Update loan acc for close type
         if (doc.type == 'close') {
-            // Set close status on disbursement
-            Disbursement.direct.update({_id: doc.disbursementId}, {$unset: {closeDate: ''}});
+            // Set close status on loan acc
+            LoanAcc.direct.update({_id: doc.loanAccId}, {$unset: {closeDate: ''}});
         }
     });
 });

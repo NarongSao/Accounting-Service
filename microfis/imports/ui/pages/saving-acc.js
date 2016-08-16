@@ -182,6 +182,12 @@ formTmpl.onDestroyed(function () {
 
 // Hook
 let hooksObject = {
+    before: {
+        insert: function (doc) {
+            doc.status = {value: 'Inactive'};
+            return doc;
+        }
+    },
     onSuccess (formType, result) {
         alertify.savingAcc().close();
         alertify.savingAccProduct().close();
