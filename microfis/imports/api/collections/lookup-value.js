@@ -14,16 +14,10 @@ LookupValue.schema = new SimpleSchema({
         max: 250
     },
     private: {
-        type: String,
+        type: Boolean,
+        defaultValue: false,
         autoform: {
-            type: "select-radio-inline",
-            defaultValue: 'true',
-            options: function () {
-                return [
-                    {label: 'True', value: 'true'},
-                    {label: 'False', value: 'false'}
-                ];
-            }
+            type: "boolean-checkbox"
         }
     },
     options: {
@@ -41,8 +35,9 @@ LookupValue.schema = new SimpleSchema({
         type: String,
         max: 250
     },
-    'options.$.index': {
-        type: Number
+    'options.$.order': {
+        type: Number,
+        min: 0
     }
 });
 

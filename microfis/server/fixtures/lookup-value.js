@@ -1,5 +1,7 @@
 import {Meteor} from 'meteor/meteor';
+import {_} from 'meteor/erasaur:meteor-lodash';
 
+// Collection
 import {LookupValue} from '../../imports/api/collections/lookup-value.js';
 
 Meteor.startup(function () {
@@ -10,10 +12,10 @@ Meteor.startup(function () {
                 name: 'Prefix',
                 private: true,
                 options: [
-                    {label: 'Mr', value: 'Mr', index: 1},
-                    {label: 'Miss', value: 'Miss', index: 2},
-                    {label: 'Ms', value: 'Ms', index: 3},
-                    {label: 'Mrs', value: 'Mrs', index: 4}
+                    {label: 'Mr', value: 'Mr', order: 0},
+                    {label: 'Miss', value: 'Miss', order: 1},
+                    {label: 'Ms', value: 'Ms', order: 2},
+                    {label: 'Mrs', value: 'Mrs', order: 3}
                 ]
             },
             // History
@@ -21,9 +23,9 @@ Meteor.startup(function () {
                 name: 'History',
                 private: true,
                 options: [
-                    {label: 'History1', value: 'History1', index: 1},
-                    {label: 'History2', value: 'History2', index: 2},
-                    {label: 'History3', value: 'History3', index: 3},
+                    {label: 'History0', value: 'History0', order: 0},
+                    {label: 'History1', value: 'History1', order: 1},
+                    {label: 'History2', value: 'History2', order: 2},
                 ]
             },
             // Purpose
@@ -31,9 +33,9 @@ Meteor.startup(function () {
                 name: 'Purpose',
                 private: true,
                 options: [
-                    {label: 'Purpose1', value: 'Purpose1', index: 1},
-                    {label: 'Purpose2', value: 'Purpose2', index: 2},
-                    {label: 'Purpose3', value: 'Purpose3', index: 3},
+                    {label: 'Purpose0', value: 'Purpose0', order: 0},
+                    {label: 'Purpose1', value: 'Purpose1', order: 1},
+                    {label: 'Purpose2', value: 'Purpose2', order: 2},
                 ]
             },
             // Purpose Activity
@@ -41,9 +43,9 @@ Meteor.startup(function () {
                 name: 'Purpose Activity',
                 private: true,
                 options: [
-                    {label: 'Activity1', value: 'Activity1', index: 1},
-                    {label: 'Activity2', value: 'Activity2', index: 2},
-                    {label: 'Activity3', value: 'Activity3', index: 3},
+                    {label: 'Activity0', value: 'Activity0', order: 0},
+                    {label: 'Activity1', value: 'Activity1', order: 1},
+                    {label: 'Activity2', value: 'Activity2', order: 2},
                 ]
             },
             // Collateral Type
@@ -51,9 +53,9 @@ Meteor.startup(function () {
                 name: 'Collateral Type',
                 private: true,
                 options: [
-                    {label: 'Type1', value: 'Type1', index: 1},
-                    {label: 'Type2', value: 'Type2', index: 2},
-                    {label: 'Type3', value: 'Type3', index: 3},
+                    {label: 'Type0', value: 'Type0', order: 0},
+                    {label: 'Type1', value: 'Type1', order: 1},
+                    {label: 'Type2', value: 'Type2', order: 2},
                 ]
             },
             // Collateral Security
@@ -61,10 +63,10 @@ Meteor.startup(function () {
                 name: 'Collateral Security',
                 private: true,
                 options: [
-                    {label: 'Poor', value: 'POO', index: 1},
-                    {label: 'Average', value: 'AVG', index: 2},
-                    {label: 'Good', value: 'GD', index: 3},
-                    {label: 'Very Good', value: 'VG', index: 4},
+                    {label: 'Poor', value: 'POO', order: 0},
+                    {label: 'Average', value: 'AVG', order: 1},
+                    {label: 'Good', value: 'GD', order: 2},
+                    {label: 'Very Good', value: 'VG', order: 3},
                 ]
             },
             // Education
@@ -72,10 +74,10 @@ Meteor.startup(function () {
                 name: 'Education',
                 private: true,
                 options: [
-                    {label: 'Primary School', value: 'PS', index: 1},
-                    {label: 'Secondary School', value: 'SS', index: 2},
-                    {label: 'High School', value: 'HS', index: 3},
-                    {label: 'University', value: 'UN', index: 4},
+                    {label: 'Primary School', value: 'PS', order: 0},
+                    {label: 'Secondary School', value: 'SS', order: 1},
+                    {label: 'High School', value: 'HS', order: 2},
+                    {label: 'University', value: 'UN', order: 3},
                 ]
             },
             // Occupation
@@ -83,8 +85,8 @@ Meteor.startup(function () {
                 name: 'Occupation',
                 private: true,
                 options: [
-                    {label: 'Student', value: 'ST', index: 1},
-                    {label: 'Agriculture', value: 'AG', index: 2},
+                    {label: 'Student', value: 'ST', order: 0},
+                    {label: 'Agriculture', value: 'AG', order: 1},
                 ]
             },
             // Poverty Level
@@ -92,14 +94,14 @@ Meteor.startup(function () {
                 name: 'Poverty Level',
                 private: true,
                 options: [
-                    {label: 'Level 1', value: 'L1', index: 1},
-                    {label: 'Level 2', value: 'L2', index: 2},
+                    {label: 'Level 0', value: 'L0', order: 0},
+                    {label: 'Level 1', value: 'L1', order: 1},
                 ]
             },
         ];
 
-        data.forEach(function (obj) {
-            LookupValue.insert(obj);
+        _.forEach(data, function (val) {
+            LookupValue.insert(val);
         });
     }
 });
