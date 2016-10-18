@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Penalty} from '../../imports/api/collections/penalty.js';
+import {Penalty} from '../../common/collections/penalty.js';
 
 Meteor.publish('microfis.penalty', function microfisPenalty(selector = {}, options = {}) {
     this.unblock();

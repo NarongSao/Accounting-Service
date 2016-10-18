@@ -3,7 +3,7 @@ import {idGenerator2} from 'meteor/theara:id-generator';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
-import {Guarantor} from '../../imports/api/collections/guarantor.js';
+import {Guarantor} from '../../common/collections/guarantor.js';
 
 Guarantor.before.insert(function (userId, doc) {
     let prefix = doc.branchId + '-';

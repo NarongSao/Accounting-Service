@@ -3,7 +3,7 @@ import {idGenerator2} from 'meteor/theara:id-generator';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../../common/collections/location.js';
 
 Location.before.insert(function (userId, doc) {
     // Check level

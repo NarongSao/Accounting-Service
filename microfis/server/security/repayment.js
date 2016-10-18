@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Repayment} from '../../imports/api/collections/repayment.js';
+import {Repayment} from '../../common/collections/repayment.js';
 
 Repayment.permit(['insert'])
     .Microfis_ifDataInsert()

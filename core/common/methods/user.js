@@ -52,7 +52,7 @@ export const insertUser = new ValidatedMethod({
             });
 
             // Add roles
-            _.forEach(doc.roles, function (element) {
+            _.each(doc.roles, function (element) {
                 let roleWords = _.words(element, /[^:]+/g);
                 Roles.addUsersToRoles(userId,
                     roleWords[1], // roles
@@ -95,7 +95,6 @@ export const updateUser = new ValidatedMethod({
             if (doc.password != 'old&password') {
                 Accounts.setPassword(_id, doc.password);
             }
-
             // Update roles
             _.forEach(doc.roles, function (element) {
                 let roleWords = _.words(element, /[^:]+/g);

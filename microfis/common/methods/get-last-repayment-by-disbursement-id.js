@@ -4,7 +4,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {Repayment} from '../../imports/api/collections/repayment.js';
+import {Repayment} from '../../common/collections/repayment.js';
 
 export const getLastRepaymentByLoanAccId = new ValidatedMethod({
     name: 'microfis.getLastRepaymentByLoanAccId',

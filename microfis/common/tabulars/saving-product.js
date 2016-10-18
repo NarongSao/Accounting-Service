@@ -12,10 +12,10 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {SavingProduct} from '../../imports/api/collections/saving-product';
+import {SavingProduct} from '../../common/collections/saving-product';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/saving-product.html');
+Meteor.isClient && require('../../imports/pages/saving-product.html');
 
 tabularOpts.name = 'microfis.savingProduct';
 tabularOpts.collection = SavingProduct;

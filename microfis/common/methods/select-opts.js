@@ -7,15 +7,15 @@ import {moment} from  'meteor/momentjs:moment';
 import fx from 'money';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
-import {Fund} from '../../imports/api/collections/fund.js';
-import {Fee} from '../../imports/api/collections/fee.js';
-import {Penalty} from '../../imports/api/collections/penalty.js';
-import {PenaltyClosing} from '../../imports/api/collections/penalty-closing.js';
-import {Client} from '../../imports/api/collections/client.js';
-import {Product} from '../../imports/api/collections/product.js';
-import {CreditOfficer} from '../../imports/api/collections/credit-officer.js';
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
+import {Location} from '../../common/collections/location.js';
+import {Fund} from '../../common/collections/fund.js';
+import {Fee} from '../../common/collections/fee.js';
+import {Penalty} from '../../common/collections/penalty.js';
+import {PenaltyClosing} from '../../common/collections/penalty-closing.js';
+import {Client} from '../../common/collections/client.js';
+import {Product} from '../../common/collections/product.js';
+import {CreditOfficer} from '../../common/collections/credit-officer.js';
+import {LoanAcc} from '../../common/collections/loan-acc';
 
 export let SelectOptMethods = {};
 

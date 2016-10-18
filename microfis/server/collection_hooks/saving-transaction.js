@@ -4,8 +4,8 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import math from 'mathjs';
 
 // Collection
-import {SavingTransaction} from '../../imports/api/collections/saving-transaction';
-import {SavingAcc} from '../../imports/api/collections/saving-acc';
+import {SavingTransaction} from '../../common/collections/saving-transaction';
+import {SavingAcc} from '../../common/collections/saving-acc';
 
 // Before insert
 SavingTransaction.before.insert(function (userId, doc) {

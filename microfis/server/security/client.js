@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Client} from '../../imports/api/collections/client.js';
+import {Client} from '../../common/collections/client.js';
 
 Client.permit(['insert'])
     .Microfis_ifDataInsert()

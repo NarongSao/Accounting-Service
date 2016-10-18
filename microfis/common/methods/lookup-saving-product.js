@@ -4,7 +4,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {SavingProduct} from '../../imports/api/collections/saving-product.js';
+import {SavingProduct} from '../../common/collections/saving-product.js';
 
 export const lookupSavingProduct = new ValidatedMethod({
     name: 'microfis.lookupSavingProduct',

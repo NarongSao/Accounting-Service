@@ -10,8 +10,8 @@ import {__} from '../../core/common/libs/tapi18n-callback-helper.js';
 
 // Layout
 import {Layout} from '../../core/client/libs/render-layout.js';
-import '../../core/imports/ui/layouts/login';
-import '../../core/imports/ui/layouts/main';
+import '../../core/imports/layouts/login';
+import '../../core/imports/layouts/main';
 
 // Group
 let MicrofisRoutes = FlowRouter.group({
@@ -25,7 +25,7 @@ let MicrofisRoutes = FlowRouter.group({
 });
 
 // Home
-import '../imports/ui/pages/home.js';
+import '../imports/pages/home.js';
 MicrofisRoutes.route('/home', {
     name: 'microfis.home',
     title: 'Home',
@@ -46,7 +46,7 @@ MicrofisRoutes.route('/home', {
  *********************/
 
 // Lookup value
-import '../imports/ui/pages/lookup-value.js';
+import '../imports/pages/lookup-value.js';
 MicrofisRoutes.route('/lookup-value', {
     name: 'microfis.lookupValue',
     title: 'Lookup Value',
@@ -63,7 +63,7 @@ MicrofisRoutes.route('/lookup-value', {
 });
 
 // Setting
-import '../imports/ui/pages/setting.js';
+import '../imports/pages/setting.js';
 MicrofisRoutes.route('/setting', {
     name: 'microfis.setting',
     title: 'Setting',
@@ -80,7 +80,7 @@ MicrofisRoutes.route('/setting', {
 });
 
 // Location
-import '../imports/ui/pages/location.js';
+import '../imports/pages/location.js';
 MicrofisRoutes.route('/location', {
     name: 'microfis.location',
     title: 'Location',
@@ -97,7 +97,7 @@ MicrofisRoutes.route('/location', {
 });
 
 // Fee
-import '../imports/ui/pages/fee.js';
+import '../imports/pages/fee.js';
 MicrofisRoutes.route('/fee', {
     name: 'microfis.fee',
     title: 'Fee',
@@ -114,7 +114,7 @@ MicrofisRoutes.route('/fee', {
 });
 
 // Fund
-import '../imports/ui/pages/fund.js';
+import '../imports/pages/fund.js';
 MicrofisRoutes.route('/fund', {
     name: 'microfis.fund',
     title: 'Fund',
@@ -131,7 +131,7 @@ MicrofisRoutes.route('/fund', {
 });
 
 // Holiday
-import '../imports/ui/pages/holiday.js';
+import '../imports/pages/holiday.js';
 MicrofisRoutes.route('/holiday', {
     name: 'microfis.holiday',
     title: 'Holiday',
@@ -148,7 +148,7 @@ MicrofisRoutes.route('/holiday', {
 });
 
 // Penalty
-import '../imports/ui/pages/penalty.js';
+import '../imports/pages/penalty.js';
 MicrofisRoutes.route('/penalty', {
     name: 'microfis.penalty',
     title: 'Penalty',
@@ -165,7 +165,7 @@ MicrofisRoutes.route('/penalty', {
 });
 
 // Penalty Closing
-import '../imports/ui/pages/penalty-closing.js';
+import '../imports/pages/penalty-closing.js';
 MicrofisRoutes.route('/penalty-closing', {
     name: 'microfis.penaltyClosing',
     title: 'Penalty Closing',
@@ -182,7 +182,7 @@ MicrofisRoutes.route('/penalty-closing', {
 });
 
 // Product
-import '../imports/ui/pages/product.js';
+import '../imports/pages/product.js';
 MicrofisRoutes.route('/product', {
     name: 'microfis.product',
     title: 'Product',
@@ -199,7 +199,7 @@ MicrofisRoutes.route('/product', {
 });
 
 // Credit Officer
-import '../imports/ui/pages/credit-officer.js';
+import '../imports/pages/credit-officer.js';
 MicrofisRoutes.route('/credit-officer', {
     name: 'microfis.creditOfficer',
     title: 'Credit Officer',
@@ -216,7 +216,7 @@ MicrofisRoutes.route('/credit-officer', {
 });
 
 // Guarantor
-import '../imports/ui/pages/guarantor.js';
+import '../imports/pages/guarantor.js';
 MicrofisRoutes.route('/guarantor', {
     name: 'microfis.guarantor',
     title: 'uarantor',
@@ -233,7 +233,7 @@ MicrofisRoutes.route('/guarantor', {
 });
 
 // Client
-import '../imports/ui/pages/client.js';
+import '../imports/pages/client.js';
 MicrofisRoutes.route('/client', {
     name: 'microfis.client',
     title: 'Client',
@@ -250,7 +250,7 @@ MicrofisRoutes.route('/client', {
 });
 
 // Client Account
-import '../imports/ui/pages/client-acc.js';
+import '../imports/pages/client-acc.js';
 MicrofisRoutes.route('/client-acc/:clientId', {
     name: 'microfis.clientAcc',
     title: 'Account',
@@ -270,7 +270,7 @@ MicrofisRoutes.route('/client-acc/:clientId', {
 });
 
 // Repayment
-import '../imports/ui/pages/repayment.js';
+import '../imports/pages/repayment.js';
 MicrofisRoutes.route('/repayment/:clientId/:loanAccId', {
     name: 'microfis.repayment',
     title: 'Loan',
@@ -295,7 +295,7 @@ MicrofisRoutes.route('/repayment/:clientId/:loanAccId', {
  *********************/
 
 // Product
-import '../imports/ui/pages/saving-product.js';
+import '../imports/pages/saving-product.js';
 MicrofisRoutes.route('/saving-product', {
     name: 'microfis.savingProduct',
     title: 'Saving Product',
@@ -312,7 +312,7 @@ MicrofisRoutes.route('/saving-product', {
 });
 
 // Transaction
-import '../imports/ui/pages/saving-transaction.js';
+import '../imports/pages/saving-transaction.js';
 MicrofisRoutes.route('/saving-transaction/:clientId/:savingAccId', {
     name: 'microfis.savingTransaction',
     title: 'Saving',

@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Setting} from '../../imports/api/collections/setting.js';
+import {Setting} from '../../common/collections/setting.js';
 
 Setting.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

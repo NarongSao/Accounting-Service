@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 
-import {Client} from '../../imports/api/collections/client.js';
+import {Client} from '../../common/collections/client.js';
 
 Meteor.startup(function () {
     if (Client.find().count() == 0) {

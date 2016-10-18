@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {Fee} from '../../imports/api/collections/fee.js';
+import {Fee} from '../../common/collections/fee.js';
 
 Meteor.startup(function () {
     if (Fee.find().count() == 0) {

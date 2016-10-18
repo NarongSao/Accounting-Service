@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {Product} from '../../imports/api/collections/product.js';
+import {Product} from '../../common/collections/product.js';
 
 Meteor.startup(function () {
     if (Product.find().count() == 0) {

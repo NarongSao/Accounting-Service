@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../../common/collections/location.js';
 
 Meteor.publish('microfis.location', function microfisLocation(selector = {}, options = {}) {
     this.unblock();

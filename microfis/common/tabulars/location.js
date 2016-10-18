@@ -12,10 +12,10 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../../common/collections/location.js';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/location.html');
+Meteor.isClient && require('../../imports/pages/location.html');
 
 tabularOpts.name = 'microfis.location';
 tabularOpts.collection = Location;

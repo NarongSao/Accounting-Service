@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc.js';
+import {LoanAcc} from '../../common/collections/loan-acc.js';
 
 Meteor.publish('microfis.loanAccById', function microfisLoanAccById(loanAccId) {
     this.unblock();

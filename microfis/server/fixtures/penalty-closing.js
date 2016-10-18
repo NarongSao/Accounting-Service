@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {PenaltyClosing} from '../../imports/api/collections/penalty-closing.js';
+import {PenaltyClosing} from '../../common/collections/penalty-closing.js';
 
 Meteor.startup(function () {
     if (PenaltyClosing.find().count() == 0) {

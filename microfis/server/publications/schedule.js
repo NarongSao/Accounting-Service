@@ -3,7 +3,7 @@ import {check} from 'meteor/check';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 Meteor.publish('microfis.scheduleByLoanAccId', function microfisScheduleByLoanAccId(loanAccId) {
     this.unblock();

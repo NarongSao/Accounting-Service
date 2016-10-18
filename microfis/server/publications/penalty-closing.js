@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {PenaltyClosing} from '../../imports/api/collections/penalty-closing.js';
+import {PenaltyClosing} from '../../common/collections/penalty-closing.js';
 
 Meteor.publish('microfis.penaltyClosing', function microfisPenaltyClosing(selector = {}, options = {}) {
     this.unblock();

@@ -4,7 +4,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../../common/collections/location.js';
 
 export const lookupLocation = new ValidatedMethod({
     name: 'microfis.lookupLocation',

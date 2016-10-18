@@ -12,10 +12,10 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Client} from '../../imports/api/collections/client.js';
+import {Client} from '../../common/collections/client.js';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/client.html');
+Meteor.isClient && require('../../imports/pages/client.html');
 
 tabularOpts.name = 'microfis.client';
 tabularOpts.collection = Client;

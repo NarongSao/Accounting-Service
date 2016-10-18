@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Fee} from '../../imports/api/collections/fee.js';
+import {Fee} from '../../common/collections/fee.js';
 
 Meteor.publish('microfis.fee', function microfisFee(selector = {}, options = {}) {
     this.unblock();

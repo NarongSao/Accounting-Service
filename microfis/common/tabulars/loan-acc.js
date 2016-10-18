@@ -12,10 +12,10 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
+import {LoanAcc} from '../../common/collections/loan-acc';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/loan-acc.html');
+Meteor.isClient && require('../../imports/pages/loan-acc.html');
 
 tabularOpts.name = 'microfis.loanAcc';
 tabularOpts.collection = LoanAcc;

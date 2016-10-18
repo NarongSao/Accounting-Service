@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Guarantor} from '../../imports/api/collections/guarantor.js';
+import {Guarantor} from '../../common/collections/guarantor.js';
 
 Guarantor.permit(['insert'])
     .Microfis_ifDataInsert()

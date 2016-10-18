@@ -4,7 +4,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 export const getSchedule = new ValidatedMethod({
     name: 'microfis.getSchedule',

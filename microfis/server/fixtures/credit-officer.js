@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 
-import {CreditOfficer} from '../../imports/api/collections/credit-officer.js';
+import {CreditOfficer} from '../../common/collections/credit-officer.js';
 
 Meteor.startup(function () {
     if (CreditOfficer.find().count() == 0) {

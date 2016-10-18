@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {PenaltyClosing} from '../../imports/api/collections/penalty-closing.js';
+import {PenaltyClosing} from '../../common/collections/penalty-closing.js';
 
 PenaltyClosing.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

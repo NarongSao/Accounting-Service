@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {SavingAcc} from '../../imports/api/collections/saving-acc';
+import {SavingAcc} from '../../common/collections/saving-acc';
 
 SavingAcc.permit(['insert'])
     .Microfis_ifDataInsert()

@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {CreditOfficer} from '../../imports/api/collections/credit-officer.js';
+import {CreditOfficer} from '../../common/collections/credit-officer.js';
 
 Meteor.publish('microfis.creditOfficer', function microfisCreditOfficer(selector = {}, options = {}) {
     this.unblock();

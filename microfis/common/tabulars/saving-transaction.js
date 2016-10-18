@@ -12,10 +12,10 @@ import moment from 'moment';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {SavingTransaction} from '../../imports/api/collections/saving-transaction';
+import {SavingTransaction} from '../../common/collections/saving-transaction';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/saving-transaction.html');
+Meteor.isClient && require('../../imports/pages/saving-transaction.html');
 
 tabularOpts.name = 'microfis.savingTransaction';
 tabularOpts.collection = SavingTransaction;

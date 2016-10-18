@@ -8,8 +8,8 @@ import  {lookupProduct} from '../../common/methods/lookup-product.js';
 import  {MakeSchedule} from '../../common/methods/make-schedule.js';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc.js';
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 // Before insert
 LoanAcc.before.insert(function (userId, doc) {

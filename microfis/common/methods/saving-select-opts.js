@@ -7,7 +7,7 @@ import {moment} from  'meteor/momentjs:moment';
 import fx from 'money';
 
 // Collection
-import {SavingProduct} from '../../imports/api/collections/saving-product.js';
+import {SavingProduct} from '../../common/collections/saving-product.js';
 
 export let SavingSelectOptMethods = {};
 

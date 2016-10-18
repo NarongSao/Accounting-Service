@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Penalty} from '../../imports/api/collections/penalty.js';
+import {Penalty} from '../../common/collections/penalty.js';
 
 Penalty.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

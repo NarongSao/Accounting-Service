@@ -3,9 +3,9 @@ import {idGenerator2} from 'meteor/theara:id-generator';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
-import {Repayment} from '../../imports/api/collections/repayment.js';
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {LoanAcc} from '../../common/collections/loan-acc';
+import {Repayment} from '../../common/collections/repayment.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 // Before insert
 Repayment.before.insert(function (userId, doc) {

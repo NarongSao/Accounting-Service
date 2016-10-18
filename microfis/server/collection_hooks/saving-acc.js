@@ -4,7 +4,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import math from 'mathjs';
 
 // Collection
-import {SavingAcc} from '../../imports/api/collections/saving-acc';
+import {SavingAcc} from '../../common/collections/saving-acc';
 
 // Before insert
 SavingAcc.before.insert(function (userId, doc) {

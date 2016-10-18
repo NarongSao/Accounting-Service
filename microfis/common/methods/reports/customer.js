@@ -6,8 +6,8 @@
 // import {moment} from  'meteor/momentjs:moment';
 //
 // // Collection
-// import {Company} from '../../../../core/imports/api/collections/company.js';
-// import {Customer} from '../../../imports/api/collections/customer.js';
+// import {Company} from '../../../../core/common/collections/company.js';
+// import {Customer} from '../../../common/collections/customer.js';
 //
 // export const customerReport = new ValidatedMethod({
 //     name: 'microfis.customerReport',

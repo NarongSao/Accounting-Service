@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Client} from '../../imports/api/collections/client.js';
+import {Client} from '../../common/collections/client.js';
 
 Meteor.publish('microfis.client', function microfisClient(selector = {}, options = {}) {
     this.unblock();

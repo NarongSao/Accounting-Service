@@ -12,10 +12,10 @@ import moment from 'moment';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Repayment} from '../../imports/api/collections/repayment.js';
+import {Repayment} from '../../common/collections/repayment.js';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/repayment.html');
+Meteor.isClient && require('../../imports/pages/repayment.html');
 
 tabularOpts.name = 'microfis.repayment';
 tabularOpts.collection = Repayment;

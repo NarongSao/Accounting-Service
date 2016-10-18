@@ -12,10 +12,10 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {SavingAcc} from '../../imports/api/collections/saving-acc';
+import {SavingAcc} from '../../common/collections/saving-acc';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/saving-acc.html');
+Meteor.isClient && require('../../imports/pages/saving-acc.html');
 
 tabularOpts.name = 'microfis.savingAcc';
 tabularOpts.collection = SavingAcc;

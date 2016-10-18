@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {SavingProduct} from '../../imports/api/collections/saving-product.js';
+import {SavingProduct} from '../../common/collections/saving-product.js';
 
 SavingProduct.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

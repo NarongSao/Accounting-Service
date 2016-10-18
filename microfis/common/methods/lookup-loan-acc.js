@@ -7,7 +7,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import  {lookupProduct} from './lookup-product.js';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
+import {LoanAcc} from '../../common/collections/loan-acc';
 
 export const lookupLoanAcc = new ValidatedMethod({
     name: 'microfis.lookupLoanAcc',

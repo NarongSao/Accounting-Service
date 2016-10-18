@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Holiday} from '../../imports/api/collections/holiday.js';
+import {Holiday} from '../../common/collections/holiday.js';
 
 Meteor.publish('microfis.holiday', function microfisHoliday(selector = {}, options = {}) {
     this.unblock();

@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Guarantor} from '../../imports/api/collections/guarantor.js';
+import {Guarantor} from '../../common/collections/guarantor.js';
 
 Meteor.publish('microfis.guarantor', function microfisGuarantor(selector = {}, options = {}) {
     this.unblock();

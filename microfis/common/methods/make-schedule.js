@@ -8,15 +8,15 @@ import moment from 'moment';
 import math from 'mathjs';
 
 // Lib
-import {roundCurrency} from '../../imports/api/libs/round-currency.js';
+import {roundCurrency} from '../libs/round-currency.js';
 
 // Method
-import {Calculate} from './libs/calculate.js';
+import {Calculate} from '../libs/calculate.js';
 import {lookupLoanAcc} from './lookup-loan-acc.js';
 
 // Collection
-import {Setting} from '../../imports/api/collections/setting.js';
-import {Holiday} from '../../imports/api/collections/holiday.js';
+import {Setting} from '../../common/collections/setting.js';
+import {Holiday} from '../../common/collections/holiday.js';
 
 export let MakeSchedule = {};
 
