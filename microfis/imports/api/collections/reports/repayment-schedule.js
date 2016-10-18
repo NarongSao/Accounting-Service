@@ -24,15 +24,15 @@ export const RepaymentScheduleSchema = new SimpleSchema({
             }
         }
     },
-    disbursementId: {
+    loanAccId: {
         type: String,
-        label: 'Disbursement ID',
+        label: 'Loan acc',
         autoform: {
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
                 optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.disbursementByClient',
+                optionsMethod: 'microfis.selectOpts.loanAccByClient',
                 optionsMethodParams: function () {
                     let clientId = AutoForm.getFieldValue('clientId');
                     return {clientId: clientId};

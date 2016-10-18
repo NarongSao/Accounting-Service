@@ -197,8 +197,8 @@
                         <dd>{{accountType}}</dd>
                         <dt>Currency</dt>
                         <dd>{{currencyId}}</dd>
-                        <dt>Microfis Amount</dt>
-                        <dd>{{loanAmount}}</dd>
+                        <dt>Loan Amount</dt>
+                        <dd>{{numFormat loanAmount "0,0.00"}}</dd>
                     </fieldset>
 
                     <fieldset>
@@ -227,10 +227,10 @@
                         <dd>{{escapeDayMethod}}</dd>
                         <dt>Escape Day Frequency</dt>
                         <dd>{{escapeDayFrequency}}</dd>
-                        <!--<dt>Maturity Date</dt>-->
-                        <!--<dd>{{moFormat maturityDate "DD/MM/YYYY"}}</dd>-->
-                        <!--<dt>Tenor</dt>-->
-                        <!--<dd>{{tenor}}</dd>-->
+                        <dt>Maturity Date</dt>
+                        <dd>{{moFormat maturityDate "DD/MM/YYYY"}}</dd>
+                        <dt>Tenor</dt>
+                        <dd>{{tenor}}</dd>
                     </fieldset>
 
                     <fieldset>

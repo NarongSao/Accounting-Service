@@ -100,6 +100,7 @@ indexTmpl.events({
             clientId: FlowRouter.getParam('clientId'),
             loanAccId: rowData._id
         };
+
         FlowRouter.go('microfis.repayment', params);
     }
 });

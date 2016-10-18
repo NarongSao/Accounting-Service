@@ -153,7 +153,6 @@ let hooksObject = {
         this.done(null, insertDoc);
     },
     onSuccess: function (formType, result) {
-        console.log(result);
         formDataState.set(result);
     },
     onError: function (formType, error) {

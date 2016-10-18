@@ -23,7 +23,7 @@
 
             <!--Client Info-->
             <div class="text-bold pull-right">
-                {{#with disbursementDoc}}
+                {{#with loanAccDoc}}
                     <a href="#" class="js-display-disbursement">
                         {{clientId}} : {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</a>
                 {{/with}}
@@ -35,7 +35,7 @@
 
     <div class="box-body">
         <!--Summary-->
-        {{> Microfis_repaymentDetailSummary data=disbursementDoc}}
+        {{> Microfis_repaymentDetailSummary data=loanAccDoc}}
 
 
         <!--Detail-->
@@ -47,7 +47,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_schedule">
-                    {{#if subsReady "microfis.scheduleByDisbursementId"}}
+                    {{#if subsReady "microfis.scheduleByLoanAccId"}}
                         {{> Microfis_repaymentDetailSchedule data=scheduleDoc}}
                     {{else}}
                         {{> iconLoading}}
@@ -61,7 +61,7 @@
                 <!-- /.tab-pane -->
 
                 <!--<div class="tab-pane" id="tab_summary">-->
-                <!--{{> Microfis_repaymentDetailSummary data=disbursementDoc}}-->
+                <!--{{> Microfis_repaymentDetailSummary data=loanAccDoc}}-->
                 <!--</div>-->
                 <!-- /.tab-pane -->
 
@@ -98,7 +98,7 @@
         {{#each item in data}}
             <tr {{checkStatusAttr item}}>
                 <th>
-                    {{#if allowClosing}}
+                    {{#if item.allowClosing}}
                         <u>{{item.installment}}</u>
                     {{else}}
                         {{item.installment}}
@@ -125,20 +125,32 @@
         {{#with data}}
             <div class="col-md-6">
                 <dl class="dl-horizontal">
-                    <dt>Disbursement ID</dt>
-                    <dd>{{_id}}</dd>
+                    <dt>Loan Acc</dt>
+                    <dd>{{_id}} ({{accountType}})</dd>
                     <dt>Submit Date</dt>
                     <dd>{{moFormat submitDate "DD/MM/YYYY"}}</dd>
                     <dt>Disburse Date</dt>
                     <dd>{{moFormat disbursementDate "DD/MM/YYYY"}}</dd>
-                    <dt>Microfis Amount</dt>
-                    <dd>{{numFormat microfisAmount "0,0.00"}} {{currencyId}}</dd>
+                    <dt>Repaid Frequency</dt>
+                    <dd>{{repaidFrequency}} ({{paymentMethod}})</dd>
+                    <dt>Team</dt>
+                    <dd>{{term}}</dd>
+                    <dt>Loan Amount</dt>
+                    <dd>{{numFormat loanAmount "0,0.00"}} {{currencyId}}</dd>
                 </dl>
             </div>
             <div class="col-md-6">
                 <dl class="dl-horizontal">
-                    <dt>Payment Method</dt>
-                    <dd>{{paymentMethod}}</dd>
+                    <dt>Principal Installment</dt>
+                    <dd>
+                        Frequency: {{principalInstallment.frequency}},
+                        Type: {{principalInstallment.calculateType}}
+                        Amount: {{numFormat principalInstallment.amount "0,0.00"}}
+                    </dd>
+                    <dt>Interest Method</dt>
+                    <dd>{{interestMethod}}</dd>
+                    <dt>Interest Rate</dt>
+                    <dd>{{numFormat interestRate "0,0.00 %"}}</dd>
                     <dt>Credit Officer</dt>
                     <dd>{{creditOfficerDoc.khName}}</dd>
                 </dl>
@@ -169,8 +181,8 @@
                 <dl class="dl-horizontal">
                     <dt>ID</dt>
                     <dd>{{_id}}</dd>
-                    <dt>Disbursement Client ID</dt>
-                    <dd>{{disbursementClientId}}</dd>
+                    <dt>Loan Acc Client ID</dt>
+                    <dd>{{loanAccId}}</dd>
                     <dt>Repaid Date</dt>
                     <dd>{{moFormat repaidDate "DD/MM/YYYY HH:mm:ss"}}</dd>
                     <dt>Amount</dt>

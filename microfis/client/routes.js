@@ -253,7 +253,7 @@ MicrofisRoutes.route('/client', {
 import '../imports/ui/pages/client-acc.js';
 MicrofisRoutes.route('/client-acc/:clientId', {
     name: 'microfis.clientAcc',
-    title: 'Client Account',
+    title: 'Account',
     subscriptions: function (params, queryParams) {
         this.register('microfis.clientById', Meteor.subscribe('microfis.clientById', params.clientId));
     },
@@ -263,7 +263,7 @@ MicrofisRoutes.route('/client-acc/:clientId', {
     breadcrumb: {
         params: ['clientId'],
         //queryParams: ['show', 'color'],
-        title: 'Client Account',
+        title: 'Account',
         // icon: 'sitemap',
         parent: 'microfis.client'
     }
@@ -273,10 +273,9 @@ MicrofisRoutes.route('/client-acc/:clientId', {
 import '../imports/ui/pages/repayment.js';
 MicrofisRoutes.route('/repayment/:clientId/:loanAccId', {
     name: 'microfis.repayment',
-    title: 'Repayment',
+    title: 'Loan',
     subscriptions: function (params, queryParams) {
         this.register('microfis.loanAccById', Meteor.subscribe('microfis.loanAcc', {_id: params.loanAccId}));
-        // this.register('microfis.loanAccAggregateById', Meteor.subscribe('microfis.loanAccAggregateById', params.loanAccId));
         this.register('microfis.scheduleByLoanAccId', Meteor.subscribe('microfis.scheduleByLoanAccId', params.loanAccId));
     },
     action: function (params, queryParams) {
@@ -285,9 +284,9 @@ MicrofisRoutes.route('/repayment/:clientId/:loanAccId', {
     breadcrumb: {
         params: ['clientId', 'loanAccId'],
         //queryParams: ['show', 'color'],
-        title: 'Repayment',
+        title: 'Loan',
         // icon: 'sitemap',
-        parent: 'microfis.loanAcc'
+        parent: 'microfis.clientAcc'
     }
 });
 

@@ -6,7 +6,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
 
 RepaymentSchedule.before.insert(function (userId, doc) {
-    let prefix = `${doc.disbursementId}-`;
+    let prefix = `${doc.loanAccId}-`;
     doc._id = idGenerator2.genWithPrefix(RepaymentSchedule, {
         prefix: prefix,
         length: 4

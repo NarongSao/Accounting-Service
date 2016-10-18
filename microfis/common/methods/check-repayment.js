@@ -89,6 +89,7 @@ export let checkRepayment = new ValidatedMethod({
 
                 } // detail on repayment doc don't exist
 
+
                 // Check total principal & interest due
                 if (totalPrincipalInterestDue > 0) {
                     let numOfDayLate, penaltyDue = 0;
@@ -100,6 +101,8 @@ export let checkRepayment = new ValidatedMethod({
                         penaltyDue = penaltyDoc.amount;
 
                         if (penaltyDoc.calculateType == 'P') {
+                            console.log(totalPrincipalInterestDue);
+
                             penaltyDue = Calculate.interest.call({
                                 amount: totalPrincipalInterestDue,
                                 numOfDay: numOfDayLate,

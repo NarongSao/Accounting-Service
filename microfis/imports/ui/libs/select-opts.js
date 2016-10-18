@@ -37,8 +37,8 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
-        list.push({value: 'IL', label: 'Individual Microfis'});
-        list.push({value: 'GL', label: 'Group Microfis'});
+        list.push({value: 'IL', label: 'Individual Loan'});
+        list.push({value: 'GL', label: 'Group Loan'});
 
         return list;
     },
@@ -75,8 +75,8 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
-        list.push({value: 'D', label: 'Declining'});
-        list.push({value: 'F', label: 'Flat'});
+        list.push({value: 'Declining', label: 'Declining'});
+        list.push({value: 'Flat', label: 'Flat'});
 
         return list;
     },
@@ -137,8 +137,8 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
-        list.push({value: 'P', label: 'Parent'});
-        list.push({value: 'S', label: 'Spouse'});
+        list.push({value: 'Parent', label: 'Parent'});
+        list.push({value: 'Spouse', label: 'Spouse'});
 
         return list;
     },
@@ -178,9 +178,9 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
-        list.push({value: 'NO', label: 'NO'});
-        list.push({value: 'PN', label: 'PN'}); // Previous and Next
-        list.push({value: 'AN', label: 'AN'}); // Always Next
+        list.push({value: 'NO', label: 'None'});
+        list.push({value: 'PN', label: 'Previous & Next'}); // Previous and Next
+        list.push({value: 'AN', label: 'Always Next'}); // Always Next
 
         return list;
     },

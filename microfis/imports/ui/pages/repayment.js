@@ -94,7 +94,7 @@ indexTmpl.helpers({
     },
     scheduleDoc(){
         let loanAccId = FlowRouter.getParam('loanAccId');
-        let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId});
+        let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId}, {$sort: {installment: 1}});
 
         state.set('scheduleDoc', scheduleDoc.fetch());
 

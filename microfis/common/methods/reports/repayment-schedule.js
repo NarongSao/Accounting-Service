@@ -12,15 +12,15 @@ import {Disbursement} from '../../../imports/api/collections/loan-acc.js';
 import {RepaymentSchedule} from '../../../imports/api/collections/repayment-schedule.js';
 
 // Method
-import  {lookupDisbursement} from '../lookup-loan-acc.js';
+import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 
 export const repaymentScheduleReport = new ValidatedMethod({
     name: 'simplePos.repaymentScheduleReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
-        disbursementId: {type: String}
+        loanAccId: {type: String}
     }).validator(),
-    run({disbursementId}) {
+    run({loanAccId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
@@ -31,23 +31,23 @@ export const repaymentScheduleReport = new ValidatedMethod({
                 footer: {}
             };
 
-            let disbursementDoc = lookupDisbursement.call({_id: disbursementId});
+            let loanAccDoc = lookupLoanAcc.call({_id: loanAccId});
 
             /****** Title *****/
             data.title.company = Company.findOne();
-            data.title.branch = Branch.findOne(disbursementDoc.branchId);
+            data.title.branch = Branch.findOne(loanAccDoc.branchId);
 
             /****** Header *****/
-            data.header = disbursementDoc;
+            data.header = loanAccDoc;
 
             /****** Content *****/
             let content = RepaymentSchedule.aggregate(
                 [
-                    {$match: {disbursementId: disbursementId}},
+                    {$match: {loanAccId: loanAccId}},
                     {$sort: {index: 1}},
                     {
                         $group: {
-                            _id: {disbursementId: "$disbursementId", scheduleDate: "$scheduleDate"},
+                            _id: {loanAccId: "$loanAccId", scheduleDate: "$scheduleDate"},
                             sumNumOfDay: {$sum: "$numOfDay"},
                             sumPrincipalDue: {$sum: "$principalDue"},
                             sumInterestDue: {$sum: "$interestDue"},

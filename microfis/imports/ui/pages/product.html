@@ -55,7 +55,7 @@
                         {{> afQuickField name="exchange"}}
                     </div>
                     <div class="col-md-4">
-                        {{> afQuickField name="microfisAmount"}}
+                        {{> afQuickField name="loanAmount"}}
                     </div>
                 </div>
             </fieldset>
@@ -139,9 +139,9 @@
                     <dd>{{currencyId}}</dd>
                     <dt>Amount</dt>
                     <dd>
-                        Min: {{numFormat microfisAmount.min "$ 0,0.00"}} |
-                        <!--Default: {{numFormat microfisAmount.default "$ 0,0.00"}} |-->
-                        Max: {{numFormat microfisAmount.max "$ 0,0.00"}}
+                        Min: {{numFormat loanAmount.min "$ 0,0.00"}} |
+                        <!--Default: {{numFormat loanAmount.default "$ 0,0.00"}} |-->
+                        Max: {{numFormat loanAmount.max "$ 0,0.00"}}
                     </dd>
                     <dt>Exchange</dt>
                     <dd>

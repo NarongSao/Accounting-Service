@@ -5,18 +5,16 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
 
-Meteor.publish('microfis.scheduleByDisbursementId', function microfisSchedule(disbursementId) {
+Meteor.publish('microfis.scheduleByLoanAccId', function microfisScheduleByLoanAccId(loanAccId) {
     this.unblock();
-    
+
     new SimpleSchema({
-        disbursementId: {type: String}
-    }).validate({disbursementId});
+        loanAccId: {type: String}
+    }).validate({loanAccId});
 
-    if (this.userId) {
-        let data = RepaymentSchedule.find({disbursementId: disbursementId}, {$sort: {index: 1}});
-
-        return data;
+    if (!this.userId) {
+        return this.ready();
     }
 
-    return this.ready();
+    return RepaymentSchedule.find({loanAccId: loanAccId}, {$sort: {installment: 1}});
 });

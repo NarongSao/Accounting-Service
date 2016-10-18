@@ -136,8 +136,6 @@ showTmpl.onCreated(function () {
         lookupProduct.callPromise({
             _id: currentData._id
         }).then(function (result) {
-            console.log(result);
-
             self.productDoc.set(result);
         }).catch(function (err) {
             console.log(err.message);

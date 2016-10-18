@@ -24,8 +24,6 @@ if (Meteor.isClient) {
     Tracker.autorun(function () {
         let productDoc = Session.get('productDoc');
 
-        console.log(productDoc);
-
         if (productDoc) {
             // Product ID
             state.set('productId', productDoc._id);
