@@ -60,7 +60,7 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create-loan-acc' (event, instance) {
-        alertify.loanAccProduct(fa('plus', 'LoanAcc Product'), renderTemplate(productFormTmpl));
+        alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
         // $.blockUI();
@@ -72,7 +72,7 @@ indexTmpl.events({
             Session.set('productDoc', result);
 
             // Meteor.setTimeout(function () {
-            alertify.loanAcc(fa('pencil', 'LoanAcc'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
+            alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
 
             // $.unblockUI();
             // }, 100);
@@ -86,11 +86,11 @@ indexTmpl.events({
         destroyAction(
             LoanAcc,
             {_id: this._id},
-            {title: 'LoanAcc', itemTitle: this._id}
+            {title: 'Loan Account', itemTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.loanAccShow(fa('eye', 'LoanAcc'), renderTemplate(showTmpl, this));
+        alertify.loanAccShow(fa('eye', 'Loan Account'), renderTemplate(showTmpl, this));
     },
     'dblclick tbody > tr': function (event) {
         var dataTable = $(event.target).closest('table').DataTable();
@@ -151,7 +151,7 @@ AutoForm.hooks({
             this.done();
         },
         onSuccess: function (formType, result) {
-            alertify.loanAcc(fa('plus', 'LoanAcc'), renderTemplate(formTmpl)).maximize();
+            alertify.loanAcc(fa('plus', 'Loan Account'), renderTemplate(formTmpl)).maximize();
         },
         onError: function (formType, error) {
             displayError(error.message);

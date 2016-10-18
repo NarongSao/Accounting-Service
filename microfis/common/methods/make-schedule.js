@@ -91,9 +91,9 @@ MakeSchedule.declinig = new ValidatedMethod({
                     previousDate: previousLine.dueDate,
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
-                    escapeDayMethod: loanAccDoc.escapeDayMethod, // [6, 0]
+                    escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
                     escapeDayFrequency: loanAccDoc.escapeDayFrequency, // 1,2,3 ... times
-                    dayOfWeekToEscape: dayOfWeekToEscape, // [6, 0]
+                    dayOfWeekToEscape: dayOfWeekToEscape, // [6, 7] = Sat & Sun
                     holiday: holiday,
                     paymentMethod: loanAccDoc.paymentMethod,
                     dueDateOn: loanAccDoc.dueDateOn
@@ -198,39 +198,42 @@ function findDueDate(opts) {
     }
 
     // Check day escape
-    if (opts.escapeDayMethod == 'PN') { // Previous & Next
-        let escapeDay = isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
-        if (escapeDay) {
+    if (opts.escapeDayMethod == 'GR') { // General = Previous & Next
+        let inEscapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
+        if (inEscapeDay) {
             let getDoEscapeDay;
 
             // Check previous escape
-            getDoEscapeDay = doEscapeDayWithFrequency(dueDate, {
+            getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
                 escapeDayFrequency: -opts.escapeDayFrequency,
                 dayOfWeekToEscape: opts.dayOfWeekToEscape,
-                holiday: opts.holiday
+                holiday: opts.holiday,
+                paymentMethod: opts.paymentMethod
             });
 
             // Check next escape
-            if (moment(opts.previousDate).isBefore(getDoEscapeDay)) {
-                getDoEscapeDay = doEscapeDayWithFrequency(dueDate, {
+            if (moment(opts.previousDate).isBefore(getDoEscapeDay, 'day')) {
+                getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
                     escapeDayFrequency: opts.escapeDayFrequency,
                     dayOfWeekToEscape: opts.dayOfWeekToEscape,
-                    holiday: opts.holiday
+                    holiday: opts.holiday,
+                    paymentMethod: opts.paymentMethod
                 });
             }
 
             return getDoEscapeDay;
         }
     } else if (opts.escapeDayMethod == 'AN') { // Always Next
-        let escapeDay = isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
+        let escapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
         if (escapeDay) {
             let getDoEscapeDay;
 
             // Check always next
-            getDoEscapeDay = doEscapeDayWithFrequency(dueDate, {
+            getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
                 escapeDayFrequency: opts.escapeDayFrequency,
                 dayOfWeekToEscape: opts.dayOfWeekToEscape,
-                holiday: opts.holiday
+                holiday: opts.holiday,
+                paymentMethod: opts.paymentMethod
             });
 
             return getDoEscapeDay;
@@ -240,26 +243,61 @@ function findDueDate(opts) {
     return dueDate;
 }
 
-function doEscapeDayWithFrequency(date, opts) {
+function _doEscapeDayWithFrequency(date, opts) {
     check(date, Date);
 
     new SimpleSchema({
         escapeDayFrequency: {type: Number},
         dayOfWeekToEscape: {type: [Number]},
-        holiday: {type: [Object], blackbox: true}
+        holiday: {type: [Object], blackbox: true},
+        paymentMethod: {type: String}
     }).validate(opts);
+
+    let startOrEndOf;
+    switch (opts.paymentMethod) {
+        case 'D': // Daily
+            startOrEndOf = 'day';
+            break;
+        case 'W': // Weekly
+            startOrEndOf = 'isoWeek';
+            break;
+        case 'M': // Monthly
+            startOrEndOf = 'month';
+            break;
+        case 'Y': // Yearly
+            startOrEndOf = 'year';
+            break;
+    }
 
     let tmpEscapeDay, tmpDate = date;
 
     do {
         tmpDate = moment(tmpDate).add(opts.escapeDayFrequency, 'd').toDate();
-        tmpEscapeDay = isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+
+        // Check start of period
+        if (opts.escapeDayFrequency < 0) {
+            let startOf = moment(date).startOf(startOrEndOf);
+            if (moment(tmpDate).isBefore(startOf, 'day')) {
+                tmpEscapeDay = false;
+                tmpDate = date;
+            } else {
+                tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+            }
+        } else {
+            let endOf = moment(date).endOf(startOrEndOf);
+            if (moment(tmpDate).isAfter(endOf, 'day')) {
+                tmpEscapeDay = false;
+                tmpDate = date;
+            } else {
+                tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+            }
+        }
     } while (tmpEscapeDay);
 
     return tmpDate;
 }
 
-function isInEscapeDayAndDate(date, dayOfWeekToEscape, holiday) {
+function _isInEscapeDayAndDate(date, dayOfWeekToEscape, holiday) {
     check(date, Date);
     check(dayOfWeekToEscape, [Number]);
     check(holiday, [Object]);

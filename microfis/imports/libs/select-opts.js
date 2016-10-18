@@ -179,8 +179,8 @@ export const SelectOpts = {
             list.push({value: '', label: '(Select One)'});
         }
         list.push({value: 'NO', label: 'None'});
-        list.push({value: 'PN', label: 'Previous & Next'}); // Previous and Next
-        list.push({value: 'AN', label: 'Always Next'}); // Always Next
+        list.push({value: 'GR', label: 'General'}); // Previous and Next
+        list.push({value: 'AN', label: 'Always Next'}); // Always next
 
         return list;
     },
