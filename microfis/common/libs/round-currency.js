@@ -1,4 +1,5 @@
 import {check} from 'meteor/check';
+import math from 'mathjs';
 
 export const roundCurrency = function (amount, currencyId) {
     check(amount, Number);

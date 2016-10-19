@@ -30,6 +30,14 @@
                         <i class="fa fa-circle-o"></i> <span>Credit Officer</span>
                     </a>
                 </li>
+
+                <!--Exchange-->
+                <li class="{{isActiveRoute name='core.exchange'}}">
+                    <a href="{{pathFor 'core.exchange'}}">
+                        <i class="fa fa-circle-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+                    </a>
+                </li>
+
             </ul>
         </li>
     {{/if}}
@@ -64,11 +72,7 @@
 
             <ul class="treeview-menu" style="display: none">
                 <!--Loan-->
-                <li class="{{isActiveRoute name='core.exchange'}}">
-                    <a href="{{pathFor 'core.exchange'}}">
-                        <i class="fa fa-circle-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
-                    </a>
-                </li>
+                <li class="dropdown-header">Loan</li>
                 <li class="{{isActiveRoute name='microfis.product'}}">
                     <a href="{{pathFor 'microfis.product'}}">
                         <i class="fa fa-circle-o"></i> <span>Product</span>

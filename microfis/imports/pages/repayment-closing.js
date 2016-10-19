@@ -101,6 +101,11 @@ formTmpl.onCreated(function () {
                     Session.set('maxAmountPaid', maxAmountPaid.toNumber());
                 }
 
+                // Set last repayment
+                if (result.lastRepayment) {
+                    state.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                }
+
                 Meteor.setTimeout(()=> {
                     $.unblockUI();
                 }, 200);
@@ -113,14 +118,6 @@ formTmpl.onCreated(function () {
             state.set('checkRepayment', null);
         }
     });
-
-    // Get last repayment
-    let lastRepaid = Repayment.findOne({
-        loanAccId: loanAccDoc._id
-    }, {sort: {_id: -1}});
-    if (lastRepaid) {
-        state.set('lastTransactionDate', lastRepaid.repaidDate);
-    }
 
 });
 

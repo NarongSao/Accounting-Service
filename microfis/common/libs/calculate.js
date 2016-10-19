@@ -53,6 +53,9 @@ Calculate.interest = new ValidatedMethod({
             dayInMethod = opts.dayInMethod;
         } else {
             switch (opts.method) {
+                case 'D': // Daily
+                    dayInMethod = 1;
+                    break;
                 case 'W': // Weekly
                     dayInMethod = setting.dayOfRates.weekly;
                     break;
@@ -65,7 +68,6 @@ Calculate.interest = new ValidatedMethod({
             }
         }
         ratePerDay = (opts.interestRate / 100) / dayInMethod;
-
         interest = opts.amount * opts.numOfDay * ratePerDay;
 
         // Check currency

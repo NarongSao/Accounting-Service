@@ -107,7 +107,7 @@
 
             <div class="col-md-6">
                 {{#autoForm collection=collection id="Microfis_repaymentClosingForm" type="insert"}}
-                    {{> afQuickField type="hidden" name="disbursementId" value=(param "disbursementId") readonly=true}}
+                    {{> afQuickField type="hidden" name="loanAccId" value=(param "loanAccId") readonly=true}}
                     {{> afQuickField name="repaidDate"}}
                     {{> afQuickField name="amountType"}}
                     {{#with defaultValue}}

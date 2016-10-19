@@ -10,15 +10,16 @@ import BigNumber from 'bignumber.js';
 import {round2} from 'meteor/theara:round2';
 
 // Lib
-import {roundCurrency} from '../libs/round-currency.js';
+import {roundCurrency} from '../libs/round-currency';
 
 // Method
-import {Calculate} from '../libs/calculate.js';
-import {lookupLoanAcc} from './lookup-loan-acc.js';
+import {Calculate} from '../libs/calculate';
+import {lookupLoanAcc} from './lookup-loan-acc';
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc';
-import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule';
+import {Repayment} from '../../common/collections/repayment';
 
 export let checkRepayment = new ValidatedMethod({
     name: 'microfis.checkRepayment',
@@ -101,8 +102,6 @@ export let checkRepayment = new ValidatedMethod({
                         penaltyDue = penaltyDoc.amount;
 
                         if (penaltyDoc.calculateType == 'P') {
-                            console.log(totalPrincipalInterestDue);
-
                             penaltyDue = Calculate.interest.call({
                                 amount: totalPrincipalInterestDue,
                                 numOfDay: numOfDayLate,
@@ -290,13 +289,11 @@ export let checkRepayment = new ValidatedMethod({
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
                 if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing) {
-                    console.log('hi due');
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             } else {
                 let checkInstallmentTermPrevious = totalSchedulePrevious.installment.to && totalSchedulePrevious.installment.to < loanAccDoc.installmentAllowClosing;
                 if (!totalSchedulePrevious.installment.to || checkInstallmentTermPrevious) {
-                    console.log('hi pre');
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             }
@@ -305,6 +302,9 @@ export let checkRepayment = new ValidatedMethod({
             closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty, _round.precision, _round.type);
 
 
+            // Get last repayment
+            let lastRepayment = Repayment.findOne({loanAccId: loanAccId}, {$sort: {_id: -1}});
+
             return {
                 scheduleDue: scheduleDue,
                 totalScheduleDue: totalScheduleDue,
@@ -312,7 +312,8 @@ export let checkRepayment = new ValidatedMethod({
                 totalSchedulePrevious: totalSchedulePrevious,
                 scheduleNext: scheduleNext,
                 totalScheduleNext: totalScheduleNext,
-                closing: closing
+                closing: closing,
+                lastRepayment: lastRepayment
             };
         }
     }

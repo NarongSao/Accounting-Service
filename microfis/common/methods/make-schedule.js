@@ -208,16 +208,18 @@ function findDueDate(opts) {
                 escapeDayFrequency: -opts.escapeDayFrequency,
                 dayOfWeekToEscape: opts.dayOfWeekToEscape,
                 holiday: opts.holiday,
-                paymentMethod: opts.paymentMethod
+                paymentMethod: opts.paymentMethod,
+                escapeDayMethod: opts.escapeDayMethod
             });
 
             // Check next escape
-            if (moment(opts.previousDate).isBefore(getDoEscapeDay, 'day')) {
+            if (moment(dueDate).isSame(getDoEscapeDay, 'day')) {
                 getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
                     escapeDayFrequency: opts.escapeDayFrequency,
                     dayOfWeekToEscape: opts.dayOfWeekToEscape,
                     holiday: opts.holiday,
-                    paymentMethod: opts.paymentMethod
+                    paymentMethod: opts.paymentMethod,
+                    escapeDayMethod: opts.escapeDayMethod
                 });
             }
 
@@ -233,7 +235,8 @@ function findDueDate(opts) {
                 escapeDayFrequency: opts.escapeDayFrequency,
                 dayOfWeekToEscape: opts.dayOfWeekToEscape,
                 holiday: opts.holiday,
-                paymentMethod: opts.paymentMethod
+                paymentMethod: opts.paymentMethod,
+                escapeDayMethod: opts.escapeDayMethod
             });
 
             return getDoEscapeDay;
@@ -250,7 +253,8 @@ function _doEscapeDayWithFrequency(date, opts) {
         escapeDayFrequency: {type: Number},
         dayOfWeekToEscape: {type: [Number]},
         holiday: {type: [Object], blackbox: true},
-        paymentMethod: {type: String}
+        paymentMethod: {type: String},
+        escapeDayMethod: {type: String}
     }).validate(opts);
 
     let startOrEndOf;
@@ -284,11 +288,16 @@ function _doEscapeDayWithFrequency(date, opts) {
                 tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
             }
         } else {
-            let endOf = moment(date).endOf(startOrEndOf);
-            if (moment(tmpDate).isAfter(endOf, 'day')) {
-                tmpEscapeDay = false;
-                tmpDate = date;
-            } else {
+            // Check escapeDayMethod = GR || AN
+            if (opts.escapeDayMethod == 'GR') {
+                let endOf = moment(date).endOf(startOrEndOf);
+                if (moment(tmpDate).isAfter(endOf, 'day')) {
+                    tmpEscapeDay = false;
+                    tmpDate = date;
+                } else {
+                    tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+                }
+            } else { // AN
                 tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
             }
         }
