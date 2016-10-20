@@ -66,9 +66,8 @@ indexTmpl.onCreated(function () {
         scheduleDoc: null
     });
 
+    let loanAccId = FlowRouter.getParam('loanAccId');
     this.autorun(function () {
-        let loanAccId = FlowRouter.getParam('loanAccId');
-
         if (loanAccId) {
             $.blockUI();
 
@@ -85,7 +84,14 @@ indexTmpl.onCreated(function () {
                 console.log(err.message);
             });
         }
-    })
+    });
+
+    // Reactive table filter
+    this.filter = new ReactiveTable.Filter('microfis.repaymentByLoanAcc', ['loanAccId']);
+    this.autorun(()=> {
+        this.filter.set(loanAccId);
+    });
+
 });
 
 indexTmpl.helpers({
@@ -107,6 +113,78 @@ indexTmpl.helpers({
             selector: selector
         };
     },
+    tableSettings(){
+        reactiveTableSettings.collection = 'microfis.reactiveTable.repayment';
+        reactiveTableSettings.filters = ['microfis.repaymentByLoanAcc'];
+        reactiveTableSettings.fields = [
+            {
+                key: '_id',
+                label: 'ID',
+                sortOrder: 0,
+                sortDirection: 'desc',
+                hidden: true
+            },
+            {
+                key: 'repaidDate',
+                label: 'Paid Date',
+                fn (value, object, key) {
+                    return moment(value).format('DD/MM/YYYY');
+                }
+            },
+            {key: 'type', label: 'Type'},
+            {
+                key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestDue',
+                label: 'Amount Due',
+                fn (value, object, key) {
+                    return numeral(value).format('0,0.00');
+                }
+            },
+            {
+                key: 'detailDoc.totalSchedulePaid.penaltyDue',
+                label: 'Penalty Due',
+                fn (value, object, key) {
+                    return numeral(value).format('0,0.00');
+                }
+            },
+            {
+                key: 'amountPaid',
+                label: 'Amount Paid',
+                fn (value, object, key) {
+                    return numeral(value).format('0,0.00');
+                }
+            },
+            {
+                key: 'penaltyPaid',
+                label: 'Penalty Paid',
+                fn (value, object, key) {
+                    return numeral(value).format('0,0.00');
+                }
+            },
+            {
+                key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestBal',
+                label: 'Overdue Amount',
+                fn (value, object, key) {
+                    if (value > 0) {
+                        return Spacebars.SafeString('<span class="text-red">' + numeral(value).format('0,0.00') + '</span>');
+                    }
+                    return numeral(value).format('0,0.00');
+                }
+            },
+            {
+                key: '_id',
+                label(){
+                    return fa('bars', '', true);
+                },
+                headerClass: function () {
+                    let css = 'text-center col-action';
+                    return css;
+                },
+                tmpl: actionTmpl, sortable: false
+            }
+        ];
+
+        return reactiveTableSettings;
+    }
 });
 
 indexTmpl.events({
@@ -119,15 +197,10 @@ indexTmpl.events({
         alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
     },
     'click .js-create-reschedule' (event, instance) {
-        //     alertify.repayment(fa('pencil', 'Repayment'), renderTemplate(generalFormTmpl, this));
     },
     'click .js-create-waive-interest' (event, instance) {
-        let data = {loanAccDoc: state.get('loanAccDoc'),};
-        alertify.repayment(fa('plus', 'Repayment Waive Interest'), renderTemplate(waiveInteFormTmpl, data));
     },
     'click .js-create-write-off' (event, instance) {
-        let data = {loanAccDoc: state.get('loanAccDoc'),};
-        alertify.repayment(fa('plus', 'Repayment Waive Interest'), renderTemplate(waiveInteFormTmpl, data));
     },
     'click .js-create-close' (event, instance) {
         let data = {

@@ -183,7 +183,7 @@ let hooksObject = {
 
             // Check have current due amount
             if (checkRepayment && checkRepayment.scheduleDue.length > 0) {
-                displayError("Have current due amount");
+                displayError("Have current due amount, so can't prepay");
                 return false;
             }
 

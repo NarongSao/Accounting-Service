@@ -11,9 +11,9 @@
             <button type="button" class="btn btn-primary js-create-reschedule">
                 <i class="fa fa-refresh"></i> Reschedule
             </button>
-            <button type="button" class="btn btn-warning js-create-waive-interest">
-                <i class="fa fa-trash-o"></i> Waive Interest
-            </button>
+            <!--<button type="button" class="btn btn-warning js-create-waive-interest">-->
+                <!--<i class="fa fa-trash-o"></i> Waive Interest-->
+            <!--</button>-->
             <button type="button" class="btn btn-warning js-create-write-off">
                 <i class="fa fa-trash-o"></i> Write Off
             </button>
@@ -56,7 +56,8 @@
                 <!-- /.tab-pane -->
 
                 <div class="tab-pane" id="tab_transaction">
-                    {{> Microfis_repaymentDetailTransaction data=tabularTable}}
+                    <!--{{> Microfis_repaymentDetailTransaction data=tabularTable}}-->
+                    {{> Microfis_repaymentDetailTransaction data=tableSettings}}
                 </div>
                 <!-- /.tab-pane -->
 
@@ -161,12 +162,13 @@
 
 <!--Index Transaction-->
 <template name="Microfis_repaymentDetailTransaction">
-    {{> tabular table=data.tabularTable selector=data.selector class="table table-striped table-bordered table-condensed"}}
+    <!--{{> tabular table=data.tabularTable selector=data.selector class="table table-striped table-bordered table-condensed"}}-->
+    {{> reactiveTable settings=data}}
 </template>
 
 <!--Action-->
 <template name="Microfis_repaymentAction">
-    {{#columnAction}}
+    {{#columnAction align="right"}}
         <!--<li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>-->
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
         <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
