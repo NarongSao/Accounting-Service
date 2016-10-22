@@ -47,14 +47,14 @@ indexTmpl.helpers({
                 sortOrder: 0,
                 sortDirection: 'desc',
                 fn (value, object, key) {
-                    return moment(value).format('DD/MM/YYYY');
+                    return moment(value).format('ddd DD/MM/YYYY');
                 }
             },
             {
                 key: 'to',
                 label: 'To',
                 fn (value, object, key) {
-                    return moment(value).format('DD/MM/YYYY');
+                    return moment(value).format('ddd DD/MM/YYYY');
                 }
             },
             {key: 'name', label: 'Name'},

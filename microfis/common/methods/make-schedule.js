@@ -187,8 +187,8 @@ function findDueDate(opts) {
         }
     }).validate(opts);
 
-    // let dueDate = moment(opts.previousDate).add(opts.repaidFrequency, opts.addingTime).toDate();
-    let dueDate = moment(opts.disbursementDate).add(opts.repaidFrequency * opts.installment, opts.addingTime).toDate();
+    let dueDate = moment(opts.previousDate).add(opts.repaidFrequency, opts.addingTime).toDate();
+    // let dueDate = moment(opts.disbursementDate).add(opts.repaidFrequency * opts.installment, opts.addingTime).toDate();
 
     // Check due date on
     if (opts.paymentMethod == 'W') {
@@ -274,13 +274,14 @@ function _doEscapeDayWithFrequency(date, opts) {
     }
 
     let tmpEscapeDay, tmpDate = date;
+    let startOf = moment(date).startOf(startOrEndOf);
+    let endOf = moment(date).endOf(startOrEndOf);
 
     do {
         tmpDate = moment(tmpDate).add(opts.escapeDayFrequency, 'd').toDate();
 
         // Check start of period
         if (opts.escapeDayFrequency < 0) {
-            let startOf = moment(date).startOf(startOrEndOf);
             if (moment(tmpDate).isBefore(startOf, 'day')) {
                 tmpEscapeDay = false;
                 tmpDate = date;
@@ -290,7 +291,6 @@ function _doEscapeDayWithFrequency(date, opts) {
         } else {
             // Check escapeDayMethod = GR || AN
             if (opts.escapeDayMethod == 'GR') {
-                let endOf = moment(date).endOf(startOrEndOf);
                 if (moment(tmpDate).isAfter(endOf, 'day')) {
                     tmpEscapeDay = false;
                     tmpDate = date;
