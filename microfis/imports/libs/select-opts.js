@@ -75,6 +75,7 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
+        list.push({value: 'Annuity', label: 'Annuity'});
         list.push({value: 'Declining', label: 'Declining'});
         list.push({value: 'Flat', label: 'Flat'});
 

@@ -147,8 +147,134 @@ MakeSchedule.declinig = new ValidatedMethod({
     }
 });
 
+MakeSchedule.annuity = new ValidatedMethod({
+    name: 'microfis.makeSchedule.annuity',
+    mixins: [CallPromiseMixin],
+    validate: new SimpleSchema({
+        loanAccId: {
+            type: String
+        }
+    }).validator(),
+    run({loanAccId}) {
+        if (!this.isSimulation) {
+            Meteor._sleepForMs(200);
 
-// Functions
+            // Get loan acc
+            let setting = Setting.findOne(),
+                dayOfWeekToEscape = setting.dayOfWeekToEscape,
+                holiday = Holiday.find().fetch(),
+                loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
+                principalInstallmentDoc = loanAccDoc.principalInstallment;
+
+            // Declare default value
+            let schedules = [];
+            let principalInstallmentAmountPerLine = principalInstallmentDoc.amount;
+
+            // Check principal installment calculate type
+            if (principalInstallmentDoc.calculateType == 'P') {
+                let numOfPrincipalInstallmentFrequency = _.ceil(loanAccDoc.term / principalInstallmentDoc.frequency);
+                principalInstallmentAmountPerLine = (loanAccDoc.loanAmount / numOfPrincipalInstallmentFrequency) * (principalInstallmentDoc.amount / 100);
+                principalInstallmentAmountPerLine = roundCurrency(principalInstallmentAmountPerLine, loanAccDoc.currencyId);
+            }
+
+            // Config moment addingTime for next due date
+            let addingTime;
+            switch (loanAccDoc.paymentMethod) {
+                case 'D': // Daily
+                    addingTime = 'd';
+                    break;
+                case 'W': // Weekly
+                    addingTime = 'w';
+                    break;
+                case 'M': // Monthly
+                    addingTime = 'M';
+                    break;
+                case 'Y': // Yearly
+                    addingTime = 'y';
+                    break;
+            }
+
+            // Schedule for first line
+            schedules.push({
+                installment: 0,
+                dueDate: loanAccDoc.disbursementDate,
+                numOfDay: 0,
+                principalDue: 0,
+                interestDue: 0,
+                totalDue: 0,
+                balance: loanAccDoc.loanAmount,
+                allowClosing: false
+            });
+
+            // Schedule loop
+            for (let i = 1; i <= loanAccDoc.term; i++) {
+                let previousLine, dueDate, numOfDay, principalDue = 0, interestDue, totalDue;
+
+                previousLine = schedules[i - 1];
+
+                dueDate = findDueDate({
+                    installment: i,
+                    disbursementDate: loanAccDoc.disbursementDate,
+                    previousDate: previousLine.dueDate,
+                    repaidFrequency: loanAccDoc.repaidFrequency,
+                    addingTime: addingTime,
+                    escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
+                    escapeDayFrequency: loanAccDoc.escapeDayFrequency, // 1,2,3 ... times
+                    dayOfWeekToEscape: dayOfWeekToEscape, // [6, 7] = Sat & Sun
+                    holiday: holiday,
+                    paymentMethod: loanAccDoc.paymentMethod,
+                    dueDateOn: loanAccDoc.dueDateOn
+                });
+
+                // Check first repayment date
+                if (i == 1 && loanAccDoc.firstRepaymentDate) {
+                    dueDate = loanAccDoc.firstRepaymentDate;
+                }
+                numOfDay = moment(dueDate).diff(previousLine.dueDate, 'days');
+
+                // Check principal due per line
+                if (i % principalInstallmentDoc.frequency == 0) {
+                    principalDue = principalInstallmentAmountPerLine;
+                }
+
+                // Check principal due for last line
+                if (i == loanAccDoc.term) {
+                    principalDue = previousLine.balance;
+                }
+
+                interestDue = Calculate.interest.call({
+                    amount: previousLine.balance,
+                    numOfDay: numOfDay,
+                    interestRate: loanAccDoc.interestRate,
+                    method: loanAccDoc.paymentMethod,
+                    currencyId: loanAccDoc.currencyId
+                });
+                totalDue = roundCurrency(principalDue + interestDue, loanAccDoc.currencyId);
+                balane = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
+
+                // Check installment can close without penalty
+                let allowClosing = false;
+                if (i >= loanAccDoc.installmentAllowClosing) {
+                    allowClosing = true;
+                }
+                schedules.push({
+                    installment: i,
+                    dueDate: dueDate,
+                    numOfDay: numOfDay,
+                    principalDue: principalDue,
+                    interestDue: interestDue,
+                    totalDue: totalDue,
+                    balance: balane,
+                    allowClosing: allowClosing
+                });
+            }
+
+            return schedules;
+        }
+    }
+});
+
+/**************** Functions *********************/
 function findDueDate(opts) {
     new SimpleSchema({
         installment: {
