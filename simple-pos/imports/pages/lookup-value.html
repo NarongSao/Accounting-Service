@@ -35,12 +35,17 @@
         {{#if Template.subscriptionsReady}}
             {{#autoForm collection=collection id="SimplePos_lookupValueForm" doc=data.doc type=data.formType}}
                 <div class="row">
-                    <div class="col-md-12">
-                        {{> afQuickField name='name'}}
+                    <div class="col-md-3">
                         {{> afQuickField name='private'}}
                     </div>
+                    <div class="col-md-9">
+                        {{> afQuickField name='name'}}
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-12">
-                        {{> afArrayField name="options" id="options" template="simplePosCustomArrayFieldForLookupOptions" subtemplate="SimplePos_customObjectFieldForLookupOptions"}}
+                        {{> afArrayField name="options" id="options" template="MLM_customArrayFieldForLookupOptions" subtemplate="MLM_customObjectFieldForLookupOptions"}}
                     </div>
                 </div>
 
@@ -53,7 +58,7 @@
 </template>
 
 <!------------Custom options array field-------------------->
-<template name="afArrayField_simplePosCustomArrayFieldForLookupOptions">
+<template name="afArrayField_SimplePos_customArrayFieldForLookupOptions">
     <div class="panel panel-default">
         <div class="panel-heading">{{afFieldLabelText name=this.atts.name}}</div>
         <div class="panel-body">
