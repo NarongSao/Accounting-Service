@@ -187,7 +187,7 @@ let hooksObject = {
             let loanAccDoc = state.get('loanAccDoc'),
                 checkRepayment = state.get('checkRepayment');
 
-            doc.type = 'waive-interest';
+            doc.type = 'Waive-interest';
 
             // Check to payment
             let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid > 0;

@@ -50,7 +50,18 @@ tabularOpts.columns = [
             return doc.currencyId + ' ' + numeral(val).format('0,0.00');
         }
     },
+    {
+        title: "Status", data: "status", render(val, type, doc){
+        if (val == "Close") {
+            return `<span class="badge bg-orange-active"><i class="fa fa-heart-o"></i> ${val} </span>`;
+        }
+        return `<span class="badge bg-teal-active"><i class="fa fa-heart"></i> ${val} </span>`;
+    }
+    },
+    {title: 'Action', tmpl: Meteor.isClient && Template.Microfis_loanAccReStructureAction}
+
 ];
 tabularOpts.extraFields = ['currencyId'];
+tabularOpts.columnDefs = [{"width": "12px", targets: 0}, {"width": "20px", targets: 6},{"width": "25px", targets: 7}];
 
 export const LoanAccTabular = new Tabular.Table(tabularOpts);

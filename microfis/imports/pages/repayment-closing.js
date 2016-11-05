@@ -186,10 +186,18 @@ formTmpl.onDestroyed(function () {
 let hooksObject = {
     before: {
         insert: function (doc) {
+            debugger;
             let loanAccDoc = state.get('loanAccDoc'),
                 checkRepayment = state.get('checkRepayment');
 
-            doc.type = 'close';
+            doc.type = 'Close';
+
+            if(loanAccDoc.status=="ReStructure"){
+                alertify.error("You already Restructure");
+                return false;
+            }
+
+
 
             // Check to payment
             let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;

@@ -1,47 +1,49 @@
-import {Template} from 'meteor/templating';
-import {Tracker} from 'meteor/tracker';
-import {ReactiveDict} from 'meteor/reactive-dict';
-import {AutoForm} from 'meteor/aldeed:autoform';
-import {alertify} from 'meteor/ovcharik:alertifyjs';
-import {fa} from 'meteor/theara:fa-helpers';
-import {ReactiveTable} from 'meteor/aslagle:reactive-table';
-import {_} from 'meteor/erasaur:meteor-lodash';
+import { Template } from 'meteor/templating';
+import { Tracker } from 'meteor/tracker';
+import { ReactiveDict } from 'meteor/reactive-dict';
+import { AutoForm } from 'meteor/aldeed:autoform';
+import { alertify } from 'meteor/ovcharik:alertifyjs';
+import { fa } from 'meteor/theara:fa-helpers';
+import { ReactiveTable } from 'meteor/aslagle:reactive-table';
+import { _ } from 'meteor/erasaur:meteor-lodash';
 import BigNumber from 'bignumber.js';
-import {round2} from 'meteor/theara:round2';
+import { round2 } from 'meteor/theara:round2';
+import math from 'mathjs';
 
 // Lib
-import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
-import {renderTemplate} from '../../../core/client/libs/render-template.js';
-import {destroyAction} from '../../../core/client/libs/destroy-action.js';
-import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
-import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
-import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
-import {roundCurrency} from '../../common/libs/round-currency.js';
+import { createNewAlertify } from '../../../core/client/libs/create-new-alertify.js';
+import { renderTemplate } from '../../../core/client/libs/render-template.js';
+import { destroyAction } from '../../../core/client/libs/destroy-action.js';
+import { displaySuccess, displayError } from '../../../core/client/libs/display-alert.js';
+import { reactiveTableSettings } from '../../../core/client/libs/reactive-table-settings.js';
+import { __ } from '../../../core/common/libs/tapi18n-callback-helper.js';
+import { roundCurrency } from '../../common/libs/round-currency.js';
 
 // Component
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
-// Method
-import {checkRepayment} from '../../common/methods/check-repayment';
-
 // API Lib
-import {MakeRepayment} from '../../common/libs/make-repayment.js';
+import { MakeRepayment } from '../../common/libs/make-repayment.js';
+import { Calculate } from '../../common/libs/calculate.js';
+
+// Method
+import { checkRepayment } from '../../common/methods/check-repayment';
 
 // Collection
-import {Repayment} from '../../common/collections/repayment.js';
+import { Repayment } from '../../common/collections/repayment.js';
 
 // Page
-import './repayment-prepay.html';
+import './repayment-principal-installment.html';
 
 // Declare template
-let formTmpl = Template.Microfis_repaymentPrepayForm;
+let formTmpl = Template.Microfis_principalInstallmentForm;
 
 // State
 let state = new ReactiveDict();
 
-//-------- Form ------------
+//-------- General Form ------------
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
         loanAccDoc = currentData.loanAccDoc;
@@ -83,23 +85,22 @@ formTmpl.onCreated(function () {
                 loanAccId: loanAccDoc._id,
                 checkDate: repaidDate
             }).then(function (result) {
-                console.log(result);
-
                 // Set state
                 state.set('checkRepayment', result);
 
                 // Set max amount on simple schema
-                if (result && result.totalScheduleNext) {
-                    let maxAmountPaid = result.totalScheduleNext.totalPrincipalInterestDue - Session.get('minAmountPaid');
-                    Session.set('maxAmountPaid', maxAmountPaid);
+                let maxAmountPaid = new BigNumber(0);
+                if (result && result.principalInstallment) {
+                    maxAmountPaid = maxAmountPaid.plus(result.principalInstallment.totalDue);
+                    Session.set('maxPenaltyPaid', result.principalInstallment.penaltyDue);
                 }
 
-                // Set last repayment
-                if (result.lastRepayment) {
-                    state.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                if (maxAmountPaid.greaterThan(0)) {
+                    Session.set('maxAmountPaid', maxAmountPaid.toNumber());
                 }
 
-                Meteor.setTimeout(()=> {
+
+                Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
 
@@ -128,32 +129,31 @@ formTmpl.onRendered(function () {
 });
 
 formTmpl.helpers({
-    collection(){
+    collection() {
         return Repayment;
     },
-    checkRepayment(){
+    checkRepayment() {
         return state.get('checkRepayment');
     },
-    defaultValue(){
-        // let totalDue = Session.get('maxAmountPaid'),
-        let totalDue = 0,
-            totalPenalty = 0,
+    defaultValue() {
+        let totalDue = new BigNumber(0),
+            totalPenalty = new BigNumber(0),
             checkRepayment = state.get('checkRepayment');
 
-        if (checkRepayment && checkRepayment.totalScheduleDue) {
-            totalDue = checkRepayment.totalScheduleDue.totalPrincipalInterestDue;
-            totalPenalty = checkRepayment.totalScheduleDue.penaltyDue;
+        if (checkRepayment && checkRepayment.principalInstallment) {
+            totalDue = totalDue.plus(checkRepayment.principalInstallment.principalReminder);
+            totalPenalty = totalPenalty.plus(checkRepayment.principalInstallment.interestAddition);
         }
 
-        return {totalDue, totalPenalty};
+        return { totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber() };
     },
-    jsonViewData(data){
+    jsonViewData(data) {
         if (data) {
             if (_.isArray(data) && data.length > 0) {
-                _.forEach(data, (o, k)=> {
+                _.forEach(data, (o, k) => {
                     o.scheduleDate = moment(o.scheduleDate).format('DD/MM/YYY');
                     o.dueDate = moment(o.dueDate).format('DD/MM/YYY');
-                    delete  o.repaymentDoc;
+                    delete o.repaymentDoc;
                     data[k] = o;
                 })
             }
@@ -161,8 +161,8 @@ formTmpl.helpers({
             return data;
         }
     },
-    jsonViewOpts(){
-        return {collapsed: true};
+    jsonViewOpts() {
+        return { collapsed: true };
     }
 });
 
@@ -176,10 +176,13 @@ formTmpl.onDestroyed(function () {
 let hooksObject = {
     before: {
         insert: function (doc) {
-            let loanAccDoc = state.get('loanAccDoc'),
-                checkRepayment = state.get('checkRepayment');
 
-            doc.type = 'Prepay';
+            let loanAccDoc=state.get('loanAccDoc');
+
+            doc.type = 'ReSchedule';
+            doc.totalPaid = doc.amountPaid + doc.penaltyPaid;
+
+            let checkRepayment = state.get('checkRepayment');
 
             if(loanAccDoc.status=="ReStructure"){
                 alertify.error("You already Restructure");
@@ -188,41 +191,24 @@ let hooksObject = {
 
             // Check have current due amount
             if (checkRepayment && checkRepayment.scheduleDue.length > 0) {
-                displayError("Have current due amount, so can't prepay");
+                displayError("Have current due amount, so can't make principal installment");
                 return false;
             }
 
-            if(checkRepayment.balanceUnPaid -doc.loanAmount<=0){
-                alertify.error("You should go to Closing");
-                return false;
-            }
-
-            // Check to payment
-            let checkBeforePayment = checkRepayment && checkRepayment.scheduleNext.length > 0 && doc.repaidDate && doc.amountPaid > 0;
-            if (checkBeforePayment) {
-                let makeRepayment = MakeRepayment.prepay({
-                    repaidDate: doc.repaidDate,
-                    amountPaid: doc.amountPaid,
-                    scheduleNext: checkRepayment.scheduleNext
-                });
-
-                console.log(makeRepayment);
-
-                doc.totalPaid = doc.amountPaid;
-
-                doc.detailDoc = makeRepayment;
-                doc.detailDoc.scheduleNext = checkRepayment.scheduleNext;
-            }
+            doc.detailDoc = {};
+            doc.totalPaid = doc.amountPaid;
+            doc.detailDoc.scheduleNext = checkRepayment.scheduleNext;
+            doc.detailDoc.principalInstallment = checkRepayment.principalInstallment;
 
             this.result(doc);
         }
     },
-    onSuccess (formType, result) {
+    onSuccess(formType, result) {
         alertify.repayment().close();
         displaySuccess();
     },
-    onError (formType, error) {
+    onError(formType, error) {
         displayError(error.message);
     }
 };
-AutoForm.addHooks(['Microfis_repaymentPrepayForm'], hooksObject);
+AutoForm.addHooks(['Microfis_principalInstallmentForm'], hooksObject);

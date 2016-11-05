@@ -1,19 +1,19 @@
-import {Template} from 'meteor/templating';
-import {Tracker} from 'meteor/tracker';
-import {ReactiveDict} from 'meteor/reactive-dict';
-import {AutoForm} from 'meteor/aldeed:autoform';
-import {alertify} from 'meteor/ovcharik:alertifyjs';
-import {fa} from 'meteor/theara:fa-helpers';
-import {ReactiveTable} from 'meteor/aslagle:reactive-table';
-import {_} from 'meteor/erasaur:meteor-lodash';
+import { Template } from 'meteor/templating';
+import { Tracker } from 'meteor/tracker';
+import { ReactiveDict } from 'meteor/reactive-dict';
+import { AutoForm } from 'meteor/aldeed:autoform';
+import { alertify } from 'meteor/ovcharik:alertifyjs';
+import { fa } from 'meteor/theara:fa-helpers';
+import { ReactiveTable } from 'meteor/aslagle:reactive-table';
+import { _ } from 'meteor/erasaur:meteor-lodash';
 
 // Lib
-import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
-import {renderTemplate} from '../../../core/client/libs/render-template.js';
-import {destroyAction} from '../../../core/client/libs/destroy-action.js';
-import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
-import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
-import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
+import { createNewAlertify } from '../../../core/client/libs/create-new-alertify.js';
+import { renderTemplate } from '../../../core/client/libs/render-template.js';
+import { destroyAction } from '../../../core/client/libs/destroy-action.js';
+import { displaySuccess, displayError } from '../../../core/client/libs/display-alert.js';
+import { reactiveTableSettings } from '../../../core/client/libs/reactive-table-settings.js';
+import { __ } from '../../../core/common/libs/tapi18n-callback-helper.js';
 
 // Component
 import '../../../core/client/components/loading.js';
@@ -21,17 +21,17 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
+import { lookupLoanAcc } from '../../common/methods/lookup-loan-acc.js';
 
 // API Lib
-import {MakeRepayment} from '../../common/libs/make-repayment.js';
+import { MakeRepayment } from '../../common/libs/make-repayment.js';
 
 // Collection
-import {Repayment} from '../../common/collections/repayment.js';
-import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
+import { Repayment } from '../../common/collections/repayment.js';
+import { RepaymentSchedule } from '../../common/collections/repayment-schedule.js';
 
 // Tabular
-import {RepaymentTabular} from '../../common/tabulars/repayment.js';
+import { RepaymentTabular } from '../../common/tabulars/repayment.js';
 
 // Page
 import './repayment.html';
@@ -39,6 +39,7 @@ import './repayment-general.js';
 import './repayment-prepay.js';
 import './repayment-waive-interest.js';
 import './repayment-closing.js';
+import './repayment-principal-installment.js';
 
 // Declare template
 let indexTmpl = Template.Microfis_repayment,
@@ -49,7 +50,8 @@ let indexTmpl = Template.Microfis_repayment,
     generalFormTmpl = Template.Microfis_repaymentGeneralForm,
     prepayFormTmpl = Template.Microfis_repaymentPrepayForm,
     waiveInteFormTmpl = Template.Microfis_repaymentWaiveInterestForm,
-    closingFormTmpl = Template.Microfis_repaymentClosingForm;
+    closingFormTmpl = Template.Microfis_repaymentClosingForm,
+    principalInstallmentFormTmpl = Template.Microfis_principalInstallmentForm;
 
 // State
 let state = new ReactiveDict();
@@ -57,7 +59,7 @@ let state = new ReactiveDict();
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('repayment', {size: 'lg'});
+    createNewAlertify('repayment', { size: 'lg' });
     createNewAlertify('repaymentShow');
 
     // Default stat
@@ -77,7 +79,7 @@ indexTmpl.onCreated(function () {
             }).then(function (result) {
                 state.set('loanAccDoc', result);
 
-                Meteor.setTimeout(()=> {
+                Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
             }).catch(function (err) {
@@ -88,32 +90,37 @@ indexTmpl.onCreated(function () {
 
     // Reactive table filter
     this.filter = new ReactiveTable.Filter('microfis.repaymentByLoanAcc', ['loanAccId']);
-    this.autorun(()=> {
+    this.autorun(() => {
         this.filter.set(loanAccId);
     });
 
 });
 
 indexTmpl.helpers({
-    loanAccDoc(){
+    loanAccDoc() {
         return state.get('loanAccDoc');
     },
-    scheduleDoc(){
+    scheduleDoc() {
         let loanAccId = FlowRouter.getParam('loanAccId');
-        let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId}, {$sort: {installment: 1}});
+        let lastScheduleDate = RepaymentSchedule.findOne({ loanAccId: loanAccId }, { sort: { scheduleDate: -1 } }).scheduleDate;
+        let selector={};
+        selector.loanAccId=loanAccId;
+        selector.scheduleDate={$eq: lastScheduleDate};
 
+
+        let scheduleDoc = RepaymentSchedule.find(selector, { sort: { installment: 1 } });
         state.set('scheduleDoc', scheduleDoc.fetch());
 
         return scheduleDoc;
     },
-    tabularTable(){
-        let selector = {loanAccId: FlowRouter.getParam('loanAccId')};
+    tabularTable() {
+        let selector = { loanAccId: FlowRouter.getParam('loanAccId') };
         return {
             tabularTable: RepaymentTabular,
             selector: selector
         };
     },
-    tableSettings(){
+    tableSettings() {
         reactiveTableSettings.collection = 'microfis.reactiveTable.repayment';
         reactiveTableSettings.filters = ['microfis.repaymentByLoanAcc'];
         reactiveTableSettings.fields = [
@@ -127,43 +134,43 @@ indexTmpl.helpers({
             {
                 key: 'repaidDate',
                 label: 'Paid Date',
-                fn (value, object, key) {
+                fn(value, object, key) {
                     return moment(value).format('DD/MM/YYYY');
                 }
             },
-            {key: 'type', label: 'Type'},
+            { key: 'type', label: 'Type' },
             {
                 key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestDue',
                 label: 'Amount Due',
-                fn (value, object, key) {
+                fn(value, object, key) {
                     return numeral(value).format('0,0.00');
                 }
             },
             {
                 key: 'detailDoc.totalSchedulePaid.penaltyDue',
                 label: 'Penalty Due',
-                fn (value, object, key) {
+                fn(value, object, key) {
                     return numeral(value).format('0,0.00');
                 }
             },
             {
                 key: 'amountPaid',
                 label: 'Amount Paid',
-                fn (value, object, key) {
+                fn(value, object, key) {
                     return numeral(value).format('0,0.00');
                 }
             },
             {
                 key: 'penaltyPaid',
                 label: 'Penalty Paid',
-                fn (value, object, key) {
+                fn(value, object, key) {
                     return numeral(value).format('0,0.00');
                 }
             },
             {
                 key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestBal',
                 label: 'Overdue Amount',
-                fn (value, object, key) {
+                fn(value, object, key) {
                     if (value > 0) {
                         return Spacebars.SafeString('<span class="text-red">' + numeral(value).format('0,0.00') + '</span>');
                     }
@@ -172,7 +179,7 @@ indexTmpl.helpers({
             },
             {
                 key: '_id',
-                label(){
+                label() {
                     return fa('bars', '', true);
                 },
                 headerClass: function () {
@@ -188,21 +195,30 @@ indexTmpl.helpers({
 });
 
 indexTmpl.events({
-    'click .js-create-payment' (event, instance) {
-        let data = {loanAccDoc: state.get('loanAccDoc'),};
+    'click .js-create-payment'(event, instance) {
+        let data = { loanAccDoc: state.get('loanAccDoc'), };
         alertify.repayment(fa('plus', 'Repayment General'), renderTemplate(generalFormTmpl, data));
     },
-    'click .js-create-prepay' (event, instance) {
-        let data = {loanAccDoc: state.get('loanAccDoc'),};
+    'click .js-create-prepay'(event, instance) {
+        let data = { loanAccDoc: state.get('loanAccDoc'), };
         alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
     },
-    'click .js-create-reschedule' (event, instance) {
+    'click .js-create-reschedule'(event, instance) {
+
+
+    }, 'click .js-create-principal-installment'(event, instance) {
+        let data = {
+            loanAccDoc: state.get('loanAccDoc'),
+            scheduleDoc: state.get('scheduleDoc'),
+        };
+        alertify.repayment(fa('plus', 'Principal Installment'), renderTemplate(principalInstallmentFormTmpl, data));
+
     },
-    'click .js-create-waive-interest' (event, instance) {
+    'click .js-create-waive-interest'(event, instance) {
     },
-    'click .js-create-write-off' (event, instance) {
+    'click .js-create-write-off'(event, instance) {
     },
-    'click .js-create-close' (event, instance) {
+    'click .js-create-close'(event, instance) {
         let data = {
             loanAccDoc: state.get('loanAccDoc'),
             scheduleDoc: state.get('scheduleDoc'),
@@ -210,21 +226,21 @@ indexTmpl.events({
 
         alertify.repayment(fa('plus', 'Repayment Closing'), renderTemplate(closingFormTmpl, data));
     },
-    'click .js-destroy' (event, instance) {
+    'click .js-destroy'(event, instance) {
         destroyAction(
             Repayment,
-            {_id: this._id},
-            {title: 'Repayment', itemTitle: this._id}
+            { _id: this._id },
+            { title: 'Repayment', itemTitle: this._id }
         );
     },
-    'click .js-display' (event, instance) {
+    'click .js-display'(event, instance) {
         alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showTmpl, this));
     }
 });
 
 // Schedule detail
 scheduleDetailTmpl.helpers({
-    checkStatusAttr(item){
+    checkStatusAttr(item) {
         let className = '';
 
         if (item.installment == 0) {
@@ -240,15 +256,15 @@ scheduleDetailTmpl.helpers({
             }
         }
 
-        return {class: className};
+        return { class: className };
     },
-    principalInterestPaid(repaymentDoc){
+    principalInterestPaid(repaymentDoc) {
         if (repaymentDoc) {
             return repaymentDoc.totalPrincipalPaid + repaymentDoc.totalInterestPaid;
         }
         return 0;
     },
-    outstanding(item){
+    outstanding(item) {
         if (item.repaymentDoc) {
             let totalPaidAndInterestWaived = (item.repaymentDoc.totalPrincipalPaid + item.repaymentDoc.totalInterestPaid + item.repaymentDoc.totalInterestWaived)
             return item.totalDue - totalPaidAndInterestWaived;

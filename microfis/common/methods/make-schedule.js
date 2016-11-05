@@ -1,22 +1,22 @@
-import {Meteor} from 'meteor/meteor';
-import {check} from 'meteor/check';
-import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
-import {_} from 'meteor/erasaur:meteor-lodash';
+import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { CallPromiseMixin } from 'meteor/didericis:callpromise-mixin';
+import { _ } from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 import math from 'mathjs';
 
 // Lib
-import {roundCurrency} from '../libs/round-currency.js';
+import { roundCurrency } from '../libs/round-currency.js';
 
 // Method
-import {Calculate} from '../libs/calculate.js';
-import {lookupLoanAcc} from './lookup-loan-acc.js';
+import { Calculate } from '../libs/calculate.js';
+import { lookupLoanAcc } from './lookup-loan-acc.js';
 
 // Collection
-import {Setting} from '../../common/collections/setting.js';
-import {Holiday} from '../../common/collections/holiday.js';
+import { Setting } from '../../common/collections/setting.js';
+import { Holiday } from '../../common/collections/holiday.js';
 
 export let MakeSchedule = {};
 
@@ -26,9 +26,10 @@ MakeSchedule.declinig = new ValidatedMethod({
     validate: new SimpleSchema({
         loanAccId: {
             type: String
-        }
+        },
+        options: { type: Object, optional: true, blackbox: true }
     }).validator(),
-    run({loanAccId}) {
+    run({loanAccId,options}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
@@ -36,8 +37,18 @@ MakeSchedule.declinig = new ValidatedMethod({
             let setting = Setting.findOne(),
                 dayOfWeekToEscape = setting.dayOfWeekToEscape,
                 holiday = Holiday.find().fetch(),
-                loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
+                loanAccDoc = lookupLoanAcc.call({ _id: loanAccId }),
                 principalInstallmentDoc = loanAccDoc.principalInstallment;
+            
+            // Overried loan account
+            if (options != null) {
+                loanAccDoc.disbursementDate = options.disbursementDate;
+                loanAccDoc.loanAmount = options.loanAmount;
+                loanAccDoc.term = options.term;
+                loanAccDoc.firstRepaymentDate = options.firstRepaymentDate;
+                loanAccDoc.installmentAllowClosing = options.installmentAllowClosing;
+
+            }
 
             // Declare default value
             let schedules = [];
@@ -163,7 +174,7 @@ MakeSchedule.annuity = new ValidatedMethod({
             let setting = Setting.findOne(),
                 dayOfWeekToEscape = setting.dayOfWeekToEscape,
                 holiday = Holiday.find().fetch(),
-                loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
+                loanAccDoc = lookupLoanAcc.call({ _id: loanAccId }),
                 principalInstallmentDoc = loanAccDoc.principalInstallment;
 
             // Declare default value
@@ -376,11 +387,11 @@ function _doEscapeDayWithFrequency(date, opts) {
     check(date, Date);
 
     new SimpleSchema({
-        escapeDayFrequency: {type: Number},
-        dayOfWeekToEscape: {type: [Number]},
-        holiday: {type: [Object], blackbox: true},
-        paymentMethod: {type: String},
-        escapeDayMethod: {type: String}
+        escapeDayFrequency: { type: Number },
+        dayOfWeekToEscape: { type: [Number] },
+        holiday: { type: [Object], blackbox: true },
+        paymentMethod: { type: String },
+        escapeDayMethod: { type: String }
     }).validate(opts);
 
     let startOrEndOf;
@@ -439,7 +450,7 @@ function _isInEscapeDayAndDate(date, dayOfWeekToEscape, holiday) {
 
     // Check date of month
     let checkDayOfWeek = _.includes(dayOfWeekToEscape, moment(date).isoWeekday());
-    let checkDateOfMonth = _.find(holiday, (o)=> {
+    let checkDateOfMonth = _.find(holiday, (o) => {
         return moment(date).isBetween(o.from, o.to, 'day', '[]');
     });
 
@@ -449,3 +460,4 @@ function _isInEscapeDayAndDate(date, dayOfWeekToEscape, holiday) {
 
     return false;
 }
+

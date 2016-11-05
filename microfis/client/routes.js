@@ -219,7 +219,7 @@ MicrofisRoutes.route('/credit-officer', {
 import '../imports/pages/guarantor.js';
 MicrofisRoutes.route('/guarantor', {
     name: 'microfis.guarantor',
-    title: 'uarantor',
+    title: 'Guarantor',
     action: function (params, queryParams) {
         Layout.main('Microfis_guarantor');
     },
@@ -330,3 +330,22 @@ MicrofisRoutes.route('/saving-transaction/:clientId/:savingAccId', {
         parent: 'microfis.clientAcc'
     }
 });
+
+
+// Product Status
+import '../imports/pages/productStatus';
+MicrofisRoutes.route('/productStatus', {
+    name: 'microfis.productStatus',
+    title: 'Product Status',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_productStatus');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Product Status',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+

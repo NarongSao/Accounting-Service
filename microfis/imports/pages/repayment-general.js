@@ -99,6 +99,7 @@ formTmpl.onCreated(function () {
                     state.set('lastTransactionDate', result.lastRepayment.repaidDate);
                 }
 
+
                 Meteor.setTimeout(()=> {
                     $.unblockUI();
                 }, 200);
@@ -178,7 +179,19 @@ let hooksObject = {
             let loanAccDoc = state.get('loanAccDoc'),
                 checkRepayment = state.get('checkRepayment');
 
-            doc.type = 'general';
+            if(loanAccDoc.status=="ReStructure"){
+                alertify.error("You already Restructure");
+                return false;
+            }
+
+
+            if(checkRepayment.balanceUnPaid -doc.loanAmount<=0){
+                alertify.error("You should go to Closing");
+                return false;
+            }
+
+
+            doc.type = 'General';
 
             // Check to payment
             let checkBeforePayment = checkRepayment && checkRepayment.scheduleDue.length > 0 && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;

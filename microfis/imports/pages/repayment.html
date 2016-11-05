@@ -8,9 +8,13 @@
             <button type="button" class="btn btn-primary js-create-prepay">
                 <i class="fa fa-ticket"></i> Prepay
             </button>
-            <button type="button" class="btn btn-primary js-create-reschedule">
-                <i class="fa fa-refresh"></i> Reschedule
+            <button type="button" class="btn btn-primary js-create-principal-installment">
+                <i class="fa fa-refresh"></i> ReSchedule
             </button>
+            <!--<button type="button" class="btn btn-primary js-create-reschedule">
+                <i class="fa fa-refresh"></i> Reschedule
+            </button>-->
+            
             <!--<button type="button" class="btn btn-warning js-create-waive-interest">-->
                 <!--<i class="fa fa-trash-o"></i> Waive Interest-->
             <!--</button>-->
@@ -145,13 +149,13 @@
                     <dt>Principal Installment</dt>
                     <dd>
                         Frequency: {{principalInstallment.frequency}},
-                        Type: {{principalInstallment.calculateType}}
+                        Type: {{principalInstallment.calculateType}},
                         Amount: {{numFormat principalInstallment.amount "0,0.00"}}
                     </dd>
                     <dt>Interest Method</dt>
                     <dd>{{interestMethod}}</dd>
                     <dt>Interest Rate</dt>
-                    <dd>{{numFormat interestRate "0,0.00 %"}}</dd>
+                    <dd>{{numFormat interestRate "0,0.00"}}%</dd>
                     <dt>Credit Officer</dt>
                     <dd>{{creditOfficerDoc.khName}}</dd>
                 </dl>

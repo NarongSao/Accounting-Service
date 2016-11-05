@@ -32,13 +32,15 @@ import {LoanAccTabular} from '../../common/tabulars/loan-acc.js';
 
 // Page
 import './loan-acc.html';
+import './reStructure.js';
 
 // Declare template
 let indexTmpl = Template.Microfis_loanAcc,
     actionTmpl = Template.Microfis_loanAccAction,
     productFormTmpl = Template.Microfis_loanAccProductForm,
     formTmpl = Template.Microfis_loanAccForm,
-    showTmpl = Template.Microfis_loanAccShow;
+    showTmpl = Template.Microfis_loanAccShow,
+    reStructureForm=Template.Microfis_reStructure;
 
 
 // Index
@@ -73,6 +75,27 @@ indexTmpl.events({
 
             // Meteor.setTimeout(function () {
             alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
+
+            // $.unblockUI();
+            // }, 100);
+
+        }).catch(function (err) {
+            console.log(err.message);
+        });
+
+    },
+    'click .js-reStructure' (event, instance) {
+        // $.blockUI();
+
+        let self = this;
+        self.loanAccId=this._id;
+        lookupProduct.callPromise({
+            _id: self.productId
+        }).then(function (result) {
+            Session.set('productDoc', result);
+
+            // Meteor.setTimeout(function () {
+            alertify.loanAcc(fa('plus', 'Loan Account'), renderTemplate(reStructureForm, self));
 
             // $.unblockUI();
             // }, 100);

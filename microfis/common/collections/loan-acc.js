@@ -160,6 +160,14 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: Date,
         optional: true
     },
+    cancelDate: {
+        type: Date,
+        optional: true
+    },
+    restructureDate: {
+        type: Date,
+        optional: true
+    },
     fundId: {
         type: String,
         label: 'Fund',
@@ -198,9 +206,28 @@ LoanAcc.generalSchema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    parentId: {
+        type: String,
+        defaultValue: "0"
+    },
+    childId: {
+        type: String,
+        defaultValue: "0"
+    },
+    status: {
+        type: String,
+        defaultValue: "Check"
+        //  Active
+        //  Write Off
+        //  Restructure
+        //  Cancel
+        //  Close
+
     }
-})
-;
+
+
+});
 
 // Account
 LoanAcc.accountSchema = new SimpleSchema({
@@ -823,7 +850,7 @@ LoanAcc.attachSchema([
     LoanAcc.repaymentSchema,
     LoanAcc.interestSchema,
     LoanAcc.locationSchema,
-    LoanAcc.otherSchema,
+    LoanAcc.otherSchema
 ]);
 
 // Custom validate
@@ -831,4 +858,108 @@ SimpleSchema.messages({
     cusMaxDateForSubmitDate: '[label] cannot be after [LoanAcc Date]',
     cusMinDateForFirstRepaymentDate: '[label] must be on or after [LoanAcc Date]',
     cusBetweenDateForLoanAccDate: `LoanAcc date must be between [Start - End Date]`
+});
+
+
+LoanAcc.reStructure = new SimpleSchema({
+    disbursementDate: {
+        type: Date,
+        label: function () {
+            return Spacebars.SafeString(`Disbursement date <span class="text-red">(${state.get('startDate')} - ${state.get('endDate')})</span>`);
+        },
+        defaultValue: moment().toDate(),
+        autoform: {
+            afFieldInput: {
+                type: 'bootstrap-datetimepicker',
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
+                }
+            }
+        }
+    },
+    loanAmount: {
+        type: Number,
+        label: 'Loan amount',
+        decimal: true
+    },
+    term: {
+        type: Number,
+        label: 'Term',
+        autoform: {
+            type: 'select',
+            afFieldInput: {
+                options: function () {
+                    let term = state.get('term');
+                    if (term) {
+                        let list = [];
+                        for (let i = term.min; i <= term.max; i++) {
+                            list.push({value: i, label: `${i}`});
+                        }
+
+                        return list;
+                    }
+                }
+            }
+        }
+    },
+    firstRepaymentDate: {
+        type: Date,
+        label: 'First repayment date',
+        // defaultValue: moment().toDate(),
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true,
+                    showClear: true
+                }
+            }
+        },
+        custom: function () {
+            let disbursementDate = moment(this.field('disbursementDate').value, 'DD/MM/YYYY');
+            let firstRepaymentDate = moment(this.value, 'DD/MM/YYYY');
+
+            if (disbursementDate.isSameOrAfter(firstRepaymentDate, 'day')) {
+                return 'cusMinDateForFirstRepaymentDate';
+            }
+        }
+    },
+    dueDateOn: {
+        type: Number,
+        label: 'Due date on',
+        autoform: {
+            type: 'select',
+            afFieldInput: {
+                options: function () {
+                    if (Meteor.isClient) {
+                        let list = [];
+                        let paymentMethod = state.get('paymentMethod');
+
+                        if (paymentMethod) {
+                            if (paymentMethod == 'D') {
+                                list.push({label: 'Null', value: 0});
+                            } else if (paymentMethod == 'W') {
+                                list.push({label: 'Mon', value: 1});
+                                list.push({label: 'Tue', value: 2});
+                                list.push({label: 'Wed', value: 3});
+                                list.push({label: 'Thu', value: 4});
+                                list.push({label: 'Fri', value: 5});
+                                list.push({label: 'Sat', value: 6});
+                                list.push({label: 'Sun', value: 7});
+                            } else if (paymentMethod == 'M' || paymentMethod == 'Y') {
+                                for (let i = 1; i <= 25; i++) {
+                                    list.push({label: `${i}`, value: i});
+                                }
+                            }
+
+                            return list;
+                        }
+                    }
+                }
+            }
+        }
+    }
 });

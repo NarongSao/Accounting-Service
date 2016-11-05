@@ -62,6 +62,10 @@ Setting.schema = new SimpleSchema({
                 inputmaskOptions: inputmaskOptions.integer()
             }
         }
+    },
+    writeOff: {
+        type: Number,
+        label: "Write Off (Days)"
     }
 });
 

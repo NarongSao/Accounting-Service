@@ -28,12 +28,14 @@ tabularOpts.columns = [
         data: 'parentDoc',
         title: 'Parent Doc',
         render: function (val, type, doc) {
-            if (doc.level == 2) {
-                return `${val.khNamePro}`;
-            } else if (doc.level == 3) {
-                return `${val.khNamePro}, ${val.khNameDis}`;
-            } else if (doc.level == 4) {
-                return `${val.khNamePro}, ${val.khNameDis}, ${val.khNameCom}`;
+            if (val) {
+                if (doc.level == 2) {
+                    return `${val.khNamePro}`;
+                } else if (doc.level == 3) {
+                    return `${val.khNamePro}, ${val.khNameDis}`;
+                } else if (doc.level == 4) {
+                    return `${val.khNamePro}, ${val.khNameDis}, ${val.khNameCom}`;
+                }
             }
         }
     }
