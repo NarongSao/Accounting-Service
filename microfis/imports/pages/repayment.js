@@ -1,19 +1,19 @@
-import { Template } from 'meteor/templating';
-import { Tracker } from 'meteor/tracker';
-import { ReactiveDict } from 'meteor/reactive-dict';
-import { AutoForm } from 'meteor/aldeed:autoform';
-import { alertify } from 'meteor/ovcharik:alertifyjs';
-import { fa } from 'meteor/theara:fa-helpers';
-import { ReactiveTable } from 'meteor/aslagle:reactive-table';
-import { _ } from 'meteor/erasaur:meteor-lodash';
+import {Template} from 'meteor/templating';
+import {Tracker} from 'meteor/tracker';
+import {ReactiveDict} from 'meteor/reactive-dict';
+import {AutoForm} from 'meteor/aldeed:autoform';
+import {alertify} from 'meteor/ovcharik:alertifyjs';
+import {fa} from 'meteor/theara:fa-helpers';
+import {ReactiveTable} from 'meteor/aslagle:reactive-table';
+import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Lib
-import { createNewAlertify } from '../../../core/client/libs/create-new-alertify.js';
-import { renderTemplate } from '../../../core/client/libs/render-template.js';
-import { destroyAction } from '../../../core/client/libs/destroy-action.js';
-import { displaySuccess, displayError } from '../../../core/client/libs/display-alert.js';
-import { reactiveTableSettings } from '../../../core/client/libs/reactive-table-settings.js';
-import { __ } from '../../../core/common/libs/tapi18n-callback-helper.js';
+import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
+import {renderTemplate} from '../../../core/client/libs/render-template.js';
+import {destroyAction} from '../../../core/client/libs/destroy-action.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
+import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
+import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 
 // Component
 import '../../../core/client/components/loading.js';
@@ -21,17 +21,17 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import { lookupLoanAcc } from '../../common/methods/lookup-loan-acc.js';
+import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 
 // API Lib
-import { MakeRepayment } from '../../common/libs/make-repayment.js';
+import {MakeRepayment} from '../../common/libs/make-repayment.js';
 
 // Collection
-import { Repayment } from '../../common/collections/repayment.js';
-import { RepaymentSchedule } from '../../common/collections/repayment-schedule.js';
+import {Repayment} from '../../common/collections/repayment.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 // Tabular
-import { RepaymentTabular } from '../../common/tabulars/repayment.js';
+import {RepaymentTabular} from '../../common/tabulars/repayment.js';
 
 // Page
 import './repayment.html';
@@ -59,7 +59,7 @@ let state = new ReactiveDict();
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('repayment', { size: 'lg' });
+    createNewAlertify('repayment', {size: 'lg'});
     createNewAlertify('repaymentShow');
 
     // Default stat
@@ -102,105 +102,107 @@ indexTmpl.helpers({
     },
     scheduleDoc() {
         let loanAccId = FlowRouter.getParam('loanAccId');
-        let lastScheduleDate = RepaymentSchedule.findOne({ loanAccId: loanAccId }, { sort: { scheduleDate: -1 } }).scheduleDate;
-        let selector={};
-        selector.loanAccId=loanAccId;
-        selector.scheduleDate={$eq: lastScheduleDate};
+        let lastScheduleDate = RepaymentSchedule.findOne({loanAccId: loanAccId}, {sort: {scheduleDate: -1}}).scheduleDate;
+        let selector = {};
+        selector.loanAccId = loanAccId;
+        selector.scheduleDate = {$eq: lastScheduleDate};
 
 
-        let scheduleDoc = RepaymentSchedule.find(selector, { sort: { installment: 1 } });
+        let scheduleDoc = RepaymentSchedule.find(selector, {sort: {installment: 1}});
         state.set('scheduleDoc', scheduleDoc.fetch());
 
         return scheduleDoc;
     },
     tabularTable() {
-        let selector = { loanAccId: FlowRouter.getParam('loanAccId') };
+        let selector = {loanAccId: FlowRouter.getParam('loanAccId')};
         return {
             tabularTable: RepaymentTabular,
             selector: selector
         };
     },
     tableSettings() {
-        reactiveTableSettings.collection = 'microfis.reactiveTable.repayment';
-        reactiveTableSettings.filters = ['microfis.repaymentByLoanAcc'];
-        reactiveTableSettings.fields = [
-            {
-                key: '_id',
-                label: 'ID',
-                sortOrder: 0,
-                sortDirection: 'desc',
-                hidden: true
-            },
-            {
-                key: 'repaidDate',
-                label: 'Paid Date',
-                fn(value, object, key) {
-                    return moment(value).format('DD/MM/YYYY');
-                }
-            },
-            { key: 'type', label: 'Type' },
-            {
-                key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestDue',
-                label: 'Amount Due',
-                fn(value, object, key) {
-                    return numeral(value).format('0,0.00');
-                }
-            },
-            {
-                key: 'detailDoc.totalSchedulePaid.penaltyDue',
-                label: 'Penalty Due',
-                fn(value, object, key) {
-                    return numeral(value).format('0,0.00');
-                }
-            },
-            {
-                key: 'amountPaid',
-                label: 'Amount Paid',
-                fn(value, object, key) {
-                    return numeral(value).format('0,0.00');
-                }
-            },
-            {
-                key: 'penaltyPaid',
-                label: 'Penalty Paid',
-                fn(value, object, key) {
-                    return numeral(value).format('0,0.00');
-                }
-            },
-            {
-                key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestBal',
-                label: 'Overdue Amount',
-                fn(value, object, key) {
-                    if (value > 0) {
-                        return Spacebars.SafeString('<span class="text-red">' + numeral(value).format('0,0.00') + '</span>');
+        let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
+            collection: 'microfis.reactiveTable.repayment',
+            filters: ['microfis.repaymentByLoanAcc'],
+            fields: [
+                {
+                    key: '_id',
+                    label: 'ID',
+                    sortOrder: 0,
+                    sortDirection: 'desc',
+                    hidden: true
+                },
+                {
+                    key: 'repaidDate',
+                    label: 'Paid Date',
+                    fn(value, object, key) {
+                        return moment(value).format('DD/MM/YYYY');
                     }
-                    return numeral(value).format('0,0.00');
+                },
+                {key: 'type', label: 'Type'},
+                {
+                    key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestDue',
+                    label: 'Amount Due',
+                    fn(value, object, key) {
+                        return numeral(value).format('0,0.00');
+                    }
+                },
+                {
+                    key: 'detailDoc.totalSchedulePaid.penaltyDue',
+                    label: 'Penalty Due',
+                    fn(value, object, key) {
+                        return numeral(value).format('0,0.00');
+                    }
+                },
+                {
+                    key: 'amountPaid',
+                    label: 'Amount Paid',
+                    fn(value, object, key) {
+                        return numeral(value).format('0,0.00');
+                    }
+                },
+                {
+                    key: 'penaltyPaid',
+                    label: 'Penalty Paid',
+                    fn(value, object, key) {
+                        return numeral(value).format('0,0.00');
+                    }
+                },
+                {
+                    key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestBal',
+                    label: 'Overdue Amount',
+                    fn(value, object, key) {
+                        if (value > 0) {
+                            return Spacebars.SafeString('<span class="text-red">' + numeral(value).format('0,0.00') + '</span>');
+                        }
+                        return numeral(value).format('0,0.00');
+                    }
+                },
+                {
+                    key: '_id',
+                    label() {
+                        return fa('bars', '', true);
+                    },
+                    headerClass: function () {
+                        let css = 'text-center col-action';
+                        return css;
+                    },
+                    tmpl: actionTmpl, sortable: false
                 }
-            },
-            {
-                key: '_id',
-                label() {
-                    return fa('bars', '', true);
-                },
-                headerClass: function () {
-                    let css = 'text-center col-action';
-                    return css;
-                },
-                tmpl: actionTmpl, sortable: false
-            }
-        ];
+            ],
+        });
 
-        return reactiveTableSettings;
+        return reactiveTableData;
     }
 });
 
 indexTmpl.events({
     'click .js-create-payment'(event, instance) {
-        let data = { loanAccDoc: state.get('loanAccDoc'), };
+        let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment General'), renderTemplate(generalFormTmpl, data));
     },
     'click .js-create-prepay'(event, instance) {
-        let data = { loanAccDoc: state.get('loanAccDoc'), };
+        let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
     },
     'click .js-create-reschedule'(event, instance) {
@@ -229,8 +231,8 @@ indexTmpl.events({
     'click .js-destroy'(event, instance) {
         destroyAction(
             Repayment,
-            { _id: this._id },
-            { title: 'Repayment', itemTitle: this._id }
+            {_id: this._id},
+            {title: 'Repayment', itemTitle: this._id}
         );
     },
     'click .js-display'(event, instance) {
@@ -256,7 +258,7 @@ scheduleDetailTmpl.helpers({
             }
         }
 
-        return { class: className };
+        return {class: className};
     },
     principalInterestPaid(repaymentDoc) {
         if (repaymentDoc) {

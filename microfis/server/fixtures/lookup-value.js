@@ -7,6 +7,17 @@ import {LookupValue} from '../../common/collections/lookup-value.js';
 Meteor.startup(function () {
     if (LookupValue.find().count() == 0) {
         const data = [
+            // Location Type
+            {
+                name: 'Location Type',
+                private: true,
+                options: [
+                    {label: 'Province', value: 'P', order: 0},
+                    {label: 'District', value: 'D', order: 1},
+                    {label: 'Commune', value: 'C', order: 2},
+                    {label: 'Village', value: 'V', order: 3}
+                ]
+            },
             // Prefix
             {
                 name: 'Prefix',

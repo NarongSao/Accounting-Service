@@ -63,7 +63,7 @@ Setting.schema = new SimpleSchema({
             }
         }
     },
-    writeOff: {
+    writeOffDay: {
         type: Number,
         label: "Write Off (Days)"
     }

@@ -4,7 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Collection
 import {Location} from '../../common/collections/location.js';
 
-Meteor.publish('microfis.locationById', function microfisLocationById(locationId) {
+Meteor.publish('simplePos.locationById', function simplePosLocationById(locationId) {
     this.unblock();
 
     new SimpleSchema({

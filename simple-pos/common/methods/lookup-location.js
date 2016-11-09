@@ -8,7 +8,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {Location} from '../collections/location.js';
 
 export const lookupLocation = new ValidatedMethod({
-    name: 'microfis.lookupLocation',
+    name: 'simplePos.lookupLocation',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         locationId: {type: String}
@@ -28,7 +28,7 @@ export const lookupLocation = new ValidatedMethod({
                 },
                 {
                     $lookup: {
-                        from: "microfis_location",
+                        from: "simplePos_location",
                         localField: "ancestors",
                         foreignField: "_id",
                         as: "ancestorsDoc"

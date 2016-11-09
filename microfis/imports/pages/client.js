@@ -56,68 +56,70 @@ indexTmpl.helpers({
         return {branchId: Session.get('currentBranch')};
     },
     tableSettings(){
-        reactiveTableSettings.class = 'table table-striped table-bordered table-condensed table-hover-pointer';
-        reactiveTableSettings.collection = 'microfis.reactiveTable.client';
-        reactiveTableSettings.filters = ['microfis.clientByBranch'];
-        reactiveTableSettings.fields = [
-            {
-                key: '_id',
-                label: 'ID',
-                sortOrder: 0,
-                sortDirection: 'desc'
-            },
-            {key: 'prefix', label: 'Prefix', hidden: true},
-            {key: 'khSurname', label: 'Kh Surname'},
-            {key: 'khGivenName', label: 'Kh Given Name'},
-            {key: 'khNickname', label: 'Kh Nickname', hidden: true},
-            {key: 'enSurname', label: 'En Surname', hidden: true},
-            {key: 'enGivenName', label: 'En Given Name', hidden: true},
-            {key: 'enNickname', label: 'En Nickname', hidden: true},
-            {key: 'gender', label: 'Gender'},
-            {
-                key: 'dob',
-                label: 'Date of Birth',
-                hidden: true,
-                fn (value, object, key) {
-                    return moment(value).format('DD/MM/YYYY');
-                }
-            },
-            {key: 'maritalStatus', label: 'Marital Status', hidden: true},
-            {key: 'branchId', label: 'Branch', hidden: true},
-            {key: 'idType', label: 'ID Type'},
-            {key: 'idNumber', label: 'ID Num'},
-            {key: 'idExpiryDate', label: 'ID Expiry Date', hidden: true},
-            {key: 'address', label: 'Address', hidden: true},
-            {key: 'telephone', label: 'Telephone'},
-            {key: 'email', label: 'Email', hidden: true},
-            {
-                key: 'photo',
-                label: 'Photo',
-                fn(value, object, key) {
-                    if (value) {
-                        let img = Files.findOne(value);
-                        if (img) {
-                            return Spacebars.SafeString(lightbox(img.url(), object._id, object.name));
-                        }
+        let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
+            class: 'table table-striped table-bordered table-condensed table-hover-pointer',
+            collection: 'microfis.reactiveTable.client',
+            filters: ['microfis.clientByBranch'],
+            fields: [
+                {
+                    key: '_id',
+                    label: 'ID',
+                    sortOrder: 0,
+                    sortDirection: 'desc'
+                },
+                {key: 'prefix', label: 'Prefix', hidden: true},
+                {key: 'khSurname', label: 'Kh Surname'},
+                {key: 'khGivenName', label: 'Kh Given Name'},
+                {key: 'khNickname', label: 'Kh Nickname', hidden: true},
+                {key: 'enSurname', label: 'En Surname', hidden: true},
+                {key: 'enGivenName', label: 'En Given Name', hidden: true},
+                {key: 'enNickname', label: 'En Nickname', hidden: true},
+                {key: 'gender', label: 'Gender'},
+                {
+                    key: 'dob',
+                    label: 'Date of Birth',
+                    hidden: true,
+                    fn (value, object, key) {
+                        return moment(value).format('DD/MM/YYYY');
                     }
+                },
+                {key: 'maritalStatus', label: 'Marital Status', hidden: true},
+                {key: 'branchId', label: 'Branch', hidden: true},
+                {key: 'idType', label: 'ID Type'},
+                {key: 'idNumber', label: 'ID Num'},
+                {key: 'idExpiryDate', label: 'ID Expiry Date', hidden: true},
+                {key: 'address', label: 'Address', hidden: true},
+                {key: 'telephone', label: 'Telephone'},
+                {key: 'email', label: 'Email', hidden: true},
+                {
+                    key: 'photo',
+                    label: 'Photo',
+                    fn(value, object, key) {
+                        if (value) {
+                            let img = Files.findOne(value);
+                            if (img) {
+                                return Spacebars.SafeString(lightbox(img.url(), object._id, object.name));
+                            }
+                        }
 
-                    return null;
+                        return null;
+                    }
+                },
+                {
+                    key: '_id',
+                    label(){
+                        return fa('bars', '', true);
+                    },
+                    headerClass: function () {
+                        let css = 'text-center col-action';
+                        return css;
+                    },
+                    tmpl: actionTmpl, sortable: false
                 }
-            },
-            {
-                key: '_id',
-                label(){
-                    return fa('bars', '', true);
-                },
-                headerClass: function () {
-                    let css = 'text-center col-action';
-                    return css;
-                },
-                tmpl: actionTmpl, sortable: false
-            }
-        ];
+            ],
+        });
 
-        return reactiveTableSettings;
+        return reactiveTableData;
     }
 });
 

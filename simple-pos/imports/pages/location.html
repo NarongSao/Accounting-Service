@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="Microfis_location">
+<template name="SimplePos_location">
     <div class="box-header with-border">
         <h3 class="box-title">
             {{> addNewButton}}
@@ -15,7 +15,7 @@
 </template>
 
 <!--Action-->
-<template name="Microfis_locationAction">
+<template name="SimplePos_locationAction">
     {{#columnAction}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
@@ -24,10 +24,10 @@
 </template>
 
 <!--Form-->
-<template name="Microfis_locationForm">
+<template name="SimplePos_locationForm">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="Microfis_locationForm" doc=data.doc type=data.formType
+            {{#autoForm collection=collection id="SimplePos_locationForm" doc=data.doc type=data.formType
                         resetOnSuccess=false}}
                 <div class="row">
                     <div class="col-md-12">
@@ -49,7 +49,7 @@
 </template>
 
 <!--Show-->
-<template name="Microfis_locationShow">
+<template name="SimplePos_locationShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
             {{#with data}}

@@ -33,10 +33,10 @@ import {lookupLocation} from '../../common/methods/lookup-location';
 import './location.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_location,
-    actionTmpl = Template.Microfis_locationAction,
-    formTmpl = Template.Microfis_locationForm,
-    showTmpl = Template.Microfis_locationShow;
+let indexTmpl = Template.SimplePos_location,
+    actionTmpl = Template.SimplePos_locationAction,
+    formTmpl = Template.SimplePos_locationForm,
+    showTmpl = Template.SimplePos_locationShow;
 
 
 // Index
@@ -80,12 +80,12 @@ formTmpl.onCreated(function () {
 
     this.autorun(()=> {
         // Lookup value
-        this.subscribe('microfis.lookupValue', ['Location Type']);
+        this.subscribe('simplePos.lookupValue', ['Unit', 'Location Type']);
 
         let currentData = Template.currentData();
         if (currentData) {
             this.typeState.set(currentData.type);
-            this.subscribe('microfis.locationById', currentData.locationId);
+            this.subscribe('simplePos.locationById', currentData.locationId);
         }
     });
 });
@@ -188,7 +188,7 @@ let hooksObject = {
     },
 };
 
-AutoForm.addHooks(['Microfis_locationForm'], hooksObject);
+AutoForm.addHooks(['SimplePos_locationForm'], hooksObject);
 
 // Clear form
 function clearForm() {

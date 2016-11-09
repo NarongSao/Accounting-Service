@@ -17,10 +17,10 @@ import {Location} from '../collections/location.js';
 Meteor.isClient && require('../../imports/pages/location.html');
 
 let tabularData = _.assignIn(_.clone(tabularOpts), {
-    name: 'microfis.location',
+    name: 'simplePos.location',
     collection: Location,
     columns: [
-        {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_locationAction},
+        {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.SimplePos_locationAction},
         {
             data: "code",
             title: "Code",

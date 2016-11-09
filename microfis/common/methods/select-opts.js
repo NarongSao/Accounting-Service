@@ -35,18 +35,57 @@ SelectOptMethods.location = new ValidatedMethod({
             if (searchText) {
                 selector = {
                     $or: [
-                        {_id: {$regex: searchText, $options: 'i'}},
-                        {khName: {$regex: searchText, $options: 'i'}}
-                    ]
+                        {code: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
             }
-            selector.level = {$ne: 4};
+            _.assignIn(selector, params);
 
-            let data = Location.find(selector, {limit: 10});
+            let data = Location.aggregate([
+                {
+                    $match: selector
+                },
+                {
+                    $limit: 10
+                },
+                {
+                    $unwind: {path: "$ancestors", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $lookup: {
+                        from: "microfis_location",
+                        localField: "ancestors",
+                        foreignField: "_id",
+                        as: "ancestorsDoc"
+                    }
+                },
+                {
+                    $unwind: {path: "$ancestorsDoc", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        type: {$first: "$type"},
+                        parent: {$first: "$parent"},
+                        code: {$first: "$code"},
+                        name: {$first: "$name"},
+                        ancestorsDoc: {$push: "$ancestorsDoc.name"}
+                    }
+                }
+            ]);
+
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.khName;
+                let label = `${value.code} : `;
+                if (_.compact(value.ancestorsDoc).length > 0) {
+                    _.forEach(value.ancestorsDoc, (o)=> {
+                        label += o + ', ';
+                    })
+                }
+                label += value.name;
+
                 list.push({label: label, value: value._id});
             });
 

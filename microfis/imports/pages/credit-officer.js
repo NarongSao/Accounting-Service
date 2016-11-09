@@ -37,7 +37,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('creditOfficer', {size: 'lg'});
     createNewAlertify('creditOfficerShow');
-    
+
     // Reactive table filter
     this.filter = new ReactiveTable.Filter('microfis.creditOfficerByBranch', ['branchId']);
     this.autorun(()=> {
@@ -47,58 +47,60 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     tableSettings(){
-        reactiveTableSettings.collection = 'microfis.reactiveTable.creditOfficer';
-        reactiveTableSettings.filters = ['microfis.creditOfficerByBranch'];
-        reactiveTableSettings.fields = [
-            {
-                key: '_id',
-                label: 'ID',
-                sortOrder: 0,
-                sortDirection: 'desc'
-            },
-            {key: 'khName', label: 'Kh Name'},
-            {key: 'enName', label: 'En Name'},
-            {key: 'gender', label: 'Gender'},
-            {
-                key: 'dob',
-                label: 'Date of Birth',
-                hidden: true,
-                fn (value, object, key) {
-                    return moment(value).format('DD/MM/YYYY');
-                }
-            },
-            {key: 'address', label: 'Address', hidden: true},
-            {key: 'telephone', label: 'Telephone'},
-            {key: 'email', label: 'Email', hidden: true},
-            {
-                key: 'photo',
-                label: 'Photo',
-                fn(value, object, key) {
-                    if (value) {
-                        let img = Files.findOne(value);
-                        if (img) {
-                            return Spacebars.SafeString(lightbox(img.url(), object._id, object.name));
-                        }
+        let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
+            collection: 'microfis.reactiveTable.creditOfficer',
+            filters: ['microfis.creditOfficerByBranch'],
+            fields: [
+                {
+                    key: '_id',
+                    label: 'ID',
+                    sortOrder: 0,
+                    sortDirection: 'desc'
+                },
+                {key: 'khName', label: 'Kh Name'},
+                {key: 'enName', label: 'En Name'},
+                {key: 'gender', label: 'Gender'},
+                {
+                    key: 'dob',
+                    label: 'Date of Birth',
+                    hidden: true,
+                    fn (value, object, key) {
+                        return moment(value).format('DD/MM/YYYY');
                     }
+                },
+                {key: 'address', label: 'Address', hidden: true},
+                {key: 'telephone', label: 'Telephone'},
+                {key: 'email', label: 'Email', hidden: true},
+                {
+                    key: 'photo',
+                    label: 'Photo',
+                    fn(value, object, key) {
+                        if (value) {
+                            let img = Files.findOne(value);
+                            if (img) {
+                                return Spacebars.SafeString(lightbox(img.url(), object._id, object.name));
+                            }
+                        }
 
-                    return null;
+                        return null;
+                    }
+                },
+                {key: 'branchId', label: 'Branch', hidden: true},
+                {
+                    key: '_id',
+                    label(){
+                        return fa('bars', '', true);
+                    },
+                    headerClass: function () {
+                        let css = 'text-center col-action';
+                        return css;
+                    },
+                    tmpl: actionTmpl, sortable: false
                 }
-            },
-            {key: 'branchId', label: 'Branch', hidden: true},
-            {
-                key: '_id',
-                label(){
-                    return fa('bars', '', true);
-                },
-                headerClass: function () {
-                    let css = 'text-center col-action';
-                    return css;
-                },
-                tmpl: actionTmpl, sortable: false
-            }
-        ];
+            ],
+        });
 
-        return reactiveTableSettings;
+        return reactiveTableData;
     }
 });
 

@@ -670,11 +670,15 @@ LoanAcc.locationSchema = new SimpleSchema({
         autoform: {
             type: 'universe-select',
             afFieldInput: {
-                uniPlaceholder: '(Select One)',
-                optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.locationOnLoanAcc'
+                uniPlaceholder: 'Select One',
+                optionsMethod: 'microfis.selectOpts.location',
+                optionsMethodParams: function () {
+                    if (Meteor.isClient) {
+                        return {type: 'V'};
+                    }
+                }
             }
-        }
+        },
     },
     geography: {
         type: String,

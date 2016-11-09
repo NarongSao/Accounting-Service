@@ -5,10 +5,9 @@ import {AutoForm} from 'meteor/aldeed:autoform';
 // Lib
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/select-opts.js';
-import {lookupValue} from '../../imports/libs/lookup-value.js';
-import {SelectOptMethods} from '../methods/select-opts.js';
+import {getLookupValue} from '../../imports/libs/get-lookup-value.js';
 
-export const Location = new Mongo.Collection("microfis_location");
+export const Location = new Mongo.Collection("simplePos_location");
 
 Location.schema = new SimpleSchema({
     type: {
@@ -18,7 +17,7 @@ Location.schema = new SimpleSchema({
         autoform: {
             type: "select-radio-inline",
             options: function () {
-                return lookupValue('Location Type', {selectOne: false});
+                return getLookupValue('Location Type');
             }
         }
     },
@@ -32,7 +31,7 @@ Location.schema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
-                optionsMethod: 'microfis.selectOpts.location',
+                optionsMethod: 'simplePos.selectOptsMethod.location',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
                         let typeVal;

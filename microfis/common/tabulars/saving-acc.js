@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Session} from 'meteor/session';
 import {Template} from 'meteor/templating';
-import {Tabular} from 'meteor/aldeed:tabular';
+import Tabular from 'meteor/aldeed:tabular';
 import {EJSON} from 'meteor/ejson';
 import {moment} from 'meteor/momentjs:moment';
 import {_} from 'meteor/erasaur:meteor-lodash';
@@ -17,21 +17,23 @@ import {SavingAcc} from '../../common/collections/saving-acc';
 // Page
 Meteor.isClient && require('../../imports/pages/saving-acc.html');
 
-tabularOpts.name = 'microfis.savingAcc';
-tabularOpts.collection = SavingAcc;
-tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_savingAccAction},
-    {data: '_id', title: 'ID'},
-    {data: 'productId', title: 'Product'},
-    {
-        data: 'accDate',
-        title: 'Acc Date',
-        render: function (val, type, doc) {
-            return moment(val).format('DD/MM/YYYY');
-        }
-    },
-    {data: 'accountType', title: 'Acc Type'},
-    {data: 'status.value', title: 'Status'},
-];
-// tabularOpts.extraFields = ['parentId'];
-export const SavingAccTabular = new Tabular.Table(tabularOpts);
+let tabularData = _.assignIn(_.clone(tabularOpts), {
+    name: 'microfis.savingAcc',
+    collection: SavingAcc,
+    columns: [
+        {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_savingAccAction},
+        {data: '_id', title: 'ID'},
+        {data: 'productId', title: 'Product'},
+        {
+            data: 'accDate',
+            title: 'Acc Date',
+            render: function (val, type, doc) {
+                return moment(val).format('DD/MM/YYYY');
+            }
+        },
+        {data: 'accountType', title: 'Acc Type'},
+        {data: 'status.value', title: 'Status'},
+    ],
+});
+
+export const SavingAccTabular = new Tabular.Table(tabularData);

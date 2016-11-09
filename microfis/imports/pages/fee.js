@@ -40,40 +40,42 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     tableSettings(){
-        reactiveTableSettings.collection = 'microfis.reactiveTable.fee';
-        reactiveTableSettings.fields = [
-            {
-                key: '_id',
-                label: 'ID',
-                sortOrder: 0,
-                sortDirection: 'desc'
-            },
-            {key: 'name', label: 'Name'},
-            {key: 'calculateType', label: 'Calculate Type'},
-            {
-                key: 'amount',
-                label: 'Amount',
-                fn (value, object, key) {
-                    if (object.calculateType == 'A') {
-                        return numeral(value).format('0,0.00');
+        let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
+            collection: 'microfis.reactiveTable.fee',
+            fields: [
+                {
+                    key: '_id',
+                    label: 'ID',
+                    sortOrder: 0,
+                    sortDirection: 'desc'
+                },
+                {key: 'name', label: 'Name'},
+                {key: 'calculateType', label: 'Calculate Type'},
+                {
+                    key: 'amount',
+                    label: 'Amount',
+                    fn (value, object, key) {
+                        if (object.calculateType == 'A') {
+                            return numeral(value).format('0,0.00');
+                        }
+                        return numeral(value / 100).format('0%');
                     }
-                    return numeral(value / 100).format('0%');
+                },
+                {
+                    key: '_id',
+                    label(){
+                        return fa('bars', '', true);
+                    },
+                    headerClass: function () {
+                        let css = 'text-center col-action';
+                        return css;
+                    },
+                    tmpl: actionTmpl, sortable: false
                 }
-            },
-            {
-                key: '_id',
-                label(){
-                    return fa('bars', '', true);
-                },
-                headerClass: function () {
-                    let css = 'text-center col-action';
-                    return css;
-                },
-                tmpl: actionTmpl, sortable: false
-            }
-        ];
+            ],
+        });
 
-        return reactiveTableSettings;
+        return reactiveTableData;
     }
 });
 
