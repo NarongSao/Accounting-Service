@@ -55,6 +55,7 @@ Repayment.after.insert(function (userId, doc) {
             _makeScheduleForPrincipalInstallment(doc);
         }
 
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}});
     });
 });
 
@@ -109,8 +110,11 @@ Repayment.after.remove(function (userId, doc) {
         if (doc.type == "ReSchedule") {
             RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
         }
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}});
+
 
     });
+
 });
 
 

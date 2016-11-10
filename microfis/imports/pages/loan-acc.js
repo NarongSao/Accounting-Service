@@ -39,8 +39,7 @@ let indexTmpl = Template.Microfis_loanAcc,
     actionTmpl = Template.Microfis_loanAccAction,
     productFormTmpl = Template.Microfis_loanAccProductForm,
     formTmpl = Template.Microfis_loanAccForm,
-    showTmpl = Template.Microfis_loanAccShow,
-    reStructureForm=Template.Microfis_reStructure;
+    showTmpl = Template.Microfis_loanAccShow;
 
 
 // Index
@@ -84,27 +83,7 @@ indexTmpl.events({
         });
 
     },
-    'click .js-reStructure' (event, instance) {
-        // $.blockUI();
 
-        let self = this;
-        self.loanAccId=this._id;
-        lookupProduct.callPromise({
-            _id: self.productId
-        }).then(function (result) {
-            Session.set('productDoc', result);
-
-            // Meteor.setTimeout(function () {
-            alertify.loanAcc(fa('plus', 'Loan Account'), renderTemplate(reStructureForm, self));
-
-            // $.unblockUI();
-            // }, 100);
-
-        }).catch(function (err) {
-            console.log(err.message);
-        });
-
-    },
     'click .js-destroy' (event, instance) {
         destroyAction(
             LoanAcc,
@@ -202,6 +181,7 @@ formTmpl.onRendered(function () {
     $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
     $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
+    
     // LoanAcc date change
     $disbursementDate.on("dp.change", function (e) {
         $submitDate.data("DateTimePicker").maxDate(moment(e.date).startOf('day'));

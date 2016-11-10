@@ -35,10 +35,10 @@ import { checkRepayment } from '../../common/methods/check-repayment';
 import { Repayment } from '../../common/collections/repayment.js';
 
 // Page
-import './repayment-principal-installment.html';
+import './repayment-reschedule.html';
 
 // Declare template
-let formTmpl = Template.Microfis_principalInstallmentForm;
+let formTmpl = Template.Microfis_rescheduleForm;
 
 // State
 let state = new ReactiveDict();
@@ -211,4 +211,4 @@ let hooksObject = {
         displayError(error.message);
     }
 };
-AutoForm.addHooks(['Microfis_principalInstallmentForm'], hooksObject);
+AutoForm.addHooks(['Microfis_rescheduleForm'], hooksObject);

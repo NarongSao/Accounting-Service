@@ -1,4 +1,4 @@
-<template name="Microfis_reStructure">
+<template name="Microfis_writeOffEnsure">
 	<div class="box-header with-border">
 		<h3 class="box-title text-blue">
 			{{#with loanAccDoc}}
@@ -12,9 +12,9 @@
 
 	<div class="box-body">
 		{{#if Template.subscriptionsReady}} 
-        {{#autoForm schema=schema id="Microfis_reStructure" doc=data resetOnSuccess=false}}
+        {{#autoForm schema=schema id="Microfis_writeOffEnsure" doc=data resetOnSuccess=false}}
 		<fieldset>
-			<legend>ReSchedule</legend>
+			<legend>Write Off Ensure</legend>
 			<div class="row">
                 <div class="col-sm-6">
                     {{> afQuickField name="disbursementDate"}}

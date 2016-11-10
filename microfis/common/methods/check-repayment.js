@@ -345,10 +345,13 @@ export let checkRepayment = new ValidatedMethod({
 
             // ReSchedule
             let balanceUnPaid = 0;
+            let interestUnPaid = 0;
             scheduleDoc.forEach(function (obj) {
                 balanceUnPaid += obj.principalDue;
+                interestUnPaid += obj.interestDue;
                 if (obj.repaymentDoc) {
                     balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
+                    interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
                 }
             })
 
@@ -366,7 +369,8 @@ export let checkRepayment = new ValidatedMethod({
                 closing: closing,
                 principalInstallment: principalInstallment,
                 lastRepayment: lastRepayment,
-                balanceUnPaid: balanceUnPaid
+                balanceUnPaid: balanceUnPaid,
+                interestUnPaid: interestUnPaid
             };
         }
     }

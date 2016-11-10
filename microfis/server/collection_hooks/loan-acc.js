@@ -60,9 +60,11 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
 // After remove
 LoanAcc.after.remove(function (userId, doc) {
     RepaymentSchedule.remove({loanAccId: doc._id});
-
-    if (doc.status == "ReStructure") {
-        LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}});
+    if (doc.parentId!=0) {
+        let parentDoc = LoanAcc.findOne({_id: doc.parentId});
+        if (parentDoc && parentDoc.status == "ReStructure") {
+            LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}});
+        }
     }
 });
 

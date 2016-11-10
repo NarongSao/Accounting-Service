@@ -58,12 +58,11 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
             return `<span class="badge bg-teal-active"><i class="fa fa-heart"></i> ${val} </span>`;
         }
-        },
-        {title: 'Action', tmpl: Meteor.isClient && Template.Microfis_loanAccReStructureAction}
+        }
 
     ],
     extraFields: ['currencyId'],
-    columnDefs: [{"width": "12px", targets: 0}, {"width": "20px", targets: 6}, {"width": "25px", targets: 7}],
+    columnDefs: [{"width": "12px", targets: 0}, {"width": "20px", targets: 6}],
 });
 
 export const LoanAccTabular = new Tabular.Table(tabularData);

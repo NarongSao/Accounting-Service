@@ -211,10 +211,6 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: String,
         defaultValue: "0"
     },
-    childId: {
-        type: String,
-        defaultValue: "0"
-    },
     status: {
         type: String,
         defaultValue: "Check"
@@ -223,7 +219,11 @@ LoanAcc.generalSchema = new SimpleSchema({
         //  Restructure
         //  Cancel
         //  Close
-
+    },
+    paymentNumber: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 
 
@@ -869,7 +869,7 @@ LoanAcc.reStructure = new SimpleSchema({
     disbursementDate: {
         type: Date,
         label: function () {
-            return Spacebars.SafeString(`Disbursement date <span class="text-red">(${state.get('startDate')} - ${state.get('endDate')})</span>`);
+            return Spacebars.SafeString(`Disbursement Date <span class="text-red">(${state.get('startDate')} - ${state.get('endDate')})</span>`);
         },
         defaultValue: moment().toDate(),
         autoform: {
@@ -885,7 +885,14 @@ LoanAcc.reStructure = new SimpleSchema({
     loanAmount: {
         type: Number,
         label: 'Loan amount',
-        decimal: true
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
     },
     term: {
         type: Number,

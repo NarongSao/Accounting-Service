@@ -1,5 +1,5 @@
 <!--General Payment Form-->
-<template name="Microfis_principalInstallmentForm">
+<template name="Microfis_rescheduleForm">
     <div class="box-header with-border">
         <h3 class="box-title text-blue">
             {{#with loanAccDoc}}
@@ -67,7 +67,7 @@
             </div>
 
             <div class="col-md-6">
-                {{#autoForm collection=collection id="Microfis_principalInstallmentForm" type="insert"}}
+                {{#autoForm collection=collection id="Microfis_rescheduleForm" type="insert"}}
                     {{> afQuickField type="hidden" name="loanAccId" value=(param "loanAccId") readonly=true}}
                     {{> afQuickField name="repaidDate"}}
                     {{> afQuickField name="amountType"}}

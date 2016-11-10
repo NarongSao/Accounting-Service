@@ -31,8 +31,7 @@ export const makeReSchedule = new ValidatedMethod({
             LoanAcc.direct.update({_id: loanAccId}, {
                 $set: {
                     status: "ReStructure",
-                    restructureDate: opts.disbursementDate,
-                    childId: id
+                    restructureDate: opts.disbursementDate
                 }
             });
 

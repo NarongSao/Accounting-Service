@@ -22,6 +22,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Method
 import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
+import {lookupProduct} from '../../common/methods/lookup-product.js';
 
 // API Lib
 import {MakeRepayment} from '../../common/libs/make-repayment.js';
@@ -39,7 +40,10 @@ import './repayment-general.js';
 import './repayment-prepay.js';
 import './repayment-waive-interest.js';
 import './repayment-closing.js';
-import './repayment-principal-installment.js';
+import './repayment-reschedule.js';
+import './repayment-writeOff.js';
+
+import './write-off-ensure.js';
 
 // Declare template
 let indexTmpl = Template.Microfis_repayment,
@@ -51,7 +55,10 @@ let indexTmpl = Template.Microfis_repayment,
     prepayFormTmpl = Template.Microfis_repaymentPrepayForm,
     waiveInteFormTmpl = Template.Microfis_repaymentWaiveInterestForm,
     closingFormTmpl = Template.Microfis_repaymentClosingForm,
-    principalInstallmentFormTmpl = Template.Microfis_principalInstallmentForm;
+    writeOffFormTmpl = Template.Microfis_repaymentWriteOffForm,
+    writeOffEnsureFormTmpl = Template.Microfis_writeOffEnsure,
+    rescheduleFormTmpl = Template.Microfis_rescheduleForm,
+    reStructureForm=Template.Microfis_reStructure;
 
 // State
 let state = new ReactiveDict();
@@ -204,21 +211,33 @@ indexTmpl.events({
     'click .js-create-prepay'(event, instance) {
         let data = {loanAccDoc: state.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
-    },
-    'click .js-create-reschedule'(event, instance) {
-
-
-    }, 'click .js-create-principal-installment'(event, instance) {
+    }
+    , 'click .js-create-reschedule'(event, instance) {
         let data = {
             loanAccDoc: state.get('loanAccDoc'),
             scheduleDoc: state.get('scheduleDoc'),
         };
-        alertify.repayment(fa('plus', 'Principal Installment'), renderTemplate(principalInstallmentFormTmpl, data));
+        alertify.repayment(fa('plus', 'Principal Installment'), renderTemplate(rescheduleFormTmpl, data));
 
     },
     'click .js-create-waive-interest'(event, instance) {
     },
-    'click .js-create-write-off'(event, instance) {
+    'click .js-create-write-off-ensure'(event, instance) {
+        let data = {
+            loanAccDoc: state.get('loanAccDoc'),
+            scheduleDoc: state.get('scheduleDoc'),
+        };
+
+        alertify.repayment(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
+        
+    },'click .js-create-write-off'(event, instance) {
+        let data = {
+            loanAccDoc: state.get('loanAccDoc'),
+            scheduleDoc: state.get('scheduleDoc'),
+        };
+
+        alertify.repayment(fa('plus', 'Repayment Write-Off'), renderTemplate(writeOffFormTmpl, data));
+
     },
     'click .js-create-close'(event, instance) {
         let data = {
@@ -227,6 +246,17 @@ indexTmpl.events({
         };
 
         alertify.repayment(fa('plus', 'Repayment Closing'), renderTemplate(closingFormTmpl, data));
+    },
+
+    'click .js-reStructure' (event, instance) {
+        // $.blockUI();
+
+        let data = {
+            loanAccDoc: state.get('loanAccDoc'),
+            scheduleDoc: state.get('scheduleDoc'),
+        };
+        alertify.repayment(fa('plus', 'Loan Account'), renderTemplate(reStructureForm, data));
+
     },
     'click .js-destroy'(event, instance) {
         destroyAction(

@@ -30,10 +30,10 @@ import {checkRepayment} from '../../common/methods/check-repayment';
 import {lookupProduct} from '../../common/methods/lookup-product.js';
 
 // Page
-import './reStructure.html';
+import './write-off-ensure.html';
 
 // Declare template
-let formTmpl = Template.Microfis_reStructure;
+let formTmpl = Template.Microfis_writeOffEnsure;
 
 let state = new ReactiveDict();
 
@@ -187,5 +187,5 @@ let hooksObject = {
 };
 
 AutoForm.addHooks([
-    'Microfis_reStructure'
+    'Microfis_writeOffEnsure'
 ], hooksObject);
