@@ -44,7 +44,7 @@
 <template name="Microfis_productStatusEdit">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="Microfis_productStatusEdit" doc=data type="update"}}
+            {{#autoForm collection=collection id="Microfis_productStatusEdit" doc=this type="update"}}
                 <div class="row">
                     <div class="col-md-12">
                         {{> afQuickField name='name'}}
@@ -66,7 +66,7 @@
 <template name="Microfis_productStatusShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#with data}}
+            {{#with this}}
                 <dl class="dl-horizontal">
                     <dt>ID</dt>
                     <dd>{{_id}}</dd>

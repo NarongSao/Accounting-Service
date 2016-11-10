@@ -348,4 +348,20 @@ MicrofisRoutes.route('/productStatus', {
         parent: 'microfis.home'
     }
 });
+// Payment Status
+import '../imports/pages/paymentStatus';
+MicrofisRoutes.route('/paymentStatus', {
+    name: 'microfis.paymentStatus',
+    title: 'Payment Status',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_paymentStatus');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Payment Status',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
 

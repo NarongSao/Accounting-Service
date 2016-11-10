@@ -18,77 +18,77 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // Collection
-import {ProductStatus} from '../../common/collections/productStatus';
+import {PaymentStatus} from '../../common/collections/paymentStatus.js';
 
 // Tabular
-import {ProductStatusTabular} from '../../common/tabulars/productStatus';
+import {PaymentStatusTabular} from '../../common/tabulars/paymentStatus.js';
 
 // Page
-import './productStatus.html';
+import './paymentStatus.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_productStatus,
-    actionTmpl = Template.Microfis_productStatusAction,
-    newTmpl = Template.Microfis_productStatusNew,
-    editTmpl = Template.Microfis_productStatusEdit,
-    showTmpl = Template.Microfis_productStatusShow;
+let indexTmpl = Template.Microfis_paymentStatus,
+    actionTmpl = Template.Microfis_paymentStatusAction,
+    newTmpl = Template.Microfis_paymentStatusNew,
+    editTmpl = Template.Microfis_paymentStatusEdit,
+    showTmpl = Template.Microfis_paymentStatusShow;
 
 
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('productStatus');
+    createNewAlertify('paymentStatus');
 });
 
 indexTmpl.helpers({
     tabularTable(){
-        return ProductStatusTabular;
+        return PaymentStatusTabular;
     }
 });
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.productStatus(fa('plus', 'Product Status'), renderTemplate(newTmpl));
+        alertify.paymentStatus(fa('plus', 'Product Status'), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.productStatus(fa('pencil', 'Product Status'), renderTemplate(editTmpl, this));
+        alertify.paymentStatus(fa('pencil', 'Product Status'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
-            ProductStatus,
+            PaymentStatus,
             {_id: this._id},
-            {title: 'Product Status', itemTitle: this._id}
+            {title: 'Payment Status', itemTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.productStatus(fa('eye', 'Product Status'), renderTemplate(showTmpl, this));
+        alertify.paymentStatus(fa('eye', 'Payment Status'), renderTemplate(showTmpl, this));
     }
 });
 
 // New
 newTmpl.helpers({
     collection(){
-        return ProductStatus;
+        return PaymentStatus;
     }
 });
 
 // Edit
 editTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('microfis.productStatus', {_id: this.data._id});
+        this.subscribe('microfis.paymentStatus', {_id: this.data._id});
     });
 });
 
 editTmpl.helpers({
     collection(){
-        return ProductStatus;
+        return PaymentStatus;
     }
 });
 
 // Show
 showTmpl.onCreated(function () {
     this.autorun(()=> {
-        this.subscribe('microfis.productStatus', {_id: this.data._id});
+        this.subscribe('microfis.paymentStatus', {_id: this.data._id});
     });
 });
 
@@ -97,7 +97,7 @@ showTmpl.onCreated(function () {
 let hooksObject = {
     onSuccess (formType, result) {
         if (formType == 'update') {
-            alertify.productStatus().close();
+            alertify.paymentStatus().close();
         }
         $('[name="level"]').val(1);
         displaySuccess();
@@ -108,6 +108,6 @@ let hooksObject = {
 };
 
 AutoForm.addHooks([
-    'Microfis_productStatusNew',
-    'Microfis_productStatusEdit'
+    'Microfis_paymentStatusNew',
+    'Microfis_paymentStatusEdit'
 ], hooksObject);

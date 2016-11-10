@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="SimplePos_item">
+<template name="Microfis_paymentStatus">
     <div class="box-header with-border">
         <h3 class="box-title">
             {{> addNewButton}}
@@ -11,33 +11,46 @@
         <!--Tabular-->
         {{> tabular table=tabularTable class="table table-striped table-bordered table-condensed"}}
     </div>
-    <!-- /.box-body -->
 </template>
 
 <!--Action-->
-<template name="SimplePos_itemAction">
-    {{#columnAction}}
+<template name="Microfis_paymentStatusAction">
+    {{#columnAction align="right"}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
         <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
     {{/columnAction}}
 </template>
 
-<!--Form-->
-<template name="SimplePos_itemForm">
+<!--Insert-->
+<template name="Microfis_paymentStatusNew">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_paymentStatusNew" type="insert"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name='name'}}
+                    {{> afQuickField name="code"}}
+                    {{> afQuickField name='from'}}
+                    {{> afQuickField name='to'}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Update-->
+<template name="Microfis_paymentStatusEdit">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="SimplePos_itemForm" doc=data.doc type=data.formType
-                        resetOnSuccess=false}}
+            {{#autoForm collection=collection id="Microfis_paymentStatusEdit" doc=this type="update"}}
                 <div class="row">
                     <div class="col-md-12">
-                        {{> afQuickField name='type'}}
-                        {{> afQuickField name='parent'}}
                         {{> afQuickField name='name'}}
-                        {{#if showPrice}}
-                            {{> afQuickField name='price'}}
-                        {{/if}}
-                        {{> afQuickField name='photo'}}
+                        {{> afQuickField name="code"}}
+                        {{> afQuickField name='from'}}
+                        {{> afQuickField name='to'}}
                     </div>
                 </div>
 
@@ -50,23 +63,21 @@
 </template>
 
 <!--Show-->
-<template name="SimplePos_itemShow">
+<template name="Microfis_paymentStatusShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#with data}}
+            {{#with this}}
                 <dl class="dl-horizontal">
-                    <dt>{{i18nLabel "_id"}}</dt>
+                    <dt>ID</dt>
                     <dd>{{_id}}</dd>
-                    <dt>{{i18nLabel "name"}}</dt>
+                    <dt>Name</dt>
                     <dd>{{name}}</dd>
-                    <dt>{{i18nLabel "price"}}</dt>
-                    <dd>{{price}}</dd>
-                    <dt>{{i18nLabel "type"}}</dt>
-                    <dd>{{main}}</dd>
-                    <dt>{{i18nLabel "parent"}}</dt>
-                    <dd>{{parent}}</dd>
-                    <dt>{{i18nLabel "photo"}}</dt>
-                    <dd>{{lightbox url=photoUrl title=name}}</dd>
+                    <dt>Code</dt>
+                    <dd>{{code}}</dd>
+                    <dt>From</dt>
+                    <dd>{{from}}</dd>
+                    <dt>To</dt>
+                    <dd>{{to}}</dd>
                 </dl>
             {{/with}}
         {{else}}
