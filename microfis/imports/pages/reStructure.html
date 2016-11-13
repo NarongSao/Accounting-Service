@@ -1,0 +1,39 @@
+<template name="Microfis_reStructure">
+	<div class="box-header with-border">
+		<h3 class="box-title text-blue">
+			{{#with loanAccDoc}}
+                <b>Product:</b> {{productId}},
+                <b>Disbursement Date:</b> {{moFormat disbursementDate "DD/MM/YYYY"}},
+                <b>Currency:</b> {{currencyId}}
+            {{/with}}
+		</h3>
+	</div>
+	<!-- /.box-header -->
+
+	<div class="box-body">
+		{{#if Template.subscriptionsReady}} 
+        {{#autoForm schema=schema id="Microfis_reStructure" doc=data resetOnSuccess=false}}
+		<fieldset>
+			<legend>ReSchedule</legend>
+			<div class="row">
+                <div class="col-sm-6">
+                    {{> afQuickField name="disbursementDate"}}
+                    {{> afQuickField name="loanAmount" value=balanceUnPaid readonly=true}}
+                    {{> afQuickField name="term"}}
+                </div>
+                <div class="col-sm-6">
+                    {{> afQuickField name="firstRepaymentDate"}}
+                     {{> afQuickField name="dueDateOn"}}
+                </div>
+				
+                
+			</div>
+		</fieldset>
+
+		{{> formFooterWithButton}} 
+        {{/autoForm}} 
+        {{else}} 
+            {{> loading}} 
+        {{/if}}
+	</div>
+</template>

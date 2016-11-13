@@ -7,15 +7,15 @@ import {moment} from  'meteor/momentjs:moment';
 import fx from 'money';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
-import {Fund} from '../../imports/api/collections/fund.js';
-import {Fee} from '../../imports/api/collections/fee.js';
-import {Penalty} from '../../imports/api/collections/penalty.js';
-import {PenaltyClosing} from '../../imports/api/collections/penalty-closing.js';
-import {Client} from '../../imports/api/collections/client.js';
-import {Product} from '../../imports/api/collections/product.js';
-import {CreditOfficer} from '../../imports/api/collections/credit-officer.js';
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
+import {Location} from '../../common/collections/location.js';
+import {Fund} from '../../common/collections/fund.js';
+import {Fee} from '../../common/collections/fee.js';
+import {Penalty} from '../../common/collections/penalty.js';
+import {PenaltyClosing} from '../../common/collections/penalty-closing.js';
+import {Client} from '../../common/collections/client.js';
+import {Product} from '../../common/collections/product.js';
+import {CreditOfficer} from '../../common/collections/credit-officer.js';
+import {LoanAcc} from '../../common/collections/loan-acc';
 
 export let SelectOptMethods = {};
 
@@ -35,18 +35,57 @@ SelectOptMethods.location = new ValidatedMethod({
             if (searchText) {
                 selector = {
                     $or: [
-                        {_id: {$regex: searchText, $options: 'i'}},
-                        {khName: {$regex: searchText, $options: 'i'}}
-                    ]
+                        {code: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
             }
-            selector.level = {$ne: 4};
+            _.assignIn(selector, params);
 
-            let data = Location.find(selector, {limit: 10});
+            let data = Location.aggregate([
+                {
+                    $match: selector
+                },
+                {
+                    $limit: 10
+                },
+                {
+                    $unwind: {path: "$ancestors", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $lookup: {
+                        from: "microfis_location",
+                        localField: "ancestors",
+                        foreignField: "_id",
+                        as: "ancestorsDoc"
+                    }
+                },
+                {
+                    $unwind: {path: "$ancestorsDoc", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        type: {$first: "$type"},
+                        parent: {$first: "$parent"},
+                        code: {$first: "$code"},
+                        name: {$first: "$name"},
+                        ancestorsDoc: {$push: "$ancestorsDoc.name"}
+                    }
+                }
+            ]);
+
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.khName;
+                let label = `${value.code} : `;
+                if (_.compact(value.ancestorsDoc).length > 0) {
+                    _.forEach(value.ancestorsDoc, (o)=> {
+                        label += o + ', ';
+                    })
+                }
+                label += value.name;
+
                 list.push({label: label, value: value._id});
             });
 

@@ -11,7 +11,7 @@ import {__} from '../../core/common/libs/tapi18n-callback-helper.js';
 
 // Layout
 import {Layout} from '../../core/client/libs/render-layout.js';
-import '../../core/imports/ui/layouts/report/index.html';
+import '../../core/imports/layouts/report/index.html';
 
 // Group
 let MicrofisRoutes = FlowRouter.group({
@@ -24,7 +24,7 @@ let MicrofisRoutes = FlowRouter.group({
 });
 
 // Repayment schedule
-import '../imports/ui/reports/repayment-schedule.js';
+import '../imports/reports/repayment-schedule.js';
 MicrofisRoutes.route('/repayment-schedule-report', {
     name: 'microfis.repaymentScheduleReport',
     title: 'Repayment Schedule Report',

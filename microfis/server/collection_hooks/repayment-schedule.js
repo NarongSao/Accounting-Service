@@ -3,7 +3,7 @@ import {idGenerator2} from 'meteor/theara:id-generator';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 RepaymentSchedule.before.insert(function (userId, doc) {
     let prefix = `${doc.loanAccId}-`;

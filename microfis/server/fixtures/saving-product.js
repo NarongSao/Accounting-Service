@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {SavingProduct} from '../../imports/api/collections/saving-product.js';
+import {SavingProduct} from '../../common/collections/saving-product.js';
 
 Meteor.startup(function () {
     if (SavingProduct.find().count() == 0) {

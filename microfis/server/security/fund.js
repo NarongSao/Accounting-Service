@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Fund} from '../../imports/api/collections/fund.js';
+import {Fund} from '../../common/collections/fund.js';
 
 Fund.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

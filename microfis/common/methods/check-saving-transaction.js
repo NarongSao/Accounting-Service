@@ -10,14 +10,14 @@ import BigNumber from 'bignumber.js';
 import {round2} from 'meteor/theara:round2';
 
 // Lib
-import {roundCurrency} from '../../imports/api/libs/round-currency.js';
+import {roundCurrency} from '../libs/round-currency.js';
 
 // Method
-import {Calculate} from './libs/calculate.js';
+import {Calculate} from '../libs/calculate.js';
 import {lookupSavingAcc} from './lookup-saving-acc.js';
 
 // Collection
-import {SavingTransaction} from '../../imports/api/collections/saving-transaction';
+import {SavingTransaction} from '../../common/collections/saving-transaction';
 
 export let checkSavingTransaction = new ValidatedMethod({
     name: 'microfis.checkSavingTransaction',

@@ -4,8 +4,8 @@ import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {PublishRelations} from 'meteor/cottz:publish-relations';
 
 // Collection
-import {Product} from '../../imports/api/collections/product.js';
-import {Penalty} from '../../imports/api/collections/penalty.js';
+import {Product} from '../../common/collections/product.js';
+import {Penalty} from '../../common/collections/penalty.js';
 
 Meteor.publish('microfis.product', function microfisProduct(selector = {}, options = {}) {
     this.unblock();

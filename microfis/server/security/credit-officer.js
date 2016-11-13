@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {CreditOfficer} from '../../imports/api/collections/credit-officer.js';
+import {CreditOfficer} from '../../common/collections/credit-officer.js';
 
 CreditOfficer.permit(['insert'])
     .Microfis_ifDataInsert()

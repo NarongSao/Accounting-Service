@@ -1,10 +1,11 @@
 import {Meteor} from 'meteor/meteor';
+import {Accounts} from 'meteor/accounts-base';
 import {ValidatedMethod} from 'meteor/mdg:validated-method';
-import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../collections/location.js';
 
 export const lookupLocation = new ValidatedMethod({
     name: 'microfis.lookupLocation',
@@ -14,35 +15,38 @@ export const lookupLocation = new ValidatedMethod({
     }).validator(),
     run({locationId}) {
         if (!this.isSimulation) {
+            Meteor._sleepForMs(200);
+
             let data = Location.aggregate([
-                {$match: {_id: locationId}},
+                {
+                    $match: {
+                        _id: locationId
+                    }
+                },
+                {
+                    $unwind: {path: "$ancestors", preserveNullAndEmptyArrays: true}
+                },
                 {
                     $lookup: {
                         from: "microfis_location",
-                        localField: "parentId",
+                        localField: "ancestors",
                         foreignField: "_id",
-                        as: "level1"
+                        as: "ancestorsDoc"
                     }
                 },
-                {$unwind: {path: "$level1", preserveNullAndEmptyArrays: true}},
                 {
-                    $lookup: {
-                        from: "microfis_location",
-                        localField: "level1.parentId",
-                        foreignField: "_id",
-                        as: "level2"
-                    }
+                    $unwind: {path: "$ancestorsDoc", preserveNullAndEmptyArrays: true}
                 },
-                {$unwind: {path: "$level2", preserveNullAndEmptyArrays: true}},
                 {
-                    $lookup: {
-                        from: "microfis_location",
-                        localField: "level2.parentId",
-                        foreignField: "_id",
-                        as: "level3"
+                    $group: {
+                        _id: "$_id",
+                        type: {$first: "$type"},
+                        parent: {$first: "$parent"},
+                        code: {$first: "$code"},
+                        name: {$first: "$name"},
+                        ancestorsDoc: {$push: {code: "$ancestorsDoc.code", name: "$ancestorsDoc.name"}}
                     }
-                },
-                {$unwind: {path: "$level3", preserveNullAndEmptyArrays: true}}
+                }
             ]);
 
             return data[0];

@@ -1,26 +1,21 @@
 import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../../common/collections/location.js';
 
-Meteor.publish('microfis.location', function microfisLocation(selector = {}, options = {}) {
+Meteor.publish('microfis.locationById', function microfisLocationById(locationId) {
     this.unblock();
 
     new SimpleSchema({
-        selector: {type: Object, blackbox: true},
-        options: {type: Object, blackbox: true}
-    }).validate({selector, options});
+        locationId: {type: String},
+    }).validate({locationId});
 
-    if (this.userId) {
-        let data = Location.find(selector, options);
-
-        return data;
+    if (!this.userId) {
+        return this.ready();
     }
 
-    return this.ready();
-});
+    Meteor._sleepForMs(200);
 
-// Reactive Table
-ReactiveTable.publish("microfis.reactiveTable.location", Location);
+    return Location.find({_id: locationId});
+});

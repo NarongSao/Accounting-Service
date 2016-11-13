@@ -11,4 +11,13 @@ export const tabularOpts = {
     // },
     // dom: 'Bfrtip',
     // buttons: ['copy', 'csv']
+    // other properties...
+    buttonContainer: '.col-sm-6:eq(0)',
+    buttons: [
+        'copy',
+        'excel',
+        'csv',
+        // 'colvis'
+    ]
+
 };

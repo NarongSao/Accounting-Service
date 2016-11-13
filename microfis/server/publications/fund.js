@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Fund} from '../../imports/api/collections/fund.js';
+import {Fund} from '../../common/collections/fund.js';
 
 Meteor.publish('microfis.fund', function microfisFund(selector = {}, options = {}) {
     this.unblock();

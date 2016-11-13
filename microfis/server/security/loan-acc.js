@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc.js';
+import {LoanAcc} from '../../common/collections/loan-acc.js';
 
 LoanAcc.permit(['insert'])
     .Microfis_ifDataInsert()

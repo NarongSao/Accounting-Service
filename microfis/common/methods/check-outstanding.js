@@ -10,15 +10,15 @@ import BigNumber from 'bignumber.js';
 import {round2} from 'meteor/theara:round2';
 
 // Lib
-import {roundCurrency} from '../../imports/api/libs/round-currency.js';
+import {roundCurrency} from '../libs/round-currency.js';
 
 // Method
-import {Calculate} from './libs/calculate.js';
+import {Calculate} from '../libs/calculate.js';
 import {lookupLoanAcc} from './lookup-loan-acc.js';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {LoanAcc} from '../../common/collections/loan-acc';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 export let checkOutstanding = new ValidatedMethod({
     name: 'microfis.checkOutstanding',

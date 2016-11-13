@@ -1,0 +1,215 @@
+<!--Index-->
+<template name="Microfis_repayment">
+    <div class="box-header with-border">
+        <h3 class="box-title" style="display: inline">
+            <button type="button" class="btn btn-primary js-create-payment">
+                <i class="fa fa-money"></i> Payment
+            </button>
+            <button type="button" class="btn btn-primary js-create-prepay">
+                <i class="fa fa-ticket"></i> Prepay
+            </button>
+            <button type="button" class="btn btn-primary js-create-reschedule">
+                <i class="fa fa-refresh"></i> ReSchedule
+            </button>
+            
+            <!--<button type="button" class="btn btn-warning js-create-waive-interest">-->
+                <!--<i class="fa fa-trash-o"></i> Waive Interest-->
+            <!--</button>-->
+            <button type="button" class="btn btn-warning js-create-write-off">
+                <i class="fa fa-trash-o"></i> Write Off
+            </button>
+
+            <button type="button" class="btn btn-danger js-create-close">
+                <i class="fa fa-close"></i> Close
+            </button>
+
+            <div class="btn-group">
+                <a href="#" class="btn btn-default"><i class="fa fa-navicon"></i></a>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        More Action
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="js-create-write-off-ensure" href="#">Write Off Ensure</a></li>
+                        <li><a class="js-create-waive-interest" href="#">Waive Interest</a></li>
+                        <li><a class="js-reStructure" href="#">Restructure</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--Client Info-->
+            <div class="text-bold pull-right">
+                {{#with loanAccDoc}}
+                    <a href="#" class="js-display-disbursement">
+                        {{clientId}} : {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</a>
+                {{/with}}
+            </div>
+
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Summary-->
+        {{> Microfis_repaymentDetailSummary data=loanAccDoc}}
+
+
+        <!--Detail-->
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_schedule" data-toggle="tab" aria-expanded="false">Schedule</a></li>
+                <li class=""><a href="#tab_transaction" data-toggle="tab" aria-expanded="false">Transaction</a></li>
+                <!--<li class=""><a href="#tab_summary" data-toggle="tab" aria-expanded="true">Summary</a></li>-->
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_schedule">
+                    {{#if subsReady "microfis.scheduleByLoanAccId"}}
+                        {{> Microfis_repaymentDetailSchedule data=scheduleDoc}}
+                    {{else}}
+                        {{> iconLoading}}
+                    {{/if}}
+                </div>
+                <!-- /.tab-pane -->
+
+                <div class="tab-pane" id="tab_transaction">
+                    <!--{{> Microfis_repaymentDetailTransaction data=tabularTable}}-->
+                    {{> Microfis_repaymentDetailTransaction data=tableSettings}}
+                </div>
+                <!-- /.tab-pane -->
+
+                <!--<div class="tab-pane" id="tab_summary">-->
+                <!--{{> Microfis_repaymentDetailSummary data=loanAccDoc}}-->
+                <!--</div>-->
+                <!-- /.tab-pane -->
+
+            </div>
+            <!-- /.tab-content -->
+        </div>
+
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Index Schedule-->
+<template name="Microfis_repaymentDetailSchedule">
+    <table class="table table-condensed table-hover">
+        <thead>
+        <tr>
+            <th rowspan="2">No</th>
+            <th rowspan="2">Due Date</th>
+            <th rowspan="2">Day</th>
+            <th rowspan="2">Prin Due</th>
+            <th rowspan="2">Int Due</th>
+            <th rowspan="2">Total Due</th>
+            <th rowspan="2">Balance</th>
+            <th colspan="3" class="text-center text-blue">Repaid Doc</th>
+        </tr>
+        <tr class="text-blue">
+            <th>Total Paid</th>
+            <th>Interest Waived</th>
+            <th>Outstanding</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {{#each item in data}}
+            <tr {{checkStatusAttr item}}>
+                <th>
+                    {{#if item.allowClosing}}
+                        <u>{{item.installment}}</u>
+                    {{else}}
+                        {{item.installment}}
+                    {{/if}}
+                </th>
+                <td>{{moFormat item.dueDate "ddd DD/MM/YYYY"}}</td>
+                <td>{{item.numOfDay}}</td>
+                <td>{{numFormat item.principalDue "0,0.00"}}</td>
+                <td>{{numFormat item.interestDue "0,0.00"}}</td>
+                <td>{{numFormat item.totalDue "0,0.00"}}</td>
+                <td>{{numFormat item.balance "0,0.00"}}</td>
+                <td class="text-bold">{{numFormat (principalInterestPaid item.repaymentDoc) "0,0.00"}}</td>
+                <td class="text-bold">{{numFormat item.repaymentDoc.totalInterestWaived "0,0.00"}}</td>
+                <td class="text-bold">{{numFormat (outstanding item) "0,0.00"}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<!--Index Summary-->
+<template name="Microfis_repaymentDetailSummary">
+    <div class="row">
+        {{#with data}}
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>Loan Acc</dt>
+                    <dd>{{_id}} ({{accountType}})</dd>
+                    <dt>Submit Date</dt>
+                    <dd>{{moFormat submitDate "DD/MM/YYYY"}}</dd>
+                    <dt>Disburse Date</dt>
+                    <dd>{{moFormat disbursementDate "DD/MM/YYYY"}}</dd>
+                    <dt>Repaid Frequency</dt>
+                    <dd>{{repaidFrequency}} ({{paymentMethod}})</dd>
+                    <dt>Team</dt>
+                    <dd>{{term}}</dd>
+                    <dt>Loan Amount</dt>
+                    <dd>{{numFormat loanAmount "0,0.00"}} {{currencyId}}</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>Principal Installment</dt>
+                    <dd>
+                        Frequency: {{principalInstallment.frequency}},
+                        Type: {{principalInstallment.calculateType}},
+                        Amount: {{numFormat principalInstallment.amount "0,0.00"}}
+                    </dd>
+                    <dt>Interest Method</dt>
+                    <dd>{{interestMethod}}</dd>
+                    <dt>Interest Rate</dt>
+                    <dd>{{numFormat interestRate "0,0.00"}}%</dd>
+                    <dt>Credit Officer</dt>
+                    <dd>{{creditOfficerDoc.khName}}</dd>
+                </dl>
+            </div>
+        {{/with}}
+    </div>
+</template>
+
+<!--Index Transaction-->
+<template name="Microfis_repaymentDetailTransaction">
+    <!--{{> tabular table=data.tabularTable selector=data.selector class="table table-striped table-bordered table-condensed"}}-->
+    {{> reactiveTable settings=data}}
+</template>
+
+<!--Action-->
+<template name="Microfis_repaymentAction">
+    {{#columnAction align="right"}}
+        <!--<li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>-->
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Show-->
+<template name="Microfis_repaymentShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Loan Acc Client ID</dt>
+                    <dd>{{loanAccId}}</dd>
+                    <dt>Repaid Date</dt>
+                    <dd>{{moFormat repaidDate "DD/MM/YYYY HH:mm:ss"}}</dd>
+                    <dt>Amount</dt>
+                    <dd>{{numFormat amount "0,0.00"}}</dd>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>

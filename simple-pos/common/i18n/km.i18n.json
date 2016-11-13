@@ -23,6 +23,15 @@
         "price": {
           "label": "តម្លៃ"
         },
+        "type": {
+          "label": "ប្រភេទ"
+        },
+        "parent": {
+          "label": "មេ"
+        },
+        "ancestors": {
+          "label": "មេ"
+        },
         "photo": {
           "label": "រូបភាព"
         }

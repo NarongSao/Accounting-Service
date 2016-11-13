@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 
-import {Holiday} from '../../imports/api/collections/holiday.js';
+import {Holiday} from '../../common/collections/holiday.js';
 
 Meteor.startup(function () {
     if (Holiday.find().count() == 0) {

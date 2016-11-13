@@ -1,7 +1,6 @@
 import {Meteor} from 'meteor/meteor';
-import {Session} from 'meteor/session';
-import {Template} from 'meteor/templating';
-import {Tabular} from 'meteor/aldeed:tabular';
+import {Templet} from 'meteor/templating';
+import Tabular from 'meteor/aldeed:tabular';
 import {EJSON} from 'meteor/ejson';
 import {moment} from 'meteor/momentjs:moment';
 import {_} from 'meteor/erasaur:meteor-lodash';
@@ -12,31 +11,45 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
 // Collection
-import {Location} from '../../imports/api/collections/location.js';
+import {Location} from '../collections/location.js';
 
 // Page
-Meteor.isClient && require('../../imports/ui/pages/location.html');
+Meteor.isClient && require('../../imports/pages/location.html');
 
-tabularOpts.name = 'microfis.location';
-tabularOpts.collection = Location;
-tabularOpts.columns = [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_locationAction},
-    {data: '_id', title: 'ID'},
-    {data: 'khName', title: 'Kh Name'},
-    {data: 'level', title: 'level'},
-    {
-        data: 'parentDoc',
-        title: 'Parent Doc',
-        render: function (val, type, doc) {
-            if (doc.level == 2) {
-                return `${val.khNamePro}`;
-            } else if (doc.level == 3) {
-                return `${val.khNamePro}, ${val.khNameDis}`;
-            } else if (doc.level == 4) {
-                return `${val.khNamePro}, ${val.khNameDis}, ${val.khNameCom}`;
+let tabularData = _.assignIn(_.clone(tabularOpts), {
+    name: 'microfis.location',
+    collection: Location,
+    columns: [
+        {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_locationAction},
+        {
+            data: "code",
+            title: "Code",
+            render: function (val, type, doc) {
+                let level = _.isArray(doc.ancestors) ? doc.ancestors.length : 0;
+                level = Spacebars.SafeString(_.repeat('&nbsp;', level * 5));
+
+                // Check type
+                if (doc.type == 'V') {
+                    return Spacebars.SafeString(`${level}<span class="text-green">${val}</span>`);
+                }
+
+                return `${level}${val}`;
             }
-        }
-    }
-];
-// tabularOpts.extraFields = ['parentId'];
-export const LocationTabular = new Tabular.Table(tabularOpts);
+        },
+        {data: "name", title: "Name"},
+        {
+            data: "type",
+            title: "Type",
+            render: function (val, type, doc) {
+                if (val == 'V') {
+                    return Spacebars.SafeString(`<span class="label label-success">${val}</span>`);
+                }
+                return val;
+            }
+        },
+    ],
+    order: [[1, 'asc']],
+    extraFields: ['_id', 'type', 'ancestors'],
+});
+
+export const LocationTabular = new Tabular.Table(tabularData);

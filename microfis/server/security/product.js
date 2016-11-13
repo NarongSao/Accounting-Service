@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Product} from '../../imports/api/collections/product.js';
+import {Product} from '../../common/collections/product.js';
 
 Product.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

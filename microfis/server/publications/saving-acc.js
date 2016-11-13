@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {SavingAcc} from '../../imports/api/collections/saving-acc';
+import {SavingAcc} from '../../common/collections/saving-acc';
 
 Meteor.publish('microfis.savingAccById', function microfisSavingAccById(savingAccId) {
     this.unblock();

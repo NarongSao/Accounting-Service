@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {LookupValue} from '../../imports/api/collections/lookup-value.js';
+import {LookupValue} from '../../common/collections/lookup-value.js';
 
 LookupValue.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

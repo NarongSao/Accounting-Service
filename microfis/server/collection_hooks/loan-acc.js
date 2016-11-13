@@ -8,8 +8,8 @@ import  {lookupProduct} from '../../common/methods/lookup-product.js';
 import  {MakeSchedule} from '../../common/methods/make-schedule.js';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc.js';
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 // Before insert
 LoanAcc.before.insert(function (userId, doc) {
@@ -60,6 +60,12 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
 // After remove
 LoanAcc.after.remove(function (userId, doc) {
     RepaymentSchedule.remove({loanAccId: doc._id});
+    if (doc.parentId!=0) {
+        let parentDoc = LoanAcc.findOne({_id: doc.parentId});
+        if (parentDoc && parentDoc.status == "ReStructure") {
+            LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}});
+        }
+    }
 });
 
 // Create repayment schedule

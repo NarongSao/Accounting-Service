@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {Fee} from '../../imports/api/collections/fee.js';
+import {Fee} from '../../common/collections/fee.js';
 
 Fee.permit(['insert', 'update', 'remove'])
     .Microfis_ifSetting()

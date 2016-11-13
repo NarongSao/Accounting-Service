@@ -20,11 +20,6 @@
                         <i class="fa fa-circle-o"></i> <span>Client</span>
                     </a>
                 </li>
-                <li class="{{isActiveRoute name='microfis.repayment'}}">
-                    <a href="{{pathFor 'microfis.repayment'}}">
-                        <i class="fa fa-circle-o"></i> <span>Repayment</span>
-                    </a>
-                </li>
                 <li class="{{isActiveRoute name='microfis.guarantor'}}">
                     <a href="{{pathFor 'microfis.guarantor'}}">
                         <i class="fa fa-circle-o"></i> <span>Guarantor</span>
@@ -35,6 +30,14 @@
                         <i class="fa fa-circle-o"></i> <span>Credit Officer</span>
                     </a>
                 </li>
+
+                <!--Exchange-->
+                <li class="{{isActiveRoute name='core.exchange'}}">
+                    <a href="{{pathFor 'core.exchange'}}">
+                        <i class="fa fa-circle-o"></i> <span>Exchange Report</span>
+                    </a>
+                </li>
+
             </ul>
         </li>
     {{/if}}
@@ -58,21 +61,18 @@
         </li>
     {{/if}}
 
-    <!--Loan Settings-->
+    <!--Settings-->
     {{#if isInRole 'setting' 'Microfis'}}
         <li class="treeview active">
             <a href="#">
                 <i class="fa fa-cogs"></i>
-                <span>LOAN SETTING</span>
+                <span>SETTING</span>
                 <i class="fa fa-angle-left pull-right"></i>
             </a>
 
             <ul class="treeview-menu" style="display: none">
-                <li class="{{isActiveRoute name='core.exchange'}}">
-                    <a href="{{pathFor 'core.exchange'}}">
-                        <i class="fa fa-circle-o"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
-                    </a>
-                </li>
+                <!--Loan-->
+                <li class="dropdown-header">Loan</li>
                 <li class="{{isActiveRoute name='microfis.product'}}">
                     <a href="{{pathFor 'microfis.product'}}">
                         <i class="fa fa-circle-o"></i> <span>Product</span>
@@ -118,26 +118,28 @@
                         <i class="fa fa-circle-o"></i> <span>Lookup Value</span>
                     </a>
                 </li>
-            </ul>
-        </li>
-    {{/if}}
+                <li class="{{isActiveRoute name='microfis.productStatus'}}">
+                    <a href="{{pathFor 'microfis.productStatus'}}">
+                        <i class="fa fa-circle-o"></i> <span>Product Status</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.paymentStatus'}}">
+                    <a href="{{pathFor 'microfis.paymentStatus'}}">
+                        <i class="fa fa-circle-o"></i> <span>Payment Status</span>
+                    </a>
+                </li>
 
-    <!--Saving Settings-->
-    {{#if isInRole 'setting' 'Microfis'}}
-        <li class="treeview active">
-            <a href="#">
-                <i class="fa fa-cogs"></i>
-                <span>SAVING SETTING</span>
-                <i class="fa fa-angle-left pull-right"></i>
-            </a>
-
-            <ul class="treeview-menu" style="display: none">
+                <!--Saving-->
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Saving</li>
                 <li class="{{isActiveRoute name='microfis.savingProduct'}}">
                     <a href="{{pathFor 'microfis.savingProduct'}}">
                         <i class="fa fa-circle-o"></i> <span>Product</span>
                     </a>
                 </li>
+
             </ul>
         </li>
     {{/if}}
+
 </template>

@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {SavingTransaction} from '../../imports/api/collections/saving-transaction';
+import {SavingTransaction} from '../../common/collections/saving-transaction';
 
 Meteor.publish('microfis.savingTransactionById', function microfisSavingTransactionById(savingTransactionId) {
     this.unblock();

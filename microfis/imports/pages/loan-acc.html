@@ -1,0 +1,264 @@
+<!--Index-->
+<template name="Microfis_loanAcc">
+	<div class="box-body">
+		<p>
+			<button type="button" class="btn btn-primary js-create-loan-acc"><i class="fa fa-plus"></i> Loan Account
+            </button>
+		</p>
+
+		<!--Tabular-->
+		{{> tabular table=tabularTable selector=tabularSelector class="table table-striped table-bordered table-condensed table-hover-pointer"}}
+	</div>
+	<!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Microfis_loanAccAction">
+	{{#columnAction}}
+	<li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+	<li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+	<li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+	{{/columnAction}}
+</template>
+
+<!--Action ReSchedule-->
+<template name="Microfis_loanAccReStructureAction">
+    <span class="badge bg-light-blue js-reStructure">{{fa "plus"}} ReStructure</span>
+</template>
+
+
+
+
+<!--Form-->
+<template name="Microfis_loanAccProductForm">
+	<div class="box-body">
+		{{#autoForm schema=productSchema id="Microfis_loanAccProductForm" resetOnSuccess=false}}
+		<div class="row">
+			<div class="col-md-12">
+				{{> afQuickField name="productId"}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<button type="submit" class="btn btn-primary btn-block">
+                        <i class="fa fa-chevron-right"></i> Next
+                    </button>
+			</div>
+			<div class="col-md-6">
+				<button type="button" class="btn btn-default btn-block">
+                        <i class="fa fa-times"></i> Close
+                    </button>
+			</div>
+		</div>
+		{{/autoForm}}
+	</div>
+</template>
+
+<template name="Microfis_loanAccForm">
+	<div class="box-header with-border">
+		<h3 class="box-title text-blue">
+			{{#with dataHeader}}
+			<b>Product:</b> {{_id}}, {{name}} {{/with}}
+		</h3>
+	</div>
+	<!-- /.box-header -->
+
+	<div class="box-body">
+		{{#if Template.subscriptionsReady}} {{#autoForm collection=collection id="Microfis_loanAccForm" doc=data.doc type=data.formType}}
+		<fieldset>
+			<legend>General</legend>
+			<div class="row">
+				<div class="col-md-4">
+					{{> afQuickField type="hidden" name="clientId" value=(param "clientId")}} {{> afQuickField type="hidden" name="productId"}}
+					{{> afQuickField name="submitDate"}} {{> afQuickField name="disbursementDate"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="fundId"}} {{> afQuickField name="creditOfficerId"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="attachFile"}} {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Account</legend>
+			<div class="row">
+				<div class="col-md-4">
+					{{> afQuickField name="accountType"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="currencyId"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="loanAmount"}}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Repayment</legend>
+			<div class="row">
+				<div class="col-md-4">
+					{{> afQuickField name="paymentMethod" readonly=true}} {{> afQuickField name="repaidFrequency"}} {{> afQuickField name="term"}}
+					{{> afQuickField name="firstRepaymentDate"}} {{> afQuickField name="dueDateOn"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="principalInstallment"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="paymentLocation"}} {{> afQuickField name="escapeDayMethod"}} {{> afQuickField name="escapeDayFrequency"}}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Interest</legend>
+			<div class="row">
+				<div class="col-md-6">
+					{{> afQuickField name="interestMethod"}}
+				</div>
+				<div class="col-md-6">
+					{{> afQuickField name="interestRate"}}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Location</legend>
+			<div class="row">
+				<div class="col-md-6">
+					{{> afQuickField name="locationId"}}
+				</div>
+				<div class="col-md-6">
+					{{> afQuickField name="geography"}}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Other</legend>
+			<div class="row">
+				<div class="col-md-4">
+					{{> afQuickField name="cycle"}} {{> afQuickField name="history"}} {{> afQuickField name="purpose"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="purposeActivity"}} {{> afQuickField name="collateralType"}} {{> afQuickField name="collateralSecurity"}}
+				</div>
+				<div class="col-md-4">
+					{{> afQuickField name="collateralNote" rows=3}} {{> afQuickField name="povertyLevel"}}
+				</div>
+			</div>
+		</fieldset>
+
+		{{> formFooterWithButton}} {{/autoForm}} {{else}} {{> loading}} {{/if}}
+	</div>
+</template>
+
+<!--Show-->
+<template name="Microfis_loanAccShow">
+	<div class="box-body">
+		{{#if data}} {{#with data}}
+		<dl class="dl-horizontal">
+			<fieldset>
+				<legend>General</legend>
+				<dt>Id</dt>
+				<dd>{{_id}}</dd>
+				<dt>Product</dt>
+				<dd>{{productId}} : {{productDoc.name}}</dd>
+				<dt>Submit Date</dt>
+				<dd>{{moFormat submitDate "DD/MM/YYYY"}}</dd>
+				<dt>Disbursement Date</dt>
+				<dd>{{moFormat disbursementDate "DD/MM/YYYYY"}}</dd>
+				<dt>Fund Id</dt>
+				<dd>{{fundId}} : {{fundDoc.name}}</dd>
+				<dt>Credit Officer</dt>
+				<dd>{{creditOfficerId}} : {{creditOfficerDoc.khName}}</dd>
+				<!--<dt>Attach File</dt>-->
+				<!--<dd>{{attachFile}}</dd>-->
+			</fieldset>
+
+			<fieldset>
+				<legend>Account</legend>
+				<dt>Account Type</dt>
+				<dd>{{accountType}}</dd>
+				<dt>Currency</dt>
+				<dd>{{currencyId}}</dd>
+				<dt>Loan Amount</dt>
+				<dd>{{numFormat loanAmount "0,0.00"}}</dd>
+			</fieldset>
+
+			<fieldset>
+				<legend>Payment</legend>
+				<dt>Payment Method</dt>
+				<dd>{{paymentMethod}}</dd>
+				<dt>Repaid Frequency</dt>
+				<dd>{{repaidFrequency}}</dd>
+				<dt>Term</dt>
+				<dd>{{term}}</dd>
+				<dt>Repaid Frequency</dt>
+				<dd>{{repaidFrequency}}</dd>
+				<dt>Principal Installment Frequency</dt>
+				<dd>{{principalInstallmentFrequency}}</dd>
+				<dt>Principal Installment Type</dt>
+				<dd>{{principalInstallmentType}}</dd>
+				<dt>Principal Installment Amount</dt>
+				<dd>{{numFormat principalInstallmentAmount "0,0.00"}}</dd>
+				<dt>First RepaymentDate</dt>
+				<dd>{{moFormat firstRepaymentDate "DD/MM/YYYY"}}</dd>
+				<dt>Due Date On</dt>
+				<dd>{{dueDateOn}}</dd>
+				<dt>Payment Location</dt>
+				<dd>{{paymentLocation}}</dd>
+				<dt>Escape Day Method</dt>
+				<dd>{{escapeDayMethod}}</dd>
+				<dt>Escape Day Frequency</dt>
+				<dd>{{escapeDayFrequency}}</dd>
+				<dt>Maturity Date</dt>
+				<dd>{{moFormat maturityDate "DD/MM/YYYY"}}</dd>
+				<dt>Tenor</dt>
+				<dd>{{tenor}}</dd>
+			</fieldset>
+
+			<fieldset>
+				<legend>Interest</legend>
+				<dt>Interest Method</dt>
+				<dd>{{interestMethod}}</dd>
+				<dt>Interest Rate (%)</dt>
+				<dd>{{numFormat interestRate "0,0.00"}}%</dd>
+			</fieldset>
+
+			<fieldset>
+				<legend>Location</legend>
+				<dt>Location</dt>
+				<dd>
+					{{locationId}} : {{locationDoc.parentDoc.khNamePro}}, {{locationDoc.parentDoc.khNameDis}}, {{locationDoc.parentDoc.khNameCom}},
+					{{locationDoc.khName}}
+				</dd>
+				<dt>Geography</dt>
+				<dd>{{geography}}</dd>
+			</fieldset>
+
+			<fieldset>
+				<legend>Other</legend>
+				<dt>Cycle</dt>
+				<dd>{{cycle}}</dd>
+				<dt>History</dt>
+				<dd>{{history}}</dd>
+				<dt>Purpose</dt>
+				<dd>{{purpose}}</dd>
+				<dt>Purpose Activity</dt>
+				<dd>{{purposeActivity}}</dd>
+				<dt>Collateral Type</dt>
+				<dd>{{collateralType}}</dd>
+				<dt>Collateral Note</dt>
+				<dd>{{collateralNote}}</dd>
+				<dt>Collateral Security</dt>
+				<dd>{{collateralSecurity}}</dd>
+				<dt>Poverty Level</dt>
+				<dd>{{povertyLevel}}</dd>
+			</fieldset>
+		</dl>
+		{{/with}} {{else}} {{> loading}} {{/if}}
+	</div>
+</template>

@@ -6,10 +6,10 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {moment} from  'meteor/momentjs:moment';
 
 // Collection
-import {Company} from '../../../../core/imports/api/collections/company.js';
-import {Branch} from '../../../../core/imports/api/collections/branch.js';
-import {Disbursement} from '../../../imports/api/collections/loan-acc.js';
-import {RepaymentSchedule} from '../../../imports/api/collections/repayment-schedule.js';
+import {Company} from '../../../../core/common/collections/company.js';
+import {Branch} from '../../../../core/common/collections/branch.js';
+import {Disbursement} from '../../../common/collections/loan-acc.js';
+import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';

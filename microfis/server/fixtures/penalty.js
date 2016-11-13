@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {Penalty} from '../../imports/api/collections/penalty.js';
+import {Penalty} from '../../common/collections/penalty.js';
 
 Meteor.startup(function () {
     if (Penalty.find().count() == 0) {

@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 
 // Collection
-import {Repayment} from '../../imports/api/collections/repayment.js';
+import {Repayment} from '../../common/collections/repayment.js';
 
 Meteor.publish('microfis.repayment', function microfisRepayment(selector = {}, options = {}) {
     this.unblock();

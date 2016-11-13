@@ -1,0 +1,125 @@
+<!--General Payment Form-->
+<template name="Microfis_repaymentClosingForm">
+    <div class="box-header with-border">
+        <h3 class="box-title text-blue">
+            {{#with loanAccDoc}}
+                <b>Product:</b> {{productId}},
+                <b>Disbursement Date:</b> {{moFormat disbursementDate "DD/MM/YYYY"}},
+                <b>Currency:</b> {{currencyId}}
+            {{/with}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-6">
+
+                <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">Info</div>-->
+                <!--<div class="panel-body">-->
+
+                <!--Current Due-->
+                <fieldset>
+                    <legend>Current</legend>
+                    {{#with checkRepayment.totalScheduleDue}}
+                        <dl class="dl-horizontal">
+                            <dt>Installment</dt>
+                            <dd>{{installment.from}} - {{installment.to}}</dd>
+                            <dt>Due Date</dt>
+                            <dd>
+                                {{moFormat dueDate.from "DD/MM/YYYY"}} -
+                                {{moFormat dueDate.to "DD/MM/YYYY"}}
+                            </dd>
+                            <dt>Num Of Day Late</dt>
+                            <dd>{{numOfDayLate}}</dd>
+                            <dt>Principal Due</dt>
+                            <dd>{{numFormat principalDue "0,0.00"}}</dd>
+                            <dt>Interest Due</dt>
+                            <dd>{{numFormat interestDue "0,0.00"}}</dd>
+                            <dt>Total Principal & Interest Due</dt>
+                            <dd>{{numFormat totalPrincipalInterestDue "0,0.00"}}</dd>
+                            <dt>Penalty Due</dt>
+                            <dd>{{numFormat penaltyDue "0,0.00"}}</dd>
+                            <dt>Total Amount Due</dt>
+                            <dd>{{numFormat totalAmountDue "0,0.00"}}</dd>
+                        </dl>
+                    {{/with}}
+                </fieldset>
+
+                <!--Outstanding-->
+                <fieldset>
+                    <legend>Outstanding</legend>
+                    {{#with checkRepayment.totalScheduleNext}}
+                        <dl class="dl-horizontal">
+                            <dt>Installment</dt>
+                            <dd>{{installment.from}} - {{installment.to}}</dd>
+                            <dt>Due Date</dt>
+                            <dd>
+                                {{moFormat dueDate.from "DD/MM/YYYY"}} -
+                                {{moFormat dueDate.to "DD/MM/YYYY"}}
+                            </dd>
+                            <dt>Num Of Day Late</dt>
+                            <dd>{{numOfDayLate}}</dd>
+                            <dt>Microfis Outstanding</dt>
+                            <dd>{{numFormat principalDue "0,0.00"}}</dd>
+                            <dt>Project Interest</dt>
+                            <dd>{{numFormat interestDue "0,0.00"}}</dd>
+                            <dt>Total Amount</dt>
+                            <dd>{{numFormat totalPrincipalInterestDue "0,0.00"}}</dd>
+                        </dl>
+                    {{/with}}
+                </fieldset>
+
+                <!--Closing-->
+                <fieldset>
+                    <legend>Closing</legend>
+                    {{#with checkRepayment.closing}}
+                        <dl class="dl-horizontal">
+                            <dt>Num Of Day Addition</dt>
+                            <dd>{{numOfDayAddition}}</dd>
+                            <dt>Interest Addition</dt>
+                            <dd>{{numFormat interestAddition "0,0.00"}}</dd>
+                            <dt>Interest Reminder Penalty</dt>
+                            <dd>
+                                {{numFormat interestReminderPenalty "0,0.00"}}
+                                (On interest reminder: {{numFormat interestReminder "0,0.00"}})
+                            </dd>
+                            <dt>Principal Reminder</dt>
+                            <dd>{{numFormat principalReminder "0,0.00"}}</dd>
+                            <dt>Total Due</dt>
+                            <dd>{{numFormat totalDue "0,0.00"}}</dd>
+                            <dt class="text-red">Interest Waived</dt>
+                            <dd class="text-red">{{numFormat interestWaived "0,0.00"}}</dd>
+                        </dl>
+                    {{/with}}
+                </fieldset>
+
+                <!--Detail-->
+                <!--{{> jsonView json=(jsonViewData checkRepayment.scheduleDue) options=jsonViewOpts}}-->
+
+                <!--</div>-->
+                <!-- /.panel-body -->
+                <!--</div>-->
+                <!-- /.panel -->
+
+            </div>
+
+            <div class="col-md-6">
+                {{#autoForm collection=collection id="Microfis_repaymentClosingForm" type="insert"}}
+                    {{> afQuickField type="hidden" name="loanAccId" value=(param "loanAccId")}}
+                    {{> afQuickField name="repaidDate"}}
+                    {{> afQuickField name="amountType"}}
+                    {{#with defaultValue}}
+                        {{> afQuickField name="amountPaid" value=totalDue readonly="true"}}
+                        {{> afQuickField name="penaltyPaid" value=totalPenalty}}
+                    {{/with}}
+                    {{> afQuickField name="note"}}
+
+                    {{> formFooterWithButton}}
+                {{/autoForm}}
+            </div>
+
+        </div>
+    </div>
+</template>

@@ -1,7 +1,7 @@
-import './_init.js';
+import '../configs/security.js';
 
 // Collection
-import {SavingTransaction} from '../../imports/api/collections/saving-transaction';
+import {SavingTransaction} from '../../common/collections/saving-transaction';
 
 SavingTransaction.permit(['insert'])
     .Microfis_ifDataInsert()

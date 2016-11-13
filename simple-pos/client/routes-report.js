@@ -11,38 +11,42 @@ import {__} from '../../core/common/libs/tapi18n-callback-helper.js';
 
 // Layout
 import {Layout} from '../../core/client/libs/render-layout.js';
-import '../../core/imports/ui/layouts/report/index.html';
+import '../../core/imports/layouts/report/index.html';
 
 // Group
-let SimplePOSRoutes = FlowRouter.group({
+let SimplePosRoutes = FlowRouter.group({
     prefix: '/simple-pos',
-    title: "Simple POS",
-    titlePrefix: 'Simple POS > ',
+    title: "Simple Pos",
+    titlePrefix: 'Simple Pos > ',
     subscriptions: function (params, queryParams) {
-//     this.register('files', Meteor.subscribe('files'));
+        // Branch by user
+        if (Meteor.user()) {
+            let rolesBranch = Meteor.user().rolesBranch;
+            this.register('core.branch', Meteor.subscribe('core.branch', {_id: {$in: rolesBranch}}));
+        }
     }
 });
 
-// Customer list with in page (printThis package)
-import '../imports/ui/reports/customer.js';
-SimplePOSRoutes.route('/customer-report', {
-    name: 'simplePos.customerReport',
-    title: 'Customer Report',
+// Item List
+import '../imports/reports/itemList.js';
+SimplePosRoutes.route('/item-list-report', {
+    name: 'simplePos.itemListReport',
+    title: 'Item List',
     action: function (params, queryParams) {
-        Layout.main('SimplePos_customerReport');
+        Layout.main('SimplePos_itemListReport');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: 'Customer Report',
-        icon: 'users',
+        title: 'Item List',
+        // icon: 'cart-plus',
         parent: 'simplePos.home'
     }
 });
 
-// Invoice with new page
-import '../imports/ui/reports/invoice.js';
-SimplePOSRoutes.route('/invoice-report', {
+// Invoice
+import '../imports/reports/invoice.js';
+SimplePosRoutes.route('/invoice-report', {
     name: 'simplePos.invoiceReport',
     title: 'Invoice Report',
     action: function (params, queryParams) {
@@ -52,14 +56,31 @@ SimplePOSRoutes.route('/invoice-report', {
         //params: ['id'],
         //queryParams: ['show', 'color'],
         title: 'Invoice Report',
-        icon: 'cart-plus',
+        // icon: 'cart-plus',
         parent: 'simplePos.home'
     }
 });
-SimplePOSRoutes.route('/invoice-report-gen', {
+SimplePosRoutes.route('/invoice-report-gen', {
     name: 'simplePos.invoiceReportGe',
     title: 'Invoice Report',
     action: function (params, queryParams) {
         Layout.report('SimplePos_invoiceReportGen');
+    }
+});
+
+// Order
+import '../imports/reports/order.js';
+SimplePosRoutes.route('/order-report', {
+    name: 'simplePos.orderReport',
+    title: 'Order Report',
+    action: function (params, queryParams) {
+        Layout.main('SimplePos_orderReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Order Report',
+        // icon: 'users',
+        parent: 'simplePos.home'
     }
 });

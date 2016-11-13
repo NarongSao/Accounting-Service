@@ -23,6 +23,15 @@
         "price": {
           "label": "Price"
         },
+        "type": {
+          "label": "Type"
+        },
+        "parent": {
+          "label": "Parent"
+        },
+        "ancestors": {
+          "label": "Ancestors"
+        },
         "photo": {
           "label": "Photo"
         }

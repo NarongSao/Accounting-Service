@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 
-import {Fund} from '../../imports/api/collections/fund.js';
+import {Fund} from '../../common/collections/fund.js';
 
 Meteor.startup(function () {
     if (Fund.find().count() == 0) {

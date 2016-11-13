@@ -4,7 +4,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Collection
-import {Product} from '../../imports/api/collections/product.js';
+import {Product} from '../../common/collections/product.js';
 
 export const lookupProduct = new ValidatedMethod({
     name: 'microfis.lookupProduct',

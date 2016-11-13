@@ -10,15 +10,16 @@ import BigNumber from 'bignumber.js';
 import {round2} from 'meteor/theara:round2';
 
 // Lib
-import {roundCurrency} from '../../imports/api/libs/round-currency.js';
+import {roundCurrency} from '../libs/round-currency';
 
 // Method
-import {Calculate} from './libs/calculate.js';
-import {lookupLoanAcc} from './lookup-loan-acc.js';
+import {Calculate} from '../libs/calculate';
+import {lookupLoanAcc} from './lookup-loan-acc';
 
 // Collection
-import {LoanAcc} from '../../imports/api/collections/loan-acc';
-import {RepaymentSchedule} from '../../imports/api/collections/repayment-schedule.js';
+import {LoanAcc} from '../../common/collections/loan-acc';
+import {RepaymentSchedule} from '../../common/collections/repayment-schedule';
+import {Repayment} from '../../common/collections/repayment';
 
 export let checkRepayment = new ValidatedMethod({
     name: 'microfis.checkRepayment',
@@ -41,10 +42,16 @@ export let checkRepayment = new ValidatedMethod({
             Meteor._sleepForMs(200);
 
             // Get loan acc and schedule
+            let lastScheduleDate = RepaymentSchedule.findOne({
+                loanAccId: loanAccId,
+                scheduleDate: {$lte: checkDate}
+            }, {sort: {scheduleDate: -1}}).scheduleDate;
+
             let loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
-                scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId}),
+                scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId, scheduleDate: lastScheduleDate}),
                 penaltyDoc = loanAccDoc.productDoc.penaltyDoc,
                 penaltyClosingDoc = loanAccDoc.productDoc.penaltyClosingDoc;
+
 
             //---------------------------
 
@@ -101,8 +108,6 @@ export let checkRepayment = new ValidatedMethod({
                         penaltyDue = penaltyDoc.amount;
 
                         if (penaltyDoc.calculateType == 'P') {
-                            console.log(totalPrincipalInterestDue);
-
                             penaltyDue = Calculate.interest.call({
                                 amount: totalPrincipalInterestDue,
                                 numOfDay: numOfDayLate,
@@ -256,6 +261,7 @@ export let checkRepayment = new ValidatedMethod({
                 totalAmountDue: 0
             });
 
+
             /*------ Calculate closing ---------*/
             let closing = {
                 principalReminder: totalScheduleNext.principalDue,
@@ -287,16 +293,15 @@ export let checkRepayment = new ValidatedMethod({
                 closing.interestReminder = round2(closing.interestReminder - closing.interestAddition, _round.precision, _round.type);
             }
 
+
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
                 if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing) {
-                    console.log('hi due');
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             } else {
                 let checkInstallmentTermPrevious = totalSchedulePrevious.installment.to && totalSchedulePrevious.installment.to < loanAccDoc.installmentAllowClosing;
                 if (!totalSchedulePrevious.installment.to || checkInstallmentTermPrevious) {
-                    console.log('hi pre');
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             }
@@ -305,6 +310,55 @@ export let checkRepayment = new ValidatedMethod({
             closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty, _round.precision, _round.type);
 
 
+            /*------ Calculate Principal Installment ---------*/
+
+            let principalInstallment = {
+                principalReminder: totalScheduleNext.principalDue,
+                interestReminder: totalScheduleNext.interestDue,
+                numOfDayAddition: 0,
+                interestAddition: 0,
+                totalDue: 0
+            };
+
+
+            // Cal addition
+            if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to) {
+                principalInstallment.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalSchedulePrevious.dueDate.to).startOf('day'), 'days');
+            }
+            if (totalScheduleDue && totalScheduleDue.dueDate.to) {
+                principalInstallment.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalScheduleDue.dueDate.to).startOf('day'), 'days');
+            }
+
+            if (principalInstallment.numOfDayAddition > 0) {
+                principalInstallment.interestAddition = Calculate.interest.call({
+                    amount: principalInstallment.principalReminder,
+                    numOfDay: principalInstallment.numOfDayAddition,
+                    interestRate: loanAccDoc.interestRate,
+                    method: loanAccDoc.paymentMethod,
+                    currencyId: loanAccDoc.currencyId
+                });
+
+            }
+
+            principalInstallment.totalDue = round2(principalInstallment.principalReminder + principalInstallment.interestAddition, _round.precision, _round.type);
+
+
+            // ReSchedule
+            let balanceUnPaid = 0;
+            let interestUnPaid = 0;
+            scheduleDoc.forEach(function (obj) {
+                balanceUnPaid += obj.principalDue;
+                interestUnPaid += obj.interestDue;
+                if (obj.repaymentDoc) {
+                    balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
+                    interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
+                }
+            })
+
+
+            // Get last repayment
+            let lastRepayment = Repayment.findOne({loanAccId: loanAccId}, {$sort: {_id: -1}});
+
             return {
                 scheduleDue: scheduleDue,
                 totalScheduleDue: totalScheduleDue,
@@ -312,7 +366,11 @@ export let checkRepayment = new ValidatedMethod({
                 totalSchedulePrevious: totalSchedulePrevious,
                 scheduleNext: scheduleNext,
                 totalScheduleNext: totalScheduleNext,
-                closing: closing
+                closing: closing,
+                principalInstallment: principalInstallment,
+                lastRepayment: lastRepayment,
+                balanceUnPaid: balanceUnPaid,
+                interestUnPaid: interestUnPaid
             };
         }
     }
