@@ -67,6 +67,7 @@ let state = new ReactiveDict();
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('repayment', {size: 'lg'});
+    createNewAlertify('writeOff');
     createNewAlertify('repaymentShow');
 
     // Default stat
@@ -228,7 +229,7 @@ indexTmpl.events({
             scheduleDoc: state.get('scheduleDoc'),
         };
 
-        alertify.repayment(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
+        alertify.writeOff(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
         
     },'click .js-create-write-off'(event, instance) {
         let data = {

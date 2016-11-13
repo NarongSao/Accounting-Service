@@ -53,6 +53,7 @@ formTmpl.onCreated(function () {
 
     this.autorun(() => {
 
+        debugger;
         let disbursementDate = state.get('disbursmentDate');
 
 
@@ -93,6 +94,7 @@ formTmpl.onCreated(function () {
                 // Set state
                 state.set('checkRepayment', result);
                 state.set('balanceUnPaid', result.balanceUnPaid);
+                state.set('interestUnPaid', result.interestUnPaid);
                 // Set last repayment
                 if (result.lastRepayment) {
                     state.set('lastTransactionDate', result.lastRepayment.repaidDate);
@@ -139,10 +141,13 @@ formTmpl.onRendered(function () {
 formTmpl.helpers({
 
     schema() {
-        return LoanAcc.reStructure;
+        return LoanAcc.writeOff;
     },
     balanceUnPaid() {
         return state.get('balanceUnPaid');
+    },
+    interestUnPaid() {
+        return state.get('interestUnPaid');
     }
 
 });
@@ -176,7 +181,7 @@ let hooksObject = {
             opts: doc
         }).then(function (result) {
             if (result) {
-                alertify.repayment().close();
+                alertify.writeOff().close();
             }
         }).catch(function (err) {
             alertify.error(err.message);

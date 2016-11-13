@@ -854,6 +854,7 @@ LoanAcc.attachSchema([
     LoanAcc.repaymentSchema,
     LoanAcc.interestSchema,
     LoanAcc.locationSchema,
+    LoanAcc.writeOff,
     LoanAcc.otherSchema
 ]);
 
@@ -972,5 +973,67 @@ LoanAcc.reStructure = new SimpleSchema({
                 }
             }
         }
+    }
+});
+
+LoanAcc.writeOff = new SimpleSchema({
+    writeOffDate: {
+        type: Date,
+        defaultValue: moment().toDate(),
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'bootstrap-datetimepicker',
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
+                }
+            }
+        }
+    },
+    amount: {
+        type: Number,
+        label: 'Amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
+    },
+    interest: {
+        type: Number,
+        label: 'Interest',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits : 2});
+            }
+        }
+    },
+    description: {
+        type: String,
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'summernote',
+                class: 'editor',
+                settings: {
+                    height : 80,
+                    minHeight: null,
+                    maxHeight: null,
+                    toolbar : [
+                        ['font',['bold','italic','underline','clear']],
+                        ['para',['ul','ol']]
+
+                    ]
+                }
+            }
+        }
+
     }
 });

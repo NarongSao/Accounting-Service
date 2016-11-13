@@ -16,17 +16,12 @@
 		<fieldset>
 			<legend>Write Off Ensure</legend>
 			<div class="row">
-                <div class="col-sm-6">
-                    {{> afQuickField name="disbursementDate"}}
-                    {{> afQuickField name="loanAmount" value=balanceUnPaid readonly=true}}
-                    {{> afQuickField name="term"}}
+                <div class="col-sm-12">
+                    {{> afQuickField name="writeOffDate"}}
+                    {{> afQuickField name="amount" value=balanceUnPaid readonly=true}}
+                    {{> afQuickField name="interest" value=interestUnPaid readonly=true}}
+                    {{> afQuickField name="description"}}
                 </div>
-                <div class="col-sm-6">
-                    {{> afQuickField name="firstRepaymentDate"}}
-                     {{> afQuickField name="dueDateOn"}}
-                </div>
-				
-                
 			</div>
 		</fieldset>
 
