@@ -192,11 +192,10 @@ let hooksObject = {
 
             doc.type = 'Close';
 
-            if(loanAccDoc.status=="ReStructure"){
+            if (loanAccDoc.status == "ReStructure") {
                 alertify.error("You already Restructure");
                 return false;
             }
-
 
 
             // Check to payment

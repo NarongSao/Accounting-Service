@@ -32,7 +32,7 @@ Repayment.schema = new SimpleSchema({
     type: {
         type: String,
         label: 'Type',
-        allowedValues: ['General', 'Prepay', 'ReSchedule', 'Waive-interest', 'Close', 'ReStructure','Write Off']
+        allowedValues: ['General', 'Prepay', 'ReSchedule', 'Waive-interest', 'Close', 'ReStructure', 'Write Off']
     },
     amountType: {
         type: String,
