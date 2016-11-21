@@ -10,8 +10,10 @@ Client.generalSchema = new SimpleSchema({
     prefix: {
         type: String,
         label: 'Prefix',
+        optional: true,
         autoform: {
-            type: 'select',
+            // type: 'select',
+            type: "hidden",
             afFieldInput: {
                 options: function () {
                     return SelectOpts.prefix(false);

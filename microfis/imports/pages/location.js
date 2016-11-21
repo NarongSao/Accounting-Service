@@ -131,7 +131,6 @@ showTmpl.onCreated(function () {
         lookupLocation.callPromise({
             locationId: currentData.locationId
         }).then((result)=> {
-            console.log(result);
 
             this.state.set(result);
 

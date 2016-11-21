@@ -28,6 +28,7 @@ import {MakeRepayment} from '../../common/libs/make-repayment.js';
 
 // Method
 import {checkRepayment} from '../../common/methods/check-repayment';
+import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 
 // Collection
 import {Repayment} from '../../common/collections/repayment.js';
@@ -38,21 +39,12 @@ import './repayment-general.html';
 // Declare template
 let formTmpl = Template.Microfis_repaymentGeneralForm;
 
-// State
-let state = new ReactiveDict();
 
 //-------- Form ------------
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
-        loanAccDoc = currentData.loanAccDoc;
+        loanAccDoc = stateRepayment.get("loanAccDoc");
 
-    // Set state
-    state.setDefault({
-        loanAccDoc: loanAccDoc,
-        lastTransactionDate: loanAccDoc.disbursementDate,
-        repaidDate: null,
-        checkRepayment: null
-    });
 
     // Set min/max amount to simple schema
     let minMaxAmount;
@@ -73,20 +65,29 @@ formTmpl.onCreated(function () {
 
     // Track autorun
     this.autorun(function () {
-        let repaidDate = state.get('repaidDate');
+        let repaidDate = stateRepayment.get('repaidDate');
 
         if (repaidDate) {
             $.blockUI();
 
+            if (loanAccDoc) {
+                lookupLoanAcc.callPromise({
+                    _id: loanAccDoc._id
+                }).then(function (result) {
+                    stateRepayment.set('loanAccDoc', result);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+            }
+            
             // Call check repayment from method
             checkRepayment.callPromise({
                 loanAccId: loanAccDoc._id,
                 checkDate: repaidDate
             }).then(function (result) {
-                console.log(result);
 
                 // Set state
-                state.set('checkRepayment', result);
+                stateRepayment.set('checkRepayment', result);
 
                 // Set max amount on simple schema
                 if (result && result.totalScheduleDue) {
@@ -96,7 +97,7 @@ formTmpl.onCreated(function () {
 
                 // Set last repayment
                 if (result.lastRepayment) {
-                    state.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
                 }
 
 
@@ -109,22 +110,24 @@ formTmpl.onCreated(function () {
             });
 
         } else {
-            state.set('checkRepayment', null);
+            stateRepayment.set('checkRepayment', null);
         }
     });
 
 });
 
 formTmpl.onRendered(function () {
+
+
     let $repaidDateObj = $('[name="repaidDate"]');
     let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-    state.set('repaidDate', repaidDate);
+    stateRepayment.set('repaidDate', repaidDate);
 
     // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(state.get('lastTransactionDate')).startOf('day'));
+    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
     $repaidDateObj.on("dp.change", function (e) {
-        state.set('repaidDate', moment(e.date).toDate());
+        stateRepayment.set('repaidDate', moment(e.date).toDate());
     });
 });
 
@@ -133,12 +136,12 @@ formTmpl.helpers({
         return Repayment;
     },
     checkRepayment(){
-        return state.get('checkRepayment');
+        return stateRepayment.get('checkRepayment');
     },
     defaultValue(){
         let totalDue = 0,
             totalPenalty = 0,
-            checkRepayment = state.get('checkRepayment');
+            checkRepayment = stateRepayment.get('checkRepayment');
 
         if (checkRepayment && checkRepayment.totalScheduleDue) {
             totalDue = checkRepayment.totalScheduleDue.totalPrincipalInterestDue;
@@ -170,23 +173,37 @@ formTmpl.onDestroyed(function () {
     Session.set('minAmountPaid', null);
     Session.set('maxAmountPaid', null);
     Session.set('maxPenaltyPaid', null);
+    AutoForm.resetForm("Microfis_repaymentGeneralForm");
+
+
 });
 
 // Hook
 let hooksObject = {
     before: {
         insert: function (doc) {
-            let loanAccDoc = state.get('loanAccDoc'),
-                checkRepayment = state.get('checkRepayment');
+            let loanAccDoc = stateRepayment.get('loanAccDoc'),
+                checkRepayment = stateRepayment.get('checkRepayment');
 
-            if(loanAccDoc.status=="ReStructure"){
-                alertify.error("You already Restructure");
+            if(loanAccDoc.status=="Restructure"){
+                alertify.warning("You already Restructure");
                 return false;
             }
 
 
             if(checkRepayment.balanceUnPaid -doc.loanAmount<=0){
-                alertify.error("You should go to Closing");
+                alertify.warning("You should go to Closing");
+                return false;
+            }
+
+            if (loanAccDoc.status == "Close") {
+                alertify.warning("You already Close");
+                return false;
+            }
+
+            //Check write Off
+            if (loanAccDoc.writeOffDate != null) {
+                alertify.warning("You already write off!!!");
                 return false;
             }
 
@@ -204,7 +221,6 @@ let hooksObject = {
                     totalScheduleDue: checkRepayment.totalScheduleDue
                 });
 
-                console.log(makeRepayment);
 
                 doc.totalPaid = doc.amountPaid + doc.penaltyPaid;
 

@@ -39,3 +39,19 @@ MicrofisRoutes.route('/repayment-schedule-report', {
         parent: 'microfis.home'
     }
 });
+// loan outstanding
+import '../imports/reports/loan-outstanding.js';
+MicrofisRoutes.route('/loan-outstanding-report', {
+    name: 'microfis.loanOutstandingReport',
+    title: 'Loan Outstanding Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanOutstandingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Outstanding Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

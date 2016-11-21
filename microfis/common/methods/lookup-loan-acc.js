@@ -18,7 +18,6 @@ export const lookupLoanAcc = new ValidatedMethod({
     run({_id}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(100);
-            
             let data = LoanAcc.aggregate([
                 {$match: {_id: _id}},
                 {
@@ -29,7 +28,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "clientDoc"
                     }
                 },
-                {$unwind: "$clientDoc"},
+                { $unwind: { path: "$clientDoc", preserveNullAndEmptyArrays: true } },
                 {
                     $lookup: {
                         from: "microfis_fund",
@@ -38,7 +37,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "fundDoc"
                     }
                 },
-                {$unwind: "$fundDoc"},
+                { $unwind: { path: "$fundDoc", preserveNullAndEmptyArrays: true } },
                 {
                     $lookup: {
                         from: "microfis_creditOfficer",
@@ -47,7 +46,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "creditOfficerDoc"
                     }
                 },
-                {$unwind: "$creditOfficerDoc"},
+                { $unwind: { path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true } },
                 {
                     $lookup: {
                         from: "microfis_location",
@@ -56,11 +55,48 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "locationDoc"
                     }
                 },
-                {$unwind: "$locationDoc"}
-            ])[0];
+                { $unwind: { path: "$locationDoc", preserveNullAndEmptyArrays: true } },
 
-            // Get product lookup
-            data.productDoc = lookupProduct.call({_id: data.productId});
+                {
+                    $lookup: {
+                        from: "microfis_product",
+                        localField: "productId",
+                        foreignField: "_id",
+                        as: "productDoc"
+                    }
+                },
+                { $unwind: { path: "$productDoc", preserveNullAndEmptyArrays: true } },
+
+                {
+                    $lookup: {
+                        from: "microfis_fee",
+                        localField: "productDoc.feeId",
+                        foreignField: "_id",
+                        as: "feeDoc"
+                    }
+                },
+                { $unwind: { path: "$feeDoc", preserveNullAndEmptyArrays: true } },
+
+                {
+                    $lookup: {
+                        from: "microfis_penalty",
+                        localField: "productDoc.penaltyId",
+                        foreignField: "_id",
+                        as: "penaltyDoc"
+                    }
+                },
+                { $unwind: { path: "$penaltyDoc", preserveNullAndEmptyArrays: true } },
+
+                {
+                    $lookup: {
+                        from: "microfis_penaltyClosing",
+                        localField: "productDoc.penaltyClosingId",
+                        foreignField: "_id",
+                        as: "penaltyClosingDoc"
+                    }
+                },
+                { $unwind: { path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true } }
+            ])[0];
 
             return data;
         }

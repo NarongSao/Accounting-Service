@@ -23,7 +23,7 @@
 
 <!--Action ReSchedule-->
 <template name="Microfis_loanAccReStructureAction">
-    <span class="badge bg-light-blue js-reStructure">{{fa "plus"}} ReStructure</span>
+    <span class="badge bg-light-blue js-reStructure">{{fa "plus"}} Restructure</span>
 </template>
 
 
@@ -69,7 +69,8 @@
 			<legend>General</legend>
 			<div class="row">
 				<div class="col-md-4">
-					{{> afQuickField type="hidden" name="clientId" value=(param "clientId")}} {{> afQuickField type="hidden" name="productId"}}
+					{{> afQuickField type="hidden" name="clientId" value=(param "clientId")}}
+                    {{> afQuickField type="hidden" name="productId"}}
 					{{> afQuickField name="submitDate"}} {{> afQuickField name="disbursementDate"}}
 				</div>
 				<div class="col-md-4">
@@ -100,8 +101,10 @@
 			<legend>Repayment</legend>
 			<div class="row">
 				<div class="col-md-4">
-					{{> afQuickField name="paymentMethod" readonly=true}} {{> afQuickField name="repaidFrequency"}} {{> afQuickField name="term"}}
-					{{> afQuickField name="firstRepaymentDate"}} {{> afQuickField name="dueDateOn"}}
+					{{> afQuickField name="paymentMethod" readonly=true}}
+                    {{> afQuickField name="repaidFrequency"}}
+                    {{> afQuickField name="term"}}
+                    {{> afQuickField name="firstRepaymentDate"}} {{> afQuickField name="dueDateOn"}}
 				</div>
 				<div class="col-md-4">
 					{{> afQuickField name="principalInstallment"}}

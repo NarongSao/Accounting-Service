@@ -27,7 +27,10 @@ import {LoanAcc} from '../../common/collections/loan-acc.js';
 
 import {makeReSchedule} from '../../common/methods/make-reSchedule.js';
 import {checkRepayment} from '../../common/methods/check-repayment';
+import {makeWriteOffEnsure} from '../../common/methods/make-writeOffEnsure.js';
 import {lookupProduct} from '../../common/methods/lookup-product.js';
+import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
+
 
 // Page
 import './write-off-ensure.html';
@@ -35,26 +38,17 @@ import './write-off-ensure.html';
 // Declare template
 let formTmpl = Template.Microfis_writeOffEnsure;
 
-let state = new ReactiveDict();
-
-
 // Form
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
-        loanAccDoc = currentData.loanAccDoc;
+        loanAccDoc = stateRepayment.get("loanAccDoc");
 
-    // Set state
-    state.setDefault({
-        loanAccDoc: loanAccDoc,
-        lastTransactionDate: loanAccDoc.disbursementDate,
-        disbursmentDate: moment().toDate(),
-        checkRepayment: null
-    });
+
+    stateRepayment.set('disbursmentDate',moment().toDate());
 
     this.autorun(() => {
 
-        debugger;
-        let disbursementDate = state.get('disbursmentDate');
+        let disbursementDate = stateRepayment.get('disbursmentDate');
 
 
         if (loanAccDoc.productId) {
@@ -74,14 +68,24 @@ formTmpl.onCreated(function () {
             });
         }
 
+        if (loanAccDoc) {
+            lookupLoanAcc.callPromise({
+                _id: loanAccDoc._id
+            }).then(function (result) {
+                stateRepayment.set('loanAccDoc', result);
+            }).catch(function (err) {
+                console.log(err.message);
+            });
+        }
+
         if (disbursementDate) {
             $.blockUI();
 
             let currentData = Template.currentData();
-            state.set('curData', currentData);
+            stateRepayment.set('curData', currentData);
 
             if (currentData) {
-                state.set('lastTransactionDate', currentData.disbursementDate);
+                stateRepayment.set('lastTransactionDate', currentData.disbursementDate);
                 this.subscribe('microfis.loanAccById', loanAccDoc._id);
             }
 
@@ -92,12 +96,12 @@ formTmpl.onCreated(function () {
                 checkDate: disbursementDate
             }).then(function (result) {
                 // Set state
-                state.set('checkRepayment', result);
-                state.set('balanceUnPaid', result.balanceUnPaid);
-                state.set('interestUnPaid', result.interestUnPaid);
+                stateRepayment.set('checkRepayment', result);
+                stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
+                stateRepayment.set('interestUnPaid', result.interestUnPaid);
                 // Set last repayment
                 if (result.lastRepayment) {
-                    state.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
                 }
 
 
@@ -110,7 +114,7 @@ formTmpl.onCreated(function () {
             });
 
         } else {
-            state.set('checkRepayment', null);
+            stateRepayment.set('checkRepayment', null);
         }
 
     });
@@ -131,7 +135,7 @@ formTmpl.onRendered(function () {
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
             debugger;
-            state.set('disbursmentDate', moment(e.date).toDate());
+            stateRepayment.set('disbursmentDate', moment(e.date).toDate());
             $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
         });
 
@@ -144,47 +148,85 @@ formTmpl.helpers({
         return LoanAcc.writeOff;
     },
     balanceUnPaid() {
-        return state.get('balanceUnPaid');
+        return stateRepayment.get('balanceUnPaid');
     },
     interestUnPaid() {
-        return state.get('interestUnPaid');
+        return stateRepayment.get('interestUnPaid');
     }
 
 });
 
 
 formTmpl.onDestroyed(function () {
-    AutoForm.resetForm("Microfis_reStructure");
-    state.set('curData', undefined);
+    AutoForm.resetForm("Microfis_writeOffEnsure");
+    stateRepayment.set('curData', undefined);
 });
 
 // Hook
 let hooksObject = {
     onSubmit(doc) {
 
-        let curDoc = state.get('curData');
 
-        if (curDoc.loanAccDoc.status == "ReStructure") {
-            alertify.error("You already Restructure");
+        let curDoc = stateRepayment.get('curData');
+        let loanAccDoc = stateRepayment.get('loanAccDoc');
+
+        if (loanAccDoc.status == "Restructure") {
+            alertify.warning("You already Restructure!!!");
+            return false;
+        }
+
+        if (loanAccDoc.status == "Close") {
+            alertify.warning("You already Close");
+            return false;
+        }
+
+        if (loanAccDoc.writeOffDate != null) {
+            alertify.warning("You already write off!!!");
             return false;
         }
 
 
-        if (curDoc.loanAccDoc.disbursementDate > doc.disbursementDate) {
-            alertify.error("Less than disbursement date");
-            return false;
-        }
+        let updateWriteOff = {status: "Write Off", writeOffDate: doc.writeOff.writeOffDate};
+        updateWriteOff['writeOff.writeOffDate'] = doc.writeOff.writeOffDate;
+        updateWriteOff['writeOff.amount'] = doc.writeOff.amount;
+        updateWriteOff['writeOff.interest'] = doc.writeOff.interest;
+        updateWriteOff['writeOff.description'] = doc.writeOff.description;
+
+        let paymentWriteOff = [];
+        paymentWriteOff.push({
+            rePaidDate: doc.writeOff.writeOffDate,
+            amount: 0,
+            interest: 0,
+            unPaidPrincipal: doc.writeOff.amount,
+            unPaidInterest: doc.writeOff.interest
+
+        })
+
+        updateWriteOff.paymentWriteOff = paymentWriteOff;
 
 
-        makeReSchedule.callPromise({
+        makeWriteOffEnsure.callPromise({
             loanAccId: curDoc.loanAccDoc._id,
-            opts: doc
+            opts: updateWriteOff
         }).then(function (result) {
             if (result) {
+                alertify.success("Success ");
                 alertify.writeOff().close();
+
+
+                if (result) {
+                    lookupLoanAcc.callPromise({
+                        _id: curDoc.loanAccDoc._id
+                    }).then(function (result) {
+                        stateRepayment.set('loanAccDoc', result);
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
+                }
             }
         }).catch(function (err) {
-            alertify.error(err.message);
+            console.log(err.message);
+            alertify.error("Can't put in write Off");
         });
         return false;
     }

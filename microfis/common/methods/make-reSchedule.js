@@ -18,7 +18,6 @@ export const makeReSchedule = new ValidatedMethod({
             Meteor._sleepForMs(100);
 
             let data = LoanAcc.findOne({_id: loanAccId}, {_id: 0});
-            console.log(data);
 
             data.disbursementDate = opts.disbursementDate;
             data.loanAmount = opts.loanAmount;
@@ -30,7 +29,7 @@ export const makeReSchedule = new ValidatedMethod({
             let id = LoanAcc.insert(data);
             LoanAcc.direct.update({_id: loanAccId}, {
                 $set: {
-                    status: "ReStructure",
+                    status: "Restructure",
                     restructureDate: opts.disbursementDate
                 }
             });

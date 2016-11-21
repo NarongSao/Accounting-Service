@@ -60,9 +60,9 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
 // After remove
 LoanAcc.after.remove(function (userId, doc) {
     RepaymentSchedule.remove({loanAccId: doc._id});
-    if (doc.parentId!=0) {
+    if (doc.parentId != 0) {
         let parentDoc = LoanAcc.findOne({_id: doc.parentId});
-        if (parentDoc && parentDoc.status == "ReStructure") {
+        if (parentDoc && parentDoc.status == "Restructure") {
             LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}});
         }
     }
@@ -72,10 +72,12 @@ LoanAcc.after.remove(function (userId, doc) {
 function _makeSchedule(doc) {
     let schedule = MakeSchedule.declinig.call({loanAccId: doc._id});
 
-    let maturityDate, tenor = 0;
+    let maturityDate, tenor = 0, projectInterest = 0;
 
     _.forEach(schedule, (value, key)=> {
         tenor += value.numOfDay;
+        projectInterest += value.interestDue;
+
         if (key == schedule.length - 1) {
             maturityDate = value.dueDate;
         }
@@ -87,5 +89,11 @@ function _makeSchedule(doc) {
     });
 
     // Update tenor, maturityDate on loan acc
-    LoanAcc.direct.update({_id: doc._id}, {$set: {maturityDate: maturityDate, tenor: tenor}});
+    LoanAcc.direct.update({_id: doc._id}, {
+        $set: {
+            maturityDate: maturityDate,
+            tenor: tenor,
+            projectInterest: projectInterest
+        }
+    });
 }

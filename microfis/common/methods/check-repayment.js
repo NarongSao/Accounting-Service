@@ -41,16 +41,34 @@ export let checkRepayment = new ValidatedMethod({
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
+
             // Get loan acc and schedule
-            let lastScheduleDate = RepaymentSchedule.findOne({
+            let lastScheduleDateTemp = RepaymentSchedule.findOne({
                 loanAccId: loanAccId,
                 scheduleDate: {$lte: checkDate}
-            }, {sort: {scheduleDate: -1}}).scheduleDate;
+            }, {sort: {scheduleDate: -1}});
 
-            let loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
-                scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId, scheduleDate: lastScheduleDate}),
-                penaltyDoc = loanAccDoc.productDoc.penaltyDoc,
-                penaltyClosingDoc = loanAccDoc.productDoc.penaltyClosingDoc;
+            let lastScheduleDate;
+            
+            if (lastScheduleDateTemp != undefined) {
+                lastScheduleDate = lastScheduleDateTemp.scheduleDate;
+            } else {
+                let lastScheduleDate = RepaymentSchedule.findOne({
+                    loanAccId: loanAccId,
+                }, {sort: {scheduleDate: 1}}).scheduleDate;
+            }
+
+            let loanAccDoc = {};
+
+            if (opts != undefined) {
+                loanAccDoc = opts;
+            } else {
+                loanAccDoc = lookupLoanAcc.call({_id: loanAccId});
+            }
+
+            let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId, scheduleDate: lastScheduleDate}),
+                penaltyDoc = loanAccDoc.penaltyDoc,
+                penaltyClosingDoc = loanAccDoc.penaltyClosingDoc;
 
 
             //---------------------------
@@ -174,7 +192,7 @@ export let checkRepayment = new ValidatedMethod({
                     from: null,
                     to: null
                 },
-                numOfDayLate: null,
+                numOfDayLate: 0,
                 principalDue: 0,
                 interestDue: 0,
                 totalPrincipalInterestDue: 0,
@@ -213,7 +231,7 @@ export let checkRepayment = new ValidatedMethod({
                     from: null,
                     to: null
                 },
-                numOfDayLate: null,
+                numOfDayLate: 0,
                 principalDue: 0,
                 interestDue: 0,
                 totalPrincipalInterestDue: 0,
@@ -253,7 +271,7 @@ export let checkRepayment = new ValidatedMethod({
                     from: null,
                     to: null
                 },
-                numOfDayLate: null,
+                numOfDayLate: 0,
                 principalDue: 0,
                 interestDue: 0,
                 totalPrincipalInterestDue: 0,

@@ -11,9 +11,9 @@
             <button type="button" class="btn btn-primary js-create-reschedule">
                 <i class="fa fa-refresh"></i> ReSchedule
             </button>
-            
+
             <!--<button type="button" class="btn btn-warning js-create-waive-interest">-->
-                <!--<i class="fa fa-trash-o"></i> Waive Interest-->
+            <!--<i class="fa fa-trash-o"></i> Waive Interest-->
             <!--</button>-->
             <button type="button" class="btn btn-warning js-create-write-off">
                 <i class="fa fa-trash-o"></i> Write Off
@@ -32,7 +32,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="js-create-write-off-ensure" href="#">Write Off Ensure</a></li>
-                        <li><a class="js-create-waive-interest" href="#">Waive Interest</a></li>
+                        <!--<li><a class="js-create-waive-interest" href="#">Waive Interest</a></li>-->
                         <li><a class="js-reStructure" href="#">Restructure</a></li>
                     </ul>
                 </div>
@@ -41,6 +41,9 @@
             <!--Client Info-->
             <div class="text-bold pull-right">
                 {{#with loanAccDoc}}
+
+                    <span class="badge bg-orange-active"><i class="fa fa-heart-o"></i> {{status}} </span>
+
                     <a href="#" class="js-display-disbursement">
                         {{clientId}} : {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</a>
                 {{/with}}
@@ -60,6 +63,8 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab_schedule" data-toggle="tab" aria-expanded="false">Schedule</a></li>
                 <li class=""><a href="#tab_transaction" data-toggle="tab" aria-expanded="false">Transaction</a></li>
+                <li class=""><a href="#tab_writeOff" data-toggle="tab" aria-expanded="false">Write Off</a></li>
+                <li class=""><a href="#tab_restructure" data-toggle="tab" aria-expanded="false">Restructure</a></li>
                 <!--<li class=""><a href="#tab_summary" data-toggle="tab" aria-expanded="true">Summary</a></li>-->
             </ul>
             <div class="tab-content">
@@ -76,6 +81,21 @@
                     <!--{{> Microfis_repaymentDetailTransaction data=tabularTable}}-->
                     {{> Microfis_repaymentDetailTransaction data=tableSettings}}
                 </div>
+
+
+                <!-- /.tab-pane -->
+
+                <div class="tab-pane" id="tab_writeOff">
+                    {{> Microfis_writeOffEnsureDetail data=loanAccDoc}}
+                </div>
+
+                <!-- /.tab-pane -->
+
+                <div class="tab-pane" id="tab_restructure">
+                    {{> tabular table=tabularLoan.tabularTable selector=tabularLoan.selector class="table table-striped table-bordered table-condensed table-hover-pointer"}}
+                </div>
+
+
                 <!-- /.tab-pane -->
 
                 <!--<div class="tab-pane" id="tab_summary">-->
@@ -151,7 +171,7 @@
                     <dd>{{moFormat disbursementDate "DD/MM/YYYY"}}</dd>
                     <dt>Repaid Frequency</dt>
                     <dd>{{repaidFrequency}} ({{paymentMethod}})</dd>
-                    <dt>Team</dt>
+                    <dt>Term</dt>
                     <dd>{{term}}</dd>
                     <dt>Loan Amount</dt>
                     <dd>{{numFormat loanAmount "0,0.00"}} {{currencyId}}</dd>
@@ -173,6 +193,60 @@
                     <dd>{{creditOfficerDoc.khName}}</dd>
                 </dl>
             </div>
+        {{/with}}
+    </div>
+</template>
+
+
+<!--Write Off-->
+<template name="Microfis_writeOffEnsureDetail">
+    <div class="row">
+        {{#with data}}
+            {{#if writeOff}}
+                <div class="col-md-3">
+                    <dl class="dl-horizontal">
+                        <dt>Write Off Date</dt>
+                        <dd>{{moFormat writeOff.writeOffDate "DD/MM/YYYY"}}</dd>
+
+                        <dt>Total Principal</dt>
+                        <dd>{{numFormat writeOff.amount "0,0.00"}} {{currencyId}}</dd>
+
+                        <dt>Total Interest</dt>
+                        <dd>{{numFormat writeOff.interest "0,0.00"}} {{currencyId}}</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-9">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#Id</th>
+                            <th>Repaid Date</th>
+                            <th>Amount</th>
+                            <th>Interest</th>
+                            <th>Unpaid Amount</th>
+                            <th>Unpaid Interest</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each paymentWriteOff}}
+                            <tr>
+                                <td>{{@index}}</td>
+                                <td>{{moFormat rePaidDate "DD/MM/YYYY"}}</td>
+                                <td>{{numFormat amount "0,0.00"}}</td>
+                                <td>{{numFormat interest "0,0.00"}}</td>
+                                <td>{{numFormat unPaidPrincipal "0,0.00"}}</td>
+                                <td>{{numFormat unPaidInterest "0,0.00"}}</td>
+
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <button class="btn btn-danger js-removeWriteOff"><i class="fa fa-times" aria-hidden="true"></i> Remove</button>
+                    </div>
+                </div>
+            {{/if}}
         {{/with}}
     </div>
 </template>

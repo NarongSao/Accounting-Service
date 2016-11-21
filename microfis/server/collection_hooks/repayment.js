@@ -25,22 +25,24 @@ Repayment.before.insert(function (userId, doc) {
 Repayment.after.insert(function (userId, doc) {
     Meteor.defer(function () {
         // Update schedule
-        if (doc.detailDoc.schedulePaid) {
-            let schedulePaid = doc.detailDoc.schedulePaid;
+        if (doc.detailDoc) {
+            if (doc.detailDoc.schedulePaid) {
+                let schedulePaid = doc.detailDoc.schedulePaid;
 
-            _.forEach(schedulePaid, (o) => {
-                o.repaymentId = doc._id;
+                _.forEach(schedulePaid, (o) => {
+                    o.repaymentId = doc._id;
 
-                RepaymentSchedule.update({_id: o.scheduleId}, {
-                    $inc: {
-                        'repaymentDoc.totalPrincipalPaid': o.principalPaid,
-                        'repaymentDoc.totalInterestPaid': o.interestPaid,
-                        'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
-                        'repaymentDoc.totalInterestWaived': o.interestWaived,
-                    },
-                    $push: {'repaymentDoc.detail': o}
+                    RepaymentSchedule.update({_id: o.scheduleId}, {
+                        $inc: {
+                            'repaymentDoc.totalPrincipalPaid': o.principalPaid,
+                            'repaymentDoc.totalInterestPaid': o.interestPaid,
+                            'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
+                            'repaymentDoc.totalInterestWaived': o.interestWaived,
+                        },
+                        $push: {'repaymentDoc.detail': o}
+                    });
                 });
-            });
+            }
         }
 
 
@@ -51,7 +53,7 @@ Repayment.after.insert(function (userId, doc) {
         }
 
 
-        if (doc.type == "ReSchedule") {
+        if (doc.type == "Reschedule") {
             _makeScheduleForPrincipalInstallment(doc);
         }
 
@@ -63,21 +65,22 @@ Repayment.after.insert(function (userId, doc) {
 Repayment.after.remove(function (userId, doc) {
     Meteor.defer(function () {
         // Update schedule
+        if (doc.detailDoc) {
+            if (doc.detailDoc.schedulePaid) {
+                let schedulePaid = doc.detailDoc.schedulePaid;
 
-        if (doc.detailDoc.schedulePaid) {
-            let schedulePaid = doc.detailDoc.schedulePaid;
-
-            _.forEach(schedulePaid, (o) => {
-                RepaymentSchedule.update({_id: o.scheduleId}, {
-                    $inc: {
-                        'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
-                        'repaymentDoc.totalInterestPaid': -o.interestPaid,
-                        'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
-                        'repaymentDoc.totalInterestWaived': -o.interestWaived,
-                    },
-                    $pull: {'repaymentDoc.detail': {repaymentId: doc._id}}
+                _.forEach(schedulePaid, (o) => {
+                    RepaymentSchedule.update({_id: o.scheduleId}, {
+                        $inc: {
+                            'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
+                            'repaymentDoc.totalInterestPaid': -o.interestPaid,
+                            'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
+                            'repaymentDoc.totalInterestWaived': -o.interestWaived,
+                        },
+                        $pull: {'repaymentDoc.detail': {repaymentId: doc._id}}
+                    });
                 });
-            });
+            }
         }
 
 
@@ -90,26 +93,31 @@ Repayment.after.remove(function (userId, doc) {
             if (loanDoc.writeOffDate != undefined) {
                 LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Write Off'}});
             } else if (loanDoc.restructureDate != undefined) {
-                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'ReStructure'}});
+                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Restructure'}});
             } else {
                 LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: "Active"}});
             }
         }
 
         if (doc.type == 'Write Off') {
-            // Set close status on loan acc
-            LoanAcc.direct.update({_id: doc.loanAccId}, {$unset: {restructureDate: ''}});
 
-            if (loanDoc.restructureDate != undefined) {
-                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'ReStructure'}});
-            } else {
-                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: "Active"}});
-            }
+            let updatePaymentArray = {};
+            let paymentArray = loanDoc.paymentWriteOff;
+            let paymentWriteOff = [];
+            paymentArray.forEach(function (obj) {
+
+                if (obj.rePaidDate.getTime()  !== doc.repaidDate.getTime()) {
+                    paymentWriteOff.push(obj);
+                }
+            })
+            updatePaymentArray.paymentWriteOff = paymentWriteOff;
+            LoanAcc.direct.update({_id: doc.loanAccId}, {$set: updatePaymentArray});
         }
 
-        if (doc.type == "ReSchedule") {
+        if (doc.type == "Reschedule") {
             RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
         }
+
         LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}});
 
 

@@ -126,7 +126,7 @@ LoanAcc.generalSchema = new SimpleSchema({
         label: function () {
             return Spacebars.SafeString(`Disbursement date <span class="text-red">(${state.get('startDate')} - ${state.get('endDate')})</span>`);
         },
-        // defaultValue: moment().toDate(),
+        defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
                 type: 'bootstrap-datetimepicker',
@@ -213,7 +213,8 @@ LoanAcc.generalSchema = new SimpleSchema({
     },
     status: {
         type: String,
-        defaultValue: "Check"
+        defaultValue: "Active"
+        //  Check
         //  Active
         //  Write Off
         //  Restructure
@@ -254,6 +255,12 @@ LoanAcc.accountSchema = new SimpleSchema({
                 }
             }
         }
+    },
+    projectInterest: {
+        type: Number,
+        label: 'Project Interest',
+        decimal: true,
+        optional: true
     },
     loanAmount: {
         type: Number,
@@ -347,7 +354,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
     },
     repaidFrequency: {
         type: Number,
-        label: 'Repaid frequency',
+        label: 'Repaid Frequency',
         defaultValue: 1,
         min: 1,
         autoform: {
@@ -977,7 +984,11 @@ LoanAcc.reStructure = new SimpleSchema({
 });
 
 LoanAcc.writeOff = new SimpleSchema({
-    writeOffDate: {
+    writeOff: {
+        type: Object,
+        optional: true
+    },
+    'writeOff.writeOffDate': {
         type: Date,
         defaultValue: moment().toDate(),
         optional: true,
@@ -991,7 +1002,7 @@ LoanAcc.writeOff = new SimpleSchema({
             }
         }
     },
-    amount: {
+    'writeOff.amount': {
         type: Number,
         label: 'Amount',
         decimal: true,
@@ -1003,19 +1014,20 @@ LoanAcc.writeOff = new SimpleSchema({
             }
         }
     },
-    interest: {
+    'writeOff.interest': {
         type: Number,
         label: 'Interest',
         decimal: true,
+
         autoform: {
             type: 'inputmask',
             placeholder: "Credit",
             inputmaskOptions: function () {
-                return inputmaskOptions.decimal({digits : 2});
+                return inputmaskOptions.decimal({digits: 2});
             }
         }
     },
-    description: {
+    'writeOff.description': {
         type: String,
         optional: true,
         autoform: {
@@ -1023,17 +1035,83 @@ LoanAcc.writeOff = new SimpleSchema({
                 type: 'summernote',
                 class: 'editor',
                 settings: {
-                    height : 80,
+                    height: 80,
                     minHeight: null,
                     maxHeight: null,
-                    toolbar : [
-                        ['font',['bold','italic','underline','clear']],
-                        ['para',['ul','ol']]
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol']]
 
                     ]
                 }
             }
         }
 
+    },
+    paymentWriteOff: {
+        type: [Object],
+        optional: true
+    },
+    'paymentWriteOff.$.rePaidDate': {
+        type: Date,
+        defaultValue: moment().toDate(),
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'bootstrap-datetimepicker',
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
+                }
+            }
+        }
+    },
+    'paymentWriteOff.$.amount': {
+        type: Number,
+        label: 'Amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    },
+    'paymentWriteOff.$.interest': {
+        type: Number,
+        label: 'Interest',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    },
+    'paymentWriteOff.$.unPaidPrincipal': {
+        type: Number,
+        label: 'UnPaid Principal',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    },
+    'paymentWriteOff.$.unPaidInterest': {
+        type: Number,
+        label: 'UnPaid Interest',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
     }
 });

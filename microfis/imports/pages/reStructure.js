@@ -28,6 +28,7 @@ import {LoanAcc} from '../../common/collections/loan-acc.js';
 import {makeReSchedule} from '../../common/methods/make-reSchedule.js';
 import {checkRepayment} from '../../common/methods/check-repayment';
 import {lookupProduct} from '../../common/methods/lookup-product.js';
+import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 
 // Page
 import './reStructure.html';
@@ -35,25 +36,20 @@ import './reStructure.html';
 // Declare template
 let formTmpl = Template.Microfis_reStructure;
 
-let state = new ReactiveDict();
 
 
 // Form
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
-        loanAccDoc = currentData.loanAccDoc;
+        loanAccDoc = stateRepayment.get("loanAccDoc");
 
-    // Set state
-    state.setDefault({
-        loanAccDoc: loanAccDoc,
-        lastTransactionDate: loanAccDoc.disbursementDate,
-        disbursmentDate: moment().toDate(),
-        checkRepayment: null
-    });
+
+    stateRepayment.set('disbursmentDate',moment().toDate());
+
 
     this.autorun(() => {
 
-        let disbursementDate = state.get('disbursmentDate');
+        let disbursementDate = stateRepayment.get('disbursmentDate');
 
 
         if (loanAccDoc.productId) {
@@ -76,11 +72,23 @@ formTmpl.onCreated(function () {
         if (disbursementDate) {
             $.blockUI();
 
+            if (loanAccDoc) {
+                lookupLoanAcc.callPromise({
+                    _id: loanAccDoc._id
+                }).then(function (result) {
+                    stateRepayment.set('loanAccDoc', result);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+            }
+
+
+
             let currentData = Template.currentData();
-            state.set('curData', currentData);
+            stateRepayment.set('curData', currentData);
 
             if (currentData) {
-                state.set('lastTransactionDate', currentData.disbursementDate);
+                stateRepayment.set('lastTransactionDate', currentData.disbursementDate);
                 this.subscribe('microfis.loanAccById', loanAccDoc._id);
             }
 
@@ -91,8 +99,8 @@ formTmpl.onCreated(function () {
                 checkDate: disbursementDate
             }).then(function (result) {
                 // Set state
-                state.set('checkRepayment', result);
-                state.set('balanceUnPaid', result.balanceUnPaid);
+                stateRepayment.set('checkRepayment', result);
+                stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
                 // Set last repayment
                 if (result.lastRepayment) {
                     state.set('lastTransactionDate', result.lastRepayment.repaidDate);
@@ -108,7 +116,7 @@ formTmpl.onCreated(function () {
             });
 
         } else {
-            state.set('checkRepayment', null);
+            stateRepayment.set('checkRepayment', null);
         }
 
     });
@@ -129,7 +137,7 @@ formTmpl.onRendered(function () {
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
             debugger;
-            state.set('disbursmentDate', moment(e.date).toDate());
+            stateRepayment.set('disbursmentDate', moment(e.date).toDate());
             $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
         });
 
@@ -142,7 +150,7 @@ formTmpl.helpers({
         return LoanAcc.reStructure;
     },
     balanceUnPaid() {
-        return state.get('balanceUnPaid');
+        return stateRepayment.get('balanceUnPaid');
     }
 
 });
@@ -150,17 +158,28 @@ formTmpl.helpers({
 
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_reStructure");
-    state.set('curData', undefined);
+    stateRepayment.set('curData', undefined);
 });
 
 // Hook
 let hooksObject = {
     onSubmit(doc) {
 
-        let curDoc = state.get('curData');
-
-        if (curDoc.loanAccDoc.status == "ReStructure") {
+        let curDoc = stateRepayment.get('curData');
+        let loanAccDoc=stateRepayment.get('loanAccDoc');
+        if (curDoc.loanAccDoc.status == "Restructure") {
             alertify.error("You already Restructure");
+            return false;
+        }
+
+        if (loanAccDoc.status == "Close") {
+            alertify.warning("You already Close");
+            return false;
+        }
+
+        //Check write Off
+        if (loanAccDoc.writeOffDate != null) {
+            alertify.warning("You already write off!!!");
             return false;
         }
 

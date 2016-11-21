@@ -925,27 +925,31 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     for (let o of scheduleNext) {
         let currentDue = o.currentDue;
 
-        // Check interest paid
         let principalPaid = new BigNumber(0),
             interestPaid = new BigNumber(0),
             interestWaived = new BigNumber(0);
 
-        if (tmpAmountPaid.interest.lessThanOrEqualTo(currentDue.interest)) {
+        // Check interest paid
+       /* if (tmpAmountPaid.interest.lessThanOrEqualTo(currentDue.interest)) {
             interestPaid = tmpAmountPaid.interest;
             interestWaived = new BigNumber(currentDue.interest).minus(interestPaid);
             tmpAmountPaid.interest = new BigNumber(0);
         } else {
             interestPaid = new BigNumber(currentDue.interest);
             tmpAmountPaid.interest = tmpAmountPaid.interest.minus(interestPaid);
-        }
+        }*/
+        interestWaived=new BigNumber(currentDue.interest);
+
+
         // Check principal paid
-        if (tmpAmountPaid.principal.lessThanOrEqualTo(currentDue.principal)) {
+        /*if (tmpAmountPaid.principal.lessThanOrEqualTo(currentDue.principal)) {
             principalPaid = tmpAmountPaid.principal;
             tmpAmountPaid.principal = new BigNumber(0);
         } else {
             principalPaid = new BigNumber(currentDue.principal);
             tmpAmountPaid.principal = tmpAmountPaid.principal.minus(principalPaid);
-        }
+        }*/
+        principalPaid = new BigNumber(currentDue.principal);
 
 
         // Push data
@@ -1045,6 +1049,65 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         schedulePaid: schedulePaid,
         totalSchedulePaid: totalSchedulePaid
     };
+};
+
+
+MakeRepayment.writeOff = function ({repaidDate, amountPaid, loanAccDoc, opts}) {
+    new SimpleSchema({
+        repaidDate: {
+            type: Date
+        },
+        amountPaid: {
+            type: Number,
+            decimal: true,
+            min: 0.01
+        },
+        loanAccDoc: {
+            type: Object,
+            optional: true,
+            blackbox: true
+        },
+
+        opts: {
+            type: Object,
+            optional: true,
+            blackbox: true
+        }
+    }).validate({
+        repaidDate,
+        amountPaid,
+        loanAccDoc,
+        opts
+    });
+    let objPayment = {};
+    let paymentWriteOff = loanAccDoc.paymentWriteOff;
+
+    objPayment.rePaidDate = repaidDate;
+
+    if (opts.outStanding.interest > 0) {
+        if (opts.outStanding.interest >= amountPaid) {
+            objPayment.unPaidInterest = opts.outStanding.interest - amountPaid;
+            objPayment.unPaidPrincipal = opts.outStanding.amount;
+
+            objPayment.amount = 0;
+            objPayment.interest = amountPaid;
+        } else {
+            objPayment.unPaidInterest = 0;
+            objPayment.unPaidPrincipal = opts.outStanding.amount-(amountPaid-opts.outStanding.interest);
+
+            objPayment.amount = amountPaid-opts.outStanding.interest;
+            objPayment.interest = opts.outStanding.interest;
+        }
+    }else {
+        objPayment.unPaidInterest = 0;
+        objPayment.unPaidPrincipal = opts.outStanding.amount-amountPaid;
+
+        objPayment.amount = amountPaid;
+        objPayment.interest = 0;
+    }
+
+    paymentWriteOff.push(objPayment);
+    return paymentWriteOff;
 };
 
 

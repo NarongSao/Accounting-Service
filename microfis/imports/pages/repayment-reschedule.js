@@ -1,23 +1,23 @@
-import { Template } from 'meteor/templating';
-import { Tracker } from 'meteor/tracker';
-import { ReactiveDict } from 'meteor/reactive-dict';
-import { AutoForm } from 'meteor/aldeed:autoform';
-import { alertify } from 'meteor/ovcharik:alertifyjs';
-import { fa } from 'meteor/theara:fa-helpers';
-import { ReactiveTable } from 'meteor/aslagle:reactive-table';
-import { _ } from 'meteor/erasaur:meteor-lodash';
+import {Template} from 'meteor/templating';
+import {Tracker} from 'meteor/tracker';
+import {ReactiveDict} from 'meteor/reactive-dict';
+import {AutoForm} from 'meteor/aldeed:autoform';
+import {alertify} from 'meteor/ovcharik:alertifyjs';
+import {fa} from 'meteor/theara:fa-helpers';
+import {ReactiveTable} from 'meteor/aslagle:reactive-table';
+import {_} from 'meteor/erasaur:meteor-lodash';
 import BigNumber from 'bignumber.js';
-import { round2 } from 'meteor/theara:round2';
+import {round2} from 'meteor/theara:round2';
 import math from 'mathjs';
 
 // Lib
-import { createNewAlertify } from '../../../core/client/libs/create-new-alertify.js';
-import { renderTemplate } from '../../../core/client/libs/render-template.js';
-import { destroyAction } from '../../../core/client/libs/destroy-action.js';
-import { displaySuccess, displayError } from '../../../core/client/libs/display-alert.js';
-import { reactiveTableSettings } from '../../../core/client/libs/reactive-table-settings.js';
-import { __ } from '../../../core/common/libs/tapi18n-callback-helper.js';
-import { roundCurrency } from '../../common/libs/round-currency.js';
+import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
+import {renderTemplate} from '../../../core/client/libs/render-template.js';
+import {destroyAction} from '../../../core/client/libs/destroy-action.js';
+import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
+import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
+import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
+import {roundCurrency} from '../../common/libs/round-currency.js';
 
 // Component
 import '../../../core/client/components/loading.js';
@@ -25,14 +25,15 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // API Lib
-import { MakeRepayment } from '../../common/libs/make-repayment.js';
-import { Calculate } from '../../common/libs/calculate.js';
+import {MakeRepayment} from '../../common/libs/make-repayment.js';
+import {Calculate} from '../../common/libs/calculate.js';
 
 // Method
-import { checkRepayment } from '../../common/methods/check-repayment';
+import {checkRepayment} from '../../common/methods/check-repayment';
+import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 
 // Collection
-import { Repayment } from '../../common/collections/repayment.js';
+import {Repayment} from '../../common/collections/repayment.js';
 
 // Page
 import './repayment-reschedule.html';
@@ -40,21 +41,11 @@ import './repayment-reschedule.html';
 // Declare template
 let formTmpl = Template.Microfis_rescheduleForm;
 
-// State
-let state = new ReactiveDict();
 
 //-------- General Form ------------
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
-        loanAccDoc = currentData.loanAccDoc;
-
-    // Set state
-    state.setDefault({
-        loanAccDoc: loanAccDoc,
-        lastTransactionDate: loanAccDoc.disbursementDate,
-        repaidDate: null,
-        checkRepayment: null
-    });
+        loanAccDoc = stateRepayment.get("loanAccDoc");
 
     // Set min/max amount to simple schema
     let minMaxAmount;
@@ -75,10 +66,21 @@ formTmpl.onCreated(function () {
 
     // Track autorun
     this.autorun(function () {
-        let repaidDate = state.get('repaidDate');
+        let repaidDate = stateRepayment.get('repaidDate');
 
         if (repaidDate) {
             $.blockUI();
+
+
+            if (loanAccDoc) {
+                lookupLoanAcc.callPromise({
+                    _id: loanAccDoc._id
+                }).then(function (result) {
+                    stateRepayment.set('loanAccDoc', result);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+            }
 
             // Call check repayment from method
             checkRepayment.callPromise({
@@ -86,7 +88,7 @@ formTmpl.onCreated(function () {
                 checkDate: repaidDate
             }).then(function (result) {
                 // Set state
-                state.set('checkRepayment', result);
+                stateRepayment.set('checkRepayment', result);
 
                 // Set max amount on simple schema
                 let maxAmountPaid = new BigNumber(0);
@@ -109,7 +111,7 @@ formTmpl.onCreated(function () {
             });
 
         } else {
-            state.set('checkRepayment', null);
+            stateRepayment.set('checkRepayment', null);
         }
     });
 
@@ -119,12 +121,12 @@ formTmpl.onRendered(function () {
     let $repaidDateObj = $('[name="repaidDate"]');
     let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-    state.set('repaidDate', repaidDate);
+    stateRepayment.set('repaidDate', repaidDate);
 
     // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(state.get('lastTransactionDate')).startOf('day'));
+    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
     $repaidDateObj.on("dp.change", function (e) {
-        state.set('repaidDate', moment(e.date).toDate());
+        stateRepayment.set('repaidDate', moment(e.date).toDate());
     });
 });
 
@@ -133,19 +135,20 @@ formTmpl.helpers({
         return Repayment;
     },
     checkRepayment() {
-        return state.get('checkRepayment');
+        return stateRepayment.get('checkRepayment');
     },
     defaultValue() {
+        debugger;
         let totalDue = new BigNumber(0),
             totalPenalty = new BigNumber(0),
-            checkRepayment = state.get('checkRepayment');
+            checkRepayment = stateRepayment.get('checkRepayment');
 
         if (checkRepayment && checkRepayment.principalInstallment) {
             totalDue = totalDue.plus(checkRepayment.principalInstallment.principalReminder);
             totalPenalty = totalPenalty.plus(checkRepayment.principalInstallment.interestAddition);
         }
 
-        return { totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber() };
+        return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};
     },
     jsonViewData(data) {
         if (data) {
@@ -162,7 +165,7 @@ formTmpl.helpers({
         }
     },
     jsonViewOpts() {
-        return { collapsed: true };
+        return {collapsed: true};
     }
 });
 
@@ -170,6 +173,9 @@ formTmpl.onDestroyed(function () {
     Session.set('minAmountPaid', null);
     Session.set('maxAmountPaid', null);
     Session.set('maxPenaltyPaid', null);
+
+    AutoForm.resetForm("Microfis_rescheduleForm");
+
 });
 
 // Hook
@@ -177,15 +183,27 @@ let hooksObject = {
     before: {
         insert: function (doc) {
 
-            let loanAccDoc=state.get('loanAccDoc');
+            let loanAccDoc = stateRepayment.get('loanAccDoc');
 
-            doc.type = 'ReSchedule';
+
+            doc.type = 'Reschedule';
             doc.totalPaid = doc.amountPaid + doc.penaltyPaid;
 
-            let checkRepayment = state.get('checkRepayment');
+            let checkRepayment = stateRepayment.get('checkRepayment');
 
-            if(loanAccDoc.status=="ReStructure"){
-                alertify.error("You already Restructure");
+            if (loanAccDoc.status == "Restructure") {
+                alertify.warning("You already Restructure");
+                return false;
+            }
+
+            if (loanAccDoc.status == "Close") {
+                alertify.warning("You already Close");
+                return false;
+            }
+
+            //Check write Off
+            if (loanAccDoc.writeOffDate != null) {
+                alertify.warning("You already write off!!!");
                 return false;
             }
 

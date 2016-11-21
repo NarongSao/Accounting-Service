@@ -4,6 +4,14 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
 import {Currency} from '../../../core/common/collections/currency.js';
+import {Setting} from '../../../core/common/collections/setting.js';
+import {Exchange} from '../../../core/common/collections/exchange.js';
+import {Branch} from '../../../core/common/collections/branch.js';
+import {CreditOfficer} from '../../../microfis/common/collections/credit-officer.js';
+import {Product} from '../../../microfis/common/collections/product.js';
+import {Location} from '../../../microfis/common/collections/location.js';
+import {Fund} from '../../../microfis/common/collections/fund.js';
+import {ProductStatus} from '../../../microfis/common/collections/productStatus.js';
 import {LookupValue} from '../../common/collections/lookup-value.js';
 
 export const SelectOpts = {
@@ -217,4 +225,115 @@ export const SelectOpts = {
 
         return list;
     },
+};
+
+
+export const SelectOptsReport = {
+    branch: function () {
+        var list = [];
+        list.push({label: "(Select All)", value: "All"});
+        Branch.find()
+            .forEach(function (obj) {
+                list.push({label: obj.enName, value: obj._id});
+            });
+
+        return list;
+    },
+    creditOfficer: function () {
+        Meteor.subscribe('microfis.creditOfficer');
+
+        var list = [];
+        list.push({label: "(Select All)", value: "All"});
+        CreditOfficer.find()
+            .forEach(function (obj) {
+                list.push({label: obj.khName, value: obj._id});
+            });
+
+        return list;
+    },
+    paymentMethod: function () {
+        var list = [];
+        list.push(
+            {label: "(Select All)", value: "All"},
+            {label: "Daily", value: "D"},
+            {label: "Month", value: "M"},
+            {label: "Week", value: "W"},
+            {label: "Yearly", value: "Y"}
+        );
+        return list;
+    },
+    exchange: function () {
+        Meteor.subscribe('core.exchange');
+        Meteor.subscribe('core.setting');
+
+
+        var list = [];
+        var setting = Setting.findOne();
+        if (setting) {
+            let baseCurrency = setting.baseCurrency;
+            list.push({label: "(Select One)", value: ""});
+            Exchange.find({base: baseCurrency}, {sort: {exDate: -1}})
+                .forEach(function (obj) {
+                    list.push({
+                        label: moment(obj.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(obj.rates),
+                        value: obj._id
+                    });
+                });
+        }
+
+
+        return list;
+    },
+    currency: function () {
+        Meteor.subscribe('core.currency');
+
+        var list = [];
+        list.push({label: "(Select All)", value: "All"});
+        Currency.find()
+            .forEach(function (obj) {
+                list.push({label: obj._id, value: obj._id});
+            });
+
+        return list;
+    },
+    product: function () {
+        Meteor.subscribe('microfis.product');
+
+        var list = [];
+        list.push({label: "(Select All)", value: "All"});
+        Product.find()
+            .forEach(function (obj) {
+                list.push({label: obj.name, value: obj._id});
+            });
+
+        return list;
+    },
+    location: function () {
+
+        Meteor.subscribe('microfis.location');
+
+    },
+    fund: function () {
+        Meteor.subscribe('microfis.fund');
+        var list = [];
+        list.push({label: "(Select All)", value: "All"});
+        Fund.find()
+            .forEach(function (obj) {
+                list.push({label: obj.name, value: obj._id});
+            });
+
+        return list;
+    },
+    classify: function () {
+        Meteor.subscribe('microfis.productStatus');
+        var list = [];
+        list.push({label: "(Select All)", value: "All"});
+        ProductStatus.find()
+            .forEach(function (obj) {
+                list.push({label: obj.name, value: obj._id});
+            });
+
+        return list;
+    }
+
 };

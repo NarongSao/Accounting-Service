@@ -24,6 +24,8 @@ import '../../../core/client/components/form-footer.js';
 import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 import {lookupProduct} from '../../common/methods/lookup-product.js';
 
+import {removeWriteOffEnsure} from '../../common/methods/remove-writeOffEnsure.js';
+
 // API Lib
 import {MakeRepayment} from '../../common/libs/make-repayment.js';
 
@@ -33,6 +35,8 @@ import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js'
 
 // Tabular
 import {RepaymentTabular} from '../../common/tabulars/repayment.js';
+import {LoanAccRestructureTabular} from '../../common/tabulars/loan-acc-restructure.js';
+
 
 // Page
 import './repayment.html';
@@ -58,10 +62,10 @@ let indexTmpl = Template.Microfis_repayment,
     writeOffFormTmpl = Template.Microfis_repaymentWriteOffForm,
     writeOffEnsureFormTmpl = Template.Microfis_writeOffEnsure,
     rescheduleFormTmpl = Template.Microfis_rescheduleForm,
-    reStructureForm=Template.Microfis_reStructure;
+    reStructureForm = Template.Microfis_reStructure;
 
 // State
-let state = new ReactiveDict();
+stateRepayment = new ReactiveDict();
 
 // Index
 indexTmpl.onCreated(function () {
@@ -71,21 +75,25 @@ indexTmpl.onCreated(function () {
     createNewAlertify('repaymentShow');
 
     // Default stat
-    state.setDefault({
+    stateRepayment.setDefault({
         loanAccDoc: null,
-        scheduleDoc: null
+        scheduleDoc: null,
+        lastTransactionDate: null,
+        repaidDate: null,
+        checkRepayment: null,
+        disbursmentDate:null
     });
 
     let loanAccId = FlowRouter.getParam('loanAccId');
     this.autorun(function () {
         if (loanAccId) {
             $.blockUI();
-
             // Get loan account doc
             lookupLoanAcc.callPromise({
                 _id: loanAccId
             }).then(function (result) {
-                state.set('loanAccDoc', result);
+                stateRepayment.set('loanAccDoc', result);
+                stateRepayment.set('lastTransactionDate', result.disbursementDate);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -106,7 +114,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     loanAccDoc() {
-        return state.get('loanAccDoc');
+        return stateRepayment.get('loanAccDoc');
     },
     scheduleDoc() {
         let loanAccId = FlowRouter.getParam('loanAccId');
@@ -117,7 +125,7 @@ indexTmpl.helpers({
 
 
         let scheduleDoc = RepaymentSchedule.find(selector, {sort: {installment: 1}});
-        state.set('scheduleDoc', scheduleDoc.fetch());
+        stateRepayment.set('scheduleDoc', scheduleDoc.fetch());
 
         return scheduleDoc;
     },
@@ -125,6 +133,13 @@ indexTmpl.helpers({
         let selector = {loanAccId: FlowRouter.getParam('loanAccId')};
         return {
             tabularTable: RepaymentTabular,
+            selector: selector
+        };
+    },
+    tabularLoan() {
+        let selector = {parentId: FlowRouter.getParam('loanAccId')};
+        return {
+            tabularTable: LoanAccRestructureTabular,
             selector: selector
         };
     },
@@ -206,17 +221,18 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create-payment'(event, instance) {
-        let data = {loanAccDoc: state.get('loanAccDoc'),};
+
+        let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment General'), renderTemplate(generalFormTmpl, data));
     },
     'click .js-create-prepay'(event, instance) {
-        let data = {loanAccDoc: state.get('loanAccDoc'),};
+        let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
     }
     , 'click .js-create-reschedule'(event, instance) {
         let data = {
-            loanAccDoc: state.get('loanAccDoc'),
-            scheduleDoc: state.get('scheduleDoc'),
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
         };
         alertify.repayment(fa('plus', 'Principal Installment'), renderTemplate(rescheduleFormTmpl, data));
 
@@ -225,16 +241,16 @@ indexTmpl.events({
     },
     'click .js-create-write-off-ensure'(event, instance) {
         let data = {
-            loanAccDoc: state.get('loanAccDoc'),
-            scheduleDoc: state.get('scheduleDoc'),
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
         };
 
         alertify.writeOff(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
-        
-    },'click .js-create-write-off'(event, instance) {
+
+    }, 'click .js-create-write-off'(event, instance) {
         let data = {
-            loanAccDoc: state.get('loanAccDoc'),
-            scheduleDoc: state.get('scheduleDoc'),
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
         };
 
         alertify.repayment(fa('plus', 'Repayment Write-Off'), renderTemplate(writeOffFormTmpl, data));
@@ -242,8 +258,8 @@ indexTmpl.events({
     },
     'click .js-create-close'(event, instance) {
         let data = {
-            loanAccDoc: state.get('loanAccDoc'),
-            scheduleDoc: state.get('scheduleDoc'),
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
         };
 
         alertify.repayment(fa('plus', 'Repayment Closing'), renderTemplate(closingFormTmpl, data));
@@ -253,8 +269,8 @@ indexTmpl.events({
         // $.blockUI();
 
         let data = {
-            loanAccDoc: state.get('loanAccDoc'),
-            scheduleDoc: state.get('scheduleDoc'),
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
         };
         alertify.repayment(fa('plus', 'Loan Account'), renderTemplate(reStructureForm, data));
 
@@ -265,6 +281,48 @@ indexTmpl.events({
             {_id: this._id},
             {title: 'Repayment', itemTitle: this._id}
         );
+    },
+    'click .js-removeWriteOff'(event, instance) {
+
+        let loanAccDoc = stateRepayment.get('loanAccDoc');
+        let opts = {};
+
+        opts.writeOff = "";
+        opts.writeOffDate = "";
+        opts.paymentWriteOff = "";
+
+        if (loanAccDoc.paymentWriteOff.length == 1) {
+            alertify.confirm(
+                fa("remove", "Write Off"),
+                "Are you sure to delete write off?",
+                function () {
+                    removeWriteOffEnsure.callPromise({
+                        loanAccId: loanAccDoc._id,
+                        opts: opts
+                    }).then(function (result) {
+                        alertify.success("Remove Success.");
+
+                        lookupLoanAcc.callPromise({
+                            _id: loanAccDoc._id
+                        }).then(function (result) {
+                            stateRepayment.set('loanAccDoc', result);
+                        }).catch(function (err) {
+                            console.log(err.message);
+                        });
+
+
+                    }).catch(function (err) {
+                        alertify.error(err.message);
+                        console.log(err.message);
+                    });
+                },
+                null
+            );
+        } else {
+            alertify.error("You already payment!!!!!");
+        }
+
+
     },
     'click .js-display'(event, instance) {
         alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showTmpl, this));
@@ -305,4 +363,8 @@ scheduleDetailTmpl.helpers({
             return item.totalDue;
         }
     }
+});
+
+indexTmpl.onDestroyed(function () {
+    AutoForm.resetForm("Microfis_repayment");
 });

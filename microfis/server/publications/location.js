@@ -19,3 +19,15 @@ Meteor.publish('microfis.locationById', function microfisLocationById(locationId
 
     return Location.find({_id: locationId});
 });
+
+Meteor.publish('microfis.location', function microfisLocation() {
+    this.unblock();
+
+    if (!this.userId) {
+        return this.ready();
+    }
+
+    Meteor._sleepForMs(200);
+
+    return Location.find();
+});
