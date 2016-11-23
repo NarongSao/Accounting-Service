@@ -125,7 +125,7 @@ insertTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -214,7 +214,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'USD';
+        data.currencyId = 'KHR';
         data.memo = 'test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -244,7 +244,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'USD';
+        data.currencyId = 'KHR';
         data.memo = 'update test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -939,7 +939,7 @@ insertPaymentTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -948,7 +948,7 @@ insertReceiveTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
