@@ -6,7 +6,7 @@ Meteor.startup(function () {
     if (ChartAccount.find().count() == 0) {
 
 
-        //  NWDA
+        /*//  NWDA
 
         ChartAccount.insert(
             {
@@ -860,11 +860,11 @@ Meteor.startup(function () {
                 name: 'License Fees Expense',
                 accountTypeId: "51"
             }
-        );
+        );*/
 
         //CFO
 
-        /*//Riel
+        //Riel
          ChartAccount.insert({_id:	"002"	,code:	"111101"	,name:	"Cash in Vault and on Hand ",accountTypeId:	"10"	})
          ChartAccount.insert({_id:	"003"	,code:	"111201"	,name:	"Cash in Transit ",accountTypeId:	"10"	})
          ChartAccount.insert({_id:	"004"	,code:	"111301"	,name:	"Cheques in Transit",accountTypeId:	"10"	})
@@ -1309,7 +1309,6 @@ Meteor.startup(function () {
          ChartAccount.insert({_id:	"447"	,code:	"691201"	,name:	"Village Bank/Association costs",accountTypeId:	"50"	})
          ChartAccount.insert({_id:	"448"	,code:	"692101"	,name:	"Correspondent Bank Charges",accountTypeId:	"50"	})
          ChartAccount.insert({_id:	"449"	,code:	"692201"	,name:	"Fee and Commission on Borrowing",accountTypeId:	"50"	})
-         */
 
 
         //    ICe
