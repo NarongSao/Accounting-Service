@@ -41,7 +41,6 @@ let indexTmpl = Template.Microfis_loanAcc,
     formTmpl = Template.Microfis_loanAccForm,
     showTmpl = Template.Microfis_loanAccShow;
 
-
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -55,6 +54,7 @@ indexTmpl.helpers({
         return LoanAccTabular;
     },
     tabularSelector(){
+
         return {clientId: FlowRouter.getParam('clientId')};
     },
 });
@@ -67,29 +67,38 @@ indexTmpl.events({
         // $.blockUI();
 
         let self = this;
-        lookupProduct.callPromise({
-            _id: self.productId
-        }).then(function (result) {
-            Session.set('productDoc', result);
 
-            // Meteor.setTimeout(function () {
-            alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
+        if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
+            alertify.error("Can't remove this account!!!");
+        } else {
+            lookupProduct.callPromise({
+                _id: self.productId
+            }).then(function (result) {
+                Session.set('productDoc', result);
 
-            // $.unblockUI();
-            // }, 100);
+                // Meteor.setTimeout(function () {
+                alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
 
-        }).catch(function (err) {
-            console.log(err.message);
-        });
+                // $.unblockUI();
+                // }, 100);
+
+            }).catch(function (err) {
+                console.log(err.message);
+            });
+        }
 
     },
 
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            LoanAcc,
-            {_id: this._id},
-            {title: 'Loan Account', itemTitle: this._id}
-        );
+        if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
+            alertify.error("Can't remove this account!!!");
+        } else {
+            destroyAction(
+                LoanAcc,
+                {_id: this._id},
+                {title: 'Loan Account', itemTitle: this._id}
+            );
+        }
     },
     'click .js-display' (event, instance) {
         alertify.loanAccShow(fa('eye', 'Loan Account'), renderTemplate(showTmpl, this));
@@ -111,7 +120,7 @@ indexTmpl.events({
 productFormTmpl.helpers({
     productSchema(){
         return LoanAcc.productSchema;
-    },
+    }
 });
 
 productFormTmpl.events({
@@ -181,7 +190,7 @@ formTmpl.onRendered(function () {
     $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
     $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
-    
+
     // LoanAcc date change
     $disbursementDate.on("dp.change", function (e) {
         $submitDate.data("DateTimePicker").maxDate(moment(e.date).startOf('day'));
@@ -197,6 +206,7 @@ formTmpl.helpers({
         return LoanAcc;
     },
     data(){
+        debugger;
         let doc = {}, formType = 'insert';
         let currentData = Template.currentData();
 
@@ -207,6 +217,9 @@ formTmpl.helpers({
 
         return {doc, formType};
     },
+    cycle(){
+        return stateClient.get('cycle');
+    }
 });
 
 formTmpl.onDestroyed(function () {
@@ -216,6 +229,10 @@ formTmpl.onDestroyed(function () {
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
+        if (formType == "insert" && result.status != "Restructure") {
+            stateClient.set("cycle", stateClient.get('cycle') + 1);
+        }
+
         alertify.loanAcc().close();
         alertify.loanAccProduct().close();
         displaySuccess();

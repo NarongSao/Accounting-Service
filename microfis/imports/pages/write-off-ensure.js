@@ -22,6 +22,7 @@ import '../../../core/client/components/add-new-button.js';
 // Collection
 
 import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {Setting} from '../../common/collections/setting.js';
 
 // Method
 
@@ -44,12 +45,16 @@ formTmpl.onCreated(function () {
         loanAccDoc = stateRepayment.get("loanAccDoc");
 
 
-    stateRepayment.set('disbursmentDate',moment().toDate());
-
+    stateRepayment.set('disbursmentDate', moment().toDate());
+    Meteor.subscribe("microfis.setting");
     this.autorun(() => {
 
         let disbursementDate = stateRepayment.get('disbursmentDate');
 
+        let writeOffDoc = Setting.findOne();
+        if (writeOffDoc) {
+            stateRepayment.set("writeOffDay", writeOffDoc.writeOffDay);
+        }
 
         if (loanAccDoc.productId) {
             $.blockUI();
@@ -166,9 +171,19 @@ formTmpl.onDestroyed(function () {
 let hooksObject = {
     onSubmit(doc) {
 
-
         let curDoc = stateRepayment.get('curData');
         let loanAccDoc = stateRepayment.get('loanAccDoc');
+
+        let lastDateInSchedule = curDoc.scheduleDoc[curDoc.scheduleDoc.length - 1];
+        let writeOffDay = stateRepayment.get("writeOffDay");
+
+        if (moment(moment(lastDateInSchedule.dueDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(writeOffDay, "days").toDate().getTime() >= moment(moment(doc.writeOff.writeOffDate).format("DD/MM/YYYY"), "DD/MM/YYYY").toDate().getTime()) {
+            alertify.warning("Not reach the date of write off!!!!");
+            Meteor.setTimeout(function () {
+                $(".btn-primary").attr("disabled", false);
+            }, 300)
+            return false;
+        }
 
         if (loanAccDoc.status == "Restructure") {
             alertify.warning("You already Restructure!!!");
@@ -217,7 +232,7 @@ let hooksObject = {
                 if (result) {
                     lookupLoanAcc.callPromise({
                         _id: curDoc.loanAccDoc._id
-                    }).then(function (result) {
+                    }).then(function (result) {ប្រភេទ
                         stateRepayment.set('loanAccDoc', result);
                     }).catch(function (err) {
                         console.log(err.message);

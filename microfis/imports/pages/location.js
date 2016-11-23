@@ -63,11 +63,13 @@ indexTmpl.events({
         }));
     },
     'click .js-destroy' (event, instance) {
+
         destroyAction(
             Location,
             {_id: this._id},
             {title: 'Location', locationTitle: this.code}
         );
+
     },
     'click .js-display' (event, instance) {
         alertify.locationShow(fa('eye', 'Location'), renderTemplate(showTmpl, {locationId: this._id}));

@@ -232,7 +232,6 @@ export const loanOutstandingReport = new ValidatedMethod({
                     opts: loanAccDoc
                 });
 
-                console.log(result);
 
                 let finProductStatus = function (obj) {
                     return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
@@ -280,70 +279,70 @@ export const loanOutstandingReport = new ValidatedMethod({
                 i++;
             })
 
-            totalDuePrinBase = Meteor.call('exchange',
+            totalDuePrinBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
                     totalDuePrinKHR,
                     params.exchangeId
                 )
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
                     totalDuePrinUSD,
                     params.exchangeId)
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
                     totalDuePrinTHB,
                     params.exchangeId);
-            totalDueIntBase = Meteor.call('exchange',
+            totalDueIntBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
                     totalDueIntKHR,
                     params.exchangeId
                 )
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
                     totalDueIntUSD,
                     params.exchangeId)
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
                     totalDueIntTHB,
                     params.exchangeId);
 
-            totalLoanOutPrinBase = Meteor.call('exchange',
+            totalLoanOutPrinBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
                     totalLoanOutPrinKHR,
                     params.exchangeId
                 )
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
                     totalLoanOutPrinUSD,
                     params.exchangeId
                 )
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
                     totalLoanOutPrinTHB,
                     params.exchangeId
                 );
-            totalLoanOutIntBase = Meteor.call('exchange',
+            totalLoanOutIntBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
                     totalLoanOutIntKHR,
                     params.exchangeId
                 )
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
                     totalLoanOutIntUSD,
                     params.exchangeId
                 )
-                + Meteor.call('exchange',
+                + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
                     totalLoanOutIntTHB,

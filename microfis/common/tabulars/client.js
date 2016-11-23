@@ -41,6 +41,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         }
     ],
+    extraFields: ['cycle']
 });
 
 export const

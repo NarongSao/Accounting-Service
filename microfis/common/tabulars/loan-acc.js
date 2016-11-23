@@ -61,7 +61,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         }
 
     ],
-    extraFields: ['currencyId'],
+    extraFields: ['currencyId','parentId','paymentNumber'],
     columnDefs: [{"width": "12px", targets: 0}, {"width": "20px", targets: 6}],
 });
 

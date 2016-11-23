@@ -81,7 +81,7 @@ indexTmpl.onCreated(function () {
         lastTransactionDate: null,
         repaidDate: null,
         checkRepayment: null,
-        disbursmentDate:null
+        disbursmentDate: null
     });
 
     let loanAccId = FlowRouter.getParam('loanAccId');
@@ -285,43 +285,48 @@ indexTmpl.events({
     'click .js-removeWriteOff'(event, instance) {
 
         let loanAccDoc = stateRepayment.get('loanAccDoc');
-        let opts = {};
+        if (loanAccDoc.paymentWriteOff && loanAccDoc.paymentWriteOff.length > 1) {
+            alertify.error("Can't remove wirte off, you already make repayment!!!!");
+        } else {
 
-        opts.writeOff = "";
-        opts.writeOffDate = "";
-        opts.paymentWriteOff = "";
+            let opts = {};
 
-        if (loanAccDoc.paymentWriteOff.length == 1) {
-            alertify.confirm(
-                fa("remove", "Write Off"),
-                "Are you sure to delete write off?",
-                function () {
-                    removeWriteOffEnsure.callPromise({
-                        loanAccId: loanAccDoc._id,
-                        opts: opts
-                    }).then(function (result) {
-                        alertify.success("Remove Success.");
+            opts.writeOff = "";
+            opts.writeOffDate = "";
+            opts.paymentWriteOff = "";
 
-                        lookupLoanAcc.callPromise({
-                            _id: loanAccDoc._id
+            if (loanAccDoc.paymentWriteOff.length == 1) {
+                alertify.confirm(
+                    fa("remove", "Write Off"),
+                    "Are you sure to delete write off?",
+                    function () {
+                        removeWriteOffEnsure.callPromise({
+                            loanAccId: loanAccDoc._id,
+                            opts: opts
                         }).then(function (result) {
-                            stateRepayment.set('loanAccDoc', result);
+                            alertify.success("Remove Success.");
+
+                            lookupLoanAcc.callPromise({
+                                _id: loanAccDoc._id
+                            }).then(function (result) {
+                                stateRepayment.set('loanAccDoc', result);
+                            }).catch(function (err) {
+                                console.log(err.message);
+                            });
+
+
                         }).catch(function (err) {
+                            alertify.error(err.message);
                             console.log(err.message);
                         });
+                    },
+                    null
+                );
+            } else {
+                alertify.error("You already payment!!!!!");
+            }
 
-
-                    }).catch(function (err) {
-                        alertify.error(err.message);
-                        console.log(err.message);
-                    });
-                },
-                null
-            );
-        } else {
-            alertify.error("You already payment!!!!!");
         }
-
 
     },
     'click .js-display'(event, instance) {
