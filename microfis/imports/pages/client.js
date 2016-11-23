@@ -34,7 +34,7 @@ let indexTmpl = Template.Microfis_client,
     formTmpl = Template.Microfis_clientForm,
     showTmpl = Template.Microfis_clientShow;
 
-
+stateClient = new ReactiveObj();
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -131,18 +131,26 @@ indexTmpl.events({
         alertify.client(fa('pencil', 'Client'), renderTemplate(formTmpl, this)).maximize();
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Client,
-            {_id: this._id},
-            {title: 'Client', itemTitle: this._id}
-        );
+        if (this.cycle > 0) {
+            alertify.error("You already have loan account!!!");
+        } else {
+            destroyAction(
+                Client,
+                {_id: this._id},
+                {title: 'Client', itemTitle: this._id}
+            );
+        }
+
     },
     'click .js-display' (event, instance) {
         alertify.clientShow(fa('eye', 'Client'), renderTemplate(showTmpl, this));
     },
     'dblclick tbody > tr': function (event) {
+
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(event.currentTarget).data();
+
+        stateClient.set('cycle', rowData.cycle);
 
         FlowRouter.go('microfis.clientAcc', {clientId: rowData._id});
     }

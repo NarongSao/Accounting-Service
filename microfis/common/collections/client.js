@@ -105,6 +105,11 @@ Client.generalSchema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    cycle: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 });
 

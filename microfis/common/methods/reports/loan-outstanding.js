@@ -232,7 +232,6 @@ export const loanOutstandingReport = new ValidatedMethod({
                     opts: loanAccDoc
                 });
 
-                console.log(result);
 
                 let finProductStatus = function (obj) {
                     return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;

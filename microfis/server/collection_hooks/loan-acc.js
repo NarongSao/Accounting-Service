@@ -9,6 +9,7 @@ import  {MakeSchedule} from '../../common/methods/make-schedule.js';
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {Client} from '../../common/collections/client.js';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
 // Before insert
@@ -32,6 +33,10 @@ LoanAcc.after.insert(function (userId, doc) {
     Meteor.defer(function () {
         _makeSchedule(doc);
     });
+
+    if (doc.status != "Restructure") {
+        Client.direct.update({_id: doc.clientId}, {$inc: {cycle: 1}});
+    }
 });
 
 // Before update
@@ -65,6 +70,10 @@ LoanAcc.after.remove(function (userId, doc) {
         if (parentDoc && parentDoc.status == "Restructure") {
             LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}});
         }
+    }
+
+    if (doc.status != "Restructure") {
+        Client.direct.update({_id: doc.clientId}, {$inc: {cycle: -1}});
     }
 });
 

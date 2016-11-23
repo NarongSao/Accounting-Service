@@ -37,14 +37,13 @@ import './reStructure.html';
 let formTmpl = Template.Microfis_reStructure;
 
 
-
 // Form
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
         loanAccDoc = stateRepayment.get("loanAccDoc");
 
 
-    stateRepayment.set('disbursmentDate',moment().toDate());
+    stateRepayment.set('disbursmentDate', moment().toDate());
 
 
     this.autorun(() => {
@@ -81,7 +80,6 @@ formTmpl.onCreated(function () {
                     console.log(err.message);
                 });
             }
-
 
 
             let currentData = Template.currentData();
@@ -166,7 +164,7 @@ let hooksObject = {
     onSubmit(doc) {
 
         let curDoc = stateRepayment.get('curData');
-        let loanAccDoc=stateRepayment.get('loanAccDoc');
+        let loanAccDoc = stateRepayment.get('loanAccDoc');
         if (curDoc.loanAccDoc.status == "Restructure") {
             alertify.error("You already Restructure");
             return false;
@@ -196,6 +194,12 @@ let hooksObject = {
         }).then(function (result) {
             if (result) {
                 alertify.repayment().close();
+                let loanAccDocUpdate = stateRepayment.get("loanAccDoc");
+                loanAccDocUpdate.status = "Restructure";
+
+                stateRepayment.set("loanAccDoc", loanAccDocUpdate);
+
+
             }
         }).catch(function (err) {
             alertify.error(err.message);
