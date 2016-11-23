@@ -4,7 +4,7 @@ import {Exchange} from '../../../core/common/collections/exchange.js';
 
 
 Meteor.methods({
-    exchange: function (curFrom, curTo, amount, id) {
+    microfis_exchange: function (curFrom, curTo, amount, id) {
         var ex = Exchange.findOne({
             base: curTo,
             _id: id
