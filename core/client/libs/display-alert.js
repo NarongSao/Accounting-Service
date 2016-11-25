@@ -15,7 +15,7 @@ export const displaySuccess = (msg = null, i18n = false) => {
         title: 'Success',
         message: msg,
         type: 'success',
-        style: 'growl-top-right'
+        style: 'growl-bottom-right'
     });
     // swal({
     //     title: "Success",
@@ -41,7 +41,7 @@ export const displayError = (msg = null, i18n = false) => {
         title: 'Error',
         message: msg,
         type: 'danger',
-        style: 'growl-top-right'
+        style: 'growl-bottom-right'
     });
     // swal({
     //     title: "Error",
@@ -67,7 +67,7 @@ export const displayWarning = (msg = null, i18n = false) => {
         title: 'Warning',
         message: msg,
         type: 'warning',
-        style: 'growl-top-right'
+        style: 'growl-bottom-right'
     });
     // swal({
     //     title: "Warning",
@@ -93,7 +93,7 @@ export const displayInfo = (msg = null, i18n = false) => {
         title: 'Info',
         message: msg,
         type: 'info',
-        style: 'growl-top-right'
+        style: 'growl-bottom-right'
     });
     // swal({
     //     title: "Info",
@@ -119,7 +119,7 @@ export const displayDefault = (msg = null, i18n = false) => {
         title: 'Default',
         message: msg,
         type: 'default',
-        style: 'growl-top-right'
+        style: 'growl-bottom-right'
     });
 };
 

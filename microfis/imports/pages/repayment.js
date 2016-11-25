@@ -25,9 +25,12 @@ import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 import {lookupProduct} from '../../common/methods/lookup-product.js';
 
 import {removeWriteOffEnsure} from '../../common/methods/remove-writeOffEnsure.js';
+import {updateLoanAccPaymentWrteOff} from '../../common/methods/update-LoanAccPaymentWriteOff.js';
+import {getLastRepayment} from '../../common/methods/get-last-repayment.js';
 
 // API Lib
 import {MakeRepayment} from '../../common/libs/make-repayment.js';
+
 
 // Collection
 import {Repayment} from '../../common/collections/repayment.js';
@@ -276,11 +279,69 @@ indexTmpl.events({
 
     },
     'click .js-destroy'(event, instance) {
-        destroyAction(
-            Repayment,
-            {_id: this._id},
-            {title: 'Repayment', itemTitle: this._id}
-        );
+        debugger;
+        /*destroyAction(
+         Repayment,
+         {_id: this._id},
+         {title: 'Repayment', itemTitle: this._id}
+         );*/
+
+
+
+        let self = this;
+        let loanAccDoc = stateRepayment.get('loanAccDoc');
+        stateRepayment.set("repaidDate", self.repaidDate);
+
+        getLastRepayment.callPromise({
+            loanAccId: loanAccDoc._id
+        }).then(function (doc) {
+            if(doc.repaidDate.getTime()==self.repaidDate.getTime()){
+                swal({
+                    title: 'Are you sure?',
+                    text: `You won't be able to revert this <span class="text-red text-bold">[${this._id}]</span>!`,
+                    type: 'warning',
+                    allowEscapeKey: false,
+                    allowOutsideClick: true,
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    confirmButtonColor: "#dd4b39",
+                    confirmButtonText: 'Yes, delete it!',
+                    showCancelButton: true
+                }).then(function () {
+                    Repayment.remove({_id: self._id}, function (error) {
+                        if (error) {
+                            // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
+                            displayError(options.errorMsg, options.i18n);
+                        } else {
+
+                            updateLoanAccPaymentWrteOff.callPromise({
+                                loanAccId: loanAccDoc._id,
+                                opts: loanAccDoc,
+                                repaidDate: stateRepayment.get('repaidDate')
+                            }).then(function (result) {
+                                if (result) {
+                                    lookupLoanAcc.callPromise({
+                                        _id: loanAccDoc._id
+                                    }).then(function (doc) {
+                                        stateRepayment.set('loanAccDoc', doc);
+                                    }).catch(function (err) {
+                                        console.log(err.message);
+                                    });
+                                }
+                            }).catch(function (err) {
+                                console.log(err.message);
+                            });
+                            displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
+                        }
+                    });
+                }).done();
+            }else {
+                alertify.error("Not the last payment!!!");
+            }
+        }).catch(function (err) {
+            console.log(err.message);
+        });
+
     },
     'click .js-removeWriteOff'(event, instance) {
 
@@ -295,7 +356,7 @@ indexTmpl.events({
             opts.writeOffDate = "";
             opts.paymentWriteOff = "";
 
-            if (loanAccDoc.paymentWriteOff.length == 1) {
+            if (loanAccDoc.paymentWriteOff && loanAccDoc.paymentWriteOff.length == 1) {
                 alertify.confirm(
                     fa("remove", "Write Off"),
                     "Are you sure to delete write off?",
@@ -369,6 +430,7 @@ scheduleDetailTmpl.helpers({
         }
     }
 });
+
 
 indexTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_repayment");

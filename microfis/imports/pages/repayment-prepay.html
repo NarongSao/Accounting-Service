@@ -86,10 +86,9 @@
                     {{> afQuickField type="hidden" name="loanAccId" value=(param "loanAccId") readonly=true}}
                     {{> afQuickField name="repaidDate"}}
                     {{> afQuickField name="amountType"}}
-                    {{#with defaultValue}}
-                        {{> afQuickField name="amountPaid" value=totalDue}}
-                        {{> afQuickField name="penaltyPaid" value=totalPenalty readonly=true}}
-                    {{/with}}
+
+                    {{> afQuickField name="amountPaid" value=defaultValue.totalDue}}
+
                     {{> afQuickField name="note"}}
 
                     {{> formFooterWithButton}}

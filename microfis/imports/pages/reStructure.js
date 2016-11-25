@@ -134,7 +134,6 @@ formTmpl.onRendered(function () {
 
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
-            debugger;
             stateRepayment.set('disbursmentDate', moment(e.date).toDate());
             $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
         });

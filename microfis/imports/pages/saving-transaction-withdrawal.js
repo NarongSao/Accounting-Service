@@ -76,7 +76,6 @@ formTmpl.onCreated(function () {
                 savingAccId: savingAccDoc._id,
                 checkDate: transactionDate
             }).then(function (result) {
-                console.log(result);
 
                 // Set state
                 state.set('checkSavingTransaction', result);

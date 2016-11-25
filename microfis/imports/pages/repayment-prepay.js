@@ -46,7 +46,7 @@ formTmpl.onCreated(function () {
         loanAccDoc = stateRepayment.get("loanAccDoc");
 
     // Set min/max amount to simple schema
-    let minMaxAmount;
+    let minMaxAmount=0.01;
     switch (loanAccDoc.currencyId) {
         case 'KHR':
             minMaxAmount = 100;
@@ -78,8 +78,8 @@ formTmpl.onCreated(function () {
                     console.log(err.message);
                 });
             }
-            
-            
+
+
             // Call check repayment from method
             checkRepayment.callPromise({
                 loanAccId: loanAccDoc._id,
@@ -141,9 +141,8 @@ formTmpl.helpers({
             totalPenalty = 0,
             checkRepayment = stateRepayment.get('checkRepayment');
 
-        if (checkRepayment && checkRepayment.totalScheduleDue) {
-            totalDue = checkRepayment.totalScheduleDue.totalPrincipalInterestDue;
-            totalPenalty = checkRepayment.totalScheduleDue.penaltyDue;
+        if (checkRepayment && checkRepayment.scheduleNext) {
+            totalDue = checkRepayment.scheduleNext[0].totalDue;
         }
 
         return {totalDue, totalPenalty};
@@ -195,7 +194,7 @@ let hooksObject = {
             }
 
             // Check have current due amount
-            if (checkRepayment && checkRepayment.scheduleDue.length > 0) {
+            if (checkRepayment && checkRepayment.scheduleDue && checkRepayment.scheduleDue.length > 0) {
                 displayError("Have current due amount, so can't prepay");
                 return false;
             }

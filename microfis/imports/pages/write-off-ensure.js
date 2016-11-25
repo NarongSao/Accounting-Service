@@ -139,7 +139,6 @@ formTmpl.onRendered(function () {
 
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
-            debugger;
             stateRepayment.set('disbursmentDate', moment(e.date).toDate());
             $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
         });
@@ -232,7 +231,7 @@ let hooksObject = {
                 if (result) {
                     lookupLoanAcc.callPromise({
                         _id: curDoc.loanAccDoc._id
-                    }).then(function (result) {ប្រភេទ
+                    }).then(function (result) {
                         stateRepayment.set('loanAccDoc', result);
                     }).catch(function (err) {
                         console.log(err.message);

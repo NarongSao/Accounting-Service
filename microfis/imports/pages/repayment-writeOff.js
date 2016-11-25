@@ -145,7 +145,6 @@ formTmpl.helpers({
         return writeOffDoc;
     },
     totalDue(){
-        debugger;
         let totalDue = new BigNumber(0),
             checkWriteOff = stateRepayment.get('checkWriteOff');
         if (checkWriteOff && checkWriteOff.outStanding != undefined) {
@@ -169,7 +168,6 @@ let hooksObject = {
     before: {
         insert: function (doc) {
 
-
             let writeOffDoc = stateRepayment.get('checkWriteOff');
             let loanAccDoc = stateRepayment.get('loanAccDoc');
 
@@ -182,7 +180,7 @@ let hooksObject = {
                 alertify.warning("You already Close");
                 return false;
             }
-            
+
             doc.penaltyPaid = 0;
             let makeRepaymentWriteOff = MakeRepayment.writeOff({
                 repaidDate: doc.repaidDate,
@@ -199,9 +197,7 @@ let hooksObject = {
                     loanAccId: loanAccDoc._id,
                     opts: repaymentWriteOffObj
                 }).then(function (result) {
-
                     if (result) {
-
                         lookupLoanAcc.callPromise({
                             _id: loanAccDoc._id
                         }).then(function (result) {

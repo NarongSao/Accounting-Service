@@ -48,7 +48,7 @@ formTmpl.onCreated(function () {
         loanAccDoc = stateRepayment.get("loanAccDoc");
 
     // Set min/max amount to simple schema
-    let minMaxAmount;
+    let minMaxAmount = 0.01;
     switch (loanAccDoc.currencyId) {
         case 'KHR':
             minMaxAmount = 100;
@@ -67,7 +67,6 @@ formTmpl.onCreated(function () {
     // Track autorun
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate');
-
         if (repaidDate) {
             $.blockUI();
 
@@ -90,15 +89,11 @@ formTmpl.onCreated(function () {
                 // Set state
                 stateRepayment.set('checkRepayment', result);
 
-                // Set max amount on simple schema
-                let maxAmountPaid = new BigNumber(0);
-                if (result && result.principalInstallment) {
-                    maxAmountPaid = maxAmountPaid.plus(result.principalInstallment.totalDue);
-                    Session.set('maxPenaltyPaid', result.principalInstallment.penaltyDue);
-                }
 
-                if (maxAmountPaid.greaterThan(0)) {
-                    Session.set('maxAmountPaid', maxAmountPaid.toNumber());
+                // Set max amount on simple schema
+                if (result && result.principalInstallment) {
+                    Session.set('maxAmountPaid', result.principalInstallment.principalReminder - Session.get('minAmountPaid'));
+                    Session.set('maxPenaltyPaid', result.principalInstallment.interestAddition);
                 }
 
 
@@ -138,7 +133,6 @@ formTmpl.helpers({
         return stateRepayment.get('checkRepayment');
     },
     defaultValue() {
-        debugger;
         let totalDue = new BigNumber(0),
             totalPenalty = new BigNumber(0),
             checkRepayment = stateRepayment.get('checkRepayment');

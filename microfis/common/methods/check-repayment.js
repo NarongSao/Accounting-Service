@@ -377,12 +377,28 @@ export let checkRepayment = new ValidatedMethod({
             // Get last repayment
             let lastRepayment = Repayment.findOne({loanAccId: loanAccId}, {$sort: {_id: -1}});
 
+            // ------------Schedule Next Pay-----------
+            let scheduleNexPay={};
+            if(scheduleNext && scheduleNext.length>0){
+                scheduleNexPay=scheduleNext[0];
+            }else {
+                scheduleNexPay={
+                    installment: "-",
+                    dueDate:null,
+                    principalDue: 0,
+                    interestDue: 0,
+                    totalDue: 0
+                }
+            }
+
+
             return {
                 scheduleDue: scheduleDue,
                 totalScheduleDue: totalScheduleDue,
                 schedulePrevious: schedulePrevious,
                 totalSchedulePrevious: totalSchedulePrevious,
                 scheduleNext: scheduleNext,
+                scheduleNextPay: scheduleNexPay,
                 totalScheduleNext: totalScheduleNext,
                 closing: closing,
                 principalInstallment: principalInstallment,
