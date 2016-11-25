@@ -206,7 +206,6 @@ formTmpl.helpers({
         return LoanAcc;
     },
     data(){
-        debugger;
         let doc = {}, formType = 'insert';
         let currentData = Template.currentData();
 
@@ -218,7 +217,10 @@ formTmpl.helpers({
         return {doc, formType};
     },
     cycle(){
-        return stateClient.get('cycle');
+        let currentData = Template.currentData();
+        if(!currentData){
+            return stateClient.get('cycle')+1;
+        }
     }
 });
 
@@ -228,6 +230,8 @@ formTmpl.onDestroyed(function () {
 
 // Hook
 let hooksObject = {
+
+
     onSuccess (formType, result) {
         if (formType == "insert" && result.status != "Restructure") {
             stateClient.set("cycle", stateClient.get('cycle') + 1);

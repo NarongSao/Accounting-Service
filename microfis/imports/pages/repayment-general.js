@@ -47,7 +47,7 @@ formTmpl.onCreated(function () {
 
 
     // Set min/max amount to simple schema
-    let minMaxAmount;
+    let minMaxAmount=0.01;
     switch (loanAccDoc.currencyId) {
         case 'KHR':
             minMaxAmount = 100;
@@ -66,7 +66,6 @@ formTmpl.onCreated(function () {
     // Track autorun
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate');
-
         if (repaidDate) {
             $.blockUI();
 
@@ -90,9 +89,9 @@ formTmpl.onCreated(function () {
                 stateRepayment.set('checkRepayment', result);
 
                 // Set max amount on simple schema
-                if (result && result.totalScheduleDue) {
-                    Session.set('maxAmountPaid', result.totalScheduleDue.totalPrincipalInterestDue);
-                    Session.set('maxPenaltyPaid', result.totalScheduleDue.penaltyDue);
+                if (result && result.totalScheduleNext) {
+                    Session.set('maxAmountPaid', result.totalScheduleNext.totalPrincipalInterestDue-Session.get('minAmountPaid'));
+                    Session.set('maxPenaltyPaid', result.totalScheduleNext.penaltyDue);
                 }
 
                 // Set last repayment

@@ -39,9 +39,9 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
 
                 return null;
             }
-        }
-    ],
-    extraFields: ['cycle']
+        },
+        {data: 'cycle', title: 'Cycle'}
+    ]
 });
 
 export const

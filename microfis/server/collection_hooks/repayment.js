@@ -99,20 +99,7 @@ Repayment.after.remove(function (userId, doc) {
             }
         }
 
-        if (doc.type == 'Write Off') {
-
-            let updatePaymentArray = {};
-            let paymentArray = loanDoc.paymentWriteOff;
-            let paymentWriteOff = [];
-            paymentArray.forEach(function (obj) {
-
-                if (obj.rePaidDate.getTime()  !== doc.repaidDate.getTime()) {
-                    paymentWriteOff.push(obj);
-                }
-            })
-            updatePaymentArray.paymentWriteOff = paymentWriteOff;
-            LoanAcc.direct.update({_id: doc.loanAccId}, {$set: updatePaymentArray});
-        }
+        
 
         if (doc.type == "Reschedule") {
             RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
@@ -129,6 +116,7 @@ Repayment.after.remove(function (userId, doc) {
 // Create repayment schedule when principal installment
 function _makeScheduleForPrincipalInstallment(doc) {
 
+
     let amount = doc.detailDoc.principalInstallment.principalReminder;
     let options = {};
     options.disbursementDate = doc.repaidDate;
@@ -143,7 +131,6 @@ function _makeScheduleForPrincipalInstallment(doc) {
         }
     })
     options.installmentAllowClosing = options.term - i;
-
 
     let schedule = MakeSchedule.declinig.call({loanAccId: doc.loanAccId, options: options});
 

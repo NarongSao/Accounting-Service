@@ -12,7 +12,8 @@ export const Repayment = new Mongo.Collection("microfis_repayment");
 Repayment.schema = new SimpleSchema({
     loanAccId: {
         type: String,
-        label: 'Loan ID'
+        label: 'Loan ID',
+        index: true
     },
     repaidDate: {
         type: Date,

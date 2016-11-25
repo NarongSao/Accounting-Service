@@ -19,57 +19,89 @@
                 <!--<div class="panel-heading">Info</div>-->
                 <!--<div class="panel-body">-->
 
-                <!--Current Due-->
-                <fieldset>
-                    <legend>Current</legend>
-                    {{#with checkRepayment.totalScheduleDue}}
-                        <dl class="dl-horizontal">
-                            <dt>Installment</dt>
-                            <dd>{{installment.from}} - {{installment.to}}</dd>
-                            <dt>Due Date</dt>
-                            <dd>
-                                {{moFormat dueDate.from "DD/MM/YYYY"}} -
-                                {{moFormat dueDate.to "DD/MM/YYYY"}}
-                            </dd>
-                            <dt>Num Of Day Late</dt>
-                            <dd>{{numOfDayLate}}</dd>
-                            <dt>Principal Due</dt>
-                            <dd>{{numFormat principalDue "0,0.00"}}</dd>
-                            <dt>Interest Due</dt>
-                            <dd>{{numFormat interestDue "0,0.00"}}</dd>
-                            <dt>Total Principal & Interest Due</dt>
-                            <dd>{{numFormat totalPrincipalInterestDue "0,0.00"}}</dd>
-                            <dt>Penalty Due</dt>
-                            <dd>{{numFormat penaltyDue "0,0.00"}}</dd>
-                            <dt>Total Amount Due</dt>
-                            <dd>{{numFormat totalAmountDue "0,0.00"}}</dd>
-                        </dl>
-                    {{/with}}
-                </fieldset>
+                <div class="col-md-12">
+                    <!--Current Due-->
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>Current</legend>
+                            {{#with checkRepayment.totalScheduleDue}}
+                                <dl class="dl-horizontal">
+                                    <dt>Installment</dt>
+                                    <dd>{{installment.from}} - {{installment.to}}</dd>
+                                    <dt>Due Date</dt>
+                                    <dd>
+                                        {{moFormat dueDate.from "DD/MM/YYYY"}} -
+                                        {{moFormat dueDate.to "DD/MM/YYYY"}}
+                                    </dd>
+                                    <dt>Num Of Day Late</dt>
+                                    <dd>{{numOfDayLate}}</dd>
+                                    <dt>Principal Due</dt>
+                                    <dd>{{numFormat principalDue "0,0.00"}}</dd>
+                                    <dt>Interest Due</dt>
+                                    <dd>{{numFormat interestDue "0,0.00"}}</dd>
+                                    <dt>Total Principal & Interest Due</dt>
+                                    <dd>{{numFormat totalPrincipalInterestDue "0,0.00"}}</dd>
+                                    <dt>Penalty Due</dt>
+                                    <dd>{{numFormat penaltyDue "0,0.00"}}</dd>
+                                    <dt>Total Amount Due</dt>
+                                    <dd>{{numFormat totalAmountDue "0,0.00"}}</dd>
+                                </dl>
+                            {{/with}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>Next</legend>
+                            {{#with checkRepayment.scheduleNextPay}}
+                                <dl class="dl-horizontal">
+                                    <dt>Installment</dt>
+                                    <dd>{{installment}}</dd>
+                                    <dt>Date</dt>
+                                    <dd>
+                                        {{moFormat dueDate "DD/MM/YYYY"}}
+                                    </dd>
+                                    <dt>Principal Due</dt>
+                                    <dd>{{numFormat principalDue "0,0.00"}}</dd>
+                                    <dt>Interest Due</dt>
+                                    <dd>{{numFormat interestDue "0,0.00"}}</dd>
+                                    <dt>Total Amount</dt>
+                                    <dd>{{numFormat totalDue "0,0.00"}}</dd>
+                                </dl>
+                            {{/with}}
+                        </fieldset>
+                    </div>
 
-                <!--Outstanding-->
-                <fieldset>
-                    <legend>Outstanding</legend>
-                    {{#with checkRepayment.totalScheduleNext}}
-                        <dl class="dl-horizontal">
-                            <dt>Installment</dt>
-                            <dd>{{installment.from}} - {{installment.to}}</dd>
-                            <dt>Due Date</dt>
-                            <dd>
-                                {{moFormat dueDate.from "DD/MM/YYYY"}} -
-                                {{moFormat dueDate.to "DD/MM/YYYY"}}
-                            </dd>
-                            <dt>Num Of Day Late</dt>
-                            <dd>{{numOfDayLate}}</dd>
-                            <dt>Loan Outstanding</dt>
-                            <dd>{{numFormat principalDue "0,0.00"}}</dd>
-                            <dt>Project Interest</dt>
-                            <dd>{{numFormat interestDue "0,0.00"}}</dd>
-                            <dt>Total Amount</dt>
-                            <dd>{{numFormat totalPrincipalInterestDue "0,0.00"}}</dd>
-                        </dl>
-                    {{/with}}
-                </fieldset>
+                </div>
+
+                <div class="col-md-12">
+                    <!--Outstanding-->
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend>Outstanding</legend>
+                            {{#with checkRepayment.totalScheduleNext}}
+                                <dl class="dl-horizontal">
+                                    <dt>Installment</dt>
+                                    <dd>{{installment.from}} - {{installment.to}}</dd>
+                                    <dt>Due Date</dt>
+                                    <dd>
+                                        {{moFormat dueDate.from "DD/MM/YYYY"}} -
+                                        {{moFormat dueDate.to "DD/MM/YYYY"}}
+                                    </dd>
+                                    <dt>Num Of Day Late</dt>
+                                    <dd>{{numOfDayLate}}</dd>
+                                    <dt>Loan Outstanding</dt>
+                                    <dd>{{numFormat principalDue "0,0.00"}}</dd>
+                                    <dt>Project Interest</dt>
+                                    <dd>{{numFormat interestDue "0,0.00"}}</dd>
+                                    <dt>Total Amount</dt>
+                                    <dd>{{numFormat totalPrincipalInterestDue "0,0.00"}}</dd>
+                                </dl>
+                            {{/with}}
+                        </fieldset>
+                    </div>
+
+                </div>
+
 
                 <!--Detail-->
                 <!--{{> jsonView json=(jsonViewData repaymentCheck.scheduleDue) options=jsonViewOpts}}-->

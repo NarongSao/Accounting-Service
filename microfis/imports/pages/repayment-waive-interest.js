@@ -83,7 +83,6 @@ formTmpl.onCreated(function () {
                 loanAccId: loanAccDoc._id,
                 checkDate: repaidDate
             }).then(function (result) {
-                console.log(result);
 
                 // Set state
                 state.set('checkRepayment', result);
@@ -200,7 +199,6 @@ let hooksObject = {
                     scheduleNext: checkRepayment.scheduleNext
                 });
 
-                console.log(makeRepayment);
 
                 doc.totalPaid = doc.amountPaid + doc.penaltyPaid;
 
