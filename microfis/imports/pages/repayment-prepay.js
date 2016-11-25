@@ -46,7 +46,7 @@ formTmpl.onCreated(function () {
         loanAccDoc = stateRepayment.get("loanAccDoc");
 
     // Set min/max amount to simple schema
-    let minMaxAmount=0.01;
+    let minMaxAmount = 0.01;
     switch (loanAccDoc.currencyId) {
         case 'KHR':
             minMaxAmount = 100;
@@ -117,15 +117,17 @@ formTmpl.onCreated(function () {
 
 formTmpl.onRendered(function () {
     let $repaidDateObj = $('[name="repaidDate"]');
-    let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
+    if ($repaidDateObj) {
+        let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-    stateRepayment.set('repaidDate', repaidDate);
+        stateRepayment.set('repaidDate', repaidDate);
 
-    // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
-    $repaidDateObj.on("dp.change", function (e) {
-        stateRepayment.set('repaidDate', moment(e.date).toDate());
-    });
+        // Repaid date picker
+        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+        $repaidDateObj.on("dp.change", function (e) {
+            stateRepayment.set('repaidDate', moment(e.date).toDate());
+        });
+    }
 });
 
 formTmpl.helpers({
@@ -141,7 +143,7 @@ formTmpl.helpers({
             totalPenalty = 0,
             checkRepayment = stateRepayment.get('checkRepayment');
 
-        if (checkRepayment && checkRepayment.scheduleNext) {
+        if (checkRepayment && checkRepayment.scheduleNext[0]) {
             totalDue = checkRepayment.scheduleNext[0].totalDue;
         }
 
@@ -183,7 +185,7 @@ let hooksObject = {
 
             doc.type = 'Prepay';
 
-            if(loanAccDoc.status=="Restructure"){
+            if (loanAccDoc.status == "Restructure") {
                 alertify.warning("You already Restructure");
                 return false;
             }
@@ -199,7 +201,7 @@ let hooksObject = {
                 return false;
             }
 
-            if(checkRepayment.balanceUnPaid -doc.loanAmount<=0){
+            if (checkRepayment.balanceUnPaid - doc.loanAmount <= 0) {
                 alertify.warning("You should go to Closing");
                 return false;
             }
@@ -218,7 +220,7 @@ let hooksObject = {
                     amountPaid: doc.amountPaid,
                     scheduleNext: checkRepayment.scheduleNext
                 });
-    AutoForm.resetForm("Microfis_repaymentGeneralForm");
+                AutoForm.resetForm("Microfis_repaymentGeneralForm");
 
 
                 doc.totalPaid = doc.amountPaid;
