@@ -225,6 +225,22 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: Number,
         defaultValue: 0,
         optional: true
+    },
+    savingAccId: {
+        type: String,
+        optional: true,
+        label: "Saving Account",
+        autoform: {
+            type: 'select2',
+            afFieldInput: {
+                options: function () {
+                    let clientId = FlowRouter.getParam('clientId');
+                    let sub = Meteor.subscribe("microfis.savingAccByClientId", FlowRouter.getParam("clientId"));
+                    return SelectOpts.savingAcc(clientId);
+                }
+            }
+        }
+
     }
 
 
@@ -599,6 +615,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
         type: Number,
         label: 'Escape day frequency',
         defaultValue: 1,
+        min: 1,
         autoform: {
             type: "inputmask",
             afFieldInput: {

@@ -18,3 +18,22 @@ Meteor.publish('microfis.savingAccById', function microfisSavingAccById(savingAc
 
     return SavingAcc.find({_id: savingAccId});
 });
+
+
+Meteor.publish('microfis.savingAccByClientId', function microfisSavingAccByClientId(clientId) {
+    debugger;
+    this.unblock();
+
+    new SimpleSchema({
+        clientId: {type: String},
+    }).validate({clientId});
+
+    if (!this.userId) {
+        return this.ready();
+    }
+    Meteor._sleepForMs(100);
+
+    let data= SavingAcc.find({clientId: clientId});
+    return data;
+});
+

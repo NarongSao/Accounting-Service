@@ -6,11 +6,14 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {LoanAcc} from '../../common/collections/loan-acc';
 import {Repayment} from '../../common/collections/repayment.js';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
+import {SavingTransaction} from '../../common/collections/saving-transaction.js';
 
 // Method
 
 import {lookupProduct} from '../../common/methods/lookup-product.js';
 import {MakeSchedule} from '../../common/methods/make-schedule.js';
+
+import {checkSavingTransaction} from '../../common/methods/check-saving-transaction.js';
 
 // Before insert
 Repayment.before.insert(function (userId, doc) {
@@ -28,6 +31,7 @@ Repayment.after.insert(function (userId, doc) {
         if (doc.detailDoc) {
             if (doc.detailDoc.schedulePaid) {
                 let schedulePaid = doc.detailDoc.schedulePaid;
+                console.log(schedulePaid);
 
                 _.forEach(schedulePaid, (o) => {
                     o.repaymentId = doc._id;
@@ -58,6 +62,83 @@ Repayment.after.insert(function (userId, doc) {
         }
 
         LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}});
+
+        // Insert Data to Saving
+        /*if (doc.type == "General") {
+            let loanAcc = LoanAcc.findOne({_id: doc.loanAccId});
+            if (loanAcc.savingAccId) {
+
+                let savingLoanDeposit = {};
+                let savingLoanWithdrawal = {};
+
+                // Deposit
+                checkSavingTransaction.run({
+                    savingAccId: loanAcc.savingAccId,
+                    checkDate: doc.repaidDate
+                }).then(function (result) {
+
+                    savingLoanDeposit.branchId=doc.branchId;
+                    savingLoanDeposit.amount=doc.amountPaid;
+                    savingLoanDeposit.savingAccId=loanAcc.savingAccId;
+                    savingLoanDeposit.transactionDate=doc.repaidDate;
+                    savingLoanDeposit.voucherId="012";
+
+                    result.principalBal = new BigNumber(result.principalOpening).plus(doc.amountPaid).toNumber();
+
+                    // Remove last transaction
+                    delete result.lastTransaction;
+
+                    savingLoanDeposit.transactionType = 'LD';
+                    savingLoanDeposit.details = result;
+
+
+                    SavingTransaction.insert(savingLoanDeposit);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+
+
+
+                //Withdrawal
+                checkSavingTransaction.run({
+                    savingAccId: loanAcc.savingAccId,
+                    checkDate: doc.repaidDate
+                }).then(function (result) {
+
+
+                    savingLoanWithdrawal.branchId=doc.branchId;
+                    savingLoanWithdrawal.savingAccId=loanAcc.savingAccId;
+                    savingLoanWithdrawal.transactionDate=doc.repaidDate;
+                    savingLoanWithdrawal.voucherId="012";
+
+                    savingLoanWithdrawal.amount = doc.amountPaid ? doc.amountPaid : 0;
+
+                    // Cal principal, interest bal
+                    let amount = new BigNumber(doc.amountPaid);
+                    if (amount.lessThanOrEqualTo(result.interestBal)) {
+                        result.interestBal = new BigNumber(result.interestBal).minus(doc.amount).toNumber();
+                        result.principalBal = new BigNumber(result.principalOpening).toNumber();
+                    } else {
+                        amount = amount.minus(result.interestBal);
+                        result.interestBal = new BigNumber(0).toNumber();
+                        result.principalBal = new BigNumber(result.principalOpening).minus(amount).toNumber();
+                    }
+
+                    // Remove last transaction
+                    delete result.lastTransaction;
+
+                    savingLoanWithdrawal.transactionType = 'LW';
+                    savingLoanWithdrawal.details = result;
+
+                    SavingTransaction.insert(savingLoanWithdrawal);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+
+
+
+            }
+        }*/
     });
 });
 
@@ -99,7 +180,6 @@ Repayment.after.remove(function (userId, doc) {
             }
         }
 
-        
 
         if (doc.type == "Reschedule") {
             RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});

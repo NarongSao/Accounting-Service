@@ -76,6 +76,7 @@
                     </div>
                     <div class="col-md-4">
                         {{> afQuickField name="attachFile"}} {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+                        {{> afQuickField name="savingAccId"}}
                     </div>
                 </div>
             </fieldset>
@@ -117,7 +118,7 @@
                 <legend>Interest</legend>
                 <div class="row">
                     <div class="col-md-6">
-                        {{> afQuickField name="interestMethod"}}
+                        {{> afQuickField name="interestMethod" value=testData}}
                     </div>
                     <div class="col-md-6">
                         {{> afQuickField name="interestRate"}}
