@@ -375,7 +375,7 @@ export let checkRepayment = new ValidatedMethod({
 
 
             // Get last repayment
-            let lastRepayment = Repayment.findOne({loanAccId: loanAccId}, {$sort: {_id: -1}});
+            let lastRepayment = Repayment.findOne({loanAccId: loanAccId}, {sort: {_id: -1}});
 
             // ------------Schedule Next Pay-----------
             let scheduleNexPay={};

@@ -616,6 +616,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
         label: 'Escape day frequency',
         defaultValue: 1,
         min: 1,
+        optional: true,
         autoform: {
             type: "inputmask",
             afFieldInput: {

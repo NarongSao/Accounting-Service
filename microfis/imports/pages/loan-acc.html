@@ -103,13 +103,18 @@
                         {{> afQuickField name="paymentMethod" readonly=true}}
                         {{> afQuickField name="repaidFrequency"}}
                         {{> afQuickField name="term"}}
-                        {{> afQuickField name="firstRepaymentDate"}} {{> afQuickField name="dueDateOn"}}
+                        {{> afQuickField name="firstRepaymentDate"}}
+                        {{> afQuickField name="dueDateOn"}}
                     </div>
                     <div class="col-md-4">
                         {{> afQuickField name="principalInstallment"}}
                     </div>
                     <div class="col-md-4">
-                        {{> afQuickField name="paymentLocation"}} {{> afQuickField name="escapeDayMethod"}} {{> afQuickField name="escapeDayFrequency"}}
+                        {{> afQuickField name="paymentLocation"}}
+                        {{> afQuickField name="escapeDayMethod"}}
+                        {{#if isEscapeDay}}
+                            {{> afQuickField name="escapeDayFrequency"}}
+                        {{/if}}
                     </div>
                 </div>
             </fieldset>
@@ -142,13 +147,18 @@
                 <legend>Other</legend>
                 <div class="row">
                     <div class="col-md-4">
-                        {{> afQuickField name="cycle" value=cycle readonly=true}} {{> afQuickField name="history"}} {{> afQuickField name="purpose"}}
+                        {{> afQuickField name="cycle" value=cycle readonly=true}}
+                        {{> afQuickField name="history"}}
+                        {{> afQuickField name="purpose"}}
                     </div>
                     <div class="col-md-4">
-                        {{> afQuickField name="purposeActivity"}} {{> afQuickField name="collateralType"}} {{> afQuickField name="collateralSecurity"}}
+                        {{> afQuickField name="purposeActivity"}}
+                        {{> afQuickField name="collateralType"}}
+                        {{> afQuickField name="collateralSecurity"}}
                     </div>
                     <div class="col-md-4">
-                        {{> afQuickField name="collateralNote" rows=3}} {{> afQuickField name="povertyLevel"}}
+                        {{> afQuickField name="collateralNote" rows=3}}
+                        {{> afQuickField name="povertyLevel"}}
                     </div>
                 </div>
             </fieldset>
@@ -214,8 +224,10 @@
                     <dd>{{paymentLocation}}</dd>
                     <dt>Escape Day Method</dt>
                     <dd>{{escapeDayMethod}}</dd>
+
                     <dt>Escape Day Frequency</dt>
                     <dd>{{escapeDayFrequency}}</dd>
+
                     <dt>Maturity Date</dt>
                     <dd>{{moFormat maturityDate "DD/MM/YYYY"}}</dd>
                     <dt>Tenor</dt>

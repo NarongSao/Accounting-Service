@@ -16,5 +16,5 @@ Meteor.publish('microfis.scheduleByLoanAccId', function microfisScheduleByLoanAc
         return this.ready();
     }
 
-    return RepaymentSchedule.find({loanAccId: loanAccId}, {$sort: {installment: 1}});
+    return RepaymentSchedule.find({loanAccId: loanAccId}, {sort: {installment: 1}});
 });

@@ -96,6 +96,7 @@ formTmpl.onCreated(function () {
 
 
                 // Set last repayment
+
                 if (result.lastRepayment) {
                     stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
                 }
@@ -125,10 +126,15 @@ formTmpl.onRendered(function () {
     stateRepayment.set('repaidDate', repaidDate);
 
     // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+
+    if (stateRepayment.get('lastTransactionDate')) {
+        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+    }
+
     $repaidDateObj.on("dp.change", function (e) {
         stateRepayment.set('repaidDate', moment(e.date).toDate());
     });
+
 });
 
 formTmpl.helpers({

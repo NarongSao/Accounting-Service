@@ -14,7 +14,7 @@ export const getLastRepayment = new ValidatedMethod({
     }).validator(),
     run({loanAccId}) {
         if (!this.isSimulation) {
-            return Repayment.findOne({loanAccId: loanAccId}, {$sort: {_id: -1}});
+            return Repayment.findOne({loanAccId: loanAccId}, {sort: {repaidDate: -1}});
         }
     }
 });

@@ -49,6 +49,8 @@ indexTmpl.onCreated(function () {
     createNewAlertify('loanAccProduct');
     createNewAlertify('loanAcc', {size: 'lg'});
     createNewAlertify('loanAccShow');
+
+    stateClient.set('escapeFrequency', false);
 });
 
 indexTmpl.helpers({
@@ -184,12 +186,11 @@ formTmpl.onCreated(function () {
 });
 
 formTmpl.onRendered(function () {
-    debugger;
     let $submitDate = $('[name="submitDate"]');
     let $disbursementDate = $('[name="disbursementDate"]');
     let $firstRepaymentDate = $('[name="firstRepaymentDate"]');
     let productDoc = Session.get('productDoc');
-    if ($disbursementDate && $disbursementDate.length>0) {
+    if ($disbursementDate && $disbursementDate.length > 0) {
         $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
         $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
@@ -216,6 +217,10 @@ formTmpl.helpers({
         if (currentData) {
             doc = LoanAcc.findOne({_id: currentData.loanAccId});
             formType = 'update';
+
+            if (doc.escapeDayMethod != "NO") {
+                stateClient.set('escapeFrequency', true);
+            }
         }
 
         return {doc, formType};
@@ -224,6 +229,20 @@ formTmpl.helpers({
         let currentData = Template.currentData();
         if (!currentData) {
             return stateClient.get('cycle') + 1;
+        }
+    },
+    isEscapeDay(){
+        return stateClient.get('escapeFrequency');
+    }
+
+});
+
+formTmpl.events({
+    'change [name="escapeDayMethod"]'(e, t){
+        if (e.currentTarget.value != "NO") {
+            stateClient.set('escapeFrequency', true);
+        } else {
+            stateClient.set('escapeFrequency', false);
         }
     }
 });
