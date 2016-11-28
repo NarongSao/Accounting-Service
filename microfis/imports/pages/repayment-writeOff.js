@@ -92,7 +92,9 @@ formTmpl.onCreated(function () {
 
                 let maxAmountPaid = new BigNumber(0);
                 if (result) {
-                    Session.set('maxAmountPaid', maxAmountPaid.plus(result.writeOff.total + 1));
+                    if (result.writeOff.total != undefined) {
+                        Session.set('maxAmountPaid', maxAmountPaid.plus(result.writeOff.total + 1));
+                    }
                 }
 
                 Meteor.setTimeout(()=> {
@@ -147,7 +149,7 @@ formTmpl.helpers({
     totalDue(){
         let totalDue = new BigNumber(0),
             checkWriteOff = stateRepayment.get('checkWriteOff');
-        if (checkWriteOff && checkWriteOff.outStanding != undefined) {
+        if (checkWriteOff && checkWriteOff.outStanding.total != undefined) {
             totalDue = totalDue.plus(checkWriteOff.outStanding.total);
         }
         return totalDue.toNumber();

@@ -9,6 +9,7 @@ import  {MakeSchedule} from '../../common/methods/make-schedule.js';
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {SavingAcc} from '../../common/collections/saving-acc.js';
 import {Client} from '../../common/collections/client.js';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 
@@ -37,6 +38,7 @@ LoanAcc.after.insert(function (userId, doc) {
     if (doc.status != "Restructure") {
         Client.direct.update({_id: doc.clientId}, {$inc: {cycle: 1}});
     }
+
 });
 
 // Before update

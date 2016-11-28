@@ -13,6 +13,7 @@ import {Location} from '../../../microfis/common/collections/location.js';
 import {Fund} from '../../../microfis/common/collections/fund.js';
 import {ProductStatus} from '../../../microfis/common/collections/productStatus.js';
 import {LookupValue} from '../../common/collections/lookup-value.js';
+import {SavingAcc} from '../../common/collections/saving-acc.js';
 
 export const SelectOpts = {
     dayOfWeekToEscape: function (selectOne = true) {
@@ -223,6 +224,15 @@ export const SelectOpts = {
         list.push({value: 'N', label: 'New'});
         list.push({value: 'E', label: 'Expansion'});
 
+        return list;
+    },
+    savingAcc: function (clientId) {
+        let list = [];
+        list.push({value: '', label: '(Select One)'});
+        let savingList = SavingAcc.find({clientId: clientId},{}).fetch();
+        savingList.forEach(function (obj) {
+            list.push({value: obj._id, label: obj._id + " : " + moment(obj.accDate).format("DD/MM/YYYY") + " : " + obj.currencyId});
+        });
         return list;
     },
 };

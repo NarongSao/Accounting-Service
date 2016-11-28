@@ -47,7 +47,7 @@ formTmpl.onCreated(function () {
 
 
     // Set min/max amount to simple schema
-    let minMaxAmount=0.01;
+    let minMaxAmount = 0.01;
     switch (loanAccDoc.currencyId) {
         case 'KHR':
             minMaxAmount = 100;
@@ -60,7 +60,7 @@ formTmpl.onCreated(function () {
             break;
     }
     Session.set('minAmountPaid', minMaxAmount);
-    Session.set('maxAmountPaid', minMaxAmount);
+    // Session.set('maxAmountPaid', minMaxAmount);
     Session.set('maxPenaltyPaid', minMaxAmount);
 
     // Track autorun
@@ -78,7 +78,7 @@ formTmpl.onCreated(function () {
                     console.log(err.message);
                 });
             }
-            
+
             // Call check repayment from method
             checkRepayment.callPromise({
                 loanAccId: loanAccDoc._id,
@@ -89,12 +89,14 @@ formTmpl.onCreated(function () {
                 stateRepayment.set('checkRepayment', result);
 
                 // Set max amount on simple schema
-                if (result && result.totalScheduleNext) {
-                    Session.set('maxAmountPaid', result.totalScheduleNext.totalPrincipalInterestDue-Session.get('minAmountPaid'));
-                    Session.set('maxPenaltyPaid', result.totalScheduleNext.penaltyDue);
+                if (result && result.totalScheduleDue) {
+                    // Session.set('maxAmountPaid', result.totalScheduleDue.totalPrincipalInterestDue);
+                    Session.set('maxPenaltyPaid', result.totalScheduleDue.penaltyDue);
                 }
 
+
                 // Set last repayment
+
                 if (result.lastRepayment) {
                     stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
                 }
@@ -124,10 +126,15 @@ formTmpl.onRendered(function () {
     stateRepayment.set('repaidDate', repaidDate);
 
     // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+
+    if (stateRepayment.get('lastTransactionDate')) {
+        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+    }
+
     $repaidDateObj.on("dp.change", function (e) {
         stateRepayment.set('repaidDate', moment(e.date).toDate());
     });
+
 });
 
 formTmpl.helpers({
@@ -184,13 +191,14 @@ let hooksObject = {
             let loanAccDoc = stateRepayment.get('loanAccDoc'),
                 checkRepayment = stateRepayment.get('checkRepayment');
 
-            if(loanAccDoc.status=="Restructure"){
+
+            if (loanAccDoc.status == "Restructure") {
                 alertify.warning("You already Restructure");
                 return false;
             }
 
 
-            if(checkRepayment.balanceUnPaid -doc.loanAmount<=0){
+            if ((checkRepayment.balanceUnPaid + checkRepayment.interestUnPaid) - doc.amountPaid <= 0) {
                 alertify.warning("You should go to Closing");
                 return false;
             }

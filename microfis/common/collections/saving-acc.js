@@ -71,7 +71,8 @@ SavingAcc.productSchema = new SimpleSchema({
 SavingAcc.generalSchema = new SimpleSchema({
     clientId: {
         type: String,
-        label: 'Client'
+        label: 'Client',
+        index: true
     },
     productId: {
         type: String,
@@ -121,7 +122,7 @@ SavingAcc.generalSchema = new SimpleSchema({
                         if (accountType == 'J') {
                             return [
                                 {label: 'Any', value: 'Any'},
-                                {label: 'Tow', value: 'Tow'},
+                                {label: 'Two', value: 'Two'},
                                 {label: 'All', value: 'All'}
                             ];
                         }
@@ -290,6 +291,7 @@ SavingAcc.generalSchema = new SimpleSchema({
 SavingAcc.inheritorSchema = new SimpleSchema({
     inheritor: {
         type: Array,
+        optional: true,
         minCount: 0,
         maxCount: 50
     },

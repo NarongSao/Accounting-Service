@@ -23,6 +23,8 @@ import '../../../core/client/components/add-new-button.js';
 import {Client} from '../../common/collections/client.js';
 import {LoanAcc} from '../../common/collections/loan-acc.js';
 
+import {SavingAcc} from '../../common/collections/saving-acc.js';
+
 // Method
 import {lookupProduct} from '../../common/methods/lookup-product.js';
 import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
@@ -47,6 +49,8 @@ indexTmpl.onCreated(function () {
     createNewAlertify('loanAccProduct');
     createNewAlertify('loanAcc', {size: 'lg'});
     createNewAlertify('loanAccShow');
+
+    stateClient.set('escapeFrequency', false);
 });
 
 indexTmpl.helpers({
@@ -69,7 +73,7 @@ indexTmpl.events({
         let self = this;
 
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
-            alertify.error("Can't remove this account!!!");
+            alertify.error("Can't Update this account!!!");
         } else {
             lookupProduct.callPromise({
                 _id: self.productId
@@ -186,16 +190,17 @@ formTmpl.onRendered(function () {
     let $disbursementDate = $('[name="disbursementDate"]');
     let $firstRepaymentDate = $('[name="firstRepaymentDate"]');
     let productDoc = Session.get('productDoc');
+    if ($disbursementDate && $disbursementDate.length > 0) {
+        $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
+        $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
-    $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
-    $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
-
-    // LoanAcc date change
-    $disbursementDate.on("dp.change", function (e) {
-        $submitDate.data("DateTimePicker").maxDate(moment(e.date).startOf('day'));
-        $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
-    });
+        // LoanAcc date change
+        $disbursementDate.on("dp.change", function (e) {
+            $submitDate.data("DateTimePicker").maxDate(moment(e.date).startOf('day'));
+            $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
+        });
+    }
 });
 
 formTmpl.helpers({
@@ -212,14 +217,32 @@ formTmpl.helpers({
         if (currentData) {
             doc = LoanAcc.findOne({_id: currentData.loanAccId});
             formType = 'update';
+
+            if (doc.escapeDayMethod != "NO") {
+                stateClient.set('escapeFrequency', true);
+            }
         }
 
         return {doc, formType};
     },
     cycle(){
         let currentData = Template.currentData();
-        if(!currentData){
-            return stateClient.get('cycle')+1;
+        if (!currentData) {
+            return stateClient.get('cycle') + 1;
+        }
+    },
+    isEscapeDay(){
+        return stateClient.get('escapeFrequency');
+    }
+
+});
+
+formTmpl.events({
+    'change [name="escapeDayMethod"]'(e, t){
+        if (e.currentTarget.value != "NO") {
+            stateClient.set('escapeFrequency', true);
+        } else {
+            stateClient.set('escapeFrequency', false);
         }
     }
 });
