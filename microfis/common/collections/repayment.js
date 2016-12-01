@@ -79,6 +79,8 @@ Repayment.schema = new SimpleSchema({
         type: Number,
         label: 'Penalty paid',
         decimal: true,
+        optional: true,
+        defaultValue: 0,
         min: 0,
         max: function () {
             if (Meteor.isClient) {
@@ -116,6 +118,24 @@ Repayment.schema = new SimpleSchema({
         optional: true,
         blackbox: true
     },
+    branchId: {
+        type: String,
+        label: "Branch",
+        optional: true
+    },
+    voucherId: {
+        type: String,
+        label: "Voucher"
+    },
+    currencyId: {
+        type: String,
+        label: "Currency",
+        optional: true
+    },
+    endId: {
+        type: String,
+        defaultValue: "0"
+    }
 });
 
 Repayment.attachSchema(Repayment.schema);

@@ -60,18 +60,29 @@ indexTmpl.events({
         alertify.savingAccProduct(fa('plus', 'Saving Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.savingAcc(fa('pencil', 'Saving Account'), renderTemplate(formTmpl, this)).maximize();
+        if (this.savingNumber == 0) {
+            alertify.savingAcc(fa('pencil', 'Saving Account'), renderTemplate(formTmpl, this)).maximize();
+        } else {
+            displayError("Already have transaction!!!");
+        }
     },
-    'click .js-destroy' (event, instance) {
-        destroyAction(
-            SavingAcc,
-            {_id: this._id},
-            {title: 'Saving Account', itemTitle: this._id}
-        );
-    },
-    'click .js-display' (event, instance) {
+    'click .js-destroy'(event, instance){
+        if (this.savingNumber == 0) {
+            destroyAction(
+                SavingAcc,
+                {_id: this._id},
+                {title: 'Saving Account', itemTitle: this._id}
+            );
+        } else {
+            displayError("Already have transaction!!!");
+        }
+    }
+    ,
+    'click .js-display'(event, instance)
+    {
         alertify.savingAccShow(fa('eye', 'Saving Account'), renderTemplate(showTmpl, this));
-    },
+    }
+    ,
     'dblclick tbody > tr': function (event) {
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(event.currentTarget).data();

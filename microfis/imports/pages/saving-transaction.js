@@ -102,11 +102,16 @@ indexTmpl.events({
         alertify.savingTransaction(fa('plus', 'Saving Withdrawal'), renderTemplate(withdrawalFormTmpl, data));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            SavingTransaction,
-            {_id: this._id},
-            {title: 'SavingTransaction', itemTitle: this._id}
-        );
+        if (this.paymentId == "0") {
+            destroyAction(
+                SavingTransaction,
+                {_id: this._id},
+                {title: 'SavingTransaction', itemTitle: this._id}
+            );
+        }else {
+            alertify.error("Can't remove !!!!");
+        }
+
     },
     'click .js-display' (event, instance) {
         alertify.savingTransactionShow(fa('eye', 'SavingTransaction'), renderTemplate(showTmpl, this));

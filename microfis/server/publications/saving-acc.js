@@ -21,7 +21,6 @@ Meteor.publish('microfis.savingAccById', function microfisSavingAccById(savingAc
 
 
 Meteor.publish('microfis.savingAccByClientId', function microfisSavingAccByClientId(clientId) {
-    debugger;
     this.unblock();
 
     new SimpleSchema({

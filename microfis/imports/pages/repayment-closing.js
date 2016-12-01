@@ -42,7 +42,6 @@ import './repayment-closing.html';
 let formTmpl = Template.Microfis_repaymentClosingForm;
 
 
-
 //-------- General Form ------------
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
@@ -62,7 +61,7 @@ formTmpl.onCreated(function () {
             break;
     }
     Session.set('minAmountPaid', minMaxAmount);
-    Session.set('maxAmountPaid', minMaxAmount);
+    // Session.set('maxAmountPaid', minMaxAmount);
     Session.set('maxPenaltyPaid', minMaxAmount);
 
     // Track autorun
@@ -72,6 +71,7 @@ formTmpl.onCreated(function () {
         if (repaidDate) {
             $.blockUI();
 
+            let totalSavingBal = new BigNumber(0);
 
             if (loanAccDoc) {
                 lookupLoanAcc.callPromise({
@@ -81,9 +81,15 @@ formTmpl.onCreated(function () {
                 }).catch(function (err) {
                     console.log(err.message);
                 });
+
+                Meteor.call('microfis_getLastSavingTransaction', loanAccDoc.savingAccId, function (err, data) {
+                    if (data) {
+                        stateRepayment.set('savingBalance', data);
+                        totalSavingBal = totalSavingBal.plus(data.details.principalBal).plus(data.details.interestBal);
+                    }
+                });
             }
-            
-            
+
 
             // Call check repayment from method
             checkRepayment.callPromise({
@@ -95,15 +101,25 @@ formTmpl.onCreated(function () {
 
                 // Set max amount on simple schema
                 let maxAmountPaid = new BigNumber(0);
+                let minAmountPaid = new BigNumber(0);
+
+
                 if (result && result.totalScheduleDue) {
-                    maxAmountPaid = maxAmountPaid.plus(result.totalScheduleDue.totalPrincipalInterestDue);
+                    // maxAmountPaid = maxAmountPaid.plus(result.totalScheduleDue.totalPrincipalInterestDue);
                     Session.set('maxPenaltyPaid', result.totalScheduleDue.penaltyDue);
+
+
                 }
+                // if (result && result.closing) {
+                //     maxAmountPaid = maxAmountPaid.plus(result.closing.totalDue);
+                // }
+                // if (maxAmountPaid.greaterThan(0)) {
+                //     Session.set('maxAmountPaid', maxAmountPaid.toNumber());
+                // }
+
                 if (result && result.closing) {
-                    maxAmountPaid = maxAmountPaid.plus(result.closing.totalDue);
-                }
-                if (maxAmountPaid.greaterThan(0)) {
-                    Session.set('maxAmountPaid', maxAmountPaid.toNumber());
+                    minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal);
+                    Session.set('minAmountPaid', minAmountPaid.toNumber());
                 }
 
                 // Set last repayment
@@ -118,6 +134,7 @@ formTmpl.onCreated(function () {
             }).catch(function (err) {
                 console.log(err.message);
             });
+
 
         } else {
             stateRepayment.set('checkRepayment', null);
@@ -140,6 +157,7 @@ formTmpl.onRendered(function () {
 });
 
 formTmpl.helpers({
+
     collection(){
         return Repayment;
     },
@@ -151,13 +169,14 @@ formTmpl.helpers({
             totalPenalty = new BigNumber(0),
             checkRepayment = stateRepayment.get('checkRepayment');
 
+        let data = stateRepayment.get('savingBalance');
+
         if (checkRepayment && checkRepayment.totalScheduleDue) {
-            totalDue = totalDue.plus(checkRepayment.totalScheduleDue.totalPrincipalInterestDue);
             totalPenalty = totalPenalty.plus(checkRepayment.totalScheduleDue.penaltyDue);
         }
 
         if (checkRepayment && checkRepayment.closing) {
-            totalDue = totalDue.plus(checkRepayment.closing.totalDue);
+            totalDue = totalDue.plus(checkRepayment.closing.totalDue).minus(data.details.principalBal).minus(data.details.interestBal);
         }
 
         return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};
@@ -178,6 +197,16 @@ formTmpl.helpers({
     },
     jsonViewOpts(){
         return {collapsed: true};
+    },
+    voucherId(){
+
+    },
+    savingBal(){
+        let data = stateRepayment.get('savingBalance');
+        if (data) {
+            data.totalBal = data.details.interestBal + data.details.principalBal;
+            return data;
+        }
     }
 });
 
@@ -216,8 +245,11 @@ let hooksObject = {
                 return false;
             }
 
-
-
+            // Check have current due amount
+            if (checkRepayment && checkRepayment.scheduleDue && checkRepayment.scheduleDue.length > 0) {
+                displayError("Have current due amount, so can't prepay");
+                return false;
+            }
 
 
             // Check to payment
@@ -248,6 +280,10 @@ let hooksObject = {
     },
     onSuccess (formType, result) {
         alertify.repayment().close();
+        let loanAccDoc = stateRepayment.get('loanAccDoc');
+        loanAccDoc.status = "Close";
+
+        stateRepayment.set('loanAccDoc', loanAccDoc);
         displaySuccess();
     },
     onError (formType, error) {

@@ -284,6 +284,10 @@ SavingAcc.generalSchema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    savingNumber: {
+        type: Number,
+        defaultValue: 0
     }
 });
 

@@ -96,6 +96,8 @@ function _makeSchedule(doc) {
         // Save to repayment schedule collection
         value.scheduleDate = doc.disbursementDate;
         value.loanAccId = doc._id;
+        value.savingAccId=doc.savingAccId;
+        value.branchId=doc.branchId;
         RepaymentSchedule.insert(value);
     });
 

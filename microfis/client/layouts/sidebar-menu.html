@@ -42,6 +42,25 @@
         </li>
     {{/if}}
 
+    <!--Settings-->
+    {{#if isInRole 'setting' 'Microfis'}}
+        <li class="treeview active">
+            <a href="#">
+                <i class="fa fa-cogs"></i>
+                <span>Daily Process</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.endOfProcess'}}">
+                    <a href="{{pathFor 'microfis.endOfProcess'}}">
+                        <i class="fa fa-circle-o"></i> <span>End Of Process</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
     <!--Report-->
     {{#if isInRole 'reporter' 'Microfis'}}
         <li class="treeview">

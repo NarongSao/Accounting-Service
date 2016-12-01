@@ -34,6 +34,8 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'accountType', title: 'Acc Type'},
         {data: 'status.value', title: 'Status'},
     ],
+
+    extraFields: ['savingNumber'],
 });
 
 export const SavingAccTabular = new Tabular.Table(tabularData);

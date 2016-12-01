@@ -28,6 +28,9 @@ SavingTransaction.after.insert(function (userId, doc) {
                 }
             });
         }
+
+        SavingAcc.update({_id: doc.savingAccId}, {$set: {savingNumber: transactionCount}});
+
     });
 });
 
@@ -37,13 +40,18 @@ SavingTransaction.after.remove(function (userId, doc) {
         let transactionCount = SavingTransaction.find().count();
         if (transactionCount == 0) {
             SavingAcc.update({_id: doc.savingAccId}, {
+                $set: {
+                    'status.value': 'Inactive'
+                },
                 $unset: {
-                    'status.value': 'Inactive',
                     'status.activeDate': '',
                     'status.suspendDate': '',
                     'status.closeDate': '',
                 }
             });
         }
+
+        SavingAcc.update({_id: doc.savingAccId}, {$set: {savingNumber: transactionCount}});
+
     });
 });

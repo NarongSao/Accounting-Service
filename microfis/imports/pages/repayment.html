@@ -55,7 +55,7 @@
 
     <div class="box-body">
         <!--Summary-->
-        {{> Microfis_repaymentDetailSummary data=loanAccDoc}}
+        {{> Microfis_repaymentDetailSummary data=loanAccDoc checkPayment=checkPayment}}
 
 
         <!--Detail-->
@@ -159,9 +159,9 @@
 
 <!--Index Summary-->
 <template name="Microfis_repaymentDetailSummary">
-    <div class="row">
+    <div class="row" style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
         {{#with data}}
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <dl class="dl-horizontal">
                     <dt>Loan Acc</dt>
                     <dd>{{_id}} ({{accountType}})</dd>
@@ -177,7 +177,7 @@
                     <dd>{{numFormat loanAmount "0,0.00"}} {{currencyId}}</dd>
                 </dl>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <dl class="dl-horizontal">
                     <dt>Principal Installment</dt>
                     <dd>
@@ -194,6 +194,12 @@
                 </dl>
             </div>
         {{/with}}
+        <div class="col-md-2">
+            <p class="pull-right ">
+            <h4 class="text-black">Principal Balance</h4>
+            <h2 class="text-blue text-center">{{data.currencyId}} {{numFormat  checkPayment.balanceUnPaid '0,0.00'}}</h2>
+            </p>
+        </div>
     </div>
 </template>
 

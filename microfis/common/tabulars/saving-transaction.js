@@ -54,7 +54,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         },
         {data: 'voucherId', title: 'Vocher ID'},
     ],
-    extraFields: ['savingAccId'],
+    extraFields: ['savingAccId',"paymentId"],
 });
 
 export const SavingTransactionTabular = new Tabular.Table(tabularData);
