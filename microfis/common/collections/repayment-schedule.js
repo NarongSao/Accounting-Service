@@ -50,6 +50,13 @@ RepaymentSchedule.repaidDocSchema = new SimpleSchema({
     'detail.$.repaymentId': {
         type: String
     },
+    'detail.$.endId': {
+        type: String,
+        optional: true
+    },
+    branchId: {
+        type: String
+    }
 });
 
 RepaymentSchedule.schema = new SimpleSchema({
@@ -92,6 +99,26 @@ RepaymentSchedule.schema = new SimpleSchema({
         optional: true,
         blackbox: true
     },
+    isPay: {
+        type: Boolean,
+        defaultValue: false
+    },
+    isFullPay: {
+        type: Boolean,
+        defaultValue: false
+    },
+    isPrePay: {
+        type: Boolean,
+        defaultValue: false
+    },
+    savingAccId: {
+        type: String
+    },
+    branchId: {
+        type: String,
+        label: "Branch",
+        optional: true
+    }
 });
 
 RepaymentSchedule.attachSchema(RepaymentSchedule.schema);

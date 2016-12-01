@@ -100,6 +100,7 @@ SavingTransaction.generalSchema = new SimpleSchema({
     },
     voucherId: {
         type: String,
+        label: "Voucher"
     },
     memo: {
         type: String,
@@ -118,6 +119,20 @@ SavingTransaction.generalSchema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    paymentId: {
+        type: String,
+        optional: true,
+        defaultValue: "0"
+    },
+    currencyId: {
+        type: String,
+        label: "Currency",
+        optional: true
+    },
+    endId: {
+        type: String,
+        optional: true
     }
 });
 

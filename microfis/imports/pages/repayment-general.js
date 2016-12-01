@@ -197,7 +197,6 @@ let hooksObject = {
                 return false;
             }
 
-
             if ((checkRepayment.balanceUnPaid + checkRepayment.interestUnPaid) - doc.amountPaid <= 0) {
                 alertify.warning("You should go to Closing");
                 return false;
@@ -213,8 +212,7 @@ let hooksObject = {
                 alertify.warning("You already write off!!!");
                 return false;
             }
-
-
+            
             doc.type = 'General';
 
             // Check to payment

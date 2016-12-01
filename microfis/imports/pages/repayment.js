@@ -31,6 +31,8 @@ import {getLastRepayment} from '../../common/methods/get-last-repayment.js';
 // API Lib
 import {MakeRepayment} from '../../common/libs/make-repayment.js';
 
+//Method
+import {checkRepayment} from '../../common/methods/check-repayment';
 
 // Collection
 import {Repayment} from '../../common/collections/repayment.js';
@@ -104,6 +106,22 @@ indexTmpl.onCreated(function () {
             }).catch(function (err) {
                 console.log(err.message);
             });
+
+
+            // Call check repayment from method
+            checkRepayment.callPromise({
+                loanAccId: loanAccId,
+                checkDate: moment().toDate()
+            }).then(function (result) {
+                // Set state
+                stateRepayment.set('checkRepayment', result);
+                Meteor.setTimeout(() => {
+                    $.unblockUI();
+                }, 200);
+
+            }).catch(function (err) {
+                console.log(err.message);
+            });
         }
     });
 
@@ -118,6 +136,9 @@ indexTmpl.onCreated(function () {
 indexTmpl.helpers({
     loanAccDoc() {
         return stateRepayment.get('loanAccDoc');
+    },
+    checkPayment(){
+        return stateRepayment.get('checkRepayment');
     },
     scheduleDoc() {
         let loanAccId = FlowRouter.getParam('loanAccId');
@@ -279,7 +300,6 @@ indexTmpl.events({
 
     },
     'click .js-destroy'(event, instance) {
-        debugger;
         /*destroyAction(
          Repayment,
          {_id: this._id},
@@ -287,60 +307,70 @@ indexTmpl.events({
          );*/
 
 
-
         let self = this;
         let loanAccDoc = stateRepayment.get('loanAccDoc');
         stateRepayment.set("repaidDate", self.repaidDate);
 
-        getLastRepayment.callPromise({
-            loanAccId: loanAccDoc._id
-        }).then(function (doc) {
-            if(doc.repaidDate.getTime()==self.repaidDate.getTime()){
-                swal({
-                    title: 'Are you sure?',
-                    text: `You won't be able to revert this <span class="text-red text-bold">[${this._id}]</span>!`,
-                    type: 'warning',
-                    allowEscapeKey: false,
-                    allowOutsideClick: true,
-                    showCloseButton: true,
-                    showConfirmButton: true,
-                    confirmButtonColor: "#dd4b39",
-                    confirmButtonText: 'Yes, delete it!',
-                    showCancelButton: true
-                }).then(function () {
-                    Repayment.remove({_id: self._id}, function (error) {
-                        if (error) {
-                            // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
-                            displayError(options.errorMsg, options.i18n);
-                        } else {
+        if (self.endId == "0") {
+            getLastRepayment.callPromise({
+                loanAccId: loanAccDoc._id
+            }).then(function (doc) {
+                if (doc.repaidDate.getTime() == self.repaidDate.getTime()) {
+                    swal({
+                        title: 'Are you sure?',
+                        text: `You won't be able to revert this <span class="text-red text-bold">[${self._id}]</span>!`,
+                        type: 'warning',
+                        allowEscapeKey: false,
+                        allowOutsideClick: true,
+                        showCloseButton: true,
+                        showConfirmButton: true,
+                        confirmButtonColor: "#dd4b39",
+                        confirmButtonText: 'Yes, delete it!',
+                        showCancelButton: true
+                    }).then(function () {
+                        Repayment.remove({_id: self._id}, function (error) {
+                            if (error) {
+                                // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
+                                displayError(options.errorMsg, options.i18n);
+                            } else {
 
-                            updateLoanAccPaymentWrteOff.callPromise({
-                                loanAccId: loanAccDoc._id,
-                                opts: loanAccDoc,
-                                repaidDate: stateRepayment.get('repaidDate')
-                            }).then(function (result) {
-                                if (result) {
+                                updateLoanAccPaymentWrteOff.callPromise({
+                                    loanAccId: loanAccDoc._id,
+                                    opts: loanAccDoc,
+                                    repaidDate: stateRepayment.get('repaidDate')
+                                }).then(function (result) {
+
+                                }).catch(function (err) {
+                                    console.log(err.message);
+                                });
+
+                                Meteor.setTimeout(function () {
                                     lookupLoanAcc.callPromise({
                                         _id: loanAccDoc._id
-                                    }).then(function (doc) {
-                                        stateRepayment.set('loanAccDoc', doc);
+                                    }).then(function (docLoanAcc) {
+                                        if (docLoanAcc) {
+
+                                            stateRepayment.set('loanAccDoc', docLoanAcc);
+
+                                        }
                                     }).catch(function (err) {
                                         console.log(err.message);
                                     });
-                                }
-                            }).catch(function (err) {
-                                console.log(err.message);
-                            });
-                            displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
-                        }
-                    });
-                }).done();
-            }else {
-                alertify.error("Not the last payment!!!");
-            }
-        }).catch(function (err) {
-            console.log(err.message);
-        });
+                                }, 200)
+
+                                displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
+                            }
+                        });
+                    }).done();
+                } else {
+                    alertify.error("Not the last payment!!!");
+                }
+            }).catch(function (err) {
+                console.log(err.message);
+            });
+        } else {
+            alertify.error("Already End Of Process!!!");
+        }
 
     },
     'click .js-removeWriteOff'(event, instance) {
@@ -410,6 +440,8 @@ scheduleDetailTmpl.helpers({
                 } else if (lastStatus.status == 'Partial') {
                     className = 'warning';
                 }
+            } else if (item.isPay == true) {
+                className = 'danger';
             }
         }
 

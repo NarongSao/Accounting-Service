@@ -76,7 +76,7 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
 
     let tmpAmountPaid = new BigNumber(amountPaid);
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);
-
+    
 
     for (let o of scheduleDue) {
         let currentDue = o.currentDue;

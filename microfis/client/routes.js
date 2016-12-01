@@ -365,3 +365,20 @@ MicrofisRoutes.route('/paymentStatus', {
     }
 });
 
+// End Of Process
+import '../imports/pages/endOfProcess';
+MicrofisRoutes.route('/endOfProcess', {
+    name: 'microfis.endOfProcess',
+    title: 'End Of Process',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_endOfProcess');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'End Of Process',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+

@@ -228,7 +228,6 @@ LoanAcc.generalSchema = new SimpleSchema({
     },
     savingAccId: {
         type: String,
-        optional: true,
         label: "Saving Account",
         autoform: {
             type: 'select2',

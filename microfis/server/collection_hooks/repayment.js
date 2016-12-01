@@ -1,6 +1,7 @@
 import 'meteor/matb33:collection-hooks';
 import {idGenerator2} from 'meteor/theara:id-generator';
 import {_} from 'meteor/erasaur:meteor-lodash';
+import BigNumber from 'bignumber.js';
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc';
@@ -26,28 +27,292 @@ Repayment.before.insert(function (userId, doc) {
 
 // After insert
 Repayment.after.insert(function (userId, doc) {
+    console.log(doc);
     Meteor.defer(function () {
-        // Update schedule
-        if (doc.detailDoc) {
-            if (doc.detailDoc.schedulePaid) {
-                let schedulePaid = doc.detailDoc.schedulePaid;
-                console.log(schedulePaid);
 
-                _.forEach(schedulePaid, (o) => {
-                    o.repaymentId = doc._id;
+        /*if (doc.detailDoc) {
 
-                    RepaymentSchedule.update({_id: o.scheduleId}, {
-                        $inc: {
-                            'repaymentDoc.totalPrincipalPaid': o.principalPaid,
-                            'repaymentDoc.totalInterestPaid': o.interestPaid,
-                            'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
-                            'repaymentDoc.totalInterestWaived': o.interestWaived,
-                        },
-                        $push: {'repaymentDoc.detail': o}
+         if (doc.detailDoc.schedulePaid) {
+         let schedulePaid = doc.detailDoc.schedulePaid;
+
+         _.forEach(schedulePaid, (o) => {
+         o.repaymentId = doc._id;
+
+         RepaymentSchedule.update({_id: o.scheduleId}, {
+         $inc: {
+         'repaymentDoc.totalPrincipalPaid': o.principalPaid,
+         'repaymentDoc.totalInterestPaid': o.interestPaid,
+         'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
+         'repaymentDoc.totalInterestWaived': o.interestWaived,
+         },
+         $push: {'repaymentDoc.detail': o}
+         });
+         });
+         }
+         }*/
+
+        let loanAcc = LoanAcc.findOne({_id: doc.loanAccId});
+        //Saving Link
+        if (["General", "Close"].includes(doc.type) == true) {
+
+
+            // Update schedule
+            if (doc.detailDoc) {
+
+                if (doc.detailDoc.schedulePaid) {
+                    let schedulePaid = doc.detailDoc.schedulePaid;
+
+                    _.forEach(schedulePaid, (o) => {
+                        let updatePay = {};
+                        if (o.totalPrincipalInterestBal == 0) {
+                            updatePay.isPay = true;
+                            updatePay.isFullPay = true;
+                        } else {
+                            updatePay.isPay = true;
+                            updatePay.isFullPay = false;
+                        }
+
+                        o.repaymentId = doc._id;
+
+                        RepaymentSchedule.update({_id: o.scheduleId}, {
+                            $inc: {
+                                'repaymentDoc.totalPrincipalPaid': o.principalPaid,
+                                'repaymentDoc.totalInterestPaid': o.interestPaid,
+                                'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
+                                'repaymentDoc.totalInterestWaived': o.interestWaived,
+                            },
+                            $push: {'repaymentDoc.detail': o},
+                            $set: updatePay
+                        });
                     });
+                }
+            }
+
+            // Insert Data to Saving
+            if (loanAcc.savingAccId) {
+
+                let savingLoanDeposit = {};
+                let savingLoanWithdrawal = {};
+
+                savingLoanDeposit.paymentId = doc._id;
+                savingLoanWithdrawal.paymentId = doc._id;
+
+                // Deposit
+                let savingDeposit = checkSavingTransaction.run({
+                    savingAccId: loanAcc.savingAccId,
+                    checkDate: doc.repaidDate
                 });
+
+
+                if (savingDeposit) {
+                    savingLoanDeposit.branchId = doc.branchId;
+                    savingLoanDeposit.amount = doc.amountPaid;
+                    savingLoanDeposit.savingAccId = loanAcc.savingAccId;
+                    savingLoanDeposit.transactionDate = doc.repaidDate;
+                    savingLoanDeposit.voucherId = doc.voucherId;
+                    savingLoanDeposit.memo = doc.note;
+                    savingLoanDeposit.currencyId = doc.currencyId;
+
+
+                    savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.amountPaid).toNumber();
+
+                    // Remove last transaction
+                    delete savingDeposit.lastTransaction;
+
+                    savingLoanDeposit.transactionType = 'LD';
+                    savingLoanDeposit.details = savingDeposit;
+
+                    SavingTransaction.insert(savingLoanDeposit);
+                }
+
+
+                //Withdrawal
+                let savingWithdrawal = checkSavingTransaction.run({
+                    savingAccId: loanAcc.savingAccId,
+                    checkDate: doc.repaidDate
+                })
+
+                if (savingWithdrawal) {
+                    savingLoanWithdrawal.branchId = doc.branchId;
+                    savingLoanWithdrawal.savingAccId = loanAcc.savingAccId;
+                    savingLoanWithdrawal.transactionDate = doc.repaidDate;
+                    savingLoanWithdrawal.voucherId = doc.voucherId;
+                    savingLoanWithdrawal.memo = doc.note;
+                    savingLoanWithdrawal.currencyId = doc.currencyId;
+
+
+                    if (doc.type == "General") {
+                        savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : 0;
+                    } else if (doc.type = "Close") {
+                        savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue ? doc.detailDoc.closing.totalDue : 0;
+                    }
+
+                    // Cal principal, interest bal
+                    let amount = new BigNumber(savingLoanWithdrawal.amount);
+                    if (amount.lessThanOrEqualTo(savingWithdrawal.interestBal)) {
+                        savingWithdrawal.interestBal = new BigNumber(savingWithdrawal.interestBal).minus(amount).toNumber();
+                        savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).toNumber();
+                    } else {
+                        amount = amount.minus(savingWithdrawal.interestBal);
+                        savingWithdrawal.interestBal = new BigNumber(0).toNumber();
+                        savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).minus(amount).toNumber();
+                    }
+
+                    // Remove last transaction
+                    delete savingWithdrawal.lastTransaction;
+
+                    savingLoanWithdrawal.transactionType = 'LR';
+                    savingLoanWithdrawal.details = savingWithdrawal;
+
+                    SavingTransaction.insert(savingLoanWithdrawal);
+                }
             }
         }
+        else if (doc.type == "Prepay") {
+            // Update schedule
+            if (doc.detailDoc) {
+                if (doc.detailDoc.schedulePaid) {
+                    let schedulePaid = doc.detailDoc.schedulePaid;
+
+
+                    _.forEach(schedulePaid, (o) => {
+
+                        let updatePay = {};
+                        if (o.totalPrincipalInterestBal == 0) {
+                            updatePay.isPay = true;
+                            updatePay.isFullPay = true;
+                        } else {
+                            updatePay.isPay = true;
+                            updatePay.isFullPay = false;
+                        }
+
+                        updatePay.isPrePay = true;
+
+                        RepaymentSchedule.update({_id: o.scheduleId}, {
+                            $set: updatePay
+                        });
+                    });
+                }
+                if (loanAcc.savingAccId) {
+                    let savingLoanDeposit = {};
+                    savingLoanDeposit.paymentId = doc._id;
+
+                    // Deposit
+                    let savingDeposit = checkSavingTransaction.run({
+                        savingAccId: loanAcc.savingAccId,
+                        checkDate: doc.repaidDate
+                    });
+
+
+                    if (savingDeposit) {
+                        savingLoanDeposit.branchId = doc.branchId;
+                        savingLoanDeposit.amount = doc.amountPaid;
+                        savingLoanDeposit.savingAccId = loanAcc.savingAccId;
+                        savingLoanDeposit.transactionDate = doc.repaidDate;
+                        savingLoanDeposit.voucherId = doc.voucherId;
+                        savingLoanDeposit.memo = doc.note;
+                        savingLoanDeposit.currencyId = doc.currencyId;
+
+
+                        savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.amountPaid).toNumber();
+
+                        // Remove last transaction
+                        delete savingDeposit.lastTransaction;
+
+                        savingLoanDeposit.transactionType = 'LD';
+                        savingLoanDeposit.details = savingDeposit;
+
+                        SavingTransaction.insert(savingLoanDeposit);
+                    }
+                }
+
+            }
+        } else if (["Reschedule", "Write Off"].includes(doc.type) == true) {
+
+            if (doc.type == "Reschedule") {
+                _makeScheduleForPrincipalInstallment(doc);
+            }
+
+
+            // Insert Data to Saving
+            if (loanAcc.savingAccId) {
+
+                let savingLoanDeposit = {};
+                let savingLoanWithdrawal = {};
+
+                savingLoanDeposit.paymentId = doc._id;
+                savingLoanWithdrawal.paymentId = doc._id;
+
+                // Deposit
+                let savingDeposit = checkSavingTransaction.run({
+                    savingAccId: loanAcc.savingAccId,
+                    checkDate: doc.repaidDate
+                });
+
+
+                if (savingDeposit) {
+                    savingLoanDeposit.branchId = doc.branchId;
+                    savingLoanDeposit.amount = doc.amountPaid;
+                    savingLoanDeposit.savingAccId = loanAcc.savingAccId;
+                    savingLoanDeposit.transactionDate = doc.repaidDate;
+                    savingLoanDeposit.voucherId = doc.voucherId;
+                    savingLoanDeposit.memo = doc.note;
+                    savingLoanDeposit.currencyId = doc.currencyId;
+
+
+                    savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.amountPaid).toNumber();
+
+                    // Remove last transaction
+                    delete savingDeposit.lastTransaction;
+
+                    savingLoanDeposit.transactionType = 'LD';
+                    savingLoanDeposit.details = savingDeposit;
+
+                    SavingTransaction.insert(savingLoanDeposit);
+                }
+
+
+                //Withdrawal
+                let savingWithdrawal = checkSavingTransaction.run({
+                    savingAccId: loanAcc.savingAccId,
+                    checkDate: doc.repaidDate
+                })
+
+                if (savingWithdrawal) {
+                    savingLoanWithdrawal.branchId = doc.branchId;
+                    savingLoanWithdrawal.savingAccId = loanAcc.savingAccId;
+                    savingLoanWithdrawal.transactionDate = doc.repaidDate;
+                    savingLoanWithdrawal.voucherId = doc.voucherId;
+                    savingLoanWithdrawal.memo = doc.note;
+                    savingLoanWithdrawal.currencyId = doc.currencyId;
+
+
+                    savingLoanWithdrawal.amount = doc.amountPaid;
+
+
+                    // Cal principal, interest bal
+                    let amount = new BigNumber(savingLoanWithdrawal.amount);
+                    if (amount.lessThanOrEqualTo(savingWithdrawal.interestBal)) {
+                        savingWithdrawal.interestBal = new BigNumber(savingWithdrawal.interestBal).minus(amount).toNumber();
+                        savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).toNumber();
+                    } else {
+                        amount = amount.minus(savingWithdrawal.interestBal);
+                        savingWithdrawal.interestBal = new BigNumber(0).toNumber();
+                        savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).minus(amount).toNumber();
+                    }
+
+                    // Remove last transaction
+                    delete savingWithdrawal.lastTransaction;
+
+                    savingLoanWithdrawal.transactionType = 'LR';
+                    savingLoanWithdrawal.details = savingWithdrawal;
+
+                    SavingTransaction.insert(savingLoanWithdrawal);
+                }
+            }
+        }
+
+        //End Saving Link
 
 
         // Update loan acc for close type
@@ -57,132 +322,102 @@ Repayment.after.insert(function (userId, doc) {
         }
 
 
-        if (doc.type == "Reschedule") {
-            _makeScheduleForPrincipalInstallment(doc);
-        }
-
         LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}});
 
-        // Insert Data to Saving
-        /*if (doc.type == "General") {
-            let loanAcc = LoanAcc.findOne({_id: doc.loanAccId});
-            if (loanAcc.savingAccId) {
 
-                let savingLoanDeposit = {};
-                let savingLoanWithdrawal = {};
-
-                // Deposit
-                checkSavingTransaction.run({
-                    savingAccId: loanAcc.savingAccId,
-                    checkDate: doc.repaidDate
-                }).then(function (result) {
-
-                    savingLoanDeposit.branchId=doc.branchId;
-                    savingLoanDeposit.amount=doc.amountPaid;
-                    savingLoanDeposit.savingAccId=loanAcc.savingAccId;
-                    savingLoanDeposit.transactionDate=doc.repaidDate;
-                    savingLoanDeposit.voucherId="012";
-
-                    result.principalBal = new BigNumber(result.principalOpening).plus(doc.amountPaid).toNumber();
-
-                    // Remove last transaction
-                    delete result.lastTransaction;
-
-                    savingLoanDeposit.transactionType = 'LD';
-                    savingLoanDeposit.details = result;
-
-
-                    SavingTransaction.insert(savingLoanDeposit);
-                }).catch(function (err) {
-                    console.log(err.message);
-                });
-
-
-
-                //Withdrawal
-                checkSavingTransaction.run({
-                    savingAccId: loanAcc.savingAccId,
-                    checkDate: doc.repaidDate
-                }).then(function (result) {
-
-
-                    savingLoanWithdrawal.branchId=doc.branchId;
-                    savingLoanWithdrawal.savingAccId=loanAcc.savingAccId;
-                    savingLoanWithdrawal.transactionDate=doc.repaidDate;
-                    savingLoanWithdrawal.voucherId="012";
-
-                    savingLoanWithdrawal.amount = doc.amountPaid ? doc.amountPaid : 0;
-
-                    // Cal principal, interest bal
-                    let amount = new BigNumber(doc.amountPaid);
-                    if (amount.lessThanOrEqualTo(result.interestBal)) {
-                        result.interestBal = new BigNumber(result.interestBal).minus(doc.amount).toNumber();
-                        result.principalBal = new BigNumber(result.principalOpening).toNumber();
-                    } else {
-                        amount = amount.minus(result.interestBal);
-                        result.interestBal = new BigNumber(0).toNumber();
-                        result.principalBal = new BigNumber(result.principalOpening).minus(amount).toNumber();
-                    }
-
-                    // Remove last transaction
-                    delete result.lastTransaction;
-
-                    savingLoanWithdrawal.transactionType = 'LW';
-                    savingLoanWithdrawal.details = result;
-
-                    SavingTransaction.insert(savingLoanWithdrawal);
-                }).catch(function (err) {
-                    console.log(err.message);
-                });
-
-
-
-            }
-        }*/
     });
 });
+
 
 // After remove
 Repayment.after.remove(function (userId, doc) {
     Meteor.defer(function () {
         // Update schedule
-        if (doc.detailDoc) {
-            if (doc.detailDoc.schedulePaid) {
-                let schedulePaid = doc.detailDoc.schedulePaid;
+        /*// Update schedule
+         if (doc.detailDoc) {
+         if (doc.detailDoc.schedulePaid) {
+         let schedulePaid = doc.detailDoc.schedulePaid;
 
-                _.forEach(schedulePaid, (o) => {
-                    RepaymentSchedule.update({_id: o.scheduleId}, {
-                        $inc: {
-                            'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
-                            'repaymentDoc.totalInterestPaid': -o.interestPaid,
-                            'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
-                            'repaymentDoc.totalInterestWaived': -o.interestWaived,
-                        },
-                        $pull: {'repaymentDoc.detail': {repaymentId: doc._id}}
+         _.forEach(schedulePaid, (o) => {
+         RepaymentSchedule.update({_id: o.scheduleId}, {
+         $inc: {
+         'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
+         'repaymentDoc.totalInterestPaid': -o.interestPaid,
+         'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
+         'repaymentDoc.totalInterestWaived': -o.interestWaived,
+         },
+         $pull: {'repaymentDoc.detail': {repaymentId: doc._id}}
+         });
+         });
+         }
+         }*/
+
+        let loanAcc = LoanAcc.findOne({_id: doc.loanAccId});
+
+        //Saving Link
+
+        if (["General", "Close"].includes(doc.type) == true) {
+
+            // Update schedule
+            if (doc.detailDoc) {
+                if (doc.detailDoc.schedulePaid) {
+                    let schedulePaid = doc.detailDoc.schedulePaid;
+
+                    _.forEach(schedulePaid, (o) => {
+
+
+                        RepaymentSchedule.update({_id: o.scheduleId}, {
+                            $inc: {
+                                'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
+                                'repaymentDoc.totalInterestPaid': -o.interestPaid,
+                                'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
+                                'repaymentDoc.totalInterestWaived': -o.interestWaived,
+                            },
+                            $pull: {'repaymentDoc.detail': {repaymentId: doc._id}},
+                            $set: {isPay: false, isFullPay: false}
+                        });
                     });
-                });
+                }
             }
+
+            SavingTransaction.remove({paymentId: doc._id});
+        } else if (doc.type == "Prepay") {
+            if (doc.detailDoc) {
+                if (doc.detailDoc.schedulePaid) {
+                    let schedulePaid = doc.detailDoc.schedulePaid;
+
+                    _.forEach(schedulePaid, (o) => {
+
+                        RepaymentSchedule.update({_id: o.scheduleId}, {
+                            $set: {isPay: false, isFullPay: false, isPrePay: false}
+                        });
+                    });
+                }
+            }
+            SavingTransaction.remove({paymentId: doc._id});
+        } else if (["Reschedule", "Write Off"].includes(doc.type) == true) {
+
+            if (doc.type == "Reschedule") {
+                RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
+            }
+
+            SavingTransaction.remove({paymentId: doc._id});
         }
+        //End Saving Link
 
 
-        let loanDoc = LoanAcc.findOne({_id: doc.loanAccId});
         // Update loan acc for close type
         if (doc.type == 'Close') {
             // Set close status on loan acc
             LoanAcc.direct.update({_id: doc.loanAccId}, {$unset: {closeDate: ''}});
 
-            if (loanDoc.writeOffDate != undefined) {
+            if (loanAcc.writeOffDate != undefined) {
                 LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Write Off'}});
-            } else if (loanDoc.restructureDate != undefined) {
+            } else if (loanAcc.restructureDate != undefined) {
                 LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Restructure'}});
             } else {
                 LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: "Active"}});
             }
-        }
-
-
-        if (doc.type == "Reschedule") {
-            RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
         }
 
         LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}});
@@ -225,6 +460,8 @@ function _makeScheduleForPrincipalInstallment(doc) {
         // Save to repayment schedule collection
         value.scheduleDate = doc.repaidDate;
         value.loanAccId = doc.loanAccId;
+        value.savingAccId = doc.savingAccId;
+        value.branchId = doc.branchId;
         RepaymentSchedule.insert(value);
     });
 
