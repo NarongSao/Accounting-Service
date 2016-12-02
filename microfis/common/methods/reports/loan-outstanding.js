@@ -48,29 +48,29 @@ export const loanOutstandingReport = new ValidatedMethod({
             let baseCurrency = Setting.findOne().baseCurrency;
 
             let content = "";
-            content += `<table class="rpt-9 rpt rpt-content">
-                            <thead class="rpt-content-body">
+            content += `<table class="sub-table table table-hover">
+                            <thead class=" sub-header rpt rpt-3x">
                                 <tr> 
-                                    <td>No</td>
-                                    <td>LA Code</td>
-                                    <td>Clent Name</td>
-                                    <td>CRC</td>
-                                    <td>Type</td>
-                                    <td>Dis Date</td>
-                                    <td>Mat Date</td>
-                                    <td>Loan Amount</td>
-                                    <td>Pro Int</td>
-                                    <td>Classify</td>
-                                    <td>CO</td>
-                                    <td>Vill</td>
-                                    <td>Due Prin</td>
-                                    <td>Due Int</td>
-                                    <td>Total Due</td>
-                                    <td>Loan Out Prin</td>
-                                    <td>Loan Out Int</td>
+                                    <th>No</th>
+                                    <th>LA Code</th>
+                                    <th>Clent Name</th>
+                                    <th>CRC</th>
+                                    <th>Type</th>
+                                    <th>Dis Date</th>
+                                    <th>Mat Date</th>
+                                    <th>Loan Amount</th>
+                                    <th>Pro Int</th>
+                                    <th>Classify</th>
+                                    <th>CO</th>
+                                    <th>Vill</th>
+                                    <th>Due Prin</th>
+                                    <th>Due Int</th>
+                                    <th>Total Due</th>
+                                    <th>Loan Out Prin</th>
+                                    <th>Loan Out Int</th>
                                 </tr>
                             </thead>
-                            <tbody class="rpt-content-body">`;
+                            <tbody class="rpt rpt-3x sub-body">`;
 
 
             //Param

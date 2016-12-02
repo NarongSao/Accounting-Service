@@ -9,7 +9,8 @@ import 'printthis';
 
 // Lib
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
-
+import {createNewAlertify} from '../../../core/client/libs/create-new-alertify';
+import {renderTemplate} from '../../../core/client/libs/render-template';
 // Component
 import '../../../core/imports/layouts/report/content.html';
 import '../../../core/imports/layouts/report/sign-footer.html';
@@ -27,29 +28,29 @@ import {LoanOutstandingSchema} from '../../common/collections/reports/loan-outst
 import './loan-outstanding.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_loanOutstandingReport;
-
+let indexTmpl = Template.Microfis_loanOutstandingReport,
+    tmplPrintData = Template.Microfis_loanOutstandingReportPrintData;
 // Form state
 let formDataState = new ReactiveVar(null);
 
 
 // Index
+let rptInitState = new ReactiveVar(false);
+let rptDataState = new ReactiveVar(null);
 indexTmpl.onCreated(function () {
-    this.rptInitState = new ReactiveVar(false);
-    this.rptDataState = new ReactiveVar(null);
-
+    createNewAlertify('Microfis_loanOutstandingReport');
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
-            this.rptInitState.set(true);
-            this.rptDataState.set(null);
+            rptInitState.set(true);
+            rptDataState.set(null);
 
             let params = formDataState.get();
 
             loanOutstandingReport.callPromise({params: params})
-                .then((result)=> {
-                    this.rptDataState.set(result);
-                }).catch((err)=> {
+                .then((result) => {
+                    rptDataState.set(result);
+                }).catch((err) => {
                     console.log(err.message);
                 }
             );
@@ -63,18 +64,48 @@ indexTmpl.onCreated(function () {
     });
 
 });
+tmplPrintData.helpers({
+    rptInit(){
+        return rptInitState.get();
+    },
+    rptData: function () {
+        return rptDataState.get();
+    }
+});
+tmplPrintData.events({
+    'click .btn-print'(event, instance){
+        let opts = {
+            // debug: true,               // show the iframe for debugging
+            // importCSS: true,            // import page CSS
+            // importStyle: true,         // import style tags
+            // printContainer: true,       // grab outer container as well as the contents of the selector
+            // loadCSS: "path/to/my.css",  // path to additional css file - us an array [] for multiple
+            // pageTitle: "",              // add title to print page
+            // removeInline: false,        // remove all inline styles from print elements
+            // printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
+            // header: null,               // prefix to html
+            // formValues: true            // preserve input/form values
+        };
 
+        $('.sub-div').removeClass('rpt rpt-3x');
+        $('.sub-table').removeClass('table table-hover');
+        $('.sub-body').removeClass('rpt rpt-3x ');
+        $('.sub-header').removeClass('rpt rpt-3x');
+
+        $('.sub-div').addClass('rpt-9 rpt-landscape-a4');
+        $('.sub-table').addClass('rpt-9 rpt rpt-content');
+        $('.sub-body').addClass('rpt-content-body');
+        $('.sub-header').addClass('rpt-content-header');
+
+
+        Meteor.setTimeout(function () {
+            $('#print-data').printThis();
+        }, 200)
+    }
+});
 indexTmpl.helpers({
     schema(){
         return LoanOutstandingSchema;
-    },
-    rptInit(){
-        let instance = Template.instance();
-        return instance.rptInitState.get();
-    },
-    rptData: function () {
-        let instance = Template.instance();
-        return instance.rptDataState.get();
     },
     khNameForPaymentMethod(paymentMethod){
         let khName;
@@ -135,25 +166,43 @@ indexTmpl.helpers({
 });
 
 indexTmpl.events({
-    'click .btn-print'(event, instance){
-        let opts = {
-            // debug: true,               // show the iframe for debugging
-            // importCSS: true,            // import page CSS
-            // importStyle: true,         // import style tags
-            // printContainer: true,       // grab outer container as well as the contents of the selector
-            // loadCSS: "path/to/my.css",  // path to additional css file - us an array [] for multiple
-            // pageTitle: "",              // add title to print page
-            // removeInline: false,        // remove all inline styles from print elements
-            // printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
-            // header: null,               // prefix to html
-            // formValues: true            // preserve input/form values
-        };
+    'click .fullScreen'(event, instance){
+        // $('.sub-div').addClass('rpt-9 rpt-landscape-a4');
+        // $('.sub-table').addClass('rpt-9 rpt rpt-content');
+        // $('.sub-body').addClass('rpt rpt-content-body');
+        // $('.sub-header').addClass('rpt rpt-content-header');
 
+        $('.sub-div').removeClass('rpt-9 rpt-landscape-a4');
+        $('.sub-table').removeClass('rpt-9 rpt rpt-content');
+        $('.sub-body').removeClass('rpt-content-body');
+        $('.sub-header').removeClass('rpt-content-header');
 
-        $('#print-data').printThis();
+        $('.sub-div').addClass('rpt rpt-3x');
+        $('.sub-table').addClass('table table-hover');
+        $('.sub-body').addClass('rpt rpt-3x ');
+        $('.sub-header').addClass('rpt rpt-3x');
+
+        alertify.Microfis_loanOutstandingReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     }
 });
+tmplPrintData.onDestroyed(function () {
+    // $('.sub-div').removeClass('rpt-9 rpt-landscape-a4');
+    // $('.sub-table').removeClass('rpt-9 rpt rpt-content');
+    // $('.sub-body').removeClass('rpt rpt-content-body');
+    // $('.sub-header').removeClass('rpt rpt-content-header');
 
+    $('.sub-div').removeClass('rpt-9 rpt-landscape-a4');
+    $('.sub-table').removeClass('rpt-9 rpt rpt-content');
+    $('.sub-body').removeClass('rpt-content-body');
+    $('.sub-header').removeClass('rpt-content-header');
+
+
+    $('.sub-div').addClass('rpt rpt-3x');
+    $('.sub-table').addClass('table table-hover');
+    $('.sub-body').addClass('rpt rpt-3x');
+    $('.sub-header').addClass('rpt rpt-3x');
+
+});
 indexTmpl.onDestroyed(function () {
     formDataState.set(null);
 });
