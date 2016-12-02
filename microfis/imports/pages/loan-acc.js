@@ -34,6 +34,7 @@ import {LoanAccTabular} from '../../common/tabulars/loan-acc.js';
 
 // Page
 import './loan-acc.html';
+import './saving-acc.html';
 import './reStructure.js';
 
 // Declare template
@@ -41,7 +42,10 @@ let indexTmpl = Template.Microfis_loanAcc,
     actionTmpl = Template.Microfis_loanAccAction,
     productFormTmpl = Template.Microfis_loanAccProductForm,
     formTmpl = Template.Microfis_loanAccForm,
+    savingAddOnTpl = Template.Microfis_savingAddOnAgent,
     showTmpl = Template.Microfis_loanAccShow;
+
+let state=new ReactiveObj();
 
 // Index
 indexTmpl.onCreated(function () {
@@ -49,6 +53,7 @@ indexTmpl.onCreated(function () {
     createNewAlertify('loanAccProduct');
     createNewAlertify('loanAcc', {size: 'lg'});
     createNewAlertify('loanAccShow');
+    createNewAlertify('savingAccProduct');
 
     stateClient.set('escapeFrequency', false);
 });
@@ -233,7 +238,11 @@ formTmpl.helpers({
     },
     isEscapeDay(){
         return stateClient.get('escapeFrequency');
+    },
+    saving(){
+        return state.get("saving");
     }
+
 
 });
 
@@ -250,6 +259,15 @@ formTmpl.events({
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_loanAccForm");
 });
+
+
+
+formTmpl.events({
+    'click .js-saving-addon': function (e, t) {
+        alertify.savingAccProduct(fa("plus", "Saving"), renderTemplate(savingAddOnTpl));
+    }
+});
+
 
 // Hook
 let hooksObject = {

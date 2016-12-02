@@ -30,6 +30,8 @@ import {SavingAccTabular} from '../../common/tabulars/saving-acc.js';
 // Page
 import './saving-acc.html';
 
+stateSaving=new ReactiveObj();
+
 // Declare template
 let indexTmpl = Template.Microfis_savingAcc,
     actionTmpl = Template.Microfis_savingAccAction,
@@ -200,6 +202,8 @@ let hooksObject = {
         }
     },
     onSuccess (formType, result) {
+
+
         alertify.savingAcc().close();
         alertify.savingAccProduct().close();
         displaySuccess();

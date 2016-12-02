@@ -2,7 +2,7 @@
 <template name="Microfis_loanOutstandingReport">
     <div class="box-body">
         {{#autoForm schema=schema id="Microfis_loanOutstandingReport" type="normal"}}
-            <div class="row">
+            <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
                 <div class="col-md-4">
                     {{> afQuickField name="branchId"}}
                     {{> afQuickField name="creditOfficerId"}}
@@ -21,53 +21,54 @@
                     {{> afQuickField name="exchangeId"}}
                 </div>
             </div>
-
             {{> formFooterWithButton}}
         {{/autoForm}}
 
         <hr>
-        <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
+        {{> Microfis_loanOutstandingReportPrintData}}
+    </div>
+</template>
+<template name="Microfis_loanOutstandingReportPrintData">
+    <a class="fullScreen"><i class="fa fa-window-maximize" aria-hidden="true"></i> Full Screen</a>
+    <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
+    <!--#print-data-->
+    <div id="print-data">
+        <div class="rpt rpt-3x sub-div">
+            {{#if rptInit}}
+                {{#if rptData}}
+                    {{#with rptData}}
 
-        <!--#print-data-->
-        <div id="print-data">
-            <div class="rpt-9 rpt-landscape-a4">
-                {{#if rptInit}}
-                    {{#if rptData}}
-                        {{#with rptData}}
-
-                            <!--Title-->
-                            {{#with title}}
-                                <div class="rpt-title">
-                                    <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
-                                    <div class="rpt-title-2x">{{company.enName}}</div>
-                                    <div>សាខា: {{branch.khName}}</div>
-                                    <div class="rpt-title-2x"><u>របាយការណ៍សមតុល្យចុងគ្រា</u></div>
-                                    <div>
-                                        <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
-                                        <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
-                                    </div>
+                        <!--Title-->
+                        {{#with title}}
+                            <div class="rpt-title">
+                                <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
+                                <div class="rpt-title-2x">{{company.enName}}</div>
+                                <div>សាខា: {{branch.khName}}</div>
+                                <div class="rpt-title-2x"><u>របាយការណ៍សមតុល្យចុងគ្រា</u></div>
+                                <div>
+                                    <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
+                                    <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
                                 </div>
-                            {{/with}}
+                            </div>
+                        {{/with}}
 
-                            <!--Header-->
-                            {{#with header}}
-
-                            {{/with}}
-
-                            <!--Content-->
-                            {{{content}}}
+                        <!--Header-->
+                        {{#with header}}
 
                         {{/with}}
 
-                    {{else}}
-                        <div class="text-center">
-                            {{> iconLoading size="fa-5x"}}
-                        </div>
-                    {{/if}}
-                {{/if}}
-            </div>
-        </div>
-        <!--/#print-data-->
+                        <!--Content-->
+                        {{{content}}}
 
+                    {{/with}}
+
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
     </div>
+    <!--/#print-data-->
 </template>

@@ -3,3 +3,9 @@
 .reactive-table .col-action-order-item {
     width: 60px;
 }
+
+
+th {
+    background-color: #3C8DBC;
+    color: white;
+}

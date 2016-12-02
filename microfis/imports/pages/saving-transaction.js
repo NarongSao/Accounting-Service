@@ -6,6 +6,7 @@ import {alertify} from 'meteor/ovcharik:alertifyjs';
 import {fa} from 'meteor/theara:fa-helpers';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {_} from 'meteor/erasaur:meteor-lodash';
+import BigNumber from 'bignumber.js';
 
 // Lib
 import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
@@ -75,6 +76,16 @@ indexTmpl.onCreated(function () {
             }).catch(function (err) {
                 console.log(err.message);
             });
+
+            let totalSavingBal = new BigNumber(0);
+            Meteor.call('microfis_getLastSavingTransaction', savingAccId, function (err, data) {
+                if (data) {
+                    totalSavingBal = totalSavingBal.plus(data.details.principalBal).plus(data.details.interestBal);
+                    state.set('savingTotalBalance', totalSavingBal.toNumber());
+                }
+            });
+
+
         }
     })
 });
@@ -90,6 +101,20 @@ indexTmpl.helpers({
             selector: selector
         };
     },
+    savingTotalBalance(){
+        let data = state.get('savingTotalBalance');
+        if (data) {
+            return data;
+        }
+    },
+    checkSavingLoan(){
+        let data = state.get('savingAccDoc');
+        if (data.productDoc.name == "Saving Loan") {
+            return false;
+        }
+        return true;
+
+    }
 });
 
 indexTmpl.events({
@@ -108,7 +133,7 @@ indexTmpl.events({
                 {_id: this._id},
                 {title: 'SavingTransaction', itemTitle: this._id}
             );
-        }else {
+        } else {
             alertify.error("Can't remove !!!!");
         }
 
