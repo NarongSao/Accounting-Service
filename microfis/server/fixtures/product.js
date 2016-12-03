@@ -36,9 +36,7 @@ Meteor.startup(function () {
                     "min": 1,
                     "max": 24
                 },
-                "interestMethod": [
-                    "D"
-                ],
+                "interestMethod": "Declining",
                 "interestRate": {
                     "min": 2,
                     "max": 3

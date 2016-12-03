@@ -371,7 +371,7 @@ export let checkRepayment = new ValidatedMethod({
                     balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
                     interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
                 }
-            })
+         	   })
 
 
             // Get last repayment
@@ -403,8 +403,8 @@ export let checkRepayment = new ValidatedMethod({
                 closing: closing,
                 principalInstallment: principalInstallment,
                 lastRepayment: lastRepayment,
-                balanceUnPaid: balanceUnPaid,
-                interestUnPaid: interestUnPaid
+                balanceUnPaid: math.round(balanceUnPaid,2),
+                interestUnPaid: math.round(interestUnPaid,2)
             };
         }
     }

@@ -26,6 +26,9 @@ export const makeReSchedule = new ValidatedMethod({
             data.dueDateOn = opts.dueDateOn;
             data.parentId = loanAccId;
 
+            data.repaidFrequency=opts.repaidFrequency;
+            data.principalInstallment=opts.principalInstallment;
+
             let id = LoanAcc.insert(data);
             LoanAcc.direct.update({_id: loanAccId}, {
                 $set: {

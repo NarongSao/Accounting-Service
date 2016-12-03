@@ -173,6 +173,7 @@ formTmpl.helpers({
 
         if (checkRepayment && checkRepayment.totalScheduleDue) {
             totalPenalty = totalPenalty.plus(checkRepayment.totalScheduleDue.penaltyDue);
+            totalDue=totalDue.plus(checkRepayment.totalScheduleDue.totalPrincipalInterestDue);
         }
 
         if (checkRepayment && checkRepayment.closing) {
@@ -242,12 +243,6 @@ let hooksObject = {
             //Check write Off
             if (loanAccDoc.writeOffDate != null) {
                 alertify.warning("You already write off!!!");
-                return false;
-            }
-
-            // Check have current due amount
-            if (checkRepayment && checkRepayment.scheduleDue && checkRepayment.scheduleDue.length > 0) {
-                displayError("Have current due amount, so can't prepay");
                 return false;
             }
 

@@ -175,7 +175,7 @@ indexTmpl.events({
         $('.sub-div').removeClass('rpt-9 rpt-landscape-a4');
         $('.sub-table').removeClass('rpt-9 rpt rpt-content');
         $('.sub-body').removeClass('rpt-content-body');
-        $('.sub-header').removeClass('rpt-content-header');
+        $('.sub-header').removeClastate.get('disbursementDate');ss('rpt-content-header');
 
         $('.sub-div').addClass('rpt rpt-3x');
         $('.sub-table').addClass('table table-hover');

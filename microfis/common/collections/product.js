@@ -244,12 +244,12 @@ Product.repaymentSchema = new SimpleSchema({
 // Interest
 Product.interestSchema = new SimpleSchema({
     interestMethod: {
-        type: [String],
+        type: String,
         label: 'Interest method',
         autoform: {
             type: 'universe-select',
             afFieldInput: {
-                multiple: true,
+                // multiple: true,
                 uniPlaceholder: 'Please select',
                 optionsPlaceholder: 'Unselect all',
                 options: function () {
