@@ -229,9 +229,14 @@ export const SelectOpts = {
     savingAcc: function (clientId) {
         let list = [];
         list.push({value: '', label: '(Select One)'});
-        let savingList = SavingAcc.find({clientId: clientId},{}).fetch();
+        let savingList = SavingAcc.find({
+            clientId: clientId
+        }, {}).fetch();
         savingList.forEach(function (obj) {
-            list.push({value: obj._id, label: obj._id + " : " + moment(obj.accDate).format("DD/MM/YYYY") + " : " + obj.currencyId});
+            list.push({
+                value: obj._id,
+                label: obj._id + " : " + moment(obj.accDate).format("DD/MM/YYYY") + " : " + obj.currencyId
+            });
         });
         return list;
     },
