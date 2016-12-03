@@ -230,6 +230,7 @@ Repayment.after.insert(function (userId, doc) {
         } else if (["Reschedule", "Write Off"].includes(doc.type) == true) {
 
             if (doc.type == "Reschedule") {
+                doc.savingAccId =loanAcc.savingAccId;
                 _makeScheduleForPrincipalInstallment(doc);
             }
 
@@ -431,7 +432,7 @@ Repayment.after.remove(function (userId, doc) {
 // Create repayment schedule when principal installment
 function _makeScheduleForPrincipalInstallment(doc) {
 
-
+    console.log(doc);
     let amount = doc.detailDoc.principalInstallment.principalReminder;
     let options = {};
     options.disbursementDate = doc.repaidDate;
