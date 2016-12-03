@@ -55,9 +55,11 @@ if (Meteor.isClient) {
             state.set('term', productDoc.term);
 
             // Interest Method
-            let interestMethod = productDoc.interestMethod.map(function (value) {
-                return {label: `${value}`, value: value};
-            });
+            /*let interestMethod = productDoc.interestMethod.map(function (value) {
+             return {label: `${value}`, value: value};
+             });*/
+            let interestMethod = productDoc.interestMethod;
+
             state.set('interestMethod', interestMethod);
 
             // Interest Method
@@ -138,6 +140,7 @@ LoanAcc.generalSchema = new SimpleSchema({
         },
         custom: function () {
             if (Meteor.isClient) {
+
                 let startDate = moment(state.get('startDate'), 'DD/MM/YYYY');
                 let endDate = moment(state.get('endDate'), 'DD/MM/YYYY');
                 let disbursementDate = moment(this.value);
@@ -367,18 +370,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
             }
         }
     },
-    repaidFrequency: {
-        type: Number,
-        label: 'Repaid Frequency',
-        defaultValue: 1,
-        min: 1,
-        autoform: {
-            type: "inputmask",
-            afFieldInput: {
-                inputmaskOptions: inputmaskOptions.integer()
-            }
-        }
-    },
+
     term: {
         type: Number,
         label: 'Term',
@@ -399,10 +391,26 @@ LoanAcc.repaymentSchema = new SimpleSchema({
             }
         }
     },
+    repaidFrequency: {
+        type: Number,
+        label: 'Repaid Frequency',
+        defaultValue: 1,
+        min: 1,
+        max: function () {
+            if (Meteor.isClient) {
+                return AutoForm.getFieldValue('term');
+            }
+        },
+        autoform: {
+            type: "inputmask",
+            afFieldInput: {
+                inputmaskOptions: inputmaskOptions.integer()
+            }
+        }
+    },
     firstRepaymentDate: {
         type: Date,
         label: 'First repayment date',
-        // defaultValue: moment().toDate(),
         optional: true,
         autoform: {
             afFieldInput: {
@@ -469,14 +477,21 @@ LoanAcc.repaymentSchema = new SimpleSchema({
             type: 'select',
             afFieldInput: {
                 options: function () {
-                    let term = AutoForm.getFieldValue('term');
-                    if (term) {
-                        let list = [];
-                        for (let i = 1; i <= term; i++) {
-                            list.push({label: `${i}`, value: i});
+                    if (Meteor.isClient) {
+                        let term = AutoForm.getFieldValue('term');
+                        let repaidFrequency = AutoForm.getFieldValue('repaidFrequency')
+                        if (repaidFrequency) {
+                            term = math.round(term / repaidFrequency, 0);
                         }
 
-                        return list;
+                        if (term) {
+                            let list = [];
+                            for (let i = 1; i <= term; i++) {
+                                list.push({label: `${i}`, value: i});
+                            }
+
+                            return list;
+                        }
                     }
                 }
             }
@@ -646,14 +661,17 @@ LoanAcc.interestSchema = new SimpleSchema({
     interestMethod: {
         type: String,
         label: 'Interest method',
-        autoform: {
-            type: 'select',
-            afFieldInput: {
-                options: function () {
-                    return state.get('interestMethod');
-                }
-            }
+        defaultValue: function () {
+            return state.get('interestMethod');
         }
+        /*autoform: {
+         type: 'select',
+         afFieldInput: {
+         options: function () {
+         return state.get('interestMethod');
+         }
+         }
+         }*/
     },
     interestRate: {
         type: Number,
@@ -939,6 +957,162 @@ LoanAcc.reStructure = new SimpleSchema({
             }
         }
     },
+
+    repaidFrequency: {
+        type: Number,
+        label: 'Repaid Frequency',
+        defaultValue: 1,
+        min: 1,
+        max: function () {
+            if (Meteor.isClient) {
+                return AutoForm.getFieldValue('term');
+            }
+        },
+        autoform: {
+            type: "inputmask",
+            afFieldInput: {
+                inputmaskOptions: inputmaskOptions.integer()
+            }
+        }
+    },
+    principalInstallment: {
+        type: Object,
+        label: 'Principal installment'
+    },
+    'principalInstallment.frequency': {
+        type: Number,
+        label: 'Frequency',
+        autoform: {
+            type: 'select',
+            afFieldInput: {
+                options: function () {
+                    if (Meteor.isClient) {
+                        let term = AutoForm.getFieldValue('term');
+                        let repaidFrequency = AutoForm.getFieldValue('repaidFrequency')
+                        if (repaidFrequency) {
+                            term = math.round(term / repaidFrequency, 0);
+                        }
+
+                        if (term) {
+                            let list = [];
+                            for (let i = 1; i <= term; i++) {
+                                list.push({label: `${i}`, value: i});
+                            }
+
+                            return list;
+                        }
+                    }
+                }
+            }
+        }
+    },
+    'principalInstallment.calculateType': {
+        type: String,
+        label: 'Calculate type',
+        autoform: {
+            type: "select-radio-inline",
+            defaultValue: 'A',
+            options: function () {
+                return SelectOpts.calculateType(false);
+            }
+        }
+    },
+    'principalInstallment.amount': {
+        type: Number,
+        label: 'Amount',
+        min: function () {
+            if (Meteor.isClient) {
+                let min = 1;
+                let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType'),
+                    currencyId = AutoForm.getFieldValue('currencyId');
+
+                if (calculateType == 'A' && currencyId) {
+                    switch (currencyId) {
+                        case 'KHR':
+                            min = 5000;
+                            break;
+                        case 'USD':
+                            min = 1;
+                            break;
+                        case 'THB':
+                            min = 50;
+                            break;
+                    }
+                }
+
+                state.set('minPrincipalInstallmentAmount', min);
+
+                return min;
+            }
+        },
+        max: function () {
+            if (Meteor.isClient) {
+                let max = 100;
+                let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType'),
+                    currencyId = AutoForm.getFieldValue('currencyId'),
+                    loanAmount = AutoForm.getFieldValue('loanAmount'),
+                    term = AutoForm.getFieldValue('term'),
+                    frequency = AutoForm.getFieldValue('principalInstallment.frequency');
+
+                let checker = calculateType == 'A' && currencyId && loanAmount > 0 && term && frequency > 0;
+                if (checker) {
+                    let numOfFrequency = _.ceil(term / frequency);
+                    max = roundCurrency(loanAmount / numOfFrequency, currencyId);
+                }
+
+                state.set('maxPrincipalInstallmentAmount', max);
+
+                return max;
+            }
+        },
+        autoform: {
+            type: "inputmask",
+            defaultValue: 'A',
+            afFieldInput: {
+                placeholder: function () {
+                    if (Meteor.isClient) {
+                        let prefix = state.get('currencySymbol');
+                        let min = state.get('minPrincipalInstallmentAmount');
+                        let max = state.get('maxPrincipalInstallmentAmount');
+
+                        return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
+                    }
+                },
+                inputmaskOptions: function () {
+                    if (Meteor.isClient) {
+                        let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType');
+                        if (calculateType == 'P') {
+                            return inputmaskOptions.integer();
+                        }
+
+                        let prefix = state.get('currencySymbol');
+                        return inputmaskOptions.currency({prefix: prefix})
+                    }
+                }
+            }
+        }
+        // autoform: {
+        //     type: 'select',
+        //     afFieldInput: {
+        //         options: function () {
+        //             let list = [];
+        //             let term = AutoForm.getFieldValue('term');
+        //             let principalInstallmentFrequency = AutoForm.getFieldValue('principalInstallmentFrequency');
+        //
+        //             if (term == principalInstallmentFrequency) {
+        //                 list.push({label: '100', value: 100});
+        //             } else {
+        //                 let installment = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        //                 _.forEach(installment, (value)=> {
+        //                     list.push({label: `${value}`, value: value});
+        //                 })
+        //             }
+        //
+        //             return list;
+        //         }
+        //     }
+        // }
+    },
     firstRepaymentDate: {
         type: Date,
         label: 'First repayment date',
@@ -963,6 +1137,8 @@ LoanAcc.reStructure = new SimpleSchema({
             }
         }
     },
+
+
     dueDateOn: {
         type: Number,
         label: 'Due date on',
