@@ -175,6 +175,19 @@ formTmpl.helpers({
     }
 });
 
+formTmpl.events({
+    'click [name="repaidDate"]'(){
+        let $repaidDateObj = $('[name="repaidDate"]');
+        if (stateRepayment.get('lastTransactionDate')) {
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+        } else {
+            let loanDoc = stateRepayment.get("loanAccDoc");
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
+        }
+    }
+})
+
+
 formTmpl.onDestroyed(function () {
     Session.set('minAmountPaid', null);
     Session.set('maxAmountPaid', null);

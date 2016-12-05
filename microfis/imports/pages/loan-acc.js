@@ -45,7 +45,9 @@ let indexTmpl = Template.Microfis_loanAcc,
     savingAddOnTpl = Template.Microfis_savingAddOnAgent,
     showTmpl = Template.Microfis_loanAccShow;
 
-let state=new ReactiveObj();
+let state = new ReactiveObj({
+    disbursmentDate: moment().toDate()
+});
 
 // Index
 indexTmpl.onCreated(function () {
@@ -68,8 +70,18 @@ indexTmpl.helpers({
     },
 });
 
+Tracker.autorun(function () {
+    if (state.get("disbursmentDate")) {
+        Meteor.call("microfis_getSavingAccByDate", state.get("disbursmentDate"), FlowRouter.getParam('clientId'), function (err, result) {
+            Session.set("savingList", result);
+        })
+    }
+})
+
 indexTmpl.events({
     'click .js-create-loan-acc' (event, instance) {
+        state.set("disbursmentDate", moment().toDate());
+
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
@@ -162,6 +174,8 @@ productFormTmpl.events({
 
 productFormTmpl.onDestroyed(function () {
     Session.set('productDoc', null);
+    Session.set("savingList", null);
+    state.set("disbursmentDate", null);
 });
 
 AutoForm.hooks({
@@ -181,7 +195,7 @@ AutoForm.hooks({
 
 // Form
 formTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
 
         if (currentData) {
@@ -199,12 +213,33 @@ formTmpl.onRendered(function () {
         $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
         $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
+        $disbursementDate.data("DateTimePicker").minDate(moment().startOf('day').toDate());
+        state.set('disbursmentDate', moment().startOf('day').toDate());
 
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
-            $submitDate.data("DateTimePicker").maxDate(moment(e.date).startOf('day'));
-            $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
+            $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day').toDate());
+            state.set('disbursmentDate', moment(e.date).startOf('day').toDate());
+
+            if ($('[name="paymentMethod"]').val() == "D") {
+                state.set("firstRepaymentDate", moment(e.date).add(1, 'days').toDate());
+            } else if ($('[name="paymentMethod"]').val() == "W") {
+                state.set("firstRepaymentDate", moment(e.date).add(1, 'weeks').toDate());
+
+            } else if ($('[name="paymentMethod"]').val() == "M") {
+                state.set("firstRepaymentDate", moment(e.date).add(1, 'months').toDate());
+
+            } else if ($('[name="paymentMethod"]').val() == "Y") {
+                state.set("firstRepaymentDate", moment(e.date).add(1, 'years').toDate());
+
+            }
+
         });
+
+        $submitDate.on("dp.change", function (e) {
+            $disbursementDate.data("DateTimePicker").minDate(moment(e.date).startOf('day').toDate());
+            state.set('disbursmentDate', moment(e.date).startOf('day').toDate());
+        })
     }
 });
 
@@ -241,6 +276,18 @@ formTmpl.helpers({
     },
     saving(){
         return state.get("saving");
+    },
+    disbursmentDate(){
+        let currentData = Template.currentData();
+        if (!currentData) {
+            return state.get("disbursmentDate");
+        }
+    },
+    firstRepaymentDate(){
+        let currentData = Template.currentData();
+        if (!currentData) {
+            return state.get("firstRepaymentDate");
+        }
     }
 
 
@@ -258,8 +305,8 @@ formTmpl.events({
 
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_loanAccForm");
+    state.set("disbursmentDate", null);
 });
-
 
 
 formTmpl.events({

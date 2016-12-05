@@ -160,6 +160,18 @@ formTmpl.helpers({
 
 });
 
+formTmpl.events({
+    'click [name="writeOff.writeOffDate"]'(){
+        let $repaidDateObj = $('[name="writeOff.writeOffDate"]');
+        if (stateRepayment.get('lastTransactionDate')) {
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+        } else {
+            let loanDoc = stateRepayment.get("loanAccDoc");
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
+        }
+    }
+})
+
 
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_writeOffEnsure");

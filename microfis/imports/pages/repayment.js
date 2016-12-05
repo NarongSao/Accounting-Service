@@ -100,6 +100,8 @@ indexTmpl.onCreated(function () {
                 stateRepayment.set('loanAccDoc', result);
                 stateRepayment.set('lastTransactionDate', result.disbursementDate);
 
+
+
                 Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);

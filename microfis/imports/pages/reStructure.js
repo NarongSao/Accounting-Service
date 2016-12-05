@@ -152,6 +152,18 @@ formTmpl.helpers({
 
 });
 
+formTmpl.events({
+    'click [name="disbursementDate"]'(){
+        let $repaidDateObj = $('[name="disbursementDate"]');
+        if (stateRepayment.get('lastTransactionDate')) {
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+        } else {
+            let loanDoc = stateRepayment.get("loanAccDoc");
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
+        }
+    }
+})
+
 
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_reStructure");
