@@ -49,7 +49,7 @@ export let checkRepayment = new ValidatedMethod({
             }, {sort: {scheduleDate: -1}});
 
             let lastScheduleDate;
-            
+
             if (lastScheduleDateTemp != undefined) {
                 lastScheduleDate = lastScheduleDateTemp.scheduleDate;
             } else {
@@ -92,7 +92,7 @@ export let checkRepayment = new ValidatedMethod({
                 schedulePrevious = [],
                 scheduleNext = [];
 
-            scheduleDoc.forEach((o)=> {
+            scheduleDoc.forEach((o) => {
                 let checker = {};
 
                 let principalDue = o.principalDue,
@@ -163,7 +163,7 @@ export let checkRepayment = new ValidatedMethod({
             });
 
             // Total schedule due
-            let totalScheduleDue = _.reduce(scheduleDue, (result, val, key)=> {
+            let totalScheduleDue = _.reduce(scheduleDue, (result, val, key) => {
                 // Head
                 if (key == 0) {
                     result.installment.from = val.installment;
@@ -201,7 +201,7 @@ export let checkRepayment = new ValidatedMethod({
             });
 
             // Total schedule previous
-            let totalSchedulePrevious = _.reduce(schedulePrevious, (result, val, key)=> {
+            let totalSchedulePrevious = _.reduce(schedulePrevious, (result, val, key) => {
                 // Head
                 if (key == 0) {
                     result.installment.from = val.installment;
@@ -240,7 +240,7 @@ export let checkRepayment = new ValidatedMethod({
             });
 
             // Total schedule next
-            let totalScheduleNext = _.reduce(scheduleNext, (result, val, key)=> {
+            let totalScheduleNext = _.reduce(scheduleNext, (result, val, key) => {
                 // Head
                 if (key == 0) {
                     result.installment.from = val.installment;
@@ -312,14 +312,26 @@ export let checkRepayment = new ValidatedMethod({
             }
 
 
+            //check should be penalty
+            let isPenalty = true;
+            if (loanAccDoc.paymentMethod == "M") {
+                if (moment(checkDate).format("MM/YYYY") == moment(totalScheduleNext.dueDate.from).format("MM/YYYY")) {
+                    isPenalty = false;
+                }
+            } else if (loanAccDoc.paymentMethod == "W") {
+                if (moment(checkDate).week() == moment(totalScheduleNext.dueDate.from).week()) {
+                    isPenalty = false;
+                }
+            }
+
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
-                if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing) {
+                if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing && isPenalty) {
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             } else {
                 let checkInstallmentTermPrevious = totalSchedulePrevious.installment.to && totalSchedulePrevious.installment.to < loanAccDoc.installmentAllowClosing;
-                if (!totalSchedulePrevious.installment.to || checkInstallmentTermPrevious) {
+                if ((!totalSchedulePrevious.installment.to || checkInstallmentTermPrevious) && isPenalty) {
                     closing.interestReminderPenalty = round2(closing.interestReminder * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
                 }
             }
@@ -371,20 +383,20 @@ export let checkRepayment = new ValidatedMethod({
                     balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
                     interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
                 }
-         	   })
+            })
 
 
             // Get last repayment
             let lastRepayment = Repayment.findOne({loanAccId: loanAccId}, {sort: {_id: -1}});
 
             // ------------Schedule Next Pay-----------
-            let scheduleNexPay={};
-            if(scheduleNext && scheduleNext.length>0){
-                scheduleNexPay=scheduleNext[0];
-            }else {
-                scheduleNexPay={
+            let scheduleNexPay = {};
+            if (scheduleNext && scheduleNext.length > 0) {
+                scheduleNexPay = scheduleNext[0];
+            } else {
+                scheduleNexPay = {
                     installment: "-",
-                    dueDate:null,
+                    dueDate: null,
                     principalDue: 0,
                     interestDue: 0,
                     totalDue: 0
@@ -403,8 +415,8 @@ export let checkRepayment = new ValidatedMethod({
                 closing: closing,
                 principalInstallment: principalInstallment,
                 lastRepayment: lastRepayment,
-                balanceUnPaid: math.round(balanceUnPaid,2),
-                interestUnPaid: math.round(interestUnPaid,2)
+                balanceUnPaid: math.round(balanceUnPaid, 2),
+                interestUnPaid: math.round(interestUnPaid, 2)
             };
         }
     }

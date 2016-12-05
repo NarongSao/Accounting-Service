@@ -73,7 +73,7 @@
                             {{> afQuickField type="hidden" name="clientId" value=(param "clientId")}}
                             {{> afQuickField type="hidden" name="productId"}}
                             {{> afQuickField name="submitDate"}}
-                            {{> afQuickField name="disbursementDate"}}
+                            {{> afQuickField name="disbursementDate" value=disbursmentDate}}
                             {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
                             <div class="form-group{{#if afFieldIsInvalid name="savingAccId"}} has-error{{/if}}"
                                  data-required="true">
@@ -135,7 +135,7 @@
 
                         </div>
                         <div class="col-md-4">
-                            {{> afQuickField name="firstRepaymentDate"}}
+                            {{> afQuickField name="firstRepaymentDate" value=firstRepaymentDate}}
                             {{> afQuickField name="dueDateOn"}}
                             {{> afQuickField name="escapeDayMethod"}}
                             {{#if isEscapeDay}}

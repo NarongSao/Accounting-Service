@@ -125,9 +125,10 @@ formTmpl.onCreated(function () {
                 // Set last repayment
                 if (result.lastRepayment) {
                     stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+
                 }
 
-                Meteor.setTimeout(()=> {
+                Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
 
@@ -150,10 +151,11 @@ formTmpl.onRendered(function () {
     stateRepayment.set('repaidDate', repaidDate);
 
     // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
-    $repaidDateObj.on("dp.change", function (e) {
-        stateRepayment.set('repaidDate', moment(e.date).toDate());
-    });
+    if ($repaidDateObj) {
+        $repaidDateObj.on("dp.change", function (e) {
+            stateRepayment.set('repaidDate', moment(e.date).toDate());
+        });
+    }
 });
 
 formTmpl.helpers({
@@ -173,7 +175,7 @@ formTmpl.helpers({
 
         if (checkRepayment && checkRepayment.totalScheduleDue) {
             totalPenalty = totalPenalty.plus(checkRepayment.totalScheduleDue.penaltyDue);
-            totalDue=totalDue.plus(checkRepayment.totalScheduleDue.totalPrincipalInterestDue);
+            totalDue = totalDue.plus(checkRepayment.totalScheduleDue.totalPrincipalInterestDue);
         }
 
         if (checkRepayment && checkRepayment.closing) {
@@ -185,7 +187,7 @@ formTmpl.helpers({
     jsonViewData(data){
         if (data) {
             if (_.isArray(data) && data.length > 0) {
-                _.forEach(data, (o, k)=> {
+                _.forEach(data, (o, k) => {
                     o.scheduleDate = moment(o.scheduleDate).format('DD/MM/YYY');
                     o.dueDate = moment(o.dueDate).format('DD/MM/YYY');
                     delete  o.repaymentDoc;
@@ -210,6 +212,17 @@ formTmpl.helpers({
         }
     }
 });
+formTmpl.events({
+    'click [name="repaidDate"]'(){
+        let $repaidDateObj = $('[name="repaidDate"]');
+        if (stateRepayment.get('lastTransactionDate')) {
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+        } else {
+            let loanDoc = stateRepayment.get("loanAccDoc");
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
+        }
+    }
+})
 
 formTmpl.onDestroyed(function () {
     Session.set('minAmountPaid', null);
