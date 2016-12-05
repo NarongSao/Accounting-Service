@@ -59,52 +59,58 @@
                     </div>
                 </div>
             </fieldset>
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset>
+                        <legend>Payment</legend>
+                        <div class="row">
 
-            <fieldset>
-                <legend>Payment</legend>
-                <div class="row">
-                    <div class="col-md-4">
-                        {{> afQuickField name="paymentMethod"}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name="term.min" label=true}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name="term.max" label=true}}
-                    </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="paymentMethod"}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="term.min" label=true}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="term.max" label=true}}
+                            </div>
+                        </div>
+
+                    </fieldset>
                 </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Interest</legend>
-                <div class="row">
-                    <div class="col-md-4">
-                        {{> afQuickField name="interestMethod"}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name="interestRate.min" label=true}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name="interestRate.max" label=true}}
-                    </div>
+                <div class="col-md-4">
+                    <fieldset>
+                        <legend>Interest</legend>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{> afQuickField name="interestMethod"}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="interestRate.min" label=true}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="interestRate.max" label=true}}
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Charge</legend>
-                <div class="row">
-                    <div class="col-md-4">
-                        {{> afQuickField name="feeId"}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name="penaltyId"}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name="penaltyClosingId"}}
-                    </div>
+                <div class="col-md-4">
+                    <fieldset>
+                        <legend>Charge</legend>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{> afQuickField name="feeId"}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="penaltyId"}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name="penaltyClosingId"}}
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
-            </fieldset>
-
+            </div>
             {{> formFooterWithButton}}
         {{/autoForm}}
     </div>

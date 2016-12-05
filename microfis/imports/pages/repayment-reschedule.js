@@ -67,6 +67,22 @@ formTmpl.onCreated(function () {
     // Track autorun
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate');
+
+        if (repaidDate) {
+            var currentCurrency = loanAccDoc.currencyId;
+            var dobSelect = repaidDate;
+
+            var startYear = moment(dobSelect).year();
+            var startDate = moment('01/01/' + startYear,"DD/MM/YYYY").toDate();
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
+                if (result != undefined) {
+                    Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
+                } else {
+                    Session.set('lastVoucherId', "000001");
+                }
+            });
+        }
+
         if (repaidDate) {
             $.blockUI();
 
@@ -114,15 +130,18 @@ formTmpl.onCreated(function () {
 
 formTmpl.onRendered(function () {
     let $repaidDateObj = $('[name="repaidDate"]');
-    let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-    stateRepayment.set('repaidDate', repaidDate);
+    if ($repaidDateObj) {
+        let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-    // Repaid date picker
-    $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
-    $repaidDateObj.on("dp.change", function (e) {
-        stateRepayment.set('repaidDate', moment(e.date).toDate());
-    });
+        stateRepayment.set('repaidDate', repaidDate);
+
+        // Repaid date picker
+        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+        $repaidDateObj.on("dp.change", function (e) {
+            stateRepayment.set('repaidDate', moment(e.date).toDate());
+        });
+    }
 });
 
 formTmpl.helpers({
@@ -160,6 +179,9 @@ formTmpl.helpers({
     },
     jsonViewOpts() {
         return {collapsed: true};
+    },
+    voucherId(){
+        return Session.get('lastVoucherId');
     }
 });
 
@@ -191,6 +213,8 @@ let hooksObject = {
 
             let loanAccDoc = stateRepayment.get('loanAccDoc');
 
+            var year = moment(doc.repaidDate).format("YYYY");
+            doc.voucherId = doc.branchId + "-" + year + s.pad(doc.voucherId, 6, "0");
 
             doc.type = 'Reschedule';
             doc.totalPaid = doc.amountPaid + doc.penaltyPaid;

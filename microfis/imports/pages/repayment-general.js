@@ -67,6 +67,21 @@ formTmpl.onCreated(function () {
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate');
         if (repaidDate) {
+            var currentCurrency = loanAccDoc.currencyId;
+            var dobSelect = repaidDate;
+
+            var startYear = moment(dobSelect).year();
+            var startDate = moment('01/01/' + startYear,"DD/MM/YYYY").toDate();
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
+                if (result != undefined) {
+                    Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
+                } else {
+                    Session.set('lastVoucherId', "000001");
+                }
+            });
+        }
+
+        if (repaidDate) {
             $.blockUI();
 
             if (loanAccDoc) {
@@ -102,7 +117,7 @@ formTmpl.onCreated(function () {
                 }
 
 
-                Meteor.setTimeout(()=> {
+                Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
 
@@ -121,19 +136,20 @@ formTmpl.onRendered(function () {
 
 
     let $repaidDateObj = $('[name="repaidDate"]');
-    let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
+    if ($repaidDateObj) {
+        let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
+        stateRepayment.set('repaidDate', repaidDate);
 
-    stateRepayment.set('repaidDate', repaidDate);
+        // Repaid date picker
 
-    // Repaid date picker
+        if (stateRepayment.get('lastTransactionDate')) {
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+        }
 
-    if (stateRepayment.get('lastTransactionDate')) {
-        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+        $repaidDateObj.on("dp.change", function (e) {
+            stateRepayment.set('repaidDate', moment(e.date).toDate());
+        });
     }
-
-    $repaidDateObj.on("dp.change", function (e) {
-        stateRepayment.set('repaidDate', moment(e.date).toDate());
-    });
 
 });
 
@@ -159,7 +175,7 @@ formTmpl.helpers({
     jsonViewData(data){
         if (data) {
             if (_.isArray(data) && data.length > 0) {
-                _.forEach(data, (o, k)=> {
+                _.forEach(data, (o, k) => {
                     o.scheduleDate = moment(o.scheduleDate).format('DD/MM/YYY');
                     o.dueDate = moment(o.dueDate).format('DD/MM/YYY');
                     delete  o.repaymentDoc;
@@ -172,6 +188,9 @@ formTmpl.helpers({
     },
     jsonViewOpts(){
         return {collapsed: true};
+    },
+    voucherId(){
+        return Session.get('lastVoucherId');
     }
 });
 
@@ -204,6 +223,8 @@ let hooksObject = {
             let loanAccDoc = stateRepayment.get('loanAccDoc'),
                 checkRepayment = stateRepayment.get('checkRepayment');
 
+            var year = moment(doc.repaidDate).format("YYYY");
+            doc.voucherId = doc.branchId + "-" + year + s.pad(doc.voucherId, 6, "0");
 
             if (loanAccDoc.status == "Restructure") {
                 alertify.warning("You already Restructure");
@@ -225,7 +246,7 @@ let hooksObject = {
                 alertify.warning("You already write off!!!");
                 return false;
             }
-            
+
             doc.type = 'General';
 
             // Check to payment

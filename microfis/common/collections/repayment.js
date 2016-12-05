@@ -17,7 +17,7 @@ Repayment.schema = new SimpleSchema({
     },
     repaidDate: {
         type: Date,
-        label: 'Repaid date',
+        label: 'Repayment date',
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
@@ -37,7 +37,7 @@ Repayment.schema = new SimpleSchema({
     },
     amountType: {
         type: String,
-        label: 'Amount type',
+        label: 'Payment By',
         autoform: {
             type: "select-radio-inline",
             defaultValue: 'CA',
@@ -51,7 +51,7 @@ Repayment.schema = new SimpleSchema({
     },
     amountPaid: {
         type: Number,
-        label: 'Amount paid',
+        label: 'Amount',
         decimal: true,
         min: function () {
             if (Meteor.isClient) {
@@ -77,7 +77,7 @@ Repayment.schema = new SimpleSchema({
     },
     penaltyPaid: {
         type: Number,
-        label: 'Penalty paid',
+        label: 'Penalty Amount',
         decimal: true,
         optional: true,
         defaultValue: 0,
