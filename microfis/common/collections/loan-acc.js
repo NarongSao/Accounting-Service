@@ -265,14 +265,14 @@ LoanAcc.accountSchema = new SimpleSchema({
     currencyId: {
         type: String,
         label: 'Currency',
-        autoform: {
+        /*autoform: {
             type: 'select',
             afFieldInput: {
                 options: function () {
                     return state.get('currencyId');
                 }
             }
-        }
+        }*/
     },
     projectInterest: {
         type: Number,
@@ -393,7 +393,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
     },
     repaidFrequency: {
         type: Number,
-        label: 'Repaid Frequency',
+        label: 'Interest Repayment Frequency',
         defaultValue: 1,
         min: 1,
         max: function () {
@@ -410,7 +410,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
     },
     firstRepaymentDate: {
         type: Date,
-        label: 'First repayment date',
+        label: 'First Payment Date',
         optional: true,
         autoform: {
             afFieldInput: {

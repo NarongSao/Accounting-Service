@@ -88,7 +88,7 @@
                                     </dd>
                                     <dt>Num Of Day Late</dt>
                                     <dd>{{numOfDayLate}}</dd>
-                                    <dt>Microfis Outstanding</dt>
+                                    <dt>Loan Outstanding</dt>
                                     <dd>{{numFormat principalDue "0,0.00"}}</dd>
                                     <dt>Project Interest</dt>
                                     <dd>{{numFormat interestDue "0,0.00"}}</dd>
@@ -117,7 +117,7 @@
 
                     {{> afQuickField name="amountPaid" value=defaultValue.totalDue}}
 
-                    {{> afQuickField name="voucherId"}}
+                    {{> afQuickField name="voucherId"  value=voucherId}}
                     {{> afQuickField name="note"}}
                     {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
                     {{> afQuickField name="currencyId" type="hidden" value=loanAccDoc.currencyId}}

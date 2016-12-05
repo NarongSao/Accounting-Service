@@ -253,7 +253,7 @@ indexTmpl.events({
     },
     'click .js-create-prepay'(event, instance) {
         let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
-        alertify.repayment(fa('plus', 'Repayment Prepay'), renderTemplate(prepayFormTmpl, data));
+        alertify.repayment(fa('plus', 'Prepay'), renderTemplate(prepayFormTmpl, data));
     }
     , 'click .js-create-reschedule'(event, instance) {
         let data = {

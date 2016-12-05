@@ -67,6 +67,21 @@ formTmpl.onCreated(function () {
         let repaidDate = stateRepayment.get('repaidDate');
 
         if (repaidDate) {
+            var currentCurrency = loanAccDoc.currencyId;
+            var dobSelect = repaidDate;
+
+            var startYear = moment(dobSelect).year();
+            var startDate = moment('01/01/' + startYear,"DD/MM/YYYY").toDate();
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
+                if (result != undefined) {
+                    Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
+                } else {
+                    Session.set('lastVoucherId', "000001");
+                }
+            });
+        }
+
+        if (repaidDate) {
             $.blockUI();
 
             if (loanAccDoc) {
@@ -165,6 +180,9 @@ formTmpl.helpers({
     },
     jsonViewOpts(){
         return {collapsed: true};
+    },
+    voucherId(){
+        return Session.get('lastVoucherId');
     }
 });
 
@@ -194,6 +212,9 @@ let hooksObject = {
         insert: function (doc) {
             let loanAccDoc = stateRepayment.get('loanAccDoc'),
                 checkRepayment = stateRepayment.get('checkRepayment');
+
+            var year = moment(doc.repaidDate).format("YYYY");
+            doc.voucherId = doc.branchId + "-" + year + s.pad(doc.voucherId, 6, "0");
 
             doc.type = 'Prepay';
 

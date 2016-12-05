@@ -141,6 +141,9 @@ indexTmpl.events({
 productFormTmpl.helpers({
     productSchema(){
         return LoanAcc.productSchema;
+    },
+    currencyId(){
+        return state.get("currencyId");
     }
 });
 
@@ -288,6 +291,11 @@ formTmpl.helpers({
         if (!currentData) {
             return state.get("firstRepaymentDate");
         }
+    },
+    currencyId(){
+        if (state.get("currencyId")) {
+            return state.get("currencyId");
+        }
     }
 
 
@@ -300,12 +308,16 @@ formTmpl.events({
         } else {
             stateClient.set('escapeFrequency', false);
         }
+    },
+    'change [name="savingAccId"]'(e, t){
+        state.set("currencyId", $('[name="savingAccId"] option:selected').text().split(" : ")[2]);
     }
 });
 
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_loanAccForm");
     state.set("disbursmentDate", null);
+    state.set("currencyId", null);
 });
 
 
