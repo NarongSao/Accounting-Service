@@ -512,31 +512,32 @@ LoanAcc.repaymentSchema = new SimpleSchema({
     'principalInstallment.amount': {
         type: Number,
         label: 'Amount',
-        min: function () {
-            if (Meteor.isClient) {
-                let min = 1;
-                let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType'),
-                    currencyId = AutoForm.getFieldValue('currencyId');
+        /*min: function () {
+         if (Meteor.isClient) {
+         let min = 1;
+         let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType'),
+         currencyId = AutoForm.getFieldValue('currencyId');
 
-                if (calculateType == 'A' && currencyId) {
-                    switch (currencyId) {
-                        case 'KHR':
-                            min = 5000;
-                            break;
-                        case 'USD':
-                            min = 1;
-                            break;
-                        case 'THB':
-                            min = 50;
-                            break;
-                    }
-                }
+         if (calculateType == 'A' && currencyId) {
+         switch (currencyId) {
+         case 'KHR':
+         min = 5000;
+         break;
+         case 'USD':
+         min = 1;
+         break;
+         case 'THB':
+         min = 50;
+         break;
+         }
+         }
 
-                state.set('minPrincipalInstallmentAmount', min);
+         state.set('minPrincipalInstallmentAmount', min);
 
-                return min;
-            }
-        },
+         return min;
+         }
+         },*/
+        min: 0,
         max: function () {
             if (Meteor.isClient) {
                 let max = 100;

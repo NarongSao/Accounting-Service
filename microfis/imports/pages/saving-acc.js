@@ -189,11 +189,25 @@ formTmpl.helpers({
     },
     openingAmount(){
         if (Session.get('savingProductDoc')) {
-            let amount = Session.get('savingProductDoc').minOpeningAmount;
+            let data = Session.get('savingProductDoc');
+            if (stateSaving.get("currencyId") && stateSaving.get("currencyId") == "KHR") {
+                let amount = data.minOpeningAmount * data.exchange.KHR;
+            } else if (stateSaving.get("currencyId") && stateSaving.get("currencyId") == "THB") {
+                let amount = data.minOpeningAmount * data.exchange.THB;
+            } else {
+                let amount = data.minOpeningAmount;
+            }
+
             return amount;
         }
     }
 });
+
+formTmpl.events({
+    'change [name="currencyId"]'(e, t){
+        stateSaving.set("currencyId", $(e.currentTarget).val());
+    }
+})
 
 formTmpl.onDestroyed(function () {
     AutoForm.resetForm("Microfis_savingAccForm");
@@ -204,11 +218,12 @@ let hooksObject = {
     before: {
         insert: function (doc) {
             doc.status = {value: 'Inactive'};
+
             return doc;
         }
     },
     onSuccess (formType, result) {
-
+        stateSavingAddOn.set("isAddmoreSaving", true);
 
         alertify.savingAcc().close();
         alertify.savingAccProduct().close();
