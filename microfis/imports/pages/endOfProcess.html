@@ -23,6 +23,7 @@
             <div class="container-fluid ">
                 <div class="row col-md-12">
                     {{> afQuickField name='closeDate'}}
+                    {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
                 </div>
                 <button type="submit" class="btn btn-primary save">{{fa "floppy-o"}} Save</button>
                 <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>

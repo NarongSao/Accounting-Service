@@ -30,7 +30,7 @@ import {SavingAccTabular} from '../../common/tabulars/saving-acc.js';
 // Page
 import './saving-acc.html';
 
-stateSaving=new ReactiveObj();
+stateSaving = new ReactiveObj();
 
 // Declare template
 let indexTmpl = Template.Microfis_savingAcc,
@@ -101,7 +101,7 @@ indexTmpl.events({
 productFormTmpl.onCreated(function () {
     this.productIdState = new ReactiveVar();
 
-    this.autorun(()=> {
+    this.autorun(() => {
         if (this.productIdState.get()) {
             let handle = this.subscribe('microfis.savingProductById', this.productIdState.get());
             if (handle.ready()) {
@@ -115,7 +115,7 @@ productFormTmpl.onCreated(function () {
 productFormTmpl.helpers({
     productSchema(){
         return SavingAcc.productSchema;
-    },
+    }
 });
 
 productFormTmpl.events({
@@ -148,7 +148,7 @@ AutoForm.hooks({
 
 // Form
 formTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
 
         if (currentData) {
@@ -187,6 +187,12 @@ formTmpl.helpers({
 
         return {doc, formType};
     },
+    openingAmount(){
+        if (Session.get('savingProductDoc')) {
+            let amount = Session.get('savingProductDoc').minOpeningAmount;
+            return amount;
+        }
+    }
 });
 
 formTmpl.onDestroyed(function () {

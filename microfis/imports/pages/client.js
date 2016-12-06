@@ -43,7 +43,7 @@ indexTmpl.onCreated(function () {
 
     // Reactive table filter
     this.filter = new ReactiveTable.Filter('microfis.clientByBranch', ['branchId']);
-    this.autorun(()=> {
+    this.autorun(() => {
         this.filter.set(Session.get('currentBranch'));
     });
 });
@@ -125,9 +125,17 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
+        stateClient.set("isHaveExpire", false);
         alertify.client(fa('plus', 'Client'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
+
+        if (["N", "P", "D"].includes(this.idType) == true) {
+            stateClient.set("isHaveExpire", true);
+        } else {
+            stateClient.set("isHaveExpire", false);
+        }
+
         alertify.client(fa('pencil', 'Client'), renderTemplate(formTmpl, this)).maximize();
     },
     'click .js-destroy' (event, instance) {
@@ -162,7 +170,7 @@ indexTmpl.onDestroyed(function () {
 
 // Form
 formTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         if (currentData) {
             this.subscribe('microfis.clientById', currentData._id);
@@ -187,12 +195,27 @@ formTmpl.helpers({
         }
 
         return 'insert';
+    },
+    isHaveExpire(){
+        return stateClient.get("isHaveExpire");
     }
 });
 
+
+formTmpl.events({
+    'change [name="idType"]'(e, t){
+        let val = $(e.currentTarget).val();
+        if (["N", "P", "D"].includes(val) == true) {
+            stateClient.set("isHaveExpire", true);
+        } else {
+            stateClient.set("isHaveExpire", false);
+        }
+    }
+})
+
 // Show
 showTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         if (currentData) {
             this.subscribe('microfis.clientById', currentData._id);

@@ -88,6 +88,7 @@ indexTmpl.events({
         // $.blockUI();
 
         let self = this;
+        state.set("disbursmentDate",self.disbursementDate);
 
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
             alertify.error("Can't Update this account!!!");
@@ -179,6 +180,8 @@ productFormTmpl.onDestroyed(function () {
     Session.set('productDoc', null);
     Session.set("savingList", null);
     state.set("disbursmentDate", null);
+
+    AutoForm.resetForm("Microfis_loanAccProductForm");
 });
 
 AutoForm.hooks({

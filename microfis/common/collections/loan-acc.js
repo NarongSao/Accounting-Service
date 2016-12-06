@@ -479,11 +479,6 @@ LoanAcc.repaymentSchema = new SimpleSchema({
                 options: function () {
                     if (Meteor.isClient) {
                         let term = AutoForm.getFieldValue('term');
-                        let repaidFrequency = AutoForm.getFieldValue('repaidFrequency')
-                        if (repaidFrequency) {
-                            term = math.round(term / repaidFrequency, 0);
-                        }
-
                         if (term) {
                             let list = [];
                             for (let i = 1; i <= term; i++) {
@@ -814,6 +809,7 @@ LoanAcc.otherSchema = new SimpleSchema({
     history: {
         type: String,
         label: 'History',
+        optional: true,
         autoform: {
             type: 'select',
             afFieldInput: {
@@ -826,6 +822,7 @@ LoanAcc.otherSchema = new SimpleSchema({
     purpose: {
         type: String,
         label: 'Purpose',
+        optional: true,
         autoform: {
             type: 'select',
             afFieldInput: {
@@ -838,6 +835,7 @@ LoanAcc.otherSchema = new SimpleSchema({
     purposeActivity: {
         type: String,
         label: 'Purpose activity',
+        optional: true,
         autoform: {
             type: 'select',
             afFieldInput: {
@@ -850,6 +848,7 @@ LoanAcc.otherSchema = new SimpleSchema({
     collateralType: {
         type: String,
         label: 'Collateral type',
+        optional: true,
         autoform: {
             type: 'select',
             afFieldInput: {
@@ -861,11 +860,13 @@ LoanAcc.otherSchema = new SimpleSchema({
     },
     collateralNote: {
         type: String,
+        optional: true,
         label: 'Collateral note',
         max: 500
     },
     collateralSecurity: {
         type: String,
+        optional: true,
         label: 'Collateral security',
         autoform: {
             type: 'select',
@@ -879,6 +880,7 @@ LoanAcc.otherSchema = new SimpleSchema({
     povertyLevel: {
         type: String,
         label: 'Poverty level',
+        optional: true,
         autoform: {
             type: 'select',
             afFieldInput: {
