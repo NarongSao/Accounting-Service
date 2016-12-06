@@ -133,6 +133,16 @@ export let checkRepayment = new ValidatedMethod({
                                 method: 'D',
                                 currencyId: loanAccDoc.currencyId
                             });
+                        }else {
+                            if (loanAccDoc.currencyId == "KHR") {
+                                penaltyDue = penaltyDoc.amount * numOfDayLate * loanAccDoc.productDoc.exchange.KHR;
+
+                            } else if (loanAccDoc.currencyId == "THB") {
+                                penaltyDue = penaltyDoc.amount * numOfDayLate * loanAccDoc.productDoc.exchange.THB;
+
+                            } else {
+                                penaltyDue = penaltyDoc.amount * numOfDayLate;
+                            }
                         }
                     }
 

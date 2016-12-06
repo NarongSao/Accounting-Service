@@ -243,6 +243,12 @@ LoanAcc.generalSchema = new SimpleSchema({
             }
         }
 
+    },
+    feeAmount: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
     }
 
 
@@ -266,13 +272,13 @@ LoanAcc.accountSchema = new SimpleSchema({
         type: String,
         label: 'Currency',
         /*autoform: {
-            type: 'select',
-            afFieldInput: {
-                options: function () {
-                    return state.get('currencyId');
-                }
-            }
-        }*/
+         type: 'select',
+         afFieldInput: {
+         options: function () {
+         return state.get('currencyId');
+         }
+         }
+         }*/
     },
     projectInterest: {
         type: Number,
