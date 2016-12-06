@@ -51,6 +51,7 @@ import './repayment-waive-interest.js';
 import './repayment-closing.js';
 import './repayment-reschedule.js';
 import './repayment-writeOff.js';
+import './repayment-fee.js';
 
 import './write-off-ensure.js';
 
@@ -61,6 +62,7 @@ let indexTmpl = Template.Microfis_repayment,
     showTmpl = Template.Microfis_repaymentShow,
 
     generalFormTmpl = Template.Microfis_repaymentGeneralForm,
+    feeFormTmpl = Template.Microfis_repaymentFeeForm,
     prepayFormTmpl = Template.Microfis_repaymentPrepayForm,
     waiveInteFormTmpl = Template.Microfis_repaymentWaiveInterestForm,
     closingFormTmpl = Template.Microfis_repaymentClosingForm,
@@ -77,6 +79,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('repayment', {size: 'lg'});
     createNewAlertify('writeOff');
+    createNewAlertify('fee');
     createNewAlertify('repaymentShow');
 
     // Default stat
@@ -99,8 +102,7 @@ indexTmpl.onCreated(function () {
             }).then(function (result) {
                 stateRepayment.set('loanAccDoc', result);
                 stateRepayment.set('lastTransactionDate', result.disbursementDate);
-
-
+                stateRepayment.set("feeAmount", result.feeAmount);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -242,7 +244,22 @@ indexTmpl.helpers({
         });
 
         return reactiveTableData;
+    },
+    isFee(){
+
+        let isFee = false;
+        let isOther = true;
+
+        if (stateRepayment.get("feeAmount") == 0) {
+            isFee = true;
+            isOther = false;
+        } else {
+            isOther = true;
+            isFee = false;
+        }
+        return {isOther, isFee};
     }
+
 });
 
 indexTmpl.events({
@@ -289,6 +306,15 @@ indexTmpl.events({
         };
 
         alertify.repayment(fa('plus', 'Repayment Closing'), renderTemplate(closingFormTmpl, data));
+    },
+
+    'click .js-create-fee'(event, instance) {
+        let data = {
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
+        };
+
+        alertify.fee(fa('plus', 'Repayment Fee'), renderTemplate(feeFormTmpl, data));
     },
 
     'click .js-reStructure' (event, instance) {
@@ -359,6 +385,10 @@ indexTmpl.events({
                                         console.log(err.message);
                                     });
                                 }, 200)
+
+                                if (self.type == "Fee") {
+                                    stateRepayment.set("feeAmount", 0);
+                                }
 
                                 displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
                             }
