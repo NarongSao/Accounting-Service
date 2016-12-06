@@ -68,7 +68,6 @@ EndOfProcess.after.insert(function (userId, doc) {
                     totalScheduleDue: checkPayment.totalScheduleDue
                 });
 
-                console.log(makeRepayment);
 
                 //Make Payment To Update Scedule
                 if (makeRepayment) {

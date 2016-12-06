@@ -5,6 +5,8 @@ import math from 'mathjs';
 
 // Collection
 import {SavingAcc} from '../../common/collections/saving-acc';
+import {SavingProduct} from '../../common/collections/saving-product.js';
+import {SavingTransaction} from '../../common/collections/saving-transaction.js';
 
 // Before insert
 SavingAcc.before.insert(function (userId, doc) {
@@ -14,3 +16,4 @@ SavingAcc.before.insert(function (userId, doc) {
         length: 3
     });
 });
+

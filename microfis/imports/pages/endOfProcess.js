@@ -32,8 +32,9 @@ import './endOfProcess.html';
 // Declare template
 let indexTmpl = Template.Microfis_endOfProcess,
     actionTmpl = Template.Microfis_endOfProcessAction,
-    newTmpl = Template.acc_dateEndOfProcessInsert;
+    newTmpl = Template.Microfis_endOfProcessInsert;
 
+let stateEndOfProcess = new ReactiveObj();
 
 Tracker.autorun(function () {
     if (Session.get('isSave')) {
@@ -83,48 +84,77 @@ indexTmpl.events({
         alertify.endOfProcess(fa("plus", "End Of Process"), renderTemplate(newTmpl));
     },
     'click .remove': function (e, t) {
+        debugger;
         var id = this._id;
-        alertify.confirm("Are you sure to delete ?")
-            .set({
-                onok: function (closeEvent) {
-                    Meteor.call('microfis_removeEndOfProcess', id, function (err, result) {
-                        if (!err) {
-                            alertify.success('Success');
-                        }
+        let self = this;
+
+        Meteor.call("microfis_getLastEndOfProcess", function (err, result) {
+            if (result) {
+                stateEndOfProcess.set("closeDate", result.closeDate);
+            }
+            if (moment(result.closeDate).toDate().getTime() != moment(self.closeDate).toDate().getTime()) {
+                alertify.error("Not the Last End OF Process!!!");
+            } else {
+                alertify.confirm("Are you sure to delete ?")
+                    .set({
+                        onok: function (closeEvent) {
+                            Meteor.call('microfis_removeEndOfProcess', id, function (err, result) {
+                                if (!err) {
+                                    alertify.success('Success');
+                                }
+                            });
+                        },
+                        title: fa("remove", "End of Process")
                     });
-                },
-                title: fa("remove", "End of Process")
-            });
+            }
+
+        });
+
     }
 });
+
+newTmpl.onRendered(function () {
+    Meteor.call("microfis_getLastEndOfProcess", function (err, result) {
+        if (result) {
+            stateEndOfProcess.set("closeDate", result.closeDate);
+        } else {
+            stateEndOfProcess.set("closeDate", undefined);
+        }
+    });
+})
 
 newTmpl.events({
     'click .save': function (e, t) {
         Session.set('isSave', true);
+    },
+    'click [name="closeDate"]'(e, t){
+        let $closeDate = $('[name="closeDate"]');
+        if (stateEndOfProcess.get("closeDate")) {
+            $closeDate.data("DateTimePicker").minDate(moment(stateEndOfProcess.get("closeDate")).add(1, 'days').startOf('day').toDate());
+        } else {
+            $closeDate.data("DateTimePicker").minDate(moment().add(-200, 'years').startOf('day').toDate());
+
+        }
     }
 })
 
-
-var disableDate = function () {
-
-}
+newTmpl.onDestroyed(function () {
+    AutoForm.resetForm("Microfis_endOfProcessInsert");
+});
 
 
 // Hook
 let hooksObject = {
-    before: {
-        insert: function (doc) {
-            doc.branchId = Session.get("currentBranch");
-            return doc;
-        }
+    onSuccess: function (formType, result) {
+        Session.set('isSuccess', true)
+        alertify.endOfProcess().close();
+        alertify.success('Success');
     },
-    onSuccess (formType, result) {
-        if (formType == 'update') {
-            alertify.endOfProcess().close();
-        }
+    onError: function (formType, error) {
+        alertify.error("Duplicate Date");
     }
 };
 
 AutoForm.addHooks([
-    'acc_dateEndOfProcessInsert'
+    'Microfis_endOfProcessInsert'
 ], hooksObject);

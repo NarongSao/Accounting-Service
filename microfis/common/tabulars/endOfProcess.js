@@ -38,8 +38,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         }
 
     ],
-    order: [[1, 'asc']],
-    extraFields: ['_id', 'type', 'ancestors','endId'],
+    order: [[1, 'desc']],
 });
 
 export const EndOfProcessTabular = new Tabular.Table(tabularData);

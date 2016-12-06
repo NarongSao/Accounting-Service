@@ -64,9 +64,11 @@
                         <div class="col-md-4">
                             {{> afQuickField name="idNumber"}}
                         </div>
-                        <div class="col-md-4">
-                            {{> afQuickField name="idExpiryDate"}}
-                        </div>
+                        {{#if isHaveExpire}}
+                            <div class="col-md-4">
+                                {{> afQuickField name="idExpiryDate"}}
+                            </div>
+                        {{/if}}
                     </div>
                 </fieldset>
 
