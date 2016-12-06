@@ -49,6 +49,10 @@ let state = new ReactiveObj({
     disbursmentDate: moment().toDate()
 });
 
+stateSavingAddOn = new ReactiveObj({
+    isAddmoreSaving: false
+});
+
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -76,6 +80,14 @@ Tracker.autorun(function () {
             Session.set("savingList", result);
         })
     }
+    if (stateSavingAddOn.get("isAddmoreSaving") == true) {
+        Meteor.call("microfis_getSavingAccByDate", state.get("disbursmentDate"), FlowRouter.getParam('clientId'), function (err, result) {
+            Session.set("savingList", result);
+            stateSavingAddOn.set("isAddmoreSaving", false);
+        })
+
+    }
+
 })
 
 indexTmpl.events({
@@ -88,7 +100,7 @@ indexTmpl.events({
         // $.blockUI();
 
         let self = this;
-        state.set("disbursmentDate",self.disbursementDate);
+        state.set("disbursmentDate", self.disbursementDate);
 
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
             alertify.error("Can't Update this account!!!");
@@ -247,6 +259,8 @@ formTmpl.onRendered(function () {
             state.set('disbursmentDate', moment(e.date).startOf('day').toDate());
         })
     }
+
+
 });
 
 formTmpl.helpers({
@@ -326,6 +340,7 @@ formTmpl.onDestroyed(function () {
 
 formTmpl.events({
     'click .js-saving-addon': function (e, t) {
+        stateSavingAddOn.set("isAddmoreSaving", false);
         alertify.savingAccProduct(fa("plus", "Saving"), renderTemplate(savingAddOnTpl));
     }
 });
