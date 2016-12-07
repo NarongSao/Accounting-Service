@@ -1,0 +1,37 @@
+module.exports = {
+  servers: {
+    one: {
+      host: '35.164.170.143',
+      username: 'ubuntu',
+      pem: "/home/rabbit/Downloads/leang-pailin.pem"
+      // password:
+      // or leave blank for authenticate from ssh-agent
+    }
+  },
+
+  meteor: {
+    name: 'microfis',
+    path: '../microfis',
+    port: 8000,
+    servers: {
+      one: {}
+    },
+    buildOptions: {
+      serverOnly: true,
+    },
+    env: {
+      ROOT_URL: 'http://35.164.170.143',
+      MONGO_URL: 'mongodb://localhost/microfis'
+    },
+    dockerImage: 'abernix/meteord:base',
+    deployCheckWaitTime: 60
+  },
+
+  mongo: {
+    oplog: true,
+    port: 27017,
+    servers: {
+      one: {},
+    },
+  },
+};
