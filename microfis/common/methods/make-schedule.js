@@ -42,10 +42,10 @@ MakeSchedule.declinig = new ValidatedMethod({
             
             // Overried loan account
             if (options != null) {
-                loanAccDoc.disbursementDate = options.disbursementDate;
+                loanAccDoc.disbursementDate = moment(options.disbursementDate,"DD/MM/YYYY").toDate();
                 loanAccDoc.loanAmount = options.loanAmount;
                 loanAccDoc.term = options.term;
-                loanAccDoc.firstRepaymentDate = options.firstRepaymentDate;
+                loanAccDoc.firstRepaymentDate = moment(options.firstRepaymentDate,"DD/MM/YYYY").toDate();
                 loanAccDoc.installmentAllowClosing = options.installmentAllowClosing;
 
             }
@@ -81,7 +81,7 @@ MakeSchedule.declinig = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: loanAccDoc.disbursementDate,
+                dueDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
@@ -98,8 +98,8 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 dueDate = findDueDate({
                     installment: i,
-                    disbursementDate: loanAccDoc.disbursementDate,
-                    previousDate: previousLine.dueDate,
+                    disbursementDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
+                    previousDate: moment(previousLine.dueDate,"DD/MM/YYYY").toDate(),
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
                     escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
@@ -112,7 +112,7 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = loanAccDoc.firstRepaymentDate;
+                    dueDate = moment(loanAccDoc.firstRepaymentDate,"DD/MM/YYYY").toDate();
                 }
                 numOfDay = moment(dueDate).diff(previousLine.dueDate, 'days');
 
@@ -208,7 +208,7 @@ MakeSchedule.annuity = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: loanAccDoc.disbursementDate,
+                dueDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
@@ -225,8 +225,8 @@ MakeSchedule.annuity = new ValidatedMethod({
 
                 dueDate = findDueDate({
                     installment: i,
-                    disbursementDate: loanAccDoc.disbursementDate,
-                    previousDate: previousLine.dueDate,
+                    disbursementDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
+                    previousDate: moment(previousLine.dueDate,"DD/MM/YYYY").toDate(),
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
                     escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
@@ -239,7 +239,7 @@ MakeSchedule.annuity = new ValidatedMethod({
 
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = loanAccDoc.firstRepaymentDate;
+                    dueDate = moment(loanAccDoc.firstRepaymentDate,"DD/MM/YYYY").toDate();
                 }
                 numOfDay = moment(dueDate).diff(previousLine.dueDate, 'days');
 
@@ -410,7 +410,7 @@ function _doEscapeDayWithFrequency(date, opts) {
             break;
     }
 
-    let tmpEscapeDay, tmpDate = date;
+    let tmpEscapeDay, tmpDate = moment(date,"DD/MM/YYYY").toDate();
     let startOf = moment(date).startOf(startOrEndOf);
     let endOf = moment(date).endOf(startOrEndOf);
 
