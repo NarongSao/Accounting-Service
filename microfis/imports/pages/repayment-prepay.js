@@ -66,7 +66,7 @@ formTmpl.onCreated(function () {
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate');
 
-        if (repaidDate) {
+        if (stateRepayment.get("isVoucherId")) {
             var currentCurrency = loanAccDoc.currencyId;
             var dobSelect = repaidDate;
 
@@ -78,6 +78,7 @@ formTmpl.onCreated(function () {
                 } else {
                     Session.set('lastVoucherId', "000001");
                 }
+                stateRepayment.set("isVoucherId",false);
             });
         }
 
