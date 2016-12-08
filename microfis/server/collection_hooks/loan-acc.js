@@ -85,19 +85,23 @@ function _makeSchedule(doc) {
 
     let maturityDate, tenor = 0, projectInterest = 0;
 
-    _.forEach(schedule, (value, key)=> {
+    _.forEach(schedule, (value, key) => {
         tenor += value.numOfDay;
         projectInterest += value.interestDue;
 
         if (key == schedule.length - 1) {
-            maturityDate = value.dueDate;
+            maturityDate = moment(value.dueDate, "DD/MM/YYYY").toDate();
         }
 
         // Save to repayment schedule collection
-        value.scheduleDate = doc.disbursementDate;
+
+
+        value.scheduleDate = moment(doc.disbursementDate, "DD/MM/YYYY").toDate();
         value.loanAccId = doc._id;
-        value.savingAccId=doc.savingAccId;
-        value.branchId=doc.branchId;
+        value.savingAccId = doc.savingAccId;
+        value.branchId = doc.branchId;
+
+
         RepaymentSchedule.insert(value);
     });
 

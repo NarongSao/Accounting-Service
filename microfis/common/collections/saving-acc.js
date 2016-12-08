@@ -149,7 +149,7 @@ SavingAcc.generalSchema = new SimpleSchema({
         type: Number,
         label: 'Opening amount',
         decimal: true,
-        min: function () {
+        /*min: function () {
             if (Meteor.isClient) {
                 let min = 0,
                     currencyId = AutoForm.getFieldValue('currencyId'),
@@ -169,7 +169,7 @@ SavingAcc.generalSchema = new SimpleSchema({
 
                 return min;
             }
-        },
+        },*/
         autoform: {
             type: "inputmask",
             afFieldInput: {

@@ -31,8 +31,10 @@ EndOfProcess.after.insert(function (userId, doc) {
     let selectorPay = {};
     selectorPay.dueDate = {$lte: tDate, $gte: fDate};
     selectorPay.branchId = doc.branchId;
-    selectorPay.isPay = true;
-    selectorPay.isPrePay = true;
+    /*selectorPay.isPay = true;
+     selectorPay.isPrePay = true;*/
+
+    selectorPay.isFullPay = false;
 
     let detailPaid = [];
     let schedulePay = RepaymentSchedule.find(selectorPay).fetch();
@@ -148,7 +150,7 @@ EndOfProcess.after.insert(function (userId, doc) {
                     SavingTransaction.insert(savingLoanWithdrawal);
                 }
 
-                Repayment.direct.update({_id: savingTransaction.paymentId},{$set: {endId: doc._id}});
+                Repayment.direct.update({_id: savingTransaction.paymentId}, {$set: {endId: doc._id}});
 
             }
 
@@ -164,7 +166,6 @@ EndOfProcess.after.remove(function (userId, doc) {
 
     if (doc.detailPaid) {
         doc.detailPaid.forEach(function (o) {
-            console.log(o);
             RepaymentSchedule.update({_id: o.scheduleId}, {
                 $inc: {
                     'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
@@ -176,7 +177,7 @@ EndOfProcess.after.remove(function (userId, doc) {
                 $set: {isPay: true, isFullPay: o.isFullPay}
             });
 
-            Repayment.direct.update({endId: doc._id},{$set: {endId: "0"}});
+            Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}});
         })
     }
 
