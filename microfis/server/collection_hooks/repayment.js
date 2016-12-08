@@ -27,7 +27,6 @@ Repayment.before.insert(function (userId, doc) {
 
 // After insert
 Repayment.after.insert(function (userId, doc) {
-    console.log(doc);
     if (doc.type != "Fee") {
         Meteor.defer(function () {
 

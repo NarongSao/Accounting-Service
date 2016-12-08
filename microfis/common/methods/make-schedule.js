@@ -1,22 +1,22 @@
-import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { CallPromiseMixin } from 'meteor/didericis:callpromise-mixin';
-import { _ } from 'meteor/erasaur:meteor-lodash';
+import {Meteor} from 'meteor/meteor';
+import {check} from 'meteor/check';
+import {ValidatedMethod} from 'meteor/mdg:validated-method';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
+import {_} from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 import math from 'mathjs';
 
 // Lib
-import { roundCurrency } from '../libs/round-currency.js';
+import {roundCurrency} from '../libs/round-currency.js';
 
 // Method
-import { Calculate } from '../libs/calculate.js';
-import { lookupLoanAcc } from './lookup-loan-acc.js';
+import {Calculate} from '../libs/calculate.js';
+import {lookupLoanAcc} from './lookup-loan-acc.js';
 
 // Collection
-import { Setting } from '../../common/collections/setting.js';
-import { Holiday } from '../../common/collections/holiday.js';
+import {Setting} from '../../common/collections/setting.js';
+import {Holiday} from '../../common/collections/holiday.js';
 
 export let MakeSchedule = {};
 
@@ -27,9 +27,9 @@ MakeSchedule.declinig = new ValidatedMethod({
         loanAccId: {
             type: String
         },
-        options: { type: Object, optional: true, blackbox: true }
+        options: {type: Object, optional: true, blackbox: true}
     }).validator(),
-    run({loanAccId,options}) {
+    run({loanAccId, options}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
@@ -37,15 +37,15 @@ MakeSchedule.declinig = new ValidatedMethod({
             let setting = Setting.findOne(),
                 dayOfWeekToEscape = setting.dayOfWeekToEscape,
                 holiday = Holiday.find().fetch(),
-                loanAccDoc = lookupLoanAcc.call({ _id: loanAccId }),
+                loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
                 principalInstallmentDoc = loanAccDoc.principalInstallment;
-            
+
             // Overried loan account
             if (options != null) {
-                loanAccDoc.disbursementDate = moment(options.disbursementDate,"DD/MM/YYYY").toDate();
+                loanAccDoc.disbursementDate = moment(options.disbursementDate, "DD/MM/YYYY").toDate();
                 loanAccDoc.loanAmount = options.loanAmount;
                 loanAccDoc.term = options.term;
-                loanAccDoc.firstRepaymentDate = moment(options.firstRepaymentDate,"DD/MM/YYYY").toDate();
+                loanAccDoc.firstRepaymentDate = moment(options.firstRepaymentDate, "DD/MM/YYYY").toDate();
                 loanAccDoc.installmentAllowClosing = options.installmentAllowClosing;
 
             }
@@ -81,7 +81,7 @@ MakeSchedule.declinig = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
+                dueDate: moment(loanAccDoc.disbursementDate, "DD/MM/YYYY").toDate(),
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
@@ -98,8 +98,8 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 dueDate = findDueDate({
                     installment: i,
-                    disbursementDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
-                    previousDate: moment(previousLine.dueDate,"DD/MM/YYYY").toDate(),
+                    disbursementDate: moment(loanAccDoc.disbursementDate, "DD/MM/YYYY").toDate(),
+                    previousDate: moment(previousLine.dueDate, "DD/MM/YYYY").toDate(),
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
                     escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
@@ -112,7 +112,7 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = moment(loanAccDoc.firstRepaymentDate,"DD/MM/YYYY").toDate();
+                    dueDate = moment(loanAccDoc.firstRepaymentDate, "DD/MM/YYYY").toDate();
                 }
                 numOfDay = moment(dueDate).diff(previousLine.dueDate, 'days');
 
@@ -174,7 +174,7 @@ MakeSchedule.annuity = new ValidatedMethod({
             let setting = Setting.findOne(),
                 dayOfWeekToEscape = setting.dayOfWeekToEscape,
                 holiday = Holiday.find().fetch(),
-                loanAccDoc = lookupLoanAcc.call({ _id: loanAccId }),
+                loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
                 principalInstallmentDoc = loanAccDoc.principalInstallment;
 
             // Declare default value
@@ -208,7 +208,7 @@ MakeSchedule.annuity = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
+                dueDate: moment(loanAccDoc.disbursementDate, "DD/MM/YYYY").toDate(),
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
@@ -223,10 +223,11 @@ MakeSchedule.annuity = new ValidatedMethod({
 
                 previousLine = schedules[i - 1];
 
+
                 dueDate = findDueDate({
                     installment: i,
-                    disbursementDate: moment(loanAccDoc.disbursementDate,"DD/MM/YYYY").toDate(),
-                    previousDate: moment(previousLine.dueDate,"DD/MM/YYYY").toDate(),
+                    disbursementDate: moment(loanAccDoc.disbursementDate, "DD/MM/YYYY").toDate(),
+                    previousDate: moment(previousLine.dueDate, "DD/MM/YYYY").toDate(),
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
                     escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
@@ -237,10 +238,13 @@ MakeSchedule.annuity = new ValidatedMethod({
                     dueDateOn: loanAccDoc.dueDateOn
                 });
 
+
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = moment(loanAccDoc.firstRepaymentDate,"DD/MM/YYYY").toDate();
+                    dueDate = moment(loanAccDoc.firstRepaymentDate, "DD/MM/YYYY").toDate();
                 }
+
+
                 numOfDay = moment(dueDate).diff(previousLine.dueDate, 'days');
 
                 // Check principal due per line
@@ -324,33 +328,51 @@ function findDueDate(opts) {
         }
     }).validate(opts);
 
-    let dueDate = moment(opts.previousDate).add(opts.repaidFrequency, opts.addingTime).toDate();
-    // let dueDate = moment(opts.disbursementDate).add(opts.repaidFrequency * opts.installment, opts.addingTime).toDate();
+    if (!this.isSimulation) {
+        let dueDate = moment(opts.previousDate).add(opts.repaidFrequency, opts.addingTime).toDate();
+        // let dueDate = moment(opts.disbursementDate).add(opts.repaidFrequency * opts.installment, opts.addingTime).toDate();
 
-    // Check due date on
-    if (opts.paymentMethod == 'W') {
-        dueDate = moment(dueDate).isoWeekday(opts.dueDateOn).toDate();
-    } else if (opts.paymentMethod == 'M' || opts.paymentMethod == 'Y') {
-        dueDate = moment(dueDate).date(opts.dueDateOn).toDate();
-    }
+        // Check due date on
+        if (opts.paymentMethod == 'W') {
+            dueDate = moment(dueDate).isoWeekday(opts.dueDateOn).toDate();
+        } else if (opts.paymentMethod == 'M' || opts.paymentMethod == 'Y') {
+            dueDate = moment(dueDate).date(opts.dueDateOn).toDate();
+        }
 
-    // Check day escape
-    if (opts.escapeDayMethod == 'GR') { // General = Previous & Next
-        let inEscapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
-        if (inEscapeDay) {
-            let getDoEscapeDay;
+        // Check day escape
+        if (opts.escapeDayMethod == 'GR') { // General = Previous & Next
+            let inEscapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
+            if (inEscapeDay) {
+                let getDoEscapeDay;
 
-            // Check previous escape
-            getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
-                escapeDayFrequency: -opts.escapeDayFrequency,
-                dayOfWeekToEscape: opts.dayOfWeekToEscape,
-                holiday: opts.holiday,
-                paymentMethod: opts.paymentMethod,
-                escapeDayMethod: opts.escapeDayMethod
-            });
+                // Check previous escape
+                getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
+                    escapeDayFrequency: -opts.escapeDayFrequency,
+                    dayOfWeekToEscape: opts.dayOfWeekToEscape,
+                    holiday: opts.holiday,
+                    paymentMethod: opts.paymentMethod,
+                    escapeDayMethod: opts.escapeDayMethod
+                });
 
-            // Check next escape
-            if (moment(dueDate).isSame(getDoEscapeDay, 'day')) {
+                // Check next escape
+                if (moment(dueDate).isSame(getDoEscapeDay, 'day')) {
+                    getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
+                        escapeDayFrequency: opts.escapeDayFrequency,
+                        dayOfWeekToEscape: opts.dayOfWeekToEscape,
+                        holiday: opts.holiday,
+                        paymentMethod: opts.paymentMethod,
+                        escapeDayMethod: opts.escapeDayMethod
+                    });
+                }
+
+                return getDoEscapeDay;
+            }
+        } else if (opts.escapeDayMethod == 'AN') { // Always Next
+            let escapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
+            if (escapeDay) {
+                let getDoEscapeDay;
+
+                // Check always next
                 getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
                     escapeDayFrequency: opts.escapeDayFrequency,
                     dayOfWeekToEscape: opts.dayOfWeekToEscape,
@@ -358,89 +380,74 @@ function findDueDate(opts) {
                     paymentMethod: opts.paymentMethod,
                     escapeDayMethod: opts.escapeDayMethod
                 });
+
+                return getDoEscapeDay;
             }
-
-            return getDoEscapeDay;
         }
-    } else if (opts.escapeDayMethod == 'AN') { // Always Next
-        let escapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);
-        if (escapeDay) {
-            let getDoEscapeDay;
 
-            // Check always next
-            getDoEscapeDay = _doEscapeDayWithFrequency(dueDate, {
-                escapeDayFrequency: opts.escapeDayFrequency,
-                dayOfWeekToEscape: opts.dayOfWeekToEscape,
-                holiday: opts.holiday,
-                paymentMethod: opts.paymentMethod,
-                escapeDayMethod: opts.escapeDayMethod
-            });
-
-            return getDoEscapeDay;
-        }
+        return dueDate;
     }
-
-    return dueDate;
 }
 
 function _doEscapeDayWithFrequency(date, opts) {
     check(date, Date);
 
     new SimpleSchema({
-        escapeDayFrequency: { type: Number },
-        dayOfWeekToEscape: { type: [Number] },
-        holiday: { type: [Object], blackbox: true },
-        paymentMethod: { type: String },
-        escapeDayMethod: { type: String }
+        escapeDayFrequency: {type: Number},
+        dayOfWeekToEscape: {type: [Number]},
+        holiday: {type: [Object], blackbox: true},
+        paymentMethod: {type: String},
+        escapeDayMethod: {type: String}
     }).validate(opts);
+    if (!this.isSimulation) {
+        let startOrEndOf;
+        switch (opts.paymentMethod) {
+            case 'D': // Daily
+                startOrEndOf = 'day';
+                break;
+            case 'W': // Weekly
+                startOrEndOf = 'isoWeek';
+                break;
+            case 'M': // Monthly
+                startOrEndOf = 'month';
+                break;
+            case 'Y': // Yearly
+                startOrEndOf = 'year';
+                break;
+        }
 
-    let startOrEndOf;
-    switch (opts.paymentMethod) {
-        case 'D': // Daily
-            startOrEndOf = 'day';
-            break;
-        case 'W': // Weekly
-            startOrEndOf = 'isoWeek';
-            break;
-        case 'M': // Monthly
-            startOrEndOf = 'month';
-            break;
-        case 'Y': // Yearly
-            startOrEndOf = 'year';
-            break;
-    }
+        let tmpEscapeDay, tmpDate = moment(date, "DD/MM/YYYY").toDate();
+        let startOf = moment(date).startOf(startOrEndOf);
+        let endOf = moment(date).endOf(startOrEndOf);
 
-    let tmpEscapeDay, tmpDate = moment(date,"DD/MM/YYYY").toDate();
-    let startOf = moment(date).startOf(startOrEndOf);
-    let endOf = moment(date).endOf(startOrEndOf);
+        do {
+            tmpDate = moment(tmpDate).add(opts.escapeDayFrequency, 'd').toDate();
 
-    do {
-        tmpDate = moment(tmpDate).add(opts.escapeDayFrequency, 'd').toDate();
-
-        // Check start of period
-        if (opts.escapeDayFrequency < 0) {
-            if (moment(tmpDate).isBefore(startOf, 'day')) {
-                tmpEscapeDay = false;
-                tmpDate = date;
-            } else {
-                tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
-            }
-        } else {
-            // Check escapeDayMethod = GR || AN
-            if (opts.escapeDayMethod == 'GR') {
-                if (moment(tmpDate).isAfter(endOf, 'day')) {
+            // Check start of period
+            if (opts.escapeDayFrequency < 0) {
+                if (moment(tmpDate).isBefore(startOf, 'day')) {
                     tmpEscapeDay = false;
                     tmpDate = date;
                 } else {
                     tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
                 }
-            } else { // AN
-                tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+            } else {
+                // Check escapeDayMethod = GR || AN
+                if (opts.escapeDayMethod == 'GR') {
+                    if (moment(tmpDate).isAfter(endOf, 'day')) {
+                        tmpEscapeDay = false;
+                        tmpDate = date;
+                    } else {
+                        tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+                    }
+                } else { // AN
+                    tmpEscapeDay = _isInEscapeDayAndDate(tmpDate, opts.dayOfWeekToEscape, opts.holiday);
+                }
             }
-        }
-    } while (tmpEscapeDay);
+        } while (tmpEscapeDay);
 
-    return tmpDate;
+        return tmpDate;
+    }
 }
 
 function _isInEscapeDayAndDate(date, dayOfWeekToEscape, holiday) {
@@ -448,16 +455,19 @@ function _isInEscapeDayAndDate(date, dayOfWeekToEscape, holiday) {
     check(dayOfWeekToEscape, [Number]);
     check(holiday, [Object]);
 
-    // Check date of month
-    let checkDayOfWeek = _.includes(dayOfWeekToEscape, moment(date).isoWeekday());
-    let checkDateOfMonth = _.find(holiday, (o) => {
-        return moment(date).isBetween(o.from, o.to, 'day', '[]');
-    });
+    if (!this.isSimulation) {
 
-    if (checkDayOfWeek || checkDateOfMonth) {
-        return true;
+        // Check date of month
+        let checkDayOfWeek = _.includes(dayOfWeekToEscape, moment(date).isoWeekday());
+        let checkDateOfMonth = _.find(holiday, (o) => {
+            return moment(date).isBetween(o.from, o.to, 'day', '[]');
+        });
+
+        if (checkDayOfWeek || checkDateOfMonth) {
+            return true;
+        }
+
+        return false;
     }
-
-    return false;
 }
 
