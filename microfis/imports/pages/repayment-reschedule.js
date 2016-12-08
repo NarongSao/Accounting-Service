@@ -73,14 +73,14 @@ formTmpl.onCreated(function () {
             var dobSelect = repaidDate;
 
             var startYear = moment(dobSelect).year();
-            var startDate = moment('01/01/' + startYear,"DD/MM/YYYY").toDate();
+            var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
             Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
                 if (result != undefined) {
                     Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
                 } else {
                     Session.set('lastVoucherId', "000001");
                 }
-                stateRepayment.set("isVoucherId",false);
+                stateRepayment.set("isVoucherId", false);
             });
         }
 
@@ -112,7 +112,10 @@ formTmpl.onCreated(function () {
                     Session.set('maxAmountPaid', result.principalInstallment.principalReminder - Session.get('minAmountPaid'));
                     Session.set('maxPenaltyPaid', result.principalInstallment.interestAddition);
                 }
-
+                // Set last repayment
+                if (result.lastRepayment) {
+                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                }
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();

@@ -141,9 +141,9 @@ Repayment.after.insert(function (userId, doc) {
 
 
                         if (doc.type == "General") {
-                            savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : 0;
+                            savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
                         } else if (doc.type = "Close") {
-                            savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue ? doc.detailDoc.closing.totalDue : 0;
+                            savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue<= savingWithdrawal.principalOpening ? doc.detailDoc.closing.totalDue : savingWithdrawal.principalOpening;
                         }
 
                         // Cal principal, interest bal
