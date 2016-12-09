@@ -8,6 +8,7 @@ import {LoanAcc} from '../../common/collections/loan-acc';
 import {Repayment} from '../../common/collections/repayment.js';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 import {SavingTransaction} from '../../common/collections/saving-transaction.js';
+import {SavingAcc} from '../../common/collections/saving-acc.js';
 
 // Method
 
@@ -68,7 +69,7 @@ Repayment.after.insert(function (userId, doc) {
                                 updatePay.isPay = true;
                                 updatePay.isFullPay = true;
                             } else {
-                                updatePay.isPay = true;
+                                updatePay.isPay = false;
                                 updatePay.isFullPay = false;
                             }
 
@@ -83,6 +84,10 @@ Repayment.after.insert(function (userId, doc) {
                                 },
                                 $push: {'repaymentDoc.detail': o},
                                 $set: updatePay
+                            },function (err) {
+                                if(err){
+                                    console.log(err);
+                                }
                             });
                         });
                     }
@@ -121,7 +126,11 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanDeposit.transactionType = 'LD';
                         savingLoanDeposit.details = savingDeposit;
 
-                        SavingTransaction.insert(savingLoanDeposit);
+                        SavingTransaction.insert(savingLoanDeposit,function (err) {
+                            if(err){
+                                console.log(err);
+                            }
+                        });
                     }
 
 
@@ -143,7 +152,7 @@ Repayment.after.insert(function (userId, doc) {
                         if (doc.type == "General") {
                             savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
                         } else if (doc.type = "Close") {
-                            savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue<= savingWithdrawal.principalOpening ? doc.detailDoc.closing.totalDue : savingWithdrawal.principalOpening;
+                            savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue <= savingWithdrawal.principalOpening ? doc.detailDoc.closing.totalDue : savingWithdrawal.principalOpening;
                         }
 
                         // Cal principal, interest bal
@@ -163,7 +172,11 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanWithdrawal.transactionType = 'LR';
                         savingLoanWithdrawal.details = savingWithdrawal;
 
-                        SavingTransaction.insert(savingLoanWithdrawal);
+                        SavingTransaction.insert(savingLoanWithdrawal, function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
                     }
                 }
             }
@@ -173,15 +186,14 @@ Repayment.after.insert(function (userId, doc) {
                     if (doc.detailDoc.schedulePaid) {
                         let schedulePaid = doc.detailDoc.schedulePaid;
 
-
                         _.forEach(schedulePaid, (o) => {
 
                             let updatePay = {};
                             if (o.totalPrincipalInterestBal == 0) {
-                                updatePay.isPay = true;
+                                updatePay.isPay = false;
                                 updatePay.isFullPay = true;
                             } else {
-                                updatePay.isPay = true;
+                                updatePay.isPay = false;
                                 updatePay.isFullPay = false;
                             }
 
@@ -189,6 +201,10 @@ Repayment.after.insert(function (userId, doc) {
 
                             RepaymentSchedule.update({_id: o.scheduleId}, {
                                 $set: updatePay
+                            }, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
                             });
                         });
                     }
@@ -221,7 +237,11 @@ Repayment.after.insert(function (userId, doc) {
                             savingLoanDeposit.transactionType = 'LD';
                             savingLoanDeposit.details = savingDeposit;
 
-                            SavingTransaction.insert(savingLoanDeposit);
+                            SavingTransaction.insert(savingLoanDeposit, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
                         }
                     }
 
@@ -268,7 +288,11 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanDeposit.transactionType = 'LD';
                         savingLoanDeposit.details = savingDeposit;
 
-                        SavingTransaction.insert(savingLoanDeposit);
+                        SavingTransaction.insert(savingLoanDeposit,function (err) {
+                            if(err){
+                                console.log(err);
+                            }
+                        });
                     }
 
 
@@ -307,7 +331,11 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanWithdrawal.transactionType = 'LR';
                         savingLoanWithdrawal.details = savingWithdrawal;
 
-                        SavingTransaction.insert(savingLoanWithdrawal);
+                        SavingTransaction.insert(savingLoanWithdrawal,function (err) {
+                            if(err){
+                                console.log(err);
+                            }
+                        });
                     }
                 }
             }
@@ -318,7 +346,11 @@ Repayment.after.insert(function (userId, doc) {
             // Update loan acc for close type
             if (doc.type == 'Close') {
                 // Set close status on loan acc
-                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {closeDate: doc.repaidDate, status: "Close"}});
+                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {closeDate: doc.repaidDate, status: "Close"}},function (err) {
+                    if(err){
+                        console.log(err);
+                    }
+                });
             }
 
 
@@ -397,14 +429,26 @@ Repayment.after.insert(function (userId, doc) {
                 savingLoanWithdrawal.transactionType = 'LR';
                 savingLoanWithdrawal.details = savingWithdrawal;
 
-                SavingTransaction.insert(savingLoanWithdrawal);
+                SavingTransaction.insert(savingLoanWithdrawal,function (err) {
+                    if(err){
+                        console.log(err);
+                    }
+                });
             }
         }
 
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: doc.amountPaid}});
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: doc.amountPaid}},function (err) {
+            if(err){
+                console.log(err);
+            }
+        });
     }
 
-    LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}});
+    LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}},function (err) {
+        if(err){
+            console.log(err);
+        }
+    });
 
 })
 ;
@@ -457,12 +501,16 @@ Repayment.after.remove(function (userId, doc) {
                                 },
                                 $pull: {'repaymentDoc.detail': {repaymentId: doc._id}},
                                 $set: {isPay: false, isFullPay: false}
+                            },function (err) {
+                                if(err){
+                                    console.log(err);
+                                }
                             });
                         });
                     }
                 }
 
-                SavingTransaction.remove({paymentId: doc._id});
+
             } else if (doc.type == "Prepay") {
                 if (doc.detailDoc) {
                     if (doc.detailDoc.schedulePaid) {
@@ -472,21 +520,22 @@ Repayment.after.remove(function (userId, doc) {
 
                             RepaymentSchedule.update({_id: o.scheduleId}, {
                                 $set: {isPay: false, isFullPay: false, isPrePay: false}
+                            },function (err) {
+                                if(err){
+                                    console.log(err);
+                                }
                             });
                         });
                     }
                 }
-                SavingTransaction.remove({paymentId: doc._id});
             } else if (["Reschedule", "Write Off"].includes(doc.type) == true) {
 
                 if (doc.type == "Reschedule") {
                     RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
                 }
 
-                SavingTransaction.remove({paymentId: doc._id});
             }
             //End Saving Link
-
 
             // Update loan acc for close type
             if (doc.type == 'Close') {
@@ -503,11 +552,20 @@ Repayment.after.remove(function (userId, doc) {
             }
         });
     } else {
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: 0}});
-        SavingTransaction.remove({paymentId: doc._id});
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: 0}},function (err) {
+            if(err){
+                console.log(err);
+            }
+        });
+
 
     }
+
     LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}});
+    SavingTransaction.remove({paymentId: doc._id});
+    let countSaving = SavingTransaction.find({savingAccId: doc.savingAccId}).count();
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$set: {savingNumber: countSaving}});
+
 
 });
 

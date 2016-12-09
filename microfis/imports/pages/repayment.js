@@ -482,7 +482,7 @@ scheduleDetailTmpl.helpers({
                 } else if (lastStatus.status == 'Partial') {
                     className = 'warning';
                 }
-            } else if (item.isPay == true) {
+            } else if (item.isPrePay == true) {
                 className = 'danger';
             }
         }
