@@ -132,7 +132,8 @@ SavingTransaction.generalSchema = new SimpleSchema({
     },
     endId: {
         type: String,
-        optional: true
+        optional: true,
+        defaultValue: "0"
     }
 });
 
