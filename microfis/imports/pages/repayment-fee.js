@@ -79,7 +79,7 @@ formTmpl.onCreated(function () {
                 } else {
                     Session.set('lastVoucherId', "000001");
                 }
-                stateRepayment.set("isVoucherId",false);
+                stateRepayment.set("isVoucherId", false);
             });
         }
 
@@ -167,6 +167,12 @@ formTmpl.helpers({
     },
     voucherId(){
         return Session.get('lastVoucherId');
+    },
+    feeDate(){
+        let loanDoc = stateRepayment.get('loanAccDoc');
+        if (loanDoc) {
+            return loanDoc.disbursementDate;
+        }
     }
 });
 

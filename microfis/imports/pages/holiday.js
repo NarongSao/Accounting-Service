@@ -31,6 +31,7 @@ let indexTmpl = Template.Microfis_holiday,
     showTmpl = Template.Microfis_holidayShow;
 
 
+let stateHoliday = new ReactiveObj();
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -98,12 +99,26 @@ indexTmpl.events({
 newTmpl.helpers({
     collection(){
         return Holiday;
+    },
+    dateVal(){
+        return stateHoliday.get("dateVal");
     }
 });
 
+newTmpl.onRendered(function () {
+    let dateFrom = $('[name="from"]');
+    if (dateFrom) {
+        dateFrom.on("dp.change", function (e) {
+            stateHoliday.set('dateVal', moment(e.date).toDate());
+        })
+    }
+
+})
+
+
 // Edit
 editTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         this.subscribe('microfis.holiday', {_id: this.data._id});
     });
 });
@@ -120,7 +135,7 @@ editTmpl.helpers({
 
 // Show
 showTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         this.subscribe('microfis.holiday', {_id: this.data._id});
     });
 });

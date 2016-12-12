@@ -90,7 +90,7 @@ function _makeSchedule(doc) {
         projectInterest += value.interestDue;
 
         if (key == schedule.length - 1) {
-            maturityDate = moment(value.dueDate, "DD/MM/YYYY").toDate();
+            maturityDate = value.dueDate;
         }
 
         // Save to repayment schedule collection
@@ -101,6 +101,8 @@ function _makeSchedule(doc) {
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;
 
+
+        console.log(value);
 
         RepaymentSchedule.insert(value);
     });

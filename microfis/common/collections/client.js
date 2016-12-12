@@ -174,6 +174,11 @@ Client.idTypeSchema = new SimpleSchema({
                 }
             }
         }
+    },
+    uniqueByCondition: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 });
 

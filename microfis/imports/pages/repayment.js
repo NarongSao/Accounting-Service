@@ -119,6 +119,9 @@ indexTmpl.onCreated(function () {
             }).then(function (result) {
                 // Set state
                 stateRepayment.set('checkRepayment', result);
+
+                stateRepayment.set('lastTransactionDate',result.lastRepayment.repaidDate);
+
                 Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);

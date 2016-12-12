@@ -9,8 +9,8 @@ export const Holiday = new Mongo.Collection("microfis_holiday");
 Holiday.schema = new SimpleSchema({
     from: {
         type: Date,
-        label:'From',
-        defaultValue: moment().to(),
+        label: 'From',
+        defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
                 type: 'bootstrap-datetimepicker',
@@ -23,8 +23,8 @@ Holiday.schema = new SimpleSchema({
     },
     to: {
         type: Date,
-        label:'To',
-        defaultValue: moment().to(),
+        label: 'To',
+        defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
                 type: 'bootstrap-datetimepicker',
@@ -45,7 +45,7 @@ Holiday.schema = new SimpleSchema({
     },
     name: {
         type: String,
-        label:'Name',
+        label: 'Name',
         max: 250
     }
 });

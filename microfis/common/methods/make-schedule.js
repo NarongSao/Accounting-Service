@@ -40,6 +40,11 @@ MakeSchedule.declinig = new ValidatedMethod({
                 loanAccDoc = lookupLoanAcc.call({_id: loanAccId}),
                 principalInstallmentDoc = loanAccDoc.principalInstallment;
 
+            // if (loanAccDoc.firstRepaymentDate) {
+            //     loanAccDoc.firstRepaymentDate = moment(loanAccDoc.firstRepaymentDate).toDate();
+            //
+            // }
+
             // Overried loan account
             if (options != null) {
                 loanAccDoc.disbursementDate = options.disbursementDate;
@@ -49,6 +54,10 @@ MakeSchedule.declinig = new ValidatedMethod({
                 loanAccDoc.installmentAllowClosing = options.installmentAllowClosing;
 
             }
+            // if (loanAccDoc.disbursementDate) {
+            //     loanAccDoc.disbursementDate = moment(loanAccDoc.disbursementDate).toDate();
+            // }
+            //
 
             // Declare default value
             let schedules = [];
@@ -112,7 +121,7 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = moment(loanAccDoc.firstRepaymentDate, "DD/MM/YYYY").toDate();
+                    dueDate = moment(loanAccDoc.firstRepaymentDate).toDate();
                 }
 
 
@@ -331,7 +340,8 @@ function findDueDate(opts) {
     }).validate(opts);
 
     if (!this.isSimulation) {
-        let dueDate = moment(opts.previousDate).add(opts.repaidFrequency, opts.addingTime).toDate();
+        let dueDate = moment(opts.previousDate).startOf('day').add(opts.repaidFrequency, opts.addingTime).toDate();
+        // let dueDate = moment(opts.previousDate).startOf('days').add(opts.repaidFrequency, opts.addingTime).toDate();
         // let dueDate = moment(opts.disbursementDate).add(opts.repaidFrequency * opts.installment, opts.addingTime).toDate();
 
         // Check due date on
@@ -366,7 +376,6 @@ function findDueDate(opts) {
                         escapeDayMethod: opts.escapeDayMethod
                     });
                 }
-
 
 
                 return getDoEscapeDay;
@@ -420,7 +429,7 @@ function _doEscapeDayWithFrequency(date, opts) {
                 break;
         }
 
-        let tmpEscapeDay, tmpDate = moment(date, "DD/MM/YYYY").toDate();
+        let tmpEscapeDay, tmpDate = moment(date).toDate();
         let startOf = moment(date).startOf(startOrEndOf);
         let endOf = moment(date).endOf(startOrEndOf);
 
