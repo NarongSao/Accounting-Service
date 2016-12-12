@@ -86,7 +86,6 @@ formTmpl.onCreated(function () {
             stateRepayment.set('curData', currentData);
 
             if (currentData) {
-                stateRepayment.set('lastTransactionDate', currentData.disbursementDate);
                 this.subscribe('microfis.loanAccById', loanAccDoc._id);
             }
 
@@ -162,6 +161,7 @@ formTmpl.events({
             $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
         }
     }
+
 })
 
 

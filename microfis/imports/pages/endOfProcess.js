@@ -145,6 +145,7 @@ newTmpl.onDestroyed(function () {
 // Hook
 let hooksObject = {
     onSuccess: function (formType, result) {
+
         Session.set('isSuccess', true)
         alertify.endOfProcess().close();
         alertify.success('Success');

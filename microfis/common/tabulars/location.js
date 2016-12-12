@@ -37,6 +37,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {data: "name", title: "Name"},
+        {data: "khName", title: "KH Name"},
         {
             data: "type",
             title: "Type",

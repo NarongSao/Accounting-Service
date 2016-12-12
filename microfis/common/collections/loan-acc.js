@@ -567,8 +567,13 @@ LoanAcc.repaymentSchema = new SimpleSchema({
                         let prefix = state.get('currencySymbol');
                         let min = state.get('minPrincipalInstallmentAmount');
                         let max = state.get('maxPrincipalInstallmentAmount');
+                        let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType');
 
-                        return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
+                        if(calculateType=="P"){
+                            return '1 - 100 %';
+                        }else {
+                            return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
+                        }
                     }
                 },
                 inputmaskOptions: function () {

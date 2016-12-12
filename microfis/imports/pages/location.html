@@ -37,6 +37,7 @@
                         {{/if}}
                         {{> afQuickField name='code'}}
                         {{> afQuickField name='name'}}
+                        {{> afQuickField name='khName'}}
                     </div>
                 </div>
 
@@ -60,6 +61,8 @@
                     <dd>{{code}}</dd>
                     <dt>Name</dt>
                     <dd>{{name}}</dd>
+                    <dt>KH Name</dt>
+                    <dd>{{khName}}</dd>
                     <dt>Ancestors</dt>
                     <dd>{{> jsonView json=ancestorsDoc options=jsonViewOpts}}</dd>
                 </dl>

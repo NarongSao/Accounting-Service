@@ -7,4 +7,4 @@ import 'meteor/theara:collection-cache';
 import {Client} from '../../common/collections/client.js';
 
 Client.cacheTimestamp();
-Client._ensureIndex({idType: 1,idNumber:1}, {unique: 1});
+Client._ensureIndex({idType: 1, idNumber: 1, uniqueByCondition: 1}, {unique: 1});

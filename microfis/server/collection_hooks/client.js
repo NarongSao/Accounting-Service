@@ -6,9 +6,16 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {Client} from '../../common/collections/client.js';
 
 Client.before.insert(function (userId, doc) {
+
+
     let prefix = doc.branchId + '-';
     doc._id = idGenerator2.genWithPrefix(Client, {
         prefix: prefix,
         length: 6
     });
+
+    if (["N", "P", "D"].includes(doc.idType) == false) {
+        doc.uniqueByCondition = doc._id;
+    }
+
 });

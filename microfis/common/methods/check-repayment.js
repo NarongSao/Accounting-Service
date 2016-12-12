@@ -45,7 +45,7 @@ export let checkRepayment = new ValidatedMethod({
             // Get loan acc and schedule
             let lastScheduleDateTemp = RepaymentSchedule.findOne({
                 loanAccId: loanAccId,
-                scheduleDate: {$lte: checkDate}
+                scheduleDate: {$lte: moment(checkDate).endOf("day").toDate()}
             }, {sort: {scheduleDate: -1}});
 
             let lastScheduleDate;

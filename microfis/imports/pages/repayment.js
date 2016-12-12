@@ -119,6 +119,9 @@ indexTmpl.onCreated(function () {
             }).then(function (result) {
                 // Set state
                 stateRepayment.set('checkRepayment', result);
+
+                stateRepayment.set('lastTransactionDate',result.lastRepayment.repaidDate);
+
                 Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
@@ -265,14 +268,18 @@ indexTmpl.helpers({
 indexTmpl.events({
     'click .js-create-payment'(event, instance) {
 
+        stateRepayment.set("isVoucherId",true);
+
         let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment General'), renderTemplate(generalFormTmpl, data));
     },
     'click .js-create-prepay'(event, instance) {
+        stateRepayment.set("isVoucherId",true);
         let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Prepay'), renderTemplate(prepayFormTmpl, data));
     }
     , 'click .js-create-reschedule'(event, instance) {
+        stateRepayment.set("isVoucherId",true);
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -291,6 +298,8 @@ indexTmpl.events({
         alertify.writeOff(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
 
     }, 'click .js-create-write-off'(event, instance) {
+        stateRepayment.set("isVoucherId",true);
+
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -300,6 +309,8 @@ indexTmpl.events({
 
     },
     'click .js-create-close'(event, instance) {
+        stateRepayment.set("isVoucherId",true);
+
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -309,6 +320,8 @@ indexTmpl.events({
     },
 
     'click .js-create-fee'(event, instance) {
+        stateRepayment.set("isVoucherId",true);
+
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -472,7 +485,7 @@ scheduleDetailTmpl.helpers({
                 } else if (lastStatus.status == 'Partial') {
                     className = 'warning';
                 }
-            } else if (item.isPay == true) {
+            } else if (item.isPrePay == true) {
                 className = 'danger';
             }
         }

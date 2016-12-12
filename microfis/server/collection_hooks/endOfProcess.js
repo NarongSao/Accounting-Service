@@ -31,13 +31,13 @@ EndOfProcess.after.insert(function (userId, doc) {
     let selectorPay = {};
     selectorPay.dueDate = {$lte: tDate, $gte: fDate};
     selectorPay.branchId = doc.branchId;
-    /*selectorPay.isPay = true;
-     selectorPay.isPrePay = true;*/
-
-    selectorPay.isFullPay = false;
+    selectorPay.isPay = false;
+    selectorPay.installment = {$gt: 0};
+    /*selectorPay.isPrePay = true;*/
 
     let detailPaid = [];
     let schedulePay = RepaymentSchedule.find(selectorPay).fetch();
+
     schedulePay.forEach(function (obj) {
         let checkPayment = checkRepayment.run({loanAccId: obj.loanAccId, checkDate: doc.closeDate});
 
@@ -52,106 +52,116 @@ EndOfProcess.after.insert(function (userId, doc) {
                 }
             });
 
-            if (math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2) > 0) {
+            if (savingTransaction) {
+                if (math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2) > 0) {
+                    if (checkPayment.totalScheduleDue.totalPrincipalInterestDue < (savingTransaction.details.principalBal + savingTransaction.details.interestBal)) {
+                        amountPaid = math.round(checkPayment.totalScheduleDue.totalPrincipalInterestDue, 2);
+                    } else {
+                        amountPaid = math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2);
+                    }
 
 
-                if (checkPayment.totalScheduleDue.totalPrincipalInterestDue < (savingTransaction.details.principalBal + savingTransaction.details.interestBal)) {
-                    amountPaid = math.round(checkPayment.totalScheduleDue.totalPrincipalInterestDue, 2);
-                } else {
-                    amountPaid = math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2);
-                }
-
-                // console.log(checkPayment);
-                let makeRepayment = MakeRepayment.general({
-                    repaidDate: tDate,
-                    amountPaid: amountPaid,
-                    penaltyPaid: 0,
-                    scheduleDue: checkPayment.scheduleDue,
-                    totalScheduleDue: checkPayment.totalScheduleDue
-                });
+                    let makeRepayment = MakeRepayment.general({
+                        repaidDate: tDate,
+                        amountPaid: amountPaid,
+                        penaltyPaid: 0,
+                        scheduleDue: checkPayment.scheduleDue,
+                        totalScheduleDue: checkPayment.totalScheduleDue
+                    });
 
 
-                //Make Payment To Update Scedule
-                if (makeRepayment) {
-                    if (makeRepayment.schedulePaid) {
-                        let schedulePaid = makeRepayment.schedulePaid;
+                    //Make Payment To Update Scedule
+                    if (makeRepayment) {
+                        if (makeRepayment.schedulePaid) {
+                            let schedulePaid = makeRepayment.schedulePaid;
+                            _.forEach(schedulePaid, (o) => {
+                                let updatePay = {};
+                                if (o.totalPrincipalInterestBal == 0) {
+                                    updatePay.isPay = true;
+                                    updatePay.isFullPay = true;
+                                } else {
+                                    updatePay.isPay = false;
+                                    updatePay.isFullPay = false;
+                                }
 
-                        _.forEach(schedulePaid, (o) => {
-                            let updatePay = {};
-                            if (o.totalPrincipalInterestBal == 0) {
-                                updatePay.isPay = true;
-                                updatePay.isFullPay = true;
-                            } else {
-                                updatePay.isPay = true;
-                                updatePay.isFullPay = false;
-                            }
+                                o.repaymentId = doc._id;
+                                o.endId = doc._id;
 
-                            o.repaymentId = doc._id;
-                            o.endId = doc._id;
+                                RepaymentSchedule.update({_id: o.scheduleId}, {
+                                    $inc: {
+                                        'repaymentDoc.totalPrincipalPaid': o.principalPaid,
+                                        'repaymentDoc.totalInterestPaid': o.interestPaid,
+                                        'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
+                                        'repaymentDoc.totalInterestWaived': o.interestWaived,
+                                    },
+                                    $push: {'repaymentDoc.detail': o},
+                                    $set: updatePay
+                                });
 
-                            RepaymentSchedule.update({_id: o.scheduleId}, {
-                                $inc: {
-                                    'repaymentDoc.totalPrincipalPaid': o.principalPaid,
-                                    'repaymentDoc.totalInterestPaid': o.interestPaid,
-                                    'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
-                                    'repaymentDoc.totalInterestWaived': o.interestWaived,
-                                },
-                                $push: {'repaymentDoc.detail': o},
-                                $set: updatePay
+                                o.isFullPay = obj.isFullPay;
+                                detailPaid.push(o);
+
                             });
 
-                            o.isFullPay = obj.isFullPay;
-                            detailPaid.push(o);
+                        }
+                    }
+
+
+                    //Withdrawal
+                    let savingWithdrawal = checkSavingTransaction.run({
+                        savingAccId: obj.savingAccId,
+                        checkDate: doc.closeDate
+                    })
+
+
+                    let savingLoanWithdrawal = {};
+                    savingLoanWithdrawal.paymentId = savingTransaction.paymentId;
+
+                    if (savingWithdrawal) {
+                        savingLoanWithdrawal.branchId = doc.branchId;
+                        savingLoanWithdrawal.savingAccId = obj.savingAccId;
+                        savingLoanWithdrawal.transactionDate = doc.closeDate;
+                        savingLoanWithdrawal.voucherId = savingTransaction.voucherId;
+                        savingLoanWithdrawal.memo = savingTransaction.note;
+                        savingLoanWithdrawal.currencyId = savingTransaction.currencyId;
+
+
+                        savingLoanWithdrawal.amount = amountPaid;
+
+                        // Cal principal, interest bal
+                        let amount = new BigNumber(savingLoanWithdrawal.amount);
+                        if (amount.lessThanOrEqualTo(savingWithdrawal.interestBal)) {
+                            savingWithdrawal.interestBal = new BigNumber(savingWithdrawal.interestBal).minus(amount).toNumber();
+                            savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).toNumber();
+                        } else {
+                            amount = amount.minus(savingWithdrawal.interestBal);
+                            savingWithdrawal.interestBal = new BigNumber(0).toNumber();
+                            savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).minus(amount).toNumber();
+                        }
+
+                        // Remove last transaction
+                        delete savingWithdrawal.lastTransaction;
+
+                        savingLoanWithdrawal.transactionType = 'LR';
+                        savingLoanWithdrawal.details = savingWithdrawal;
+                        savingLoanWithdrawal.endId = doc._id;
+
+
+                        SavingTransaction.insert(savingLoanWithdrawal, function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
 
                         });
-
-                    }
-                }
-
-
-                //Withdrawal
-                let savingWithdrawal = checkSavingTransaction.run({
-                    savingAccId: obj.savingAccId,
-                    checkDate: doc.closeDate
-                })
-
-                let savingLoanWithdrawal = {};
-                savingLoanWithdrawal.paymentId = savingTransaction.paymentId;
-
-                if (savingWithdrawal) {
-                    savingLoanWithdrawal.branchId = doc.branchId;
-                    savingLoanWithdrawal.savingAccId = obj.savingAccId;
-                    savingLoanWithdrawal.transactionDate = doc.closeDate;
-                    savingLoanWithdrawal.voucherId = savingTransaction.voucherId;
-                    savingLoanWithdrawal.memo = savingTransaction.note;
-                    savingLoanWithdrawal.currencyId = savingTransaction.currencyId;
-
-
-                    savingLoanWithdrawal.amount = amountPaid;
-
-                    // Cal principal, interest bal
-                    let amount = new BigNumber(savingLoanWithdrawal.amount);
-                    if (amount.lessThanOrEqualTo(savingWithdrawal.interestBal)) {
-                        savingWithdrawal.interestBal = new BigNumber(savingWithdrawal.interestBal).minus(amount).toNumber();
-                        savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).toNumber();
-                    } else {
-                        amount = amount.minus(savingWithdrawal.interestBal);
-                        savingWithdrawal.interestBal = new BigNumber(0).toNumber();
-                        savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).minus(amount).toNumber();
                     }
 
-                    // Remove last transaction
-                    delete savingWithdrawal.lastTransaction;
+                    Repayment.direct.update({_id: savingTransaction.paymentId}, {$set: {endId: doc._id}}, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
 
-                    savingLoanWithdrawal.transactionType = 'LR';
-                    savingLoanWithdrawal.details = savingWithdrawal;
-                    savingLoanWithdrawal.endId = doc._id;
-
-                    SavingTransaction.insert(savingLoanWithdrawal);
                 }
-
-                Repayment.direct.update({_id: savingTransaction.paymentId}, {$set: {endId: doc._id}});
-
             }
 
         }
@@ -159,7 +169,11 @@ EndOfProcess.after.insert(function (userId, doc) {
 
     })
 
-    EndOfProcess.direct.update({_id: doc._id}, {$set: {detailPaid: detailPaid}});
+    EndOfProcess.direct.update({_id: doc._id}, {$set: {detailPaid: detailPaid}}, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
 })
 
 EndOfProcess.after.remove(function (userId, doc) {
@@ -174,10 +188,14 @@ EndOfProcess.after.remove(function (userId, doc) {
                     'repaymentDoc.totalInterestWaived': -o.interestWaived,
                 },
                 $pull: {'repaymentDoc.detail': {endId: doc._id}},
-                $set: {isPay: true, isFullPay: o.isFullPay}
+                $set: {isPay: false, isFullPay: o.isFullPay}
             });
 
-            Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}});
+            Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}}, function (err) {
+                if(err){
+                    console.log(err);
+                }
+            });
         })
     }
 

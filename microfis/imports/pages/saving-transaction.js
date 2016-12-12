@@ -109,7 +109,7 @@ indexTmpl.helpers({
     },
     checkSavingLoan(){
         let data = state.get('savingAccDoc');
-        if (data.productDoc.name == "Saving Loan") {
+        if (data && data.productDoc.name == "Saving Loan") {
             return false;
         }
         return true;

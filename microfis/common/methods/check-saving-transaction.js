@@ -44,7 +44,7 @@ export let checkSavingTransaction = new ValidatedMethod({
                 lastTransaction = SavingTransaction.findOne(
                     {
                         savingAccId: savingAccId,
-                        transactionDate: {$lte: checkDate}
+                        transactionDate: {$lte: moment(checkDate).endOf("day").toDate()}
                     },
                     {sort: {_id: -1}}
                 );

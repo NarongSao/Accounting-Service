@@ -80,6 +80,13 @@ Location.schema = new SimpleSchema({
             type: "textarea"
         }
     },
+    khName: {
+        type: String,
+        label: "KH Name",
+        autoform: {
+            type: "textarea"
+        }
+    },
     ancestors: {
         type: [String],
         optional: true
