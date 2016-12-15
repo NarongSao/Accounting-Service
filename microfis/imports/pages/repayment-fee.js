@@ -118,6 +118,7 @@ formTmpl.onRendered(function () {
 
         $repaidDateObj.on("dp.change", function (e) {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set("isVoucherId", true);
         });
     }
 

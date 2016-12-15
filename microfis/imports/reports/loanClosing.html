@@ -1,7 +1,7 @@
 <!--Form-->
-<template name="Microfis_loanOutstandingReport">
+<template name="Microfis_loanClosingReport">
     <div class="box-body">
-        {{#autoForm schema=schema id="Microfis_loanOutstandingReport" type="normal"}}
+        {{#autoForm schema=schema id="Microfis_loanClosingReport" type="normal"}}
             <div class="panel panel-default report-heading">
                 <div class="panel-heading">
                     <h3 class="panel-title font-head-panel-kh">ចុចទីនេះដើម្បីបង្ហាញ ឬ លាក់ <span
@@ -37,10 +37,10 @@
         {{/autoForm}}
 
         <hr>
-        {{> Microfis_loanOutstandingReportPrintData}}
+        {{> Microfis_loanClosingReportPrintData}}
     </div>
 </template>
-<template name="Microfis_loanOutstandingReportPrintData">
+<template name="Microfis_loanClosingReportPrintData">
     <!--#print-data-->
     <div id="print-data">
         <div class="rpt rpt-3x sub-div">
@@ -54,7 +54,7 @@
                                 <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
                                 <div class="rpt-title-2x">{{company.enName}}</div>
                                 <div>សាខា: {{branch.khName}}</div>
-                                <div class="rpt-title-2x"><u>របាយការណ៍សមតុល្យចុងគ្រា</u></div>
+                                <div class="rpt-title-2x"><u>របាយការណ៍អតិថិជនសងដាច់</u></div>
                                 <div>
                                     <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
                                     <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}

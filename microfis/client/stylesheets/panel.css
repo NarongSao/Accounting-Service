@@ -1,0 +1,17 @@
+.report-heading > .panel-heading {
+    cursor: pointer;
+}
+
+.panel-heading span {
+    margin-top: -20px;
+    font-size: 15px;
+}
+
+.font-head-panel-kh{
+    font-family: "Khmer OS Fasthand" ;
+}
+
+.font-head-panel-en{
+    font-family: "Forte" ;
+}
+

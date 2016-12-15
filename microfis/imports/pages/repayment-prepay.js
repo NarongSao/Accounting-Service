@@ -113,7 +113,17 @@ formTmpl.onCreated(function () {
 
                 // Set last repayment
                 if (result.lastRepayment) {
-                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), function (err, endDoc) {
+                        if (endDoc) {
+                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                            } else {
+                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            }
+                        } else {
+                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                        }
+                    })
                 }
 
                 Meteor.setTimeout(()=> {
@@ -142,6 +152,7 @@ formTmpl.onRendered(function () {
         $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
         $repaidDateObj.on("dp.change", function (e) {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set("isVoucherId", true);
         });
     }
 });

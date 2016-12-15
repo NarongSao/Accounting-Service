@@ -31,27 +31,6 @@ Repayment.after.insert(function (userId, doc) {
     if (doc.type != "Fee") {
         Meteor.defer(function () {
 
-            /*if (doc.detailDoc) {
-
-             if (doc.detailDoc.schedulePaid) {
-             let schedulePaid = doc.detailDoc.schedulePaid;
-
-             _.forEach(schedulePaid, (o) => {
-             o.repaymentId = doc._id;
-
-             RepaymentSchedule.update({_id: o.scheduleId}, {
-             $inc: {
-             'repaymentDoc.totalPrincipalPaid': o.principalPaid,
-             'repaymentDoc.totalInterestPaid': o.interestPaid,
-             'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
-             'repaymentDoc.totalInterestWaived': o.interestWaived,
-             },
-             $push: {'repaymentDoc.detail': o}
-             });
-             });
-             }
-             }*/
-
             let loanAcc = LoanAcc.findOne({_id: doc.loanAccId});
             //Saving Link
             if (["General", "Close"].includes(doc.type) == true) {
@@ -595,14 +574,17 @@ function _makeScheduleForPrincipalInstallment(doc) {
     _.forEach(schedule, (value, key) => {
         tenor += value.numOfDay;
         if (key == schedule.length - 1) {
-            maturityDate = value.dueDate;
+            maturityDate = moment(value.dueDate).startOf("day").toDate();
         }
 
         // Save to repayment schedule collection
-        value.scheduleDate = doc.repaidDate;
+        value.scheduleDate = moment(doc.repaidDate).startOf("day").toDate();
+        value.dueDate= moment(val.dueDate).startOf("day").toDate();
         value.loanAccId = doc.loanAccId;
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;
+
+
         RepaymentSchedule.insert(value);
     });
 

@@ -53,9 +53,12 @@ export let checkRepayment = new ValidatedMethod({
             if (lastScheduleDateTemp != undefined) {
                 lastScheduleDate = lastScheduleDateTemp.scheduleDate;
             } else {
-                let lastScheduleDate = RepaymentSchedule.findOne({
+                let repaymentDoc = RepaymentSchedule.findOne({
                     loanAccId: loanAccId,
                 }, {sort: {scheduleDate: 1}}).scheduleDate;
+                if (repaymentDoc) {
+                    lastScheduleDate = repaymentDoc.scheduleDate;
+                }
             }
 
             let loanAccDoc = {};
@@ -133,7 +136,7 @@ export let checkRepayment = new ValidatedMethod({
                                 method: 'D',
                                 currencyId: loanAccDoc.currencyId
                             });
-                        }else {
+                        } else {
                             if (loanAccDoc.currencyId == "KHR") {
                                 penaltyDue = penaltyDoc.amount * numOfDayLate * loanAccDoc.productDoc.exchange.KHR;
 

@@ -569,9 +569,9 @@ LoanAcc.repaymentSchema = new SimpleSchema({
                         let max = state.get('maxPrincipalInstallmentAmount');
                         let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType');
 
-                        if(calculateType=="P"){
+                        if (calculateType == "P") {
                             return '1 - 100 %';
-                        }else {
+                        } else {
                             return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
                         }
                     }
@@ -951,6 +951,11 @@ LoanAcc.reStructure = new SimpleSchema({
             }
         }
     },
+    currencyId: {
+        type: String,
+        label: 'Currency',
+        optional: true
+    },
     term: {
         type: Number,
         label: 'Term',
@@ -1002,10 +1007,6 @@ LoanAcc.reStructure = new SimpleSchema({
                 options: function () {
                     if (Meteor.isClient) {
                         let term = AutoForm.getFieldValue('term');
-                        let repaidFrequency = AutoForm.getFieldValue('repaidFrequency')
-                        if (repaidFrequency) {
-                            term = math.round(term / repaidFrequency, 0);
-                        }
 
                         if (term) {
                             let list = [];
@@ -1085,11 +1086,28 @@ LoanAcc.reStructure = new SimpleSchema({
             afFieldInput: {
                 placeholder: function () {
                     if (Meteor.isClient) {
-                        let prefix = state.get('currencySymbol');
+                        let currencyId = AutoForm.getFieldValue('currencyId');
+                        let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType');
+                        console.log(currencyId);
+                        let prefix = "";
+                        if (currencyId == 'KHR') {
+                            prefix = '៛ ';
+                        } else if (currencyId == 'USD') {
+                            prefix = '$ ';
+                        } else if (currencyId == 'THB') {
+                            prefix = 'B ';
+                        }
+
+                        state.set('currencySymbol', prefix);
+
                         let min = state.get('minPrincipalInstallmentAmount');
                         let max = state.get('maxPrincipalInstallmentAmount');
+                        if (calculateType == "P") {
+                            return '1 - 100 %';
+                        } else {
+                            return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
+                        }
 
-                        return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
                     }
                 },
                 inputmaskOptions: function () {
@@ -1105,27 +1123,7 @@ LoanAcc.reStructure = new SimpleSchema({
                 }
             }
         }
-        // autoform: {
-        //     type: 'select',
-        //     afFieldInput: {
-        //         options: function () {
-        //             let list = [];
-        //             let term = AutoForm.getFieldValue('term');
-        //             let principalInstallmentFrequency = AutoForm.getFieldValue('principalInstallmentFrequency');
-        //
-        //             if (term == principalInstallmentFrequency) {
-        //                 list.push({label: '100', value: 100});
-        //             } else {
-        //                 let installment = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-        //                 _.forEach(installment, (value)=> {
-        //                     list.push({label: `${value}`, value: value});
-        //                 })
-        //             }
-        //
-        //             return list;
-        //         }
-        //     }
-        // }
+
     },
     firstRepaymentDate: {
         type: Date,

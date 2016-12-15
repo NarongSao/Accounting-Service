@@ -87,7 +87,7 @@ indexTmpl.events({
         var id = this._id;
         let self = this;
 
-        Meteor.call("microfis_getLastEndOfProcess", function (err, result) {
+        Meteor.call("microfis_getLastEndOfProcess", self.branchId, function (err, result) {
             if (result) {
                 stateEndOfProcess.set("closeDate", result.closeDate);
             }
@@ -129,8 +129,10 @@ newTmpl.events({
     'click [name="closeDate"]'(e, t){
         let $closeDate = $('[name="closeDate"]');
         if (stateEndOfProcess.get("closeDate")) {
+            // $closeDate.data("DateTimePicker").maxDate(moment().startOf('day').toDate());
             $closeDate.data("DateTimePicker").minDate(moment(stateEndOfProcess.get("closeDate")).add(1, 'days').startOf('day').toDate());
         } else {
+            // $closeDate.data("DateTimePicker").maxDate(moment().startOf('day').toDate());
             $closeDate.data("DateTimePicker").minDate(moment().add(-200, 'years').startOf('day').toDate());
 
         }
@@ -145,6 +147,7 @@ newTmpl.onDestroyed(function () {
 // Hook
 let hooksObject = {
     onSuccess: function (formType, result) {
+
 
         Session.set('isSuccess', true)
         alertify.endOfProcess().close();

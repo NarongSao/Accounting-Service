@@ -560,9 +560,19 @@ minimist@0.0.8:
   dependencies:
     minimist "0.0.8"
 
+moment-timezone:
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.10.tgz#3766249c2d317d08f07d896d3033c26f87c4ae2b"
+  dependencies:
+    moment ">= 2.6.0"
+
 moment@^2.10.6, moment@^2.15.2:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.16.0.tgz#f38f2c97c9889b0ee18fc6cc392e1e443ad2da8e"
+
+"moment@>= 2.6.0":
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
 
 money@^0.2.0:
   version "0.2.0"

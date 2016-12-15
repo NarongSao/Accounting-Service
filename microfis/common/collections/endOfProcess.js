@@ -10,6 +10,7 @@ EndOfProcess.schema = new SimpleSchema({
     closeDate: {
         type: Date,
         label: "Date",
+
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
@@ -21,19 +22,19 @@ EndOfProcess.schema = new SimpleSchema({
             }
         }
     },
-    branchId:{
+    branchId: {
         type: String,
         label: "Branch"
     },
-    month:{
+    month: {
         type: String,
         optional: true
     },
-    year:{
+    year: {
         type: String,
         optional: true
     },
-    day:{
+    day: {
         type: String,
         optional: true
     },

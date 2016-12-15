@@ -37,7 +37,7 @@ SavingTransaction.after.insert(function (userId, doc) {
 // After remove
 SavingTransaction.after.remove(function (userId, doc) {
     Meteor.defer(function () {
-        let transactionCount = SavingTransaction.find().count();
+        let transactionCount = SavingTransaction.find({savingAccId: doc.savingAccId}).count();
         if (transactionCount == 0) {
             SavingAcc.update({_id: doc.savingAccId}, {
                 $set: {

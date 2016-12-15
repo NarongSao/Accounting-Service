@@ -32,6 +32,7 @@ Exchange.permit(['insert', 'update', 'remove'])
     .core_ifSuperOrAdmin()
     .allowInClientCode();
 
+
 // User
 Meteor.users.permit(['insert', 'update', 'remove'])
     .core_ifSuperOrAdmin()

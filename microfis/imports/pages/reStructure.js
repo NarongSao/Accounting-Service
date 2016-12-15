@@ -100,7 +100,17 @@ formTmpl.onCreated(function () {
                 stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
                 // Set last repayment
                 if (result.lastRepayment) {
-                    state.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), function (err, endDoc) {
+                        if (endDoc) {
+                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                            } else {
+                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            }
+                        } else {
+                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                        }
+                    })
                 }
 
 
@@ -141,14 +151,18 @@ formTmpl.onRendered(function () {
 });
 
 formTmpl.helpers({
-
     schema() {
         return LoanAcc.reStructure;
     },
     balanceUnPaid() {
         return stateRepayment.get('balanceUnPaid');
+    },
+    currencyId(){
+        let loanDoc = stateRepayment.get('loanAccDoc');
+        if (loanDoc) {
+            return loanDoc.currencyId;
+        }
     }
-
 });
 
 formTmpl.events({

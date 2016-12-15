@@ -25,11 +25,11 @@ EndOfProcess.before.insert(function (userId, doc) {
 
 EndOfProcess.after.insert(function (userId, doc) {
 
-    let fDate = moment(doc.closeDate).startOf('day').toDate();
     let tDate = moment(doc.closeDate).endOf('day').toDate();
-
+    console.log(moment.tz.guess());
+    console.log(moment(doc.closeDate).endOf('day').toDate());
     let selectorPay = {};
-    selectorPay.dueDate = {$lte: tDate, $gte: fDate};
+    selectorPay.dueDate = {$lte: tDate};
     selectorPay.branchId = doc.branchId;
     selectorPay.isPay = false;
     selectorPay.installment = {$gt: 0};
@@ -41,8 +41,7 @@ EndOfProcess.after.insert(function (userId, doc) {
     schedulePay.forEach(function (obj) {
         let checkPayment = checkRepayment.run({loanAccId: obj.loanAccId, checkDate: doc.closeDate});
 
-        let checkBeforePayment = checkPayment && checkPayment.scheduleNext.length > 0;
-        if (checkBeforePayment) {
+        if (checkPayment) {
 
             let amountPaid = 0;
             let savingTransaction = SavingTransaction.findOne({savingAccId: obj.savingAccId}, {
@@ -51,7 +50,8 @@ EndOfProcess.after.insert(function (userId, doc) {
                     transactionDate: -1
                 }
             });
-
+            console.log("Saving Transaction");
+            console.log(savingTransaction);
             if (savingTransaction) {
                 if (math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2) > 0) {
                     if (checkPayment.totalScheduleDue.totalPrincipalInterestDue < (savingTransaction.details.principalBal + savingTransaction.details.interestBal)) {
@@ -69,6 +69,8 @@ EndOfProcess.after.insert(function (userId, doc) {
                         totalScheduleDue: checkPayment.totalScheduleDue
                     });
 
+                    console.log("Make Payment");
+                    console.log(makeRepayment);
 
                     //Make Payment To Update Scedule
                     if (makeRepayment) {
@@ -180,6 +182,7 @@ EndOfProcess.after.remove(function (userId, doc) {
 
     if (doc.detailPaid) {
         doc.detailPaid.forEach(function (o) {
+            console.log(o);
             RepaymentSchedule.update({_id: o.scheduleId}, {
                 $inc: {
                     'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
@@ -192,7 +195,7 @@ EndOfProcess.after.remove(function (userId, doc) {
             });
 
             Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}}, function (err) {
-                if(err){
+                if (err) {
                     console.log(err);
                 }
             });

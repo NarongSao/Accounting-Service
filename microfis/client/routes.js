@@ -271,7 +271,7 @@ MicrofisRoutes.route('/client-acc/:clientId', {
 
 // Repayment
 import '../imports/pages/repayment.js';
-MicrofisRoutes.route('/repayment/:clientId/:loanAccId', {
+MicrofisRoutes.route('/repayment/:clientId/:loanAccId/:savingAccId/', {
     name: 'microfis.repayment',
     title: 'Loan',
     subscriptions: function (params, queryParams) {

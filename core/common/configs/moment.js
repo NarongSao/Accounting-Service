@@ -2,7 +2,15 @@ import {Meteor} from 'meteor/meteor';
 import {moment} from 'meteor/momentjs:moment';
 
 Meteor.startup(function () {
-    moment.tz.setDefault("Asia/Bangkok");
+
+    // moment.tz.setDefault("Asia/Bangkok");
+    let timezone = "";
+
+    timezone = moment.tz.guess();
+    console.log(timezone);
+    moment.tz.setDefault(timezone);
+
+
     moment.updateLocale('en', {
         week: {
             dow: 1, // Monday is the first day of the week.
