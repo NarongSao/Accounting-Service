@@ -18,18 +18,18 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {loanOutstandingReport} from '../../common/methods/reports/loan-outstanding.js';
+import {collectionSheetReport} from '../../common/methods/reports/collectionSheet.js';
 import {SelectOptMethods} from '../../common/methods/select-opts.js';
 
 // Schema
-import {LoanOutstandingSchema} from '../../common/collections/reports/loan-outstanding.js';
+import {CollectionSheetSchema} from '../../common/collections/reports/collectionSheet.js';
 
 // Page
-import './loan-outstanding.html';
+import './collectionSheet.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_loanOutstandingReport,
-    tmplPrintData = Template.Microfis_loanOutstandingReportPrintData;
+let indexTmpl = Template.Microfis_collectionSheetReport,
+    tmplPrintData = Template.Microfis_collectionSheetReportPrintData;
 // Form state
 let formDataState = new ReactiveVar(null);
 
@@ -38,7 +38,7 @@ let formDataState = new ReactiveVar(null);
 let rptInitState = new ReactiveVar(false);
 let rptDataState = new ReactiveVar(null);
 indexTmpl.onCreated(function () {
-    createNewAlertify('Microfis_loanOutstandingReport');
+    createNewAlertify('Microfis_collectionSheetReport');
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
@@ -47,7 +47,7 @@ indexTmpl.onCreated(function () {
 
             let params = formDataState.get();
 
-            loanOutstandingReport.callPromise({params: params})
+            collectionSheetReport.callPromise({params: params})
                 .then((result) => {
                     rptDataState.set(result);
                 }).catch((err) => {
@@ -75,7 +75,7 @@ tmplPrintData.helpers({
 
 indexTmpl.helpers({
     schema(){
-        return LoanOutstandingSchema;
+        return CollectionSheetSchema;
     },
     khNameForPaymentMethod(paymentMethod){
         let khName;
@@ -152,7 +152,7 @@ indexTmpl.events({
         $('.sub-body').addClass('rpt rpt-3x ');
         $('.sub-header').addClass('rpt rpt-3x');
 
-        alertify.Microfis_loanOutstandingReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
+        alertify.Microfis_collectionSheetReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     },
     'click .btn-print'(event, instance){
         let opts = {
@@ -260,4 +260,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('Microfis_loanOutstandingReport', hooksObject);
+AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);

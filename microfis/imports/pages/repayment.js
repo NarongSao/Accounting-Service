@@ -41,6 +41,7 @@ import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js'
 // Tabular
 import {RepaymentTabular} from '../../common/tabulars/repayment.js';
 import {LoanAccRestructureTabular} from '../../common/tabulars/loan-acc-restructure.js';
+import {SavingTransactionTabular} from '../../common/tabulars/saving-transaction.js';
 
 
 // Page
@@ -103,6 +104,7 @@ indexTmpl.onCreated(function () {
                 stateRepayment.set('loanAccDoc', result);
                 stateRepayment.set('lastTransactionDate', result.disbursementDate);
                 stateRepayment.set("feeAmount", result.feeAmount);
+                stateRepayment.set("isChargFee", result.feeDoc.amount);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -120,7 +122,7 @@ indexTmpl.onCreated(function () {
                 // Set state
                 stateRepayment.set('checkRepayment', result);
 
-                stateRepayment.set('lastTransactionDate',result.lastRepayment.repaidDate);
+                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -171,6 +173,14 @@ indexTmpl.helpers({
         let selector = {parentId: FlowRouter.getParam('loanAccId')};
         return {
             tabularTable: LoanAccRestructureTabular,
+            selector: selector
+        };
+    },
+    tabularSavingTransaction() {
+        debugger;
+        let selector = {savingAccId: FlowRouter.getParam('savingAccId')};
+        return {
+            tabularTable: SavingTransactionTabular,
             selector: selector
         };
     },
@@ -253,7 +263,7 @@ indexTmpl.helpers({
         let isFee = false;
         let isOther = true;
 
-        if (stateRepayment.get("feeAmount") == 0) {
+        if (stateRepayment.get("feeAmount") == 0 && stateRepayment.get("isChargFee") > 0 && stateRepayment.get('loanAccDoc').parentId == "0") {
             isFee = true;
             isOther = false;
         } else {
@@ -267,19 +277,20 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create-payment'(event, instance) {
-
-        stateRepayment.set("isVoucherId",true);
+        stateRepayment.set("isVoucherId", true);
 
         let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Repayment General'), renderTemplate(generalFormTmpl, data));
     },
     'click .js-create-prepay'(event, instance) {
-        stateRepayment.set("isVoucherId",true);
+
+        stateRepayment.set("isVoucherId", true);
         let data = {loanAccDoc: stateRepayment.get('loanAccDoc'),};
         alertify.repayment(fa('plus', 'Prepay'), renderTemplate(prepayFormTmpl, data));
     }
     , 'click .js-create-reschedule'(event, instance) {
-        stateRepayment.set("isVoucherId",true);
+
+        stateRepayment.set("isVoucherId", true);
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -290,6 +301,7 @@ indexTmpl.events({
     'click .js-create-waive-interest'(event, instance) {
     },
     'click .js-create-write-off-ensure'(event, instance) {
+
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -298,7 +310,8 @@ indexTmpl.events({
         alertify.writeOff(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
 
     }, 'click .js-create-write-off'(event, instance) {
-        stateRepayment.set("isVoucherId",true);
+
+        stateRepayment.set("isVoucherId", true);
 
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
@@ -309,7 +322,7 @@ indexTmpl.events({
 
     },
     'click .js-create-close'(event, instance) {
-        stateRepayment.set("isVoucherId",true);
+        stateRepayment.set("isVoucherId", true);
 
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
@@ -320,7 +333,7 @@ indexTmpl.events({
     },
 
     'click .js-create-fee'(event, instance) {
-        stateRepayment.set("isVoucherId",true);
+        stateRepayment.set("isVoucherId", true);
 
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
@@ -331,8 +344,8 @@ indexTmpl.events({
     },
 
     'click .js-reStructure' (event, instance) {
-        // $.blockUI();
 
+        // $.blockUI();
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),
@@ -402,6 +415,20 @@ indexTmpl.events({
                                 if (self.type == "Fee") {
                                     stateRepayment.set("feeAmount", 0);
                                 }
+
+
+                                checkRepayment.callPromise({
+                                    loanAccId: stateRepayment.get('loanAccDoc')._id,
+                                    checkDate: stateRepayment.get('repaidDate')
+                                }).then(function (result) {
+                                    // Set state
+                                    stateRepayment.set('checkRepayment', result);
+
+                                }).catch(function (err) {
+                                    console.log(err.message);
+                                });
+
+
 
                                 displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
                             }

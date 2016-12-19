@@ -74,7 +74,7 @@ formTmpl.onCreated(function () {
 
             var startYear = moment(dobSelect).year();
             var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
                 if (result != undefined) {
                     Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
                 } else {
@@ -114,7 +114,17 @@ formTmpl.onCreated(function () {
                 }
                 // Set last repayment
                 if (result.lastRepayment) {
-                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), function (err, endDoc) {
+                        if (endDoc) {
+                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                            } else {
+                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            }
+                        } else {
+                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                        }
+                    })
                 }
 
                 Meteor.setTimeout(() => {
@@ -144,6 +154,7 @@ formTmpl.onRendered(function () {
         $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
         $repaidDateObj.on("dp.change", function (e) {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set("isVoucherId", true);
         });
     }
 });
@@ -248,7 +259,6 @@ let hooksObject = {
             }
 
             doc.detailDoc = {};
-            doc.totalPaid = doc.amountPaid;
             doc.detailDoc.scheduleNext = checkRepayment.scheduleNext;
             doc.detailDoc.principalInstallment = checkRepayment.principalInstallment;
 
@@ -257,6 +267,18 @@ let hooksObject = {
     },
     onSuccess(formType, result) {
         alertify.repayment().close();
+
+        checkRepayment.callPromise({
+            loanAccId: stateRepayment.get('loanAccDoc')._id,
+            checkDate: stateRepayment.get('repaidDate')
+        }).then(function (result) {
+            // Set state
+            stateRepayment.set('checkRepayment', result);
+
+        }).catch(function (err) {
+            console.log(err.message);
+        });
+
         displaySuccess();
     },
     onError(formType, error) {

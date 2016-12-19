@@ -90,13 +90,13 @@ function _makeSchedule(doc) {
         projectInterest += value.interestDue;
 
         if (key == schedule.length - 1) {
-            maturityDate = value.dueDate;
+            maturityDate = moment(value.dueDate).startOf("day").toDate();
         }
 
         // Save to repayment schedule collection
 
 
-        value.scheduleDate = moment(doc.disbursementDate, "DD/MM/YYYY").toDate();
+        value.scheduleDate = moment(doc.disbursementDate, "DD/MM/YYYY").startOf("day").toDate();
         value.loanAccId = doc._id;
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;

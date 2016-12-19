@@ -17,8 +17,8 @@ import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepayment} from '../check-repayment.js';
 
-export const loanOutstandingReport = new ValidatedMethod({
-    name: 'microfis.loanOutstandingReport',
+export const loanClosingReport = new ValidatedMethod({
+    name: 'microfis.loanClosingReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         params: {type: Object, optional: true, blackbox: true}
@@ -54,20 +54,20 @@ export const loanOutstandingReport = new ValidatedMethod({
                                     <th>No</th>
                                     <th>LA Code</th>
                                     <th>Clent Name</th>
+                                    <th>Staff Name</th>
                                     <th>CRC</th>
                                     <th>Type</th>
-                                    <th>Dis Date</th>
+                                    <th>Disb Date</th>
                                     <th>Mat Date</th>
+                                    
                                     <th>Loan Amount</th>
-                                    <th>Pro Int</th>
-                                    <th>Classify</th>
-                                    <th>CO</th>
-                                    <th>Vill</th>
-                                    <th>Due Prin</th>
-                                    <th>Due Int</th>
-                                    <th>Total Due</th>
-                                    <th>Loan Out Prin</th>
-                                    <th>Loan Out Int</th>
+                                    <th>Project Interest</th>                                   
+                                    <th>Fin Date</th>                                   
+                                    <th>Sum Loss Interest M</th>                                   
+                                    <th>Sum Collection Prin M</th>                                   
+                                    <th>Total Sum Col M</th>
+                                    <th>Sum Col Pen M</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody class="rpt rpt-3x sub-body">`;
@@ -107,7 +107,7 @@ export const loanOutstandingReport = new ValidatedMethod({
 
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
             selector.disbursementDate = {$lte: dateParam};
-            selector.status = "Active";
+            selector.status = "Close";
 
             //All Active Loan in check date
 
@@ -202,26 +202,18 @@ export const loanOutstandingReport = new ValidatedMethod({
 
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
-            let totalLoanOutPrinKHR = 0;
-            let totalLoanOutIntKHR = 0;
 
 
             let totalDuePrinUSD = 0;
             let totalDueIntUSD = 0;
-            let totalLoanOutPrinUSD = 0;
-            let totalLoanOutIntUSD = 0;
 
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
-            let totalLoanOutPrinTHB = 0;
-            let totalLoanOutIntTHB = 0;
 
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
-            let totalLoanOutPrinBase = 0;
-            let totalLoanOutIntBase = 0;
 
 
             loanDoc.forEach(function (loanAccDoc) {
@@ -232,6 +224,14 @@ export const loanOutstandingReport = new ValidatedMethod({
                     opts: loanAccDoc
                 });
 
+                console.log(result);
+
+
+                if (result.totalScheduleDue.dueDate.from) {
+                    if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
+                        result.totalScheduleDue.dueDate.from = null;
+                    }
+                }
 
                 let finProductStatus = function (obj) {
                     return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
@@ -241,18 +241,13 @@ export const loanOutstandingReport = new ValidatedMethod({
                 if (loanAccDoc.currencyId == "KHR") {
                     totalDuePrinKHR += result.totalScheduleDue.principalDue;
                     totalDueIntKHR += result.totalScheduleDue.interestDue;
-                    totalLoanOutPrinKHR += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-                    totalLoanOutIntKHR += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
+
                 } else if (loanAccDoc.currencyId == "USD") {
                     totalDuePrinUSD += result.totalScheduleDue.principalDue;
                     totalDueIntUSD += result.totalScheduleDue.interestDue;
-                    totalLoanOutPrinUSD += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-                    totalLoanOutIntUSD += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
                 } else if (loanAccDoc.currencyId == "THB") {
                     totalDuePrinTHB += result.totalScheduleDue.principalDue;
                     totalDueIntTHB += result.totalScheduleDue.interestDue;
-                    totalLoanOutPrinTHB += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-                    totalLoanOutIntTHB += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
                 }
 
 
@@ -260,21 +255,23 @@ export const loanOutstandingReport = new ValidatedMethod({
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.locationDoc.name}</td>
+
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
                                 <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
                                 <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
-                                <td> ${proStatus.name}</td>
-                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
-                                <td> ${loanAccDoc.locationDoc.name}</td>
+                          
+                                
+                               
                                 <td> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
                                 <td> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
                                 <td> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue)}</td>
-                            </tr>`;
+                                
+                                <td> ${loanAccDoc.clientDoc.telephone}</td>
+                              </tr>`;
 
                 i++;
             })
@@ -312,75 +309,37 @@ export const loanOutstandingReport = new ValidatedMethod({
                     totalDueIntTHB,
                     params.exchangeId);
 
-            totalLoanOutPrinBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalLoanOutPrinKHR,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "USD",
-                    baseCurrency,
-                    totalLoanOutPrinUSD,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "THB",
-                    baseCurrency,
-                    totalLoanOutPrinTHB,
-                    params.exchangeId
-                );
-            totalLoanOutIntBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalLoanOutIntKHR,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "USD",
-                    baseCurrency,
-                    totalLoanOutIntUSD,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "THB",
-                    baseCurrency,
-                    totalLoanOutIntTHB,
-                    params.exchangeId
-                );
+
             content += `<tr>
-                            <td colspan="12" align="right">Subtotal-KHR</td>
+                            <td colspan="9" align="right">Subtotal-KHR</td>
                             <td>${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td>${microfis_formatNumber(totalDueIntKHR)}</td>
                             <td>${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinKHR)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntKHR)}</td>
+                            <td></td>
+
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-USD</td>
+                            <td colspan="9" align="right">Subtotal-USD</td>
                             <td>${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td>${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td>${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinUSD)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntUSD)}</td>
+                            <td></td>
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-THB</td>
+                            <td colspan="9" align="right">Subtotal-THB</td>
                             <td>${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td>${microfis_formatNumber(totalDueIntTHB)}</td>
                             <td>${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinTHB)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntTHB)}</td>
+                            <td></td>
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Total-${baseCurrency}</td>
+                            <td colspan="9" align="right">Total-${baseCurrency}</td>
                             <td>${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td>${microfis_formatNumber(totalDueIntBase)}</td>
                             <td>${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinBase)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntBase)}</td>
+                            <td></td>
 
                         </tr>
                         
@@ -395,7 +354,11 @@ export const loanOutstandingReport = new ValidatedMethod({
 });
 
 let microfis_formatDate = function (val) {
-    return moment(val).format("DD/MM/YYYY");
+    if (val != null) {
+        return moment(val).format("DD/MM/YYYY");
+    } else {
+        return "-";
+    }
 }
 
 let microfis_formatNumber = function (val) {

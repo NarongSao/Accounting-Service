@@ -143,7 +143,8 @@ indexTmpl.events({
 
         let params = {
             clientId: FlowRouter.getParam('clientId'),
-            loanAccId: rowData._id
+            loanAccId: rowData._id,
+            savingAccId: rowData.savingAccId
         };
 
         FlowRouter.go('microfis.repayment', params);

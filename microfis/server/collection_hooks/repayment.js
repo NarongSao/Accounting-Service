@@ -31,27 +31,6 @@ Repayment.after.insert(function (userId, doc) {
     if (doc.type != "Fee") {
         Meteor.defer(function () {
 
-            /*if (doc.detailDoc) {
-
-             if (doc.detailDoc.schedulePaid) {
-             let schedulePaid = doc.detailDoc.schedulePaid;
-
-             _.forEach(schedulePaid, (o) => {
-             o.repaymentId = doc._id;
-
-             RepaymentSchedule.update({_id: o.scheduleId}, {
-             $inc: {
-             'repaymentDoc.totalPrincipalPaid': o.principalPaid,
-             'repaymentDoc.totalInterestPaid': o.interestPaid,
-             'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
-             'repaymentDoc.totalInterestWaived': o.interestWaived,
-             },
-             $push: {'repaymentDoc.detail': o}
-             });
-             });
-             }
-             }*/
-
             let loanAcc = LoanAcc.findOne({_id: doc.loanAccId});
             //Saving Link
             if (["General", "Close"].includes(doc.type) == true) {
@@ -84,8 +63,8 @@ Repayment.after.insert(function (userId, doc) {
                                 },
                                 $push: {'repaymentDoc.detail': o},
                                 $set: updatePay
-                            },function (err) {
-                                if(err){
+                            }, function (err) {
+                                if (err) {
                                     console.log(err);
                                 }
                             });
@@ -110,7 +89,7 @@ Repayment.after.insert(function (userId, doc) {
 
                     if (savingDeposit) {
                         savingLoanDeposit.branchId = doc.branchId;
-                        savingLoanDeposit.amount = doc.amountPaid;
+                        savingLoanDeposit.amount = doc.totalPaid;
                         savingLoanDeposit.savingAccId = loanAcc.savingAccId;
                         savingLoanDeposit.transactionDate = doc.repaidDate;
                         savingLoanDeposit.voucherId = doc.voucherId;
@@ -118,7 +97,7 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanDeposit.currencyId = doc.currencyId;
 
 
-                        savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.amountPaid).toNumber();
+                        savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.totalPaid).toNumber();
 
                         // Remove last transaction
                         delete savingDeposit.lastTransaction;
@@ -126,8 +105,8 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanDeposit.transactionType = 'LD';
                         savingLoanDeposit.details = savingDeposit;
 
-                        SavingTransaction.insert(savingLoanDeposit,function (err) {
-                            if(err){
+                        SavingTransaction.insert(savingLoanDeposit, function (err) {
+                            if (err) {
                                 console.log(err);
                             }
                         });
@@ -152,7 +131,7 @@ Repayment.after.insert(function (userId, doc) {
                         if (doc.type == "General") {
                             savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
                         } else if (doc.type = "Close") {
-                            savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue <= savingWithdrawal.principalOpening ? doc.detailDoc.closing.totalDue : savingWithdrawal.principalOpening;
+                            savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue + doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.closing.totalDue + doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
                         }
 
                         // Cal principal, interest bal
@@ -272,7 +251,7 @@ Repayment.after.insert(function (userId, doc) {
 
                     if (savingDeposit) {
                         savingLoanDeposit.branchId = doc.branchId;
-                        savingLoanDeposit.amount = doc.amountPaid;
+                        savingLoanDeposit.amount = doc.totalPaid;
                         savingLoanDeposit.savingAccId = loanAcc.savingAccId;
                         savingLoanDeposit.transactionDate = doc.repaidDate;
                         savingLoanDeposit.voucherId = doc.voucherId;
@@ -280,7 +259,7 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanDeposit.currencyId = doc.currencyId;
 
 
-                        savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.amountPaid).toNumber();
+                        savingDeposit.principalBal = new BigNumber(savingDeposit.principalOpening).plus(doc.totalPaid).toNumber();
 
                         // Remove last transaction
                         delete savingDeposit.lastTransaction;
@@ -288,8 +267,8 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanDeposit.transactionType = 'LD';
                         savingLoanDeposit.details = savingDeposit;
 
-                        SavingTransaction.insert(savingLoanDeposit,function (err) {
-                            if(err){
+                        SavingTransaction.insert(savingLoanDeposit, function (err) {
+                            if (err) {
                                 console.log(err);
                             }
                         });
@@ -311,7 +290,7 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanWithdrawal.currencyId = doc.currencyId;
 
 
-                        savingLoanWithdrawal.amount = doc.amountPaid;
+                        savingLoanWithdrawal.amount = doc.totalPaid;
 
 
                         // Cal principal, interest bal
@@ -331,8 +310,8 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanWithdrawal.transactionType = 'LR';
                         savingLoanWithdrawal.details = savingWithdrawal;
 
-                        SavingTransaction.insert(savingLoanWithdrawal,function (err) {
-                            if(err){
+                        SavingTransaction.insert(savingLoanWithdrawal, function (err) {
+                            if (err) {
                                 console.log(err);
                             }
                         });
@@ -346,8 +325,13 @@ Repayment.after.insert(function (userId, doc) {
             // Update loan acc for close type
             if (doc.type == 'Close') {
                 // Set close status on loan acc
-                LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {closeDate: doc.repaidDate, status: "Close"}},function (err) {
-                    if(err){
+                LoanAcc.direct.update({_id: doc.loanAccId}, {
+                    $set: {
+                        closeDate: doc.repaidDate,
+                        status: "Close"
+                    }
+                }, function (err) {
+                    if (err) {
                         console.log(err);
                     }
                 });
@@ -429,23 +413,23 @@ Repayment.after.insert(function (userId, doc) {
                 savingLoanWithdrawal.transactionType = 'LR';
                 savingLoanWithdrawal.details = savingWithdrawal;
 
-                SavingTransaction.insert(savingLoanWithdrawal,function (err) {
-                    if(err){
+                SavingTransaction.insert(savingLoanWithdrawal, function (err) {
+                    if (err) {
                         console.log(err);
                     }
                 });
             }
         }
 
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: doc.amountPaid}},function (err) {
-            if(err){
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: doc.amountPaid}}, function (err) {
+            if (err) {
                 console.log(err);
             }
         });
     }
 
-    LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}},function (err) {
-        if(err){
+    LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}}, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -501,8 +485,8 @@ Repayment.after.remove(function (userId, doc) {
                                 },
                                 $pull: {'repaymentDoc.detail': {repaymentId: doc._id}},
                                 $set: {isPay: false, isFullPay: false}
-                            },function (err) {
-                                if(err){
+                            }, function (err) {
+                                if (err) {
                                     console.log(err);
                                 }
                             });
@@ -520,8 +504,8 @@ Repayment.after.remove(function (userId, doc) {
 
                             RepaymentSchedule.update({_id: o.scheduleId}, {
                                 $set: {isPay: false, isFullPay: false, isPrePay: false}
-                            },function (err) {
-                                if(err){
+                            }, function (err) {
+                                if (err) {
                                     console.log(err);
                                 }
                             });
@@ -552,8 +536,8 @@ Repayment.after.remove(function (userId, doc) {
             }
         });
     } else {
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: 0}},function (err) {
-            if(err){
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: 0}}, function (err) {
+            if (err) {
                 console.log(err);
             }
         });
@@ -595,14 +579,17 @@ function _makeScheduleForPrincipalInstallment(doc) {
     _.forEach(schedule, (value, key) => {
         tenor += value.numOfDay;
         if (key == schedule.length - 1) {
-            maturityDate = value.dueDate;
+            maturityDate = moment(value.dueDate).startOf("day").toDate();
         }
 
         // Save to repayment schedule collection
-        value.scheduleDate = doc.repaidDate;
+        value.scheduleDate = moment(doc.repaidDate).startOf("day").toDate();
+        value.dueDate = moment(val.dueDate).startOf("day").toDate();
         value.loanAccId = doc.loanAccId;
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;
+
+
         RepaymentSchedule.insert(value);
     });
 

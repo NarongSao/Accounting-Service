@@ -87,11 +87,11 @@ indexTmpl.events({
         var id = this._id;
         let self = this;
 
-        Meteor.call("microfis_getLastEndOfProcess", function (err, result) {
+        Meteor.call("microfis_getLastEndOfProcess", self.branchId, function (err, result) {
             if (result) {
                 stateEndOfProcess.set("closeDate", result.closeDate);
             }
-            if (moment(result.closeDate).toDate().getTime() != moment(self.closeDate).toDate().getTime()) {
+            if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
                 alertify.error("Not the Last End OF Process!!!");
             } else {
                 alertify.confirm("Are you sure to delete ?")
@@ -129,8 +129,10 @@ newTmpl.events({
     'click [name="closeDate"]'(e, t){
         let $closeDate = $('[name="closeDate"]');
         if (stateEndOfProcess.get("closeDate")) {
+            // $closeDate.data("DateTimePicker").maxDate(moment().startOf('day').toDate());
             $closeDate.data("DateTimePicker").minDate(moment(stateEndOfProcess.get("closeDate")).add(1, 'days').startOf('day').toDate());
         } else {
+            // $closeDate.data("DateTimePicker").maxDate(moment().startOf('day').toDate());
             $closeDate.data("DateTimePicker").minDate(moment().add(-200, 'years').startOf('day').toDate());
 
         }

@@ -55,3 +55,36 @@ MicrofisRoutes.route('/loan-outstanding-report', {
         parent: 'microfis.home'
     }
 });
+// Collection Sheet
+import '../imports/reports/collectionSheet.js';
+MicrofisRoutes.route('/collectionSheet-report', {
+    name: 'microfis.collectionSheetReport',
+    title: 'Collection Sheet Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_collectionSheetReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Collection Sheet Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Loan Closing
+import '../imports/reports/loanClosing.js';
+MicrofisRoutes.route('/loanClosing-report', {
+    name: 'microfis.loanClosingReport',
+    title: 'Loan Closing Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanClosingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Closing Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

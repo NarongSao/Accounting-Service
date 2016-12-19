@@ -25,27 +25,38 @@ EndOfProcess.before.insert(function (userId, doc) {
 
 EndOfProcess.after.insert(function (userId, doc) {
 
-    let fDate = moment(doc.closeDate).startOf('day').toDate();
     let tDate = moment(doc.closeDate).endOf('day').toDate();
-
+    console.log(moment.tz.guess());
+    console.log(moment(doc.closeDate).endOf('day').toDate());
     let selectorPay = {};
-    selectorPay.dueDate = {$lte: tDate, $gte: fDate};
+    selectorPay.dueDate = {$lte: tDate};
     selectorPay.branchId = doc.branchId;
     selectorPay.isPay = false;
     selectorPay.installment = {$gt: 0};
     /*selectorPay.isPrePay = true;*/
 
     let detailPaid = [];
-    let schedulePay = RepaymentSchedule.find(selectorPay).fetch();
 
-    schedulePay.forEach(function (obj) {
-        let checkPayment = checkRepayment.run({loanAccId: obj.loanAccId, checkDate: doc.closeDate});
+    let loanListEnd = RepaymentSchedule.aggregate([
+        {$match: selectorPay},
+        {
+            $group: {
+                _id: {
+                    "loanAccId": "$loanAccId",
+                    "savingAccId": "$savingAccId"
+                }
+            }
+        }
+    ]);
 
-        let checkBeforePayment = checkPayment && checkPayment.scheduleNext.length > 0;
-        if (checkBeforePayment) {
+
+    loanListEnd.forEach(function (obj) {
+        let checkPayment = checkRepayment.run({loanAccId: obj._id.loanAccId, checkDate: doc.closeDate});
+
+        if (checkPayment) {
 
             let amountPaid = 0;
-            let savingTransaction = SavingTransaction.findOne({savingAccId: obj.savingAccId}, {
+            let savingTransaction = SavingTransaction.findOne({savingAccId: obj._id.savingAccId}, {
                 sort: {
                     _id: -1,
                     transactionDate: -1
@@ -75,6 +86,9 @@ EndOfProcess.after.insert(function (userId, doc) {
                         if (makeRepayment.schedulePaid) {
                             let schedulePaid = makeRepayment.schedulePaid;
                             _.forEach(schedulePaid, (o) => {
+
+                                let isFullPay = RepaymentSchedule.findOne({_id: o.scheduleId}).isFullPay;
+
                                 let updatePay = {};
                                 if (o.totalPrincipalInterestBal == 0) {
                                     updatePay.isPay = true;
@@ -84,7 +98,7 @@ EndOfProcess.after.insert(function (userId, doc) {
                                     updatePay.isFullPay = false;
                                 }
 
-                                o.repaymentId = doc._id;
+                                o.repaymentId = savingTransaction.paymentId;
                                 o.endId = doc._id;
 
                                 RepaymentSchedule.update({_id: o.scheduleId}, {
@@ -98,7 +112,8 @@ EndOfProcess.after.insert(function (userId, doc) {
                                     $set: updatePay
                                 });
 
-                                o.isFullPay = obj.isFullPay;
+
+                                o.isFullPay = isFullPay;
                                 detailPaid.push(o);
 
                             });
@@ -109,7 +124,7 @@ EndOfProcess.after.insert(function (userId, doc) {
 
                     //Withdrawal
                     let savingWithdrawal = checkSavingTransaction.run({
-                        savingAccId: obj.savingAccId,
+                        savingAccId: obj._id.savingAccId,
                         checkDate: doc.closeDate
                     })
 
@@ -119,7 +134,7 @@ EndOfProcess.after.insert(function (userId, doc) {
 
                     if (savingWithdrawal) {
                         savingLoanWithdrawal.branchId = doc.branchId;
-                        savingLoanWithdrawal.savingAccId = obj.savingAccId;
+                        savingLoanWithdrawal.savingAccId = obj._id.savingAccId;
                         savingLoanWithdrawal.transactionDate = doc.closeDate;
                         savingLoanWithdrawal.voucherId = savingTransaction.voucherId;
                         savingLoanWithdrawal.memo = savingTransaction.note;
@@ -192,7 +207,7 @@ EndOfProcess.after.remove(function (userId, doc) {
             });
 
             Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}}, function (err) {
-                if(err){
+                if (err) {
                     console.log(err);
                 }
             });

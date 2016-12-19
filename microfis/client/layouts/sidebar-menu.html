@@ -81,6 +81,17 @@
                         <i class="fa fa-circle-o"></i> <span>Loan Outstanding</span>
                     </a>
                 </li>
+                <li class="{{isActiveRoute name='microfis.collectionSheetReport'}}">
+                    <a href="{{pathFor 'microfis.collectionSheetReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Collection Sheet</span>
+                    </a>
+                </li>
+
+                <li class="{{isActiveRoute name='microfis.loanClosingReport'}}">
+                    <a href="{{pathFor 'microfis.loanClosingReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Loan Closing</span>
+                    </a>
+                </li>
             </ul>
         </li>
     {{/if}}

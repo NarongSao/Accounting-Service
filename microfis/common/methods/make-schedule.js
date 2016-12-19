@@ -4,7 +4,7 @@ import {ValidatedMethod} from 'meteor/mdg:validated-method';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {_} from 'meteor/erasaur:meteor-lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import math from 'mathjs';
 
 // Lib
@@ -340,17 +340,28 @@ function findDueDate(opts) {
     }).validate(opts);
 
     if (!this.isSimulation) {
-        let dueDate = moment(opts.previousDate).startOf('day').add(opts.repaidFrequency, opts.addingTime).toDate();
+
+        let dueDate = moment(opts.previousDate).startOf("day").add(opts.repaidFrequency, opts.addingTime).toDate();
+        let curTimezone = moment.tz.guess();
+        console.log(moment.tz.guess());
+        // let orgDate = moment(opts.previousDate).tz("Asia/Bangkok").format('YYYY/MM/DD HH:mm:ss');
+        // console.log(orgDate);
+        // let dueDate = moment(orgDate).add(opts.repaidFrequency, opts.addingTime).toDate();
+        // console.log("After Convert" + dueDate);
+
         // let dueDate = moment(opts.previousDate).startOf('days').add(opts.repaidFrequency, opts.addingTime).toDate();
         // let dueDate = moment(opts.disbursementDate).add(opts.repaidFrequency * opts.installment, opts.addingTime).toDate();
 
         // Check due date on
         if (opts.paymentMethod == 'W') {
+            console.log("Find Day Of Week : " + moment(dueDate).isoWeekday(opts.dueDateOn).toDate());
             dueDate = moment(dueDate).isoWeekday(opts.dueDateOn).toDate();
         } else if (opts.paymentMethod == 'M' || opts.paymentMethod == 'Y') {
             dueDate = moment(dueDate).date(opts.dueDateOn).toDate();
         }
 
+        console.log("After ");
+        console.log(dueDate);
         // Check day escape
         if (opts.escapeDayMethod == 'GR') { // General = Previous & Next
             let inEscapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);

@@ -135,6 +135,11 @@ Repayment.schema = new SimpleSchema({
     endId: {
         type: String,
         defaultValue: "0"
+    },
+    savingBalance: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0
     }
 });
 

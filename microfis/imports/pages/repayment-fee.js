@@ -73,7 +73,7 @@ formTmpl.onCreated(function () {
 
             var startYear = moment(dobSelect).year();
             var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate,Session.get("currentBranch"), function (err, result) {
                 if (result != undefined) {
                     Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
                 } else {
@@ -118,6 +118,7 @@ formTmpl.onRendered(function () {
 
         $repaidDateObj.on("dp.change", function (e) {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set("isVoucherId", true);
         });
     }
 

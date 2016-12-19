@@ -75,7 +75,7 @@ Location.schema = new SimpleSchema({
     },
     name: {
         type: String,
-        label: 'Name',
+        label: 'En Name',
         autoform: {
             type: "textarea"
         }
