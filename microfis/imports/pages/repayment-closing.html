@@ -139,6 +139,8 @@
                         {{> afQuickField name="amountPaid" value=totalDue}}
                         {{> afQuickField name="penaltyPaid" value=totalPenalty}}
                     {{/with}}
+                    {{> afQuickField name="savingBalance" type="hidden" value=savingBal.totalBal}}
+
                     {{> afQuickField name="voucherId" value=voucherId}}
                     {{> afQuickField name="note"}}
                     {{> afQuickField name="branchId" type="hidden" value=currentBranch}}

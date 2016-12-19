@@ -8,9 +8,7 @@ Meteor.startup(function () {
 
     timezone = moment.tz.guess();
     console.log(timezone);
-    moment.tz.setDefault(timezone);
-
-
+    moment.tz.setDefault("Asia/Bangkok");
     moment.updateLocale('en', {
         week: {
             dow: 1, // Monday is the first day of the week.

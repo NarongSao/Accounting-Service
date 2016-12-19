@@ -69,10 +69,9 @@ export let checkRepayment = new ValidatedMethod({
                 loanAccDoc = lookupLoanAcc.call({_id: loanAccId});
             }
 
-            let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId, scheduleDate: lastScheduleDate}),
+            let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId, scheduleDate: lastScheduleDate}).fetch(),
                 penaltyDoc = loanAccDoc.penaltyDoc,
                 penaltyClosingDoc = loanAccDoc.penaltyClosingDoc;
-
 
             //---------------------------
 
@@ -117,7 +116,6 @@ export let checkRepayment = new ValidatedMethod({
 
                 } // detail on repayment doc don't exist
 
-
                 // Check total principal & interest due
                 if (totalPrincipalInterestDue > 0) {
                     let numOfDayLate, penaltyDue = 0;
@@ -161,6 +159,8 @@ export let checkRepayment = new ValidatedMethod({
                         totalAmount: totalAmountDue
                     };
 
+                    console.log("due Date " + o.dueDate);
+                    console.log("checkdate "+checkDate);
                     // Check due date
                     checker.dueDateIsSameOrBeforeCheckDate = moment(o.dueDate).isSameOrBefore(checkDate, 'day');
                     if (checker.dueDateIsSameOrBeforeCheckDate) {
@@ -416,7 +416,7 @@ export let checkRepayment = new ValidatedMethod({
                 }
             }
 
-
+            console.log(scheduleDue);
             return {
                 scheduleDue: scheduleDue,
                 totalScheduleDue: totalScheduleDue,

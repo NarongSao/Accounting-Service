@@ -91,7 +91,7 @@ indexTmpl.events({
             if (result) {
                 stateEndOfProcess.set("closeDate", result.closeDate);
             }
-            if (moment(result.closeDate).toDate().getTime() != moment(self.closeDate).toDate().getTime()) {
+            if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
                 alertify.error("Not the Last End OF Process!!!");
             } else {
                 alertify.confirm("Are you sure to delete ?")
@@ -147,7 +147,6 @@ newTmpl.onDestroyed(function () {
 // Hook
 let hooksObject = {
     onSuccess: function (formType, result) {
-
 
         Session.set('isSuccess', true)
         alertify.endOfProcess().close();

@@ -4,8 +4,8 @@ import {Repayment} from '../../../microfis/common/collections/repayment.js';
 
 
 Meteor.methods({
-    microfis_getLastVoucher: function (currencyId, startDate) {
-        return Repayment.findOne({currencyId: currencyId, repaidDate: {$gte: startDate}}, {
+    microfis_getLastVoucher: function (currencyId, startDate, branchId) {
+        return Repayment.findOne({currencyId: currencyId, branchId: branchId, repaidDate: {$gte: startDate}}, {
             sort: {
                 // repaidDate: -1,
                 voucherId: -1

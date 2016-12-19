@@ -74,7 +74,7 @@ formTmpl.onCreated(function () {
 
             var startYear = moment(dobSelect).year();
             var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, function (err, result) {
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
                 if (result != undefined) {
                     Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
                 } else {
@@ -259,7 +259,6 @@ let hooksObject = {
             }
 
             doc.detailDoc = {};
-            doc.totalPaid = doc.amountPaid;
             doc.detailDoc.scheduleNext = checkRepayment.scheduleNext;
             doc.detailDoc.principalInstallment = checkRepayment.principalInstallment;
 
@@ -268,6 +267,18 @@ let hooksObject = {
     },
     onSuccess(formType, result) {
         alertify.repayment().close();
+
+        checkRepayment.callPromise({
+            loanAccId: stateRepayment.get('loanAccDoc')._id,
+            checkDate: stateRepayment.get('repaidDate')
+        }).then(function (result) {
+            // Set state
+            stateRepayment.set('checkRepayment', result);
+
+        }).catch(function (err) {
+            console.log(err.message);
+        });
+
         displaySuccess();
     },
     onError(formType, error) {

@@ -20,7 +20,8 @@ module.exports = {
    },
    env: {
      ROOT_URL: 'http://35.165.82.225',
-     MONGO_URL: 'mongodb://localhost/microfis'
+     MONGO_URL: 'mongodb://localhost/microfis',
+     TZ: 'Asia/Bangkok'	
    },
    dockerImage: 'abernix/meteord:base',
    deployCheckWaitTime: 60
@@ -29,8 +30,12 @@ module.exports = {
  mongo: {
    oplog: true,
    port: 27017,
+   env: {
+     TZ: 'Asia/Bangkok'	
+   },
    servers: {
      one: {},
    },
+
  },
 };

@@ -12,6 +12,10 @@ import {roundCurrency} from './round-currency.js';
 // Method
 import {Calculate} from './calculate.js';
 
+//Collection
+
+import {SavingTransaction} from '../collections/saving-transaction.js'
+
 export let MakeRepayment = {};
 
 MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, totalScheduleDue, opts}) {
@@ -735,7 +739,7 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
     };
 };
 
-MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, scheduleNext, closing, opts}) {
+MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, scheduleNext, closing,principalUnpaid, opts}) {
     new SimpleSchema({
         repaidDate: {
             type: Date
@@ -772,6 +776,12 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         closing: {
             type: Object,
             blackbox: true
+        },
+        principalUnpaid: {
+            type: Number,
+            decimal: true,
+            blackbox: true,
+            optional: true
         },
         opts: {
             type: Object,
@@ -813,9 +823,10 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         totalAmountBal: new BigNumber(0)
     };
 
+
     let tmpAmountPaid = {
-        principal: new BigNumber(closing.principalReminder),
-        interest: new BigNumber(amountPaid).minus(closing.principalReminder)
+        principal: new BigNumber(principalUnpaid),
+        interest: new BigNumber(amountPaid).minus(principalUnpaid)
     };
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);
 
