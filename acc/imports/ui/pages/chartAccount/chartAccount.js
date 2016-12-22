@@ -185,11 +185,9 @@ Template.acc_chartAccount.events({
             return state.set('status', 0);
         } else if (val == "Income") {
             getMapping();
-
             return state.set('status', 1);
         } else if (val == "Balance") {
             getMapping();
-
             return state.set('status', 2);
         }
     }
@@ -325,14 +323,14 @@ AutoForm.hooks({
 });
 
 function getMapping() {
-    Meteor.call('getNbcNotMapping', function (err, result) {
+    Meteor.call('getNbcNotMapping', true, function (err, result) {
         if (result.income) {
             state.set('income', {_id: {$nin: result.income}});
         }
     })
 
 
-    Meteor.call('getNbcNotMapping', function (err, result) {
+    Meteor.call('getNbcNotMapping', true, function (err, result) {
         if (result.balance) {
             state.set('balance', {_id: {$nin: result.balance}});
         }

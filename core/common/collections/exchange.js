@@ -13,11 +13,11 @@ let Rates = new SimpleSchema({
             return TAPi18n.__('core.exchange.khrLbl');
         },
         decimal: true,
-        min: 0,
+        min: 0.000000001,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: '៛'});
+                return inputmaskOptions.currency({prefix: '៛', digits: 9});
             }
         }
     },
@@ -27,11 +27,11 @@ let Rates = new SimpleSchema({
             return TAPi18n.__('core.exchange.usdLbl');
         },
         decimal: true,
-        min: 0,
+        min: 0.000000001,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({digits: 9});
             }
         }
     },
@@ -41,11 +41,11 @@ let Rates = new SimpleSchema({
             return TAPi18n.__('core.exchange.thbLbl');
         },
         decimal: true,
-        min: 0,
+        min: 0.000000001,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: 'B'});
+                return inputmaskOptions.currency({prefix: 'B', digits: 9});
             }
         }
     }

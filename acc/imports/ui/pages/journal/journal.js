@@ -125,7 +125,7 @@ insertTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -214,7 +214,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'USD';
+        data.currencyId = 'KHR';
         data.memo = 'test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -244,7 +244,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'USD';
+        data.currencyId = 'KHR';
         data.memo = 'update test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -576,7 +576,8 @@ AutoForm.hooks({
     acc_journalInsertPayment: {
         before: {
             insert: function (doc) {
-                let paymentMethod = $('#paymentReceiveMethod').val();
+                let paymentMethod = $('#paymentReceiveMethod:checked').val();
+
                 if (paymentMethod != "") {
                     var currentBranch = Session.get("currentBranch");
                     doc.branchId = Session.get("currentBranch");
@@ -608,6 +609,10 @@ AutoForm.hooks({
                     doc.voucherId = currentBranch + "-" + year + s.pad(doc.voucherId, 6, "0");
                     doc.total = total;
                     return doc;
+                } else {
+                    alertify.error('Payment method is required');
+
+                    return false;
                 }
             }
         },
@@ -633,7 +638,8 @@ AutoForm.hooks({
     acc_journalInsertReceive: {
         before: {
             insert: function (doc) {
-                let paymentMethod = $('#paymentReceiveMethod').val();
+                let paymentMethod = $('#paymentReceiveMethod:checked').val();
+
                 if (paymentMethod != "") {
                     var currentBranch = Session.get("currentBranch");
                     doc.branchId = Session.get("currentBranch");
@@ -648,7 +654,6 @@ AutoForm.hooks({
 
                     transactionList.unshift({account: paymentMethod, dr: total, cr: 0, drcr: total})
 
-
                     doc.transaction = transactionList;
                     let transactionAssetList = [];
                     let transactionAssetData = fixAssetDepCollection.find().fetch();
@@ -659,8 +664,6 @@ AutoForm.hooks({
                         }
                     })
 
-
-
                     if (transactionAssetList.length > 0) {
                         doc.transactionAsset = transactionAssetList;
                     }
@@ -668,6 +671,10 @@ AutoForm.hooks({
                     doc.voucherId = currentBranch + "-" + year + s.pad(doc.voucherId, 6, "0");
                     doc.total = total;
                     return doc;
+                } else {
+                    alertify.error('Payment method is required');
+
+                    return false;
                 }
             }
         },
@@ -942,7 +949,7 @@ insertPaymentTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -951,7 +958,7 @@ insertReceiveTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -979,7 +986,7 @@ insertPaymentTpl.events({
         stateFixAsset.set("isFixAsset", elem.checked);
     },
     'change #paymentReceiveMethod'(){
-        if ($("#paymentReceiveMethod").val() != "") {
+        if ($("#paymentReceiveMethod:checked").val() != "") {
             state.set('cssClassForSubmit', '');
         } else {
             state.set('cssClassForSubmit', 'disabled');
@@ -1010,7 +1017,7 @@ insertReceiveTpl.events({
         stateFixAsset.set("isFixAsset", elem.checked);
     },
     'change #paymentReceiveMethod'(){
-        if ($("#paymentReceiveMethod").val() != "") {
+        if ($("#paymentReceiveMethod:checked").val() != "") {
             state.set('cssClassForSubmit', '');
         } else {
             state.set('cssClassForSubmit', 'disabled');

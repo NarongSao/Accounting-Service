@@ -50,7 +50,7 @@ Journal.schema = new SimpleSchema({
                 return SelectOpts.currency(false);
             }
         },
-        defaultValue: "USD"
+        defaultValue: "KHR"
     },
     branchId: {
         type: String,

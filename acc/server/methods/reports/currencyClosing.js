@@ -188,8 +188,9 @@ Meteor.methods({
                     selectorClose.dateFrom = fDate;
                     selectorClose.dateTo = moment(date[1], "DD/MM/YYYY").toDate();
                     selectorClose.branchId = self.branchId;
-                    selectorClose.month=moment(date[1]).month()+1;
-                    selectorClose.year=moment(date[1]).year();
+                    selectorClose.month = _.toString(moment(date[1], "DD/MM/YYYY").month() + 1);
+                    selectorClose.year = _.toString(moment(date[1], "DD/MM/YYYY").year());
+
 
                     var closingId = Closing.insert(selectorClose);
 
@@ -216,8 +217,7 @@ Meteor.methods({
 
                     var foreinExchangeLossDoc = ChartAccount.findOne({
                         _id: lostFor.accountDoc._id
-                    })
-
+                    });
 
                     if (data.grandTotalDr > 0) {
                         data.result.forEach(function (obj) {
@@ -244,6 +244,8 @@ Meteor.methods({
                                 accountDoc: accountDetail
                             });
                         });
+
+
                         var dr, cr;
                         if (data.grandTotal > 0) {
                             dr = math.round(Math.abs(data.grandTotal), 2);
@@ -254,6 +256,8 @@ Meteor.methods({
                             cr = math.round(Math.abs(data.grandTotal), 2);
                             equival = math.round(Math.abs(data.grandTotal), 2);
                         }
+
+                        console.log('stage 1');
 
                         arr.push({
                             account: accountDocDetail.code + " | " +
@@ -266,8 +270,12 @@ Meteor.methods({
 
                         var doc = {};
 
+                        console.log('stage 2');
 
-                        var voucher = Meteor.call('getVoucherId', data.currencySelect);
+                        var voucher = Meteor.call('acc_getVoucherId', data.currencySelect);
+
+                        console.log('voucher', voucher);
+                        console.log('stage 3');
 
                         if (voucher != null) {
                             var lastVoucherId = currentBranch + "-" + year + s.pad(parseInt(
@@ -275,7 +283,6 @@ Meteor.methods({
                         } else {
                             lastVoucherId = currentBranch + "-" + year + "000001";
                         }
-
 
                         doc.transaction = arr;
                         doc.journalDate = moment(date[1], "DD/MM/YYYY").toDate();
@@ -286,6 +293,8 @@ Meteor.methods({
                         doc.total = data.grandTotalDr;
 
                         doc.closingId = closingId;
+
+                        console.log(doc);
                         var insertSuccess = Journal.insert(doc);
                         if (insertSuccess) {
                             data.insertSuccess = true;
@@ -343,7 +352,7 @@ Meteor.methods({
                             accountDoc: accountDocDetail
                         });
 
-                        var voucher = Meteor.call('getVoucherId', data.currencySelectBase);
+                        var voucher = Meteor.call('acc_getVoucherId', data.currencySelectBase);
                         if (voucher != null) {
                             var lastVoucherId = currentBranch + "-" + year + s.pad(parseInt(
                                         (voucher.voucherId).substr(8, 13)) + 1, 6, "0");
@@ -478,9 +487,11 @@ Meteor.methods({
                     }
                 }
             } catch (err) {
-                Meteor.call('closingRemove',closingId);
+                Meteor.call('closingRemove', closingId);
             }
+
             GenerateAndEntry.set(false);
+
             return data;
         }
 

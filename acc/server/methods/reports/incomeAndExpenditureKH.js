@@ -428,12 +428,7 @@ Meteor.methods({
                         data.nonInterestExpenseOther += (obj.amountUsd + obj.amountThb) /
                             1000000;
 
-                    } else if (nbcCode.accountDocNBC.code == "4.2") {
-                        data.nonInterestIncome += obj.amountRiel / 1000000;
-                        data.nonInterestIncomeOther += (obj.amountUsd + obj.amountThb) /
-                            1000000;
-
-                    } else if (nbcCode.accountDocNBC.code == "4.2.1") {
+                    }  else if (nbcCode.accountDocNBC.code == "4.2.1") {
                         data.foreignExchangeGain += obj.amountRiel / 1000000;
                         data.foreignExchangeGainOther += (obj.amountUsd + obj.amountThb) /
                             1000000;
@@ -581,12 +576,7 @@ Meteor.methods({
                         data.nonInterestExpenseOther += (obj.amountUsd + obj.amountThb) /
                             1000000;
 
-                    } else if (nbcCode.accountDocNBC.code == "4.2") {
-                        data.nonInterestIncome += obj.amountRiel / 1000000;
-                        data.nonInterestIncomeOther += (obj.amountUsd + obj.amountThb) /
-                            1000000;
-
-                    } else if (nbcCode.accountDocNBC.code == "4.2.1") {
+                    }  else if (nbcCode.accountDocNBC.code == "4.2.1") {
                         data.foreignExchangeGain += obj.amountRiel / 1000000;
                         data.foreignExchangeGainOther += (obj.amountUsd + obj.amountThb) /
                             1000000;
