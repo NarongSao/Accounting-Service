@@ -62,7 +62,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             render: function (val, type, doc) {
                 var exp = "";
                 val.forEach(function (obj) {
-                    exp += obj.value + "<br>";
+                    exp += numeral(obj.value).format("(0,00.00)") + "<br>";
                 })
                 return exp;
             }
@@ -80,7 +80,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             render: function (val, type, doc) {
                 var exp = "";
                 val.forEach(function (obj) {
-                    exp += obj.estSalvage + "<br>";
+                    exp += numeral(obj.estSalvage).format("(0,00.00)") + "<br>";
                 })
                 return exp;
             }

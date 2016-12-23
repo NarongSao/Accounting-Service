@@ -92,17 +92,20 @@ dateEndOfProcessTpl.events({
 
 
     'click .remove': function (e, t) {
-        var id = this._id;
-        var lastEnd = DateEndOfProcess.findOne({}, {
+        let id = this._id;
+        let selector = {};
+        selector.branchId = Session.get("currentBranch");
+        let lastEnd = DateEndOfProcess.findOne(selector, {
             sort: {
                 closeDate: -1
             }
         });
+
         if (lastEnd.closeDate.getTime() === this.closeDate.getTime()) {
             alertify.confirm("Are you sure to delete ?")
                 .set({
                     onok: function (closeEvent) {
-                        Meteor.call('removeEndOfProcess', id, function (err, result) {
+                        Meteor.call('removeEndOfProcess', id, Session.get("currentBranch"), function (err, result) {
                             if (!err) {
                                 alertify.success('Success');
                             }
@@ -111,7 +114,7 @@ dateEndOfProcessTpl.events({
                     title: fa("remove", "End of Process")
                 });
         } else {
-            alertify.error("You can't delete. This is not the last End Of Process!!!");
+            alertify.warning("You can't delete. This is not the last End Of Process!!!");
         }
     }
 })
@@ -135,7 +138,7 @@ var disableDate = function () {
         }
     });
     if (dateVal != undefined) {
-        let mindate = moment(moment(dateVal.closeDate).format("DD/MM/YYYY"),"DD/MM/YYYY").add(1, "days").toDate();
+        let mindate = moment(moment(dateVal.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, "days").toDate();
         $("[name='closeDate']").data('DateTimePicker').minDate(mindate);
 
     }
@@ -153,7 +156,7 @@ AutoForm.hooks({
             }
         },
         onSuccess: function (formType, result) {
-            Session.set('isSuccess',true)
+            Session.set('isSuccess', true)
             alertify.endOfProcess().close();
             alertify.success('Success');
         },

@@ -24,7 +24,16 @@ DateEndOfProcess.before.insert(function (userId, doc) {
 
 DateEndOfProcess.after.insert(function (userId, doc) {
 
-    Closing.update({month: doc.month,year : doc.year},{$set : {endId: doc._id}});
+    Closing.update({
+        month: doc.month,
+        year: doc.year,
+        branchId: doc.branchId
+    }, {$set: {endId: doc._id}}, function (err, result) {
+        if(err){
+            console.log(err);
+        }
+        console.log(result);
+    });
 
     try {
         //Close Chart Account
@@ -256,10 +265,10 @@ DateEndOfProcess.after.insert(function (userId, doc) {
             Journal.insert(journalInsertNetIncomeBaht);
 
         }
-    }catch(err){
+    } catch (err) {
         DateEndOfProcess.remove({_id: doc._id});
         Journal.remove({endId: doc._id});
-        Closing.update({month: doc.month,year : doc.year},{$set : {endId: ""}});
+        Closing.update({month: doc.month, year: doc.year}, {$set: {endId: ""}});
 
     }
 

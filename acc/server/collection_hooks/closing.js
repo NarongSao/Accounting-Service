@@ -3,6 +3,7 @@ import {idGenerator} from 'meteor/theara:id-generator';
 
 // Collection
 import {Closing} from '../../imports/api/collections/closing.js';
+import {FixAssetExpense} from '../../imports/api/collections/fixAssetExpense.js';
 
 // Customer
 var module = 'Acc';
@@ -14,4 +15,18 @@ Closing.before.insert(function (userId, doc) {
     doc._id = idGenerator.genWithPrefix(Closing, prefix, 6);
 
 });
+
+Closing.after.insert(function (userId, doc) {
+
+    FixAssetExpense.update({
+        month: doc.month,
+        year: doc.year,
+        branchId: doc.branchId
+    }, {$set: {closingId: doc._id}}, function (err, result) {
+        if (err) {
+            console.log(err);
+        }
+    });
+
+})
 

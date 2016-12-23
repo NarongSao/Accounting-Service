@@ -107,6 +107,7 @@ journalDetailPaymentReceiveTpl.events({
         $('[name="account"]').val("").trigger('change');
         $('[name="amount"]').val(0).trigger('change');
 
+
         state.set('account',"")
 
     },

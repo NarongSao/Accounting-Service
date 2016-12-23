@@ -42,8 +42,8 @@ if (Meteor.isClient) {
     indexTpl.helpers({
         createChartDailyIncomeExpense: function () {
 
-            Meteor.call('chart_dailyIncomeExpense', function (err, obj) {
-
+            Meteor.call('chart_dailyIncomeExpense', Session.get("currentBranch"), function (err, obj) {
+                console.log(obj);
                 Meteor.defer(function () {
                     // Create standard Highcharts chart with options:
                     if (obj.dataIncome[0] != undefined || obj.dataExpense[0] != undefined) {
@@ -55,7 +55,7 @@ if (Meteor.isClient) {
                             },
 
                             title: {
-                                text: 'Daily Income Expense '+ obj.dataIncome[0]._id
+                                text: 'Daily Income Expense ' + obj.dataIncome[0]._id
                             },
 
                             xAxis: {
@@ -105,7 +105,7 @@ if (Meteor.isClient) {
                             },
 
                             title: {
-                                text: 'Daily Income Expense '+ obj.dataIncome[1]._id
+                                text: 'Daily Income Expense ' + obj.dataIncome[1]._id
                             },
 
                             xAxis: {
@@ -154,7 +154,7 @@ if (Meteor.isClient) {
                             },
 
                             title: {
-                                text: 'Daily Income Expense '+ obj.dataIncome[2]._id
+                                text: 'Daily Income Expense ' + obj.dataIncome[2]._id
                             },
 
                             xAxis: {

@@ -9,7 +9,6 @@ import {numeral} from 'meteor/numeral:numeral';
 import {lightbox} from 'meteor/theara:lightbox-helpers';
 
 
-
 // Lib
 import {tabularOpts} from '../../../core/common/libs/tabular-opts.js';
 
@@ -27,7 +26,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
     extraFields: ['currencyId', 'transactionAsset', 'transaction', 'endId', 'fixAssetExpenseId', 'closingId', 'refId', 'refFrom'],
     columns: [
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.acc_journalAction},
-        {data: "_id", title: "Id"},
+        {data: "_id", title: "Id", visible: false},
         {
             data: "journalDate", title: "Journal Date",
             render: function (val, type, doc) {

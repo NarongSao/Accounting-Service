@@ -66,21 +66,38 @@ fixAssetExpenseTpl.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm(
-            fa("remove", "Fix Asset Expense"),
-            "Are you sure to delete [" + id + "]?",
-            function () {
+        let self = this;
 
-                Meteor.call("removeFixAssetExpense",id,function (error) {
-                    if (error) {
-                        alertify.error(error.message);
-                    } else {
-                        alertify.success("Success");
-                    }
-                });
-            },
-            null
-        );
+        Meteor.call('getLastFixAssetExpense', Session.get("currentBranch"), id, function (err, result) {
+            if (result) {
+                if (self.closingId == undefined) {
+                    alertify.confirm(
+                        fa("remove", "Fix Asset Expense"),
+                        "Are you sure to delete [" + id + "]?",
+                        function () {
+
+                            Meteor.call("removeFixAssetExpense", id, function (error) {
+                                if (error) {
+                                    alertify.error(error.message);
+                                } else {
+                                    alertify.success("Success");
+                                }
+                            });
+                        },
+                        null
+                    );
+                } else {
+                    alertify.warning("You can't delete. U already make currency Closing!!!")
+
+                }
+
+
+            } else {
+                alertify.warning("You can't delete. This is not the last Fix Asset Expense!!!")
+            }
+
+        })
+
     }
 });
 
@@ -92,16 +109,16 @@ AutoForm.hooks({
     acc_fixAssetExpenseInsert: {
         before: {
             insert: function (doc) {
-                doc.branchId=Session.get("currentBranch");
+                doc.branchId = Session.get("currentBranch");
                 return doc;
             }
         },
-        onSuccess: function(formType, result) {
+        onSuccess: function (formType, result) {
             event.preventDefault();
             alertify.depreciationExpense().close();
             alertify.success("Success");
         },
-        onError: function(formType, error) {
+        onError: function (formType, error) {
             alertify.error(error.message);
         }
     }

@@ -41,13 +41,16 @@ indexTpl.onRendered(function () {
         Session.set('currency', 'usd');
         selector.branchId = Session.get('currentBranch');
         Meteor.call('chart_netIncome', selector, function (err, result) {
+            if (err) {
+                console.log(err);
+            }
             Session.set('chart', result);
         });
     }
     for (i = moment().year(); i > 1900; i--) {
         $('#yearpicker').append($('<option />').val(i).html(i));
     }
-    $("#radios").radiosToSlider();
+    // $("#radios").radiosToSlider();
 });
 
 indexTpl.events({
@@ -88,6 +91,7 @@ indexTpl.events({
         selector.year = year;
         let currency = Session.get('currency');
         selector.currency = currency;
+        selector.branchId = Session.get("currentBranch");
         Meteor.call('chart_netIncome', selector, function (err, result) {
             Session.set('chart', result);
         });

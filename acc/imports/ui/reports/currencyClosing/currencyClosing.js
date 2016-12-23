@@ -52,28 +52,31 @@ reportTpl.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        var lastEnd = Closing.findOne({}, {
+
+        let selector = {};
+        selector.branchId = Session.get("currentBranch");
+
+        var lastEnd = Closing.findOne(selector, {
             sort: {
                 dateTo: -1
             }
         });
         var cur = Closing.findOne({
+            branchId: Session.get("currentBranch"),
             _id: id
         });
-        if (moment(lastEnd.dateTo).format("YYYY-MM-DD") == moment(cur.dateTo).format("YYYY-MM-DD") && cur.endId==undefined) {
+        if (moment(lastEnd.dateTo).format("YYYY-MM-DD") == moment(cur.dateTo).format("YYYY-MM-DD") && cur.endId == undefined) {
             alertify.confirm("Are you sure to delete ?")
                 .set({
                     onok: function (closeEvent) {
-                        Meteor.call('closingRemove', id);
+                        Meteor.call('closingRemove', id, Session.get("currentBranch"));
                     },
                     title: fa("remove", "Closing")
                 });
         } else if (cur.endId != undefined) {
-            alertify.error(
-                "You can't delete.You're already End this Process!!!");
+            alertify.warning("You can't delete.You're already End this Process!!!");
         } else {
-            alertify.error(
-                "You can't delete. This is not the last Closing!!!");
+            alertify.warning("You can't delete. This is not the last Closing!!!");
         }
     }
 

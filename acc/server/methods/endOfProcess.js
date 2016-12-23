@@ -147,7 +147,7 @@ Meteor.methods({
 
         return "Success";
     },
-    removeEndOfProcess: function (id) {
+    removeEndOfProcess: function (id, branchId) {
         var data = DateEndOfProcess.findOne({_id: id});
         CloseChartAccount.remove({endId: id}, function (error) {
             if (!error) {
@@ -157,7 +157,7 @@ Meteor.methods({
                 }
                 DateEndOfProcess.remove(id);
                 CloseChartAccountPerMonth.remove({endId: id});
-                Closing.update({month: data.month,year : data.year},{$set : {endId: ""}});
+                Closing.update({month: data.month, year: data.year, branchId: branchId}, {$set: {endId: ""}});
             }
         });
 

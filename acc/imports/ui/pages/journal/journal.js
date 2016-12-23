@@ -83,7 +83,7 @@ Tracker.autorun(function () {
         var dobSelect = Session.get('dobSelect');
         var startYear = moment(dobSelect).year();
         var startDate = new Date('01/01/' + startYear);
-        Meteor.call('getVoucherId', currentCurrency, startDate, function (err, result) {
+        Meteor.call('acc_getVoucherId', currentCurrency, startDate,Session.get("currentBranch"), function (err, result) {
             if (result != undefined) {
                 Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
             } else {
@@ -104,7 +104,7 @@ Tracker.autorun(function () {
         state.set('totalDr', math.round(totalDr, 2));
         state.set('totalCr', math.round(totalCr, 2));
 
-        if (math.round(totalDr, 2) == math.round(totalCr, 2)) {
+        if (math.round(totalDr, 2) == math.round(totalCr, 2) && math.round(totalDr, 2) != 0) {
             state.set('cssClassForSubmit', '');
         } else {
             state.set('cssClassForSubmit', 'disabled');
@@ -289,8 +289,6 @@ indexTpl.events({
     },
     'click .insertReceive': function (e, t) {
         $.blockUI();
-
-        stateFixAsset.set('isFixAsset', false);
 
         removeCollectionNull();
 
@@ -860,6 +858,7 @@ insertPaymentTpl.helpers({
                 amount += obj.amount;
             })
         }
+        state.set('total', amount);
         return amount;
     },
     cssClassForSubmit: function () {
@@ -891,6 +890,7 @@ insertReceiveTpl.helpers({
                 amount += obj.amount;
             })
         }
+        state.set('total', amount);
         return amount;
     },
     cssClassForSubmit: function () {

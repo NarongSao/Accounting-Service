@@ -132,6 +132,7 @@ Meteor.methods({
                 data.result = result;
 
 
+
                 // Base Currency Closing
                 var grandTotalDrBase = 0,
                     grandTotalCrBase = 0,
@@ -501,6 +502,6 @@ Meteor.methods({
     closingRemove: function (id, branchId) {
         Journal.remove({closingId: id});
         Closing.remove(id);
-        FixAssetExpense.update({closingId: id, branchId: branchId}, {$set: {closingId: ""}});
+        FixAssetExpense.update({closingId : id, branchId: branchId}, {$set: {closingId:undefined}});
     }
 });
