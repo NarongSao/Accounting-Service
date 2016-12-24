@@ -40,6 +40,8 @@ import './journalDetail.html';
 import '../../libs/format.js';
 import '../../components/style.css';
 
+import '../../libs/select2-for-chartAccount.js';
+
 // Declare template
 
 // Declare template
@@ -112,15 +114,21 @@ updateTpl.helpers({
     }
 });
 
+
+journalDetailTpl.onRendered(function () {
+    select2chartAccount($("[name='account']"));
+})
+
 // Event
 journalDetailTpl.events({
     'change [name="account"]': function (e, t) {
+
         state.set('account', t.$(e.currentTarget).val());
 
         let totalDr = state.get("totalDr");
         let totalCr = state.get("totalCr");
         let bal = totalDr - totalCr;
-        
+
         if (bal > 0) {
             state.set('dr', 0);
             state.set('cr', bal);
@@ -148,7 +156,8 @@ journalDetailTpl.events({
         if (isInsert) {
             Session.set('isTotal', true);
         }
-        $('[name="account"]').val("").trigger('change');;
+        $('[name="account"]').val("").trigger('change');
+        ;
 
 
         state.set('dr', 0);
@@ -172,10 +181,13 @@ journalDetailTpl.events({
     'click .js-update-item': function (e, t) {
         var self = this;
         var doc = journalDetailCollection.findOne(self._id);
-        Session.set('accountUpdate',doc.account);
+        Session.set('accountUpdate', doc.account);
         alertify.journalDetail(fa("pencil", "Journal Detail"), renderTemplate(updateTpl, doc));
     }
 });
+updateTpl.onRendered(function () {
+    select2chartAccount($("[name='account']"));
+})
 
 updateTpl.events({
     'keyup [name="dr"]': function (e, t) {
@@ -186,8 +198,8 @@ updateTpl.events({
         state.set('crUpdate', parseFloat(t.$(e.currentTarget).val()));
         state.set('drUpdate', 0);
     },
-    'change [name="account"]': function (e,t) {
-        Session.set('accountUpdate',t.$(e.currentTarget).val());
+    'change [name="account"]': function (e, t) {
+        Session.set('accountUpdate', t.$(e.currentTarget).val());
     }
 })
 
@@ -214,7 +226,7 @@ AutoForm.hooks({
     acc_journalDetailUpdate: {
         onSubmit: function (insertDoc, updateDoc, currentDoc) {
             event.preventDefault();
-            updateDoc.$set.account=Session.get('accountUpdate');
+            updateDoc.$set.account = Session.get('accountUpdate');
             journalDetailCollection.update(
                 {_id: currentDoc._id},
                 updateDoc
@@ -223,13 +235,13 @@ AutoForm.hooks({
         },
         onSuccess: function (formType, result) {
             alertify.journalDetail().close();
-            Session.set('accountUpdate',undefined);
+            Session.set('accountUpdate', undefined);
             alertify.success("Success");
         },
         onError: function (formType, error) {
             alertify.error(error.message);
         }
-}
+    }
 });
 
 
