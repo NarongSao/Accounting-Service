@@ -10,6 +10,7 @@ import {Company} from '../../../../core/common/collections/company.js';
 import {Setting} from '../../../../core/common/collections/setting';
 import {CloseChartAccount} from '../../../imports/api/collections/closeChartAccount';
 import {MapNBCBalance} from '../../../imports/api/collections/mapNBCBalance';
+import {ExchangeNBC} from '../../../imports/api/collections/exchangeNBC';
 
 Meteor.methods({
   acc_BalanceSheetNBC: function(params) {
@@ -28,7 +29,12 @@ Meteor.methods({
       data.title = Company.findOne();
 
       /****** Header *****/
-      data.header = params;
+
+      let exchangeData=ExchangeNBC.findOne({_id: params.exchangeDate});
+        params.exchangeData=moment(exchangeData.dateTime).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+
+
+        data.header = params;
 
 
       /****** Content *****/

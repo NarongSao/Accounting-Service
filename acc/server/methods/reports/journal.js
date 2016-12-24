@@ -8,6 +8,7 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Setting} from '../../../../core/common/collections/setting';
+import {Exchange} from '../../../../core/common/collections/exchange';
 
 import {Journal} from '../../../imports/api/collections/journal';
 
@@ -30,6 +31,8 @@ Meteor.methods({
           data.title = Company.findOne();
 
           /****** Header *****/
+
+
           data.header = params;
 
           /****** Content *****/

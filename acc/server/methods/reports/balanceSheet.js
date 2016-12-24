@@ -8,6 +8,7 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Setting} from '../../../../core/common/collections/setting';
+import {Exchange} from '../../../../core/common/collections/exchange';
 import {ChartAccount} from '../../../imports/api/collections/chartAccount';
 import {CloseChartAccount} from '../../../imports/api/collections/closeChartAccount';
 
@@ -35,6 +36,9 @@ Meteor.methods({
             dataMain.title = Company.findOne();
 
             /****** Header *****/
+            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
+
+            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
             dataMain.header = params;
 
 
@@ -1002,6 +1006,12 @@ Meteor.methods({
             dataMain.title = Company.findOne();
 
             /****** Header *****/
+
+            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
+
+            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+
+
             dataMain.header = params;
 
             /****** Content *****/
@@ -1255,7 +1265,7 @@ Meteor.methods({
                     // Push Header when have Sub Account
 
                     if (o.level > 0) {
-                        if (temporary !== o.parent ) {
+                        if (temporary !== o.parent) {
 
                             if (dataOld != null && isPush == false) {
                                 variable.push({

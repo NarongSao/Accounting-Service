@@ -955,7 +955,6 @@ insertPaymentTpl.onRendered(function () {
 });
 insertReceiveTpl.onRendered(function () {
     disableDate();
-    switcherFun();
 
     Meteor.setTimeout(function () {
         Session.set('currencyId', 'KHR');

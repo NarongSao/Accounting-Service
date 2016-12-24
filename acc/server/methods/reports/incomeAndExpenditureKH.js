@@ -8,11 +8,13 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Setting} from '../../../../core/common/collections/setting';
+import {Exchange} from '../../../../core/common/collections/exchange';
 
 import {MapNBCIncomeKH} from '../../../imports/api/collections/mapNBCIncomeKH';
 import {ChartAccount} from '../../../imports/api/collections/chartAccount';
 import {CloseChartAccount} from '../../../imports/api/collections/closeChartAccount';
 import {Journal} from '../../../imports/api/collections/journal';
+import {ExchangeNBC} from '../../../imports/api/collections/exchangeNBC';
 
 Meteor.methods({
     acc_IncomeAndExpenditureKh: function (params) {
@@ -38,6 +40,11 @@ Meteor.methods({
             data.title = Company.findOne();
 
             /****** Header *****/
+            let exchangeData=ExchangeNBC.findOne({_id: params.exchangeDate});
+            params.exchangeData=moment(exchangeData.dateTime).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+
+
+
             data.header = params;
             /****** Content *****/
 

@@ -8,6 +8,7 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Setting} from '../../../../core/common/collections/setting';
+import {Exchange} from '../../../../core/common/collections/exchange';
 
 import {CloseChartAccount} from '../../../imports/api/collections/closeChartAccount';
 import {ChartAccount} from '../../../imports/api/collections/chartAccount';
@@ -36,6 +37,11 @@ Meteor.methods({
             data.title = Company.findOne();
 
             /****** Header *****/
+            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
+
+            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+
+
             data.header = params;
             /****** Content *****/
 
@@ -394,6 +400,11 @@ Meteor.methods({
             data.title = Company.findOne();
 
             /****** Header *****/
+            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
+
+            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+
+
             data.header = params;
             /****** Content *****/
             var self = params;
