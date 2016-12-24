@@ -78,8 +78,8 @@ Meteor.methods({
             /****** Header *****/
             params.date = moment().format('DD/MMMM/YYYY');
 
-            let exchangeData=Exchange.findOne({_id: params.exchangeId});
-            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+            let exchangeData = Exchange.findOne({_id: params.exchangeId});
+            params.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
 
 
             data.header = params;
@@ -147,11 +147,11 @@ Meteor.methods({
 
                     totalAmount += (Meteor.call('exchange', obj.currencyId, baseCurrency, obj.amount, exchangeId));
                     totalCumDeprec += (Meteor.call('exchange', obj.currencyId, baseCurrency, cumDeprec, exchangeId));
-                    ;
+
                     totalDepExp += (Meteor.call('exchange', obj.currencyId, baseCurrency, depExp, exchangeId));
-                    ;
+
                     totalNetBookValue += (Meteor.call('exchange', obj.currencyId, baseCurrency, obj.estSalvage, exchangeId));
-                    ;
+
 
                 })
                 content += "<tr><td colspan='4' style='border-bottom: none' align='center'>Total</td><td>" + numeral(totalAmount).format('0,0.00') + mainCurrency + "</td><td colspan='2'></td><td>" + numeral(totalDepExp).format('0,0.00') + mainCurrency + "</td><td>" + numeral(totalCumDeprec).format('0,0.00') + mainCurrency + "</td><td>" + numeral(totalNetBookValue).format('0,0.00') + mainCurrency + "</td></tr>";
@@ -162,14 +162,14 @@ Meteor.methods({
     }
 });
 
-var getCurrenySymbol =function (id) {
-    let currency=Currency.findOne(id);
-    if(currency){
+var getCurrenySymbol = function (id) {
+    let currency = Currency.findOne(id);
+    if (currency) {
         return currency.symbol;
     }
 }
 
-var compareASD=function (a, b) {
+var compareASD = function (a, b) {
     if (a.account < b.account) {
         return -1;
     } else if (a.account > b.account) {
