@@ -584,7 +584,7 @@ function _makeScheduleForPrincipalInstallment(doc) {
 
         // Save to repayment schedule collection
         value.scheduleDate = moment(doc.repaidDate).startOf("day").toDate();
-        value.dueDate = moment(val.dueDate).startOf("day").toDate();
+        value.dueDate = moment(value.dueDate).startOf("day").toDate();
         value.loanAccId = doc.loanAccId;
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;
