@@ -41,14 +41,15 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 }
                 return exp;
             }
-        },
+        }
+        /*,
 
         {
             data: "createdBy", title: "User Create",
             render: function (val, type, doc) {
                 return Meteor.users.findOne({_id: val}).username;
             }
-        }
+        }*/
     ]
 })
 export const FixAssetExpenseTabular = new Tabular.Table(tabularData);
