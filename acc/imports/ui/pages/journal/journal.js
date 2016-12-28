@@ -83,7 +83,7 @@ Tracker.autorun(function () {
         var dobSelect = Session.get('dobSelect');
         var startYear = moment(dobSelect).year();
         var startDate = new Date('01/01/' + startYear);
-        Meteor.call('acc_getVoucherId', currentCurrency, startDate,Session.get("currentBranch"), function (err, result) {
+        Meteor.call('acc_getVoucherId', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
             if (result != undefined) {
                 Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
             } else {
@@ -104,7 +104,9 @@ Tracker.autorun(function () {
         state.set('totalDr', math.round(totalDr, 2));
         state.set('totalCr', math.round(totalCr, 2));
 
-        if (math.round(totalDr, 2) == math.round(totalCr, 2) && math.round(totalDr, 2) != 0) {
+        let fixAssetLength=fixAssetDepCollection.find().count();
+
+        if (math.round(totalDr, 2) == math.round(totalCr, 2) && (math.round(totalDr, 2) != 0 || fixAssetLength > 0)) {
             state.set('cssClassForSubmit', '');
         } else {
             state.set('cssClassForSubmit', 'disabled');
