@@ -249,7 +249,8 @@ indexTpl.events({
         data.currencyId = 'KHR';
         data.memo = 'update test migrate';
         data.refId = "001";
-        data.refFrom = "Sale";
+        data.refFrom = "Sale";            totalCr += obj.cr;
+
         data.total = 400;
 
         let transaction = [];
