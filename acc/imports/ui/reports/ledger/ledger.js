@@ -67,6 +67,7 @@ ledgerTpl.onRendered(function() {
 //Event
 ledgerTpl.events({
     'click .split-account-detail': function (e, t) {
+
         var self = this;
         /*var tr = $(e.currentTarget).closest("tr");
          var voucher= tr.find('.voucher-id').text().trim();*/

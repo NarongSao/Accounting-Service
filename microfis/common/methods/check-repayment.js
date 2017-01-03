@@ -159,8 +159,7 @@ export let checkRepayment = new ValidatedMethod({
                         totalAmount: totalAmountDue
                     };
 
-                    console.log("due Date " + o.dueDate);
-                    console.log("checkdate "+checkDate);
+
                     // Check due date
                     checker.dueDateIsSameOrBeforeCheckDate = moment(o.dueDate).isSameOrBefore(checkDate, 'day');
                     if (checker.dueDateIsSameOrBeforeCheckDate) {
@@ -416,7 +415,6 @@ export let checkRepayment = new ValidatedMethod({
                 }
             }
 
-            console.log(scheduleDue);
             return {
                 scheduleDue: scheduleDue,
                 totalScheduleDue: totalScheduleDue,

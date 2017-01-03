@@ -180,6 +180,7 @@ formTmpl.events({
 
 
 formTmpl.onDestroyed(function () {
+
     AutoForm.resetForm("Microfis_reStructure");
     stateRepayment.set('curData', undefined);
 });

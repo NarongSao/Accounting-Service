@@ -103,7 +103,12 @@ export const collectionSheetReport = new ValidatedMethod({
 
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
             selector.disbursementDate = {$lte: dateParam};
-            selector.status = "Active";
+
+            selector['$or'] = [{status: "Active"},
+                {closeDate: {$exists: true, $gt: dateParam}},
+                {writeOffDate: {$exists: true, $gt: dateParam}},
+                {restructureDate: {$exists: true, $gt: dateParam}}
+            ];
 
             //All Active Loan in check date
 

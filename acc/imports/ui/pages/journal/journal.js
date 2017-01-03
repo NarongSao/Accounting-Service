@@ -132,7 +132,6 @@ insertTpl.onRendered(function () {
     }, 100);
 });
 updateTpl.onRendered(function () {
-
     let id = this.data._id;
     disableDateUpdate(id);
     switcherFun();
@@ -336,7 +335,7 @@ indexTpl.events({
         }
 
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
-            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId != "0" || data.closingId != undefined ) && data.refId == undefined)) {
+            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined)) {
                 if (lastDate != null) {
                     if (new Date(lastDate.closeDate) < data.journalDate) {
                         alertify.journal(fa("plus", "Journal"), renderTemplate(Template.acc_journalUpdate, data)).maximize();
@@ -377,7 +376,7 @@ indexTpl.events({
         selectorGetLastDate.branchId = Session.get("currentBranch");
 
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
-            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId != "0" || data.closingId != undefined ) && data.refId == undefined )) {
+            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined )) {
                 if (lastDate != undefined) {
                     if (new Date(lastDate.closeDate) < data.journalDate) {
                         alertify.journal(fa("plus", "Journal"), renderTemplate(Template.acc_journalUpdate, data)).maximize();
@@ -403,7 +402,7 @@ indexTpl.events({
         selector._id = this._id;
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
             Meteor.call('getJournal', selector, function (err, data) {
-                if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId != "0" || data.closingId != undefined ) && data.refId == undefined)) {
+                if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined)) {
                     if (lastDate != null) {
                         if (new Date(lastDate.closeDate) < data.journalDate) {
 

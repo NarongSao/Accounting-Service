@@ -173,10 +173,10 @@ AccRoutes.route('/dateEndOfProcess', {
         this.register(
             'accDateEndOfProcess',
             Meteor.subscribe('accDateEndOfProcess')
-        ), this.register(
+        )/*, this.register(
             'accCloseChartAccount',
             Meteor.subscribe('accCloseChartAccount')
-        );
+        )*/;
     },
     action: function (params, queryParams) {
         Layout.main('acc_dateEndOfProcess');
@@ -294,17 +294,50 @@ AccRoutes.route('/ledgerReport', {
 
 AccRoutes.route('/ledgerReportGen', {
     name: 'acc.ledgerReportGen',
-    subscriptions: function (params, queryParams) {
-        this.register(
-            'acc_Journal',
-            Meteor.subscribe('acc_Journal')
-        );
-    },
+    // subscriptions: function (params, queryParams) {
+    //     this.register(
+    //         'acc_Journal',
+    //         Meteor.subscribe('acc_Journal')
+    //     );
+    // },
     action: function (params, queryParams) {
         Layout.report('acc_ledgerReportGen');
     }
-})
-;
+});
+
+
+//Transaction Detail
+import '../imports/ui/reports/transactionDetail/transactionDetail.js';
+AccRoutes.route('/transactionDetailReport', {
+    name: 'acc.transactionDetailReport',
+    title: __('acc.transactionDetailReport.title'),
+    subscriptions: function (params, queryParams) {
+        this.register('cpanel_exchange', Meteor.subscribe('cpanel_exchange'));
+        this.register('acc.mapUserAndAccount', Meteor.subscribe('acc.mapUserAndAccount'));
+    },
+    action: function (params, queryParams) {
+        Layout.main('acc_transactionDetailReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Transaction Detail Report',
+        parent: 'acc.home'
+    }
+});
+
+AccRoutes.route('/transactionDetailReportGen', {
+    name: 'acc.transactionDetailReportGen',
+    // subscriptions: function (params, queryParams) {
+    //     this.register(
+    //         'acc_Journal',
+    //         Meteor.subscribe('acc_Journal')
+    //     );
+    // },
+    action: function (params, queryParams) {
+        Layout.report('acc_transactionDetailReportGen');
+    }
+});
 
 //cash
 import '../imports/ui/reports/cash/cash.js';
@@ -328,12 +361,12 @@ AccRoutes.route('/cashReport', {
 
 AccRoutes.route('/cashReportGen', {
     name: 'acc.cashReportGen',
-    subscriptions: function (params, queryParams) {
-        this.register(
-            'acc_Journal',
-            Meteor.subscribe('acc_Journal')
-        );
-    },
+    // subscriptions: function (params, queryParams) {
+    //     this.register(
+    //         'acc_Journal',
+    //         Meteor.subscribe('acc_Journal')
+    //     );
+    // },
     action: function (params, queryParams) {
         Layout.report('acc_cashReportGen');
     }

@@ -23,36 +23,41 @@ import {renderTemplate} from '../../../../../core/client/libs/render-template.js
 import {destroyAction} from '../../../../../core/client/libs/destroy-action.js';
 import {displaySuccess, displayError} from '../../../../../core/client/libs/display-alert.js';
 import {__} from '../../../../../core/common/libs/tapi18n-callback-helper.js';
+
+
+//Collection
+import {Currency} from '../../../api/collections/currency';
+import {ChartAccount} from '../../../api/collections/chartAccount';
 // Method
-// import '../../../../common/methods/reports/journal';
-
-
+// import '../../../../common/methods/reports/ledger';
 import '../../libs/getBranch';
 import '../../libs/format';
 // Schema
-import {JournalReport} from '../../../../imports/api/collections/reports/journalReport';
+import {TransactionDetailReport} from '../../../../imports/api/collections/reports/transactionDetail';
 
 // Page
-import './journal.html';
+import './transactionDetail.html';
 import '../../pages/journal/journal.html';
-
-
 // Declare template
-var reportTpl = Template.acc_journalReport,
-    generateTpl = Template.acc_journalReportGen,
+
+var reportTpl = Template.acc_transactionDetailReport,
+    generateTpl = Template.acc_transactionDetailReportGen,
     updateTpl = Template.acc_journalUpdate;
+
 
 reportTpl.helpers({
     schema() {
-        return JournalReport;
+        return TransactionDetailReport;
     }
 })
+
 
 reportTpl.events({
     'change [name="accountType"]': function (e) {
         Session.set('accountTypeIdSession', $(e.currentTarget).val());
     }
 });
+
 
 generateTpl.onCreated(function () {
     createNewAlertify(['journal']);
@@ -61,7 +66,9 @@ generateTpl.onCreated(function () {
 //Event
 generateTpl.events({
     'dblclick .journalRow': function (e, t) {
+        debugger;
         var self = this;
+        console.log(self._id);
 
         var selectorGetLastDate = {};
         var branchId = Session.get("currentBranch");
@@ -73,7 +80,8 @@ generateTpl.events({
 
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
             Meteor.call('getJournal', selector, function (err, data) {
-                if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined )  && data.refId == undefined)) {
+                if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined)) {
+
 
                     if (data.voucherId.length > 10) {
                         data.voucherId = data.voucherId.substr(8, 6);
@@ -107,6 +115,7 @@ generateTpl.events({
 
 
 generateTpl.helpers({
+
     options: function () {
         // font size = null (default), bg
         // paper = a4, a5, mini
@@ -123,11 +132,12 @@ generateTpl.helpers({
         var q = FlowRouter.current().queryParams;
 
         Fetcher.setDefault('data', false);
-        Fetcher.retrieve('data', 'acc_journalReport', q);
+        Fetcher.retrieve('data', 'acc_ledgerReport', q);
 
         return Fetcher.get('data');
-        /*var callId = JSON.stringify(q);
-         var call = Meteor.callAsync(callId, 'acc_journalReport', q);
+        /* var callId = JSON.stringify(q);
+
+         var call = Meteor.callAsync(callId, 'acc_ledgerReport', q);
 
          if (!call.ready()) {
          return false;
@@ -137,17 +147,8 @@ generateTpl.helpers({
 });
 
 
-var formatNumberToSeperate = function (val) {
-    val = val.toString();
-    var parts = (val.replace(/,/g, "")).toString().split(".");
-    return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] == "" || parts[1] != null ? "." + parts[1] : "");
-}, formatToNumber = function (val) {
-    var regex = /^\d+(\.\d{1,2})?$/i;
-    if (!regex.test(val)) {
-        val = val.replace(/,/g, "");
-    }
-    return parseFloat(val);
-};
+
+
 
 
 

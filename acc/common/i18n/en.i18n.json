@@ -22,6 +22,7 @@
       "balanceSheetNBCReport": "Balance Sheet NBC",
       "journalReport": "Journal",
       "ledgerReport": "Ledger",
+      "transactionDetailReport": "Transaction Detail",
       "trialBalanceReport": "Trial Balance",
       "currencyClosingReport": "Currency Closing",
       "chartNetIncome": "Net Income",
@@ -175,6 +176,9 @@
     },
     "ledgerReport": {
       "title": "Ledger"
+    },
+    "transactionDetailReport": {
+      "title": "Transaction Detail"
     },
     "trialBalanceReport": {
       "title": "Trial Balance"

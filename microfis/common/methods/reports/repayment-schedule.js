@@ -8,14 +8,14 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Branch} from '../../../../core/common/collections/branch.js';
-import {Disbursement} from '../../../common/collections/loan-acc.js';
+import {LoanAcc} from '../../../common/collections/loan-acc.js';
 import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 
 export const repaymentScheduleReport = new ValidatedMethod({
-    name: 'simplePos.repaymentScheduleReport',
+    name: 'microfis.repaymentScheduleReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         loanAccId: {type: String}
