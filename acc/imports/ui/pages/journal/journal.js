@@ -104,7 +104,7 @@ Tracker.autorun(function () {
         state.set('totalDr', math.round(totalDr, 2));
         state.set('totalCr', math.round(totalCr, 2));
 
-        let fixAssetLength=fixAssetDepCollection.find().count();
+        let fixAssetLength = fixAssetDepCollection.find().count();
 
         if (math.round(totalDr, 2) == math.round(totalCr, 2) && (math.round(totalDr, 2) != 0 || fixAssetLength > 0)) {
             state.set('cssClassForSubmit', '');
@@ -248,7 +248,8 @@ indexTpl.events({
         data.currencyId = 'KHR';
         data.memo = 'update test migrate';
         data.refId = "001";
-        data.refFrom = "Sale";            totalCr += obj.cr;
+        data.refFrom = "Sale";
+        totalCr += obj.cr;
 
         data.total = 400;
 
@@ -620,7 +621,18 @@ AutoForm.hooks({
             let curDate = Session.get('dobSelect');
             Session.set('dobSelect', undefined);
 
-            alertify.journal().close();
+            if (Session.get('saveNew')) {
+                Meteor.setTimeout(function () {
+                    $("#currencyId").val(Session.get('currencyId')).trigger("change");
+                    // $('#currencyId').select2('val', Session.get('currencyId'));
+                    Session.set('dobSelect', curDate);
+                    $("#journalDate").val(curDate).trigger("change");
+
+                }, 100);
+                Session.set('saveNew', false);
+            } else {
+                alertify.journal().close();
+            }
 
             stateFixAsset.set('isFixAsset', false);
             // displaySuccess();
@@ -682,7 +694,19 @@ AutoForm.hooks({
             let curDate = Session.get('dobSelect');
             Session.set('dobSelect', undefined);
 
-            alertify.journal().close();
+            if (Session.get('saveNew')) {
+                Meteor.setTimeout(function () {
+                    $("#currencyId").val(Session.get('currencyId')).trigger("change");
+                    // $('#currencyId').select2('val', Session.get('currencyId'));
+                    Session.set('dobSelect', curDate);
+                    $("#journalDate").val(curDate).trigger("change");
+
+                }, 100);
+                Session.set('saveNew', false);
+            } else {
+                alertify.journal().close();
+            }
+
             stateFixAsset.set('isFixAsset', false);
             // displaySuccess();
             alertify.success("Success");
@@ -760,6 +784,7 @@ insertTpl.onDestroyed(function () {
     state.set('totalCr', 0);
 
     stateFixAsset.set('isFixAsset', false);
+    Session.set('saveNew', false);
 
     removeCollectionNull();
 
@@ -883,6 +908,12 @@ insertPaymentTpl.helpers({
     }
 });
 
+insertPaymentTpl.events({
+    'click .save-new': function (e, t) {
+        Session.set('saveNew', true);
+    }
+})
+
 insertReceiveTpl.helpers({
     total(){
         let amount = 0;
@@ -915,6 +946,12 @@ insertReceiveTpl.helpers({
     }
 });
 
+insertReceiveTpl.events({
+    'click .save-new': function (e, t) {
+        Session.set('saveNew', true);
+    }
+})
+
 
 insertPaymentTpl.onDestroyed(function () {
 
@@ -927,6 +964,7 @@ insertPaymentTpl.onDestroyed(function () {
 
 
     stateFixAsset.set('isFixAsset', false);
+    Session.set('saveNew', false);
     removeCollectionNull();
 })
 insertReceiveTpl.onDestroyed(function () {
@@ -940,7 +978,7 @@ insertReceiveTpl.onDestroyed(function () {
 
 
     stateFixAsset.set('isFixAsset', false);
-
+    Session.set('saveNew', false);
     removeCollectionNull();
 })
 

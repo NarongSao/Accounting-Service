@@ -218,7 +218,7 @@ Meteor.methods({
                         detailObj._id = ob._id;
                         detailObj.journalDate = ob.journalDate;
                         detailObj.memo = ob.memo;
-                        detailObj.voucherId = ob.voucherId;
+                        detailObj.voucherId =ob.voucherId.substr(8, ob.voucherId.length);
 
                         //Loop for Detail Transaction
 

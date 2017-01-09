@@ -73,7 +73,7 @@ ledgerTpl.events({
          var voucher= tr.find('.voucher-id').text().trim();*/
         // var data = Acc.Collection.Journal.findOne({voucherId: self.voucherId,_id: self._id});
 
-        Meteor.call('getJournalForLedger',self.voucherId,self._id,function (err,data) {
+        Meteor.call('getJournalForLedger',self._id,function (err,data) {
             alertify.showJournal(fa("eye", "Journal"),renderTemplate(ledgerShow, data));
         })
     }
