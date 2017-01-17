@@ -187,7 +187,7 @@ Meteor.methods({
                         selectorAdvanced.branchId = self.branchId;
                     }
 
-                    var resultLast1 = Journal.find(selectorAdvanced).fetch();
+                    var resultLast1 = Journal.find(selectorAdvanced, {sort: {voucherId: 1}}).fetch();
 
 
                     if (resultLast1.length != 0) {
@@ -257,7 +257,8 @@ Meteor.methods({
                         },
                         {
                             $sort: {
-                                "_id.code": 1
+                                "_id.code": 1,
+                                "_id.voucherId": 1
                             }
                         }
                     ]);

@@ -178,7 +178,7 @@ Meteor.methods({
                         selectorAdvanced.branchId = self.branchId;
                     }
 
-                    var resultLast1 = Journal.find(selectorAdvanced).fetch();
+                    var resultLast1 = Journal.find(selectorAdvanced,{sort: {voucherId: 1}}).fetch();
                     if (resultLast1.length != 0) {
                         resultLast1.forEach(function (oldData) {
                             if (oldData != undefined) {
@@ -211,7 +211,7 @@ Meteor.methods({
                     selector['transaction.accountDoc._id'] = obj._id;
                     var i = 0;
                     /*var resultData = ReactiveMethod.call("getJournalTran", selector);*/
-                    var resultData = Journal.find(selector);
+                    var resultData = Journal.find(selector,{sort: {voucherId: 1}}).fetch();
 
                     resultData.forEach(function (ob) {
                         var detailObj = {};

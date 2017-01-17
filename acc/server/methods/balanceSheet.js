@@ -41,6 +41,8 @@ Meteor.methods({
                 }
             }
         ]);
+
+
         results.forEach(function (obj) {
             if (obj.result != 0) {
                 var re = Meteor.call('exchange', obj._id.currency, baseCurrency,
@@ -110,7 +112,6 @@ Meteor.methods({
 
             }
         }
-
         arr.sort(compare);
         return arr;
     },
