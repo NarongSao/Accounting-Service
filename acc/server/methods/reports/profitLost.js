@@ -181,6 +181,7 @@ Meteor.methods({
                             amountThb = val.value;
                         }
                         key[val.account] = {
+                            account: val.account,
                             result: val.result,
                             resultYearToDate: val.result,
                             name: val.name,
@@ -225,6 +226,7 @@ Meteor.methods({
                     if (!key[val.account]) {
                         key[val.account] = {
                             result: 0,
+                            account: val.account,
                             resultYearToDate: val.result,
                             name: val.name,
                             currency: baseCurrency,
@@ -262,6 +264,7 @@ Meteor.methods({
                 if (temporaryIncome !== obj.parent & isPushIncome == false) {
                     resultIncomeFinal.push({
                         name: dataIncome.name,
+                        account:dataIncome.account,
                         code: SpaceChar.space(6 * dataIncome.level) +
                         'Total : ' + dataIncome.code,
                         result: subTotalIncome,
@@ -277,6 +280,7 @@ Meteor.methods({
                         });
                         resultIncomeFinal.push({
                             name: dataIncome.name,
+                            account:dataIncome.account,
                             code: SpaceChar.space(6 * dataIncome.level) +
                             dataIncome.code,
                             result: "title",
@@ -295,6 +299,7 @@ Meteor.methods({
                 temporaryIncome = obj.parent;
                 resultIncomeFinal.push({
                     result: obj.result,
+                    account:obj.account,
                     resultYearToDate: obj.resultYearToDate,
                     name: obj.name,
                     currency: obj.currency,
@@ -314,6 +319,7 @@ Meteor.methods({
                 if (temporaryExpense !== obj.parent & isPushExpense == false) {
                     resultEnpenseFinal.push({
                         name: dataExpense.name,
+                        account:dataExpense.account,
                         code: SpaceChar.space(6 * dataExpense.level) +
                         'Total : ' + dataExpense.code,
                         result: subTotalExpense,
@@ -329,6 +335,7 @@ Meteor.methods({
                         });
                         resultEnpenseFinal.push({
                             name: dataExpense.name,
+                            account:dataExpense.account,
                             code: SpaceChar.space(6 * dataExpense.level) +
                             dataExpense.code,
                             result: "title",
@@ -347,6 +354,7 @@ Meteor.methods({
                 temporaryExpense = obj.parent;
                 resultEnpenseFinal.push({
                     result: obj.result,
+                    account:obj.account,
                     resultYearToDate: obj.resultYearToDate,
                     name: obj.name,
                     currency: obj.currency,
@@ -660,6 +668,7 @@ Meteor.methods({
                 if (temporaryIncome !== obj.parent & isPushIncome == false) {
                     resultIncomeFinal.push({
                         name: dataIncome.name,
+                        account:dataIncome.account,
                         code: SpaceChar.space(6 * dataIncome.level) +
                         'Total : ' + dataIncome.code,
                         result: subTotalIncome,
@@ -678,6 +687,7 @@ Meteor.methods({
                         });
                         resultIncomeFinal.push({
                             name: dataIncome.name,
+                            account:dataIncome.account,
                             code: SpaceChar.space(6 * dataIncome.level) +
                             dataIncome.code,
                             result: "title",
@@ -705,6 +715,7 @@ Meteor.methods({
                 temporaryIncome = obj.parent;
                 resultIncomeFinal.push({
                     result: obj.result,
+                    account:obj.account,
                     resultYearToDate: obj.resultYearToDate,
                     name: obj.name,
                     currency: obj.currency,
@@ -726,6 +737,7 @@ Meteor.methods({
                 if (temporaryExpense !== obj.parent && isPushExpense == false) {
                     resultEnpenseFinal.push({
                         name: dataExpense.name,
+                        account:dataExpense.account,
                         code: SpaceChar.space(6 * dataExpense.level) +
                         'Total : ' + dataExpense.code,
                         result: subTotalExpense,
@@ -744,6 +756,7 @@ Meteor.methods({
                         });
                         resultEnpenseFinal.push({
                             name: dataExpense.name,
+                            account:dataExpense.account,
                             code: SpaceChar.space(6 * dataExpense.level) +
                             dataExpense.code,
                             result: "title",
@@ -771,6 +784,7 @@ Meteor.methods({
                 temporaryExpense = obj.parent;
                 resultEnpenseFinal.push({
                     result: obj.result,
+                    account:obj.account,
                     resultYearToDate: obj.resultYearToDate,
                     name: obj.name,
                     currency: obj.currency,

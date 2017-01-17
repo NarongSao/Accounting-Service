@@ -27,7 +27,6 @@
     }
 }
 
-
 /* Report styles
 -------------------------------------------------- */
 .report-body-bg {
@@ -300,4 +299,8 @@
     text-align: center;
     width: 100%;
     font-weight: bold;
+}
+
+.fadeIn .direct-chat .box-body {
+    overflow-x: inherit;
 }

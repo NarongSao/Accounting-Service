@@ -183,7 +183,7 @@ export const SelectOpts = {
                 list.push({
                     label: Spacebars.SafeString(SpaceChar.space(obj.level * 6) + obj.code).string + " | " + obj.name,
                     value: Spacebars.SafeString(SpaceChar.space(obj.level * 6) + obj.code).string + " | " + obj.name
-            })
+                })
             });
         return list;
     }, chartAccountAsset: function () {
@@ -247,12 +247,15 @@ export const SelectOpts = {
 
         var list = [];
         list.push({label: "(Select One)", value: ""});
-        var currencyBase = Setting.findOne().baseCurrency;
-        Currency.find({_id: {$not: currencyBase}})
-            .forEach(function (obj) {
-                list.push({label: obj._id, value: obj._id});
-            });
-        return list;
+        var currencyDoc = Setting.findOne();
+        if (currencyDoc) {
+            var currencyBase = currencyDoc.baseCurrency;
+            Currency.find({_id: {$not: currencyBase}})
+                .forEach(function (obj) {
+                    list.push({label: obj._id, value: obj._id});
+                });
+            return list;
+        }
     },
     paymentReceiveMethod: function () {
         let list = [];
@@ -340,17 +343,20 @@ export const SelectOptsReport = {
     exchange: function () {
         Meteor.subscribe('core.setting');
         var list = [];
-        var baseCurrency = Setting.findOne().baseCurrency;
-        list.push({label: "(Select One)", value: ""});
-        Exchange.find({base: baseCurrency}, {sort: {exDate: -1}})
-            .forEach(function (obj) {
-                list.push({
-                    label: moment(obj.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(obj.rates),
-                    value: obj._id
+        var currencyDoc = Setting.findOne();
+        if(currencyDoc) {
+            var baseCurrency = currencyDoc.baseCurrency
+            list.push({label: "(Select One)", value: ""});
+            Exchange.find({base: baseCurrency}, {sort: {exDate: -1}})
+                .forEach(function (obj) {
+                    list.push({
+                        label: moment(obj.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(obj.rates),
+                        value: obj._id
+                    });
                 });
-            });
 
-        return list;
+            return list;
+        }
     }, exchangeNBC: function () {
         Meteor.subscribe('acc.exchangeNBC');
 

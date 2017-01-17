@@ -20,7 +20,26 @@ Meteor.methods({
             }
         });
         if (curFrom != curTo) {
-            return amount / ex.rates[curFrom];
+
+            if(curTo=="KHR"){
+                if(curFrom=="USD"){
+                    return amount * ex.rates[curFrom];
+                }else if(curFrom=="THB"){
+                    return amount * ex.rates[curFrom];
+                }
+            }else if(curTo=="USD"){
+                if(curFrom=="KHR"){
+                    return amount / ex.rates[curFrom];
+                }else if(curFrom=="THB"){
+                    return amount / ex.rates[curFrom];
+                }
+            }else if(curTo=="THB"){
+                if(curFrom=="KHR"){
+                    return amount / ex.rates[curFrom];
+                }else if(curFrom=="USD"){
+                    return amount * ex.rates[curFrom];
+                }
+            }
         } else {
             return amount;
         }
@@ -36,11 +55,25 @@ Meteor.methods({
         });
 
         if (curFrom != curTo) {
-            var val = ex.rates[curFrom].split('/');
-            if (val[1] != null) {
-                return amount * parseFloat(val[1]);
-            } else {
-                return amount / parseFloat(ex.rates[curFrom]);
+
+            if(curTo=="KHR"){
+                if(curFrom=="USD"){
+                    return amount * ex.rates[curFrom];
+                }else if(curFrom=="THB"){
+                    return amount * ex.rates[curFrom];
+                }
+            }else if(curTo=="USD"){
+                if(curFrom=="KHR"){
+                    return amount / ex.rates[curFrom];
+                }else if(curFrom=="THB"){
+                    return amount / ex.rates[curFrom];
+                }
+            }else if(curTo=="THB"){
+                if(curFrom=="KHR"){
+                    return amount / ex.rates[curFrom];
+                }else if(curFrom=="USD"){
+                    return amount * ex.rates[curFrom];
+                }
             }
         } else {
             return amount;
