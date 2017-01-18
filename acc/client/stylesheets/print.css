@@ -66,6 +66,10 @@
     font-size: 14px;
 }
 
+.display-on-print-div > .table > thead > tr > th, .display-on-print-div > .table > tbody > tr > th,.display-on-print-div > .table > tfoot > tr > th,.display-on-print-div > .table > thead > tr > td,.display-on-print-div > .table > tbody > tr > td,.display-on-print-div > .table > tfoot > tr > td {
+    border: 1px solid black !important;
+}
+
 
 
 
