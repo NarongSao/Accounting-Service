@@ -128,9 +128,9 @@ tmplPrintData.events({
 
         let self=this;
         let pa={};
-        let datePick=t.$("[name='date']").val();
-        let startDate=moment(moment(datePick).startOf('months').toDate()).format("DD/MM/YYYY");
-        let dateRange=startDate+" - "+moment(datePick).format("DD/MM/YYYY");
+        let datePick=$("[name='date']").val();
+        let startDate=moment(moment(datePick,"DD/MM/YYYY").startOf('months').toDate()).format("DD/MM/YYYY");
+        let dateRange=startDate+" - "+moment(datePick,"DD/MM/YYYY").format("DD/MM/YYYY");
 
         pa.branchId=$("[name='branchId']").val();
         pa.currencyId=$("[name='currencyId']").val();
@@ -138,7 +138,7 @@ tmplPrintData.events({
         pa.dateRange=dateRange;
 
         pa.chartAccount=self.account;
-        pa.accountType=['10','11'];
+        pa.accountType=['10','11','12','20','21','30'];
 
         var path='/acc/transactionDetailReport?branchId='+pa.branchId+'&accountType='+
             pa.accountType+'&chartAccount='+pa.chartAccount
@@ -168,9 +168,9 @@ tmplPrintDataForAll.events({
 
         let self=this;
         let pa={};
-        let datePick=t.$("[name='date']").val();
-        let startDate=moment(moment(datePick).startOf('months').toDate()).format("DD/MM/YYYY");
-        let dateRange=startDate+" - "+moment(datePick).format("DD/MM/YYYY");
+        let datePick=$("[name='date']").val();
+        let startDate=moment(moment(datePick,"DD/MM/YYYY").startOf('months').toDate()).format("DD/MM/YYYY");
+        let dateRange=startDate+" - "+moment(datePick,"DD/MM/YYYY").format("DD/MM/YYYY");
 
         pa.branchId=$("[name='branchId']").val();
         pa.currencyId=$("[name='currencyId']").val();

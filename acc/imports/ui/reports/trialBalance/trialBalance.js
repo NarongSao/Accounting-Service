@@ -102,9 +102,9 @@ tmplPrintData.events({
 
         let self=this;
         let pa={};
-        let datePick=t.$("[name='date']").val();
-        let startDate=moment(moment(datePick).startOf('months').toDate()).format("DD/MM/YYYY");
-        let dateRange=startDate+" - "+moment(datePick).format("DD/MM/YYYY");
+        let datePick=$("[name='date']").val();
+        let startDate=moment(moment(datePick,"DD/MM/YYYY").startOf('months').toDate()).format("DD/MM/YYYY");
+        let dateRange=startDate+" - "+moment(datePick,"DD/MM/YYYY").format("DD/MM/YYYY");
 
         pa.branchId=$("[name='branchId']").val();
         pa.currencyId=$("[name='currencyId']").val();

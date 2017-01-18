@@ -105,7 +105,7 @@ reportTpl.events({
 
         let result={};
         result.branchId= $('[name="branchId"]').val();
-        result.date= t.$('[name="date"]').val();
+        result.date= $('[name="date"]').val();
         result.currencyId= $('[name="currencyId"]').val();
         result.exchangeDate= $('[name="exchangeDate"]').val();
 

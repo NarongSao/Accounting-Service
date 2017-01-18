@@ -221,7 +221,7 @@ Meteor.methods({
 
                     selector['transaction.accountDoc._id'] = obj._id;
                     var i = 0;
-                    /*var resultData = ReactiveMethod.call("getJournalTran", selector);*/
+                    /*var$ resultData = ReactiveMethod.call("getJournalTran", selector);*/
                     // var resultData = Journal.find(selector).fetch();
 
                     var resultData = Journal.aggregate([{

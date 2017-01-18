@@ -310,6 +310,18 @@ Meteor.methods({
 
             });
 
+            if (isPushIncome == false) {
+                resultIncomeFinal.push({
+                    name: dataIncome.name,
+                    account:dataIncome.account,
+                    code: SpaceChar.space(6 * dataIncome.level) +
+                    'Total : ' + dataIncome.code,
+                    result: subTotalIncome,
+                    resultYearToDate: subTotalIncomeYearToDate
+                });
+                isPushIncome = true;
+            }
+
 
             var resultEnpenseFinal = [];
 
@@ -365,6 +377,17 @@ Meteor.methods({
 
             });
 
+            if (isPushExpense == false) {
+                resultEnpenseFinal.push({
+                    name: dataExpense.name,
+                    account:dataExpense.account,
+                    code: SpaceChar.space(6 * dataExpense.level) +
+                    'Total : ' + dataExpense.code,
+                    result: subTotalExpense,
+                    resultYearToDate: subTotalExpenseYearToDate
+                });
+                isPushExpense = true;
+            }
 
             data.resultIncome = resultIncomeFinal;
             data.grandTotalIncome = grandTotalIncome;
@@ -729,6 +752,22 @@ Meteor.methods({
 
             });
 
+            if (isPushIncome == false) {
+                resultIncomeFinal.push({
+                    name: dataIncome.name,
+                    account:dataIncome.account,
+                    code: SpaceChar.space(6 * dataIncome.level) +
+                    'Total : ' + dataIncome.code,
+                    result: subTotalIncome,
+                    amountUsd: subTotalUSDIncome,
+                    amountRiel: subTotalRielIncome,
+                    amountThb: subTotalTHBIncome,
+                    resultYearToDate: subTotalIncomeYearToDate
+                });
+                isPushIncome = true;
+
+            }
+
 
             var resultEnpenseFinal = [];
 
@@ -798,7 +837,21 @@ Meteor.methods({
 
             });
 
+            if (isPushExpense == false) {
+                resultEnpenseFinal.push({
+                    name: dataExpense.name,
+                    account:dataExpense.account,
+                    code: SpaceChar.space(6 * dataExpense.level) +
+                    'Total : ' + dataExpense.code,
+                    result: subTotalExpense,
+                    amountUsd: subTotalUSDExpense,
+                    amountRiel: subTotalRielExpense,
+                    amountThb: subTotalTHBExpense,
+                    resultYearToDate: subTotalExpenseYearToDate
+                });
+                isPushExpense = true;
 
+            }
             data.resultIncome = resultIncomeFinal;
             data.grandTotalIncome = grandTotalIncome;
             data.grandTotalIncomeYearToDate = grandTotalIncomeYearToDate;

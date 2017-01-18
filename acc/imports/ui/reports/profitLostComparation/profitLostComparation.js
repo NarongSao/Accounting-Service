@@ -100,7 +100,7 @@ tmplPrintData.events({
 
         let self=this;
         let pa={};
-        let datePick=t.$("[name='date']").val();
+        let datePick=$("[name='date']").val();
         let startDate=moment(moment(datePick).startOf('months').toDate()).format("DD/MM/YYYY");
         let dateRange=startDate+" - "+moment(datePick).format("DD/MM/YYYY");
 

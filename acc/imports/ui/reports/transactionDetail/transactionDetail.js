@@ -167,12 +167,12 @@ tmplPrintData.events({
 reportTpl.events({
     'click .run ': function (e, t) {
         let result = {};
-        result.branchId = t.$('[name="branchId"]').val();
-        result.date = t.$('[name="date"]').val();
-        result.currencyId = t.$('[name="currencyId"]').val();
-        result.exchangeDate = t.$('[name="exchangeDate"]').val();
-        result.accountType = t.$('[name="accountType"]').val();
-        result.chartAccount = t.$('[name="chartAccount"]').val();
+        result.branchId = $('[name="branchId"]').val();
+        result.date = $('[name="date"]').val();
+        result.currencyId = $('[name="currencyId"]').val();
+        result.exchangeDate = $('[name="exchangeDate"]').val();
+        result.accountType = $('[name="accountType"]').val();
+        result.chartAccount = $('[name="chartAccount"]').val();
 
         if (result.accountType == "" || result.exchangeDate == "") {
             alertify.warning("Required!!!");

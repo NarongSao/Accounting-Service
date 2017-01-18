@@ -117,7 +117,7 @@ reportTpl.events({
     'click .run ': function (e, t) {
         let result = {};
         result.branchId = $('[name="branchId"]').val();
-        result.date = t.$('[name="date"]').val();
+        result.date = $('[name="date"]').val();
         result.currencyId = $('[name="currencyId"]').val();
         result.accountType = $('[name="accountType"]').val();
         result.chartAccount = $('[name="chartAccount"]').val();
