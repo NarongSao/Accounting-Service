@@ -41,13 +41,29 @@ Meteor.methods({
 
         results.forEach(function (obj) {
             if (obj.result != 0) {
+                let valRiel=0;
+                let valDollar=0;
+                let valBaht=0;
+                if(obj._id.currency=="KHR"){
+                    valRiel=obj.result;
+                }else if(obj._id.currency=="USD"){
+                    valDollar=obj.result;
+                }else if(obj._id.currency=="THB"){
+                    valBaht=obj.result;
+                }
+
+
                 var re = Meteor.call('exchange', obj._id.currency, baseCurrency,
                     obj.result, exchangeDate);
+
                 arr.push({
                     account: obj._id.account,
                     name: obj._id.name,
                     result: math.round(re, 2),
-                    code: obj._id.code
+                    code: obj._id.code,
+                    valRiel: valRiel,
+                    valDollar: valDollar,
+                    valBaht: valBaht
                 });
             }
         });
@@ -61,7 +77,10 @@ Meteor.methods({
                     account: obj._id,
                     name: obj.name,
                     result: 0,
-                    code: obj.code
+                    code: obj.code,
+                    valRiel: 0,
+                    valDollar: 0,
+                    valBaht: 0
                 });
             })
         }
@@ -72,13 +91,29 @@ Meteor.methods({
             if (resultLast != null) {
                 resultLast.forEach(function (lastBal) {
                     if (lastBal.value != 0) {
+
+                        let valRiel=0;
+                        let valDollar=0;
+                        let valBaht=0;
+                        if(lastBal.currencyId=="KHR"){
+                            valRiel=lastBal.result;
+                        }else if(lastBal.currencyId=="USD"){
+                            valDollar=lastBal.result;
+                        }else if(lastBal.currencyId=="THB"){
+                            valBaht=lastBal.result;
+                        }
+
                         var re = Meteor.call('exchange', lastBal.currencyId,
                             baseCurrency, lastBal.value, exchangeDate);
+
                         arr.push({
                             account: lastBal.closeChartAccountId,
                             name: lastBal.name,
                             result: math.round(re, 2),
-                            code: lastBal.code
+                            code: lastBal.code,
+                            valRiel: valRiel,
+                            valDollar: valDollar,
+                            valBaht: valBaht
                         });
                     }
                 })

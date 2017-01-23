@@ -403,7 +403,11 @@ AccRoutes.route('/trialBalanceReport', {
 AccRoutes.route('/trialBalanceReportGen', {
     name: 'acc.trialBalanceReportGen',
     action: function (params, queryParams) {
-        Layout.report('acc_trialBalanceReportGen');
+        if (queryParams.currencyId == "All") {
+            Layout.report('acc_trialBalanceForAllReportGen');
+        } else {
+            Layout.main('acc_trialBalanceReport');
+        }
     }
 });
 

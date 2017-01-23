@@ -294,7 +294,7 @@ generateTplForAll.events({
 
         var code=  replaceAll(self.code,"&nbsp;","");
 
-         var account=Acc.Collection.ChartAccount.findOne({code: code});
+        var account=ChartAccount.findOne({code: code});
         var accountTypeId=[];
         accountTypeId.push(account.accountTypeId);
 
@@ -322,7 +322,7 @@ generateTpl.events({
 
         var code=  replaceAll(self.code,"&nbsp;","");
 
-         var account=Acc.Collection.ChartAccount.findOne({code: code});
+         var account=ChartAccount.findOne({code: code});
         var accountTypeId=[];
         accountTypeId.push(account.accountTypeId);
 

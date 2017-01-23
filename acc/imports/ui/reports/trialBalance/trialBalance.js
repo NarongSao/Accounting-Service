@@ -36,8 +36,9 @@ import '../transactionDetail/transactionDetail.html';
 
 var reportTpl = Template.acc_trialBalanceReport,
     generateTpl = Template.acc_trialBalanceReportGen,
+    generateForAllTpl = Template.acc_trialBalanceForAllReportGen,
     tmplPrintData = Template.acc_trialBalanceReportPrintData,
-    tansactionDetailData = Template.acc_transactionDetailReport;
+    tmplPrintForAllData = Template.acc_trialBalanceReportForAllPrintData;
 
 
 reportTpl.onRendered(function () {
@@ -54,21 +55,28 @@ reportTpl.helpers({
 
 // Form state
 let formDataState = new ReactiveVar(null);
+let formDataStateForAllCurency = new ReactiveVar(null);
 
 
 // Index
 let rptInitState = new ReactiveVar(false);
 let rptDataState = new ReactiveVar(null);
 
+let rptInitStateForAllCurrency = new ReactiveVar(false);
+let rptDataStateForAllCurrency = new ReactiveVar(null);
 
 reportTpl.onCreated(function () {
     createNewAlertify(['acc_trialBalanceReport']);
     this.autorun(() => {
+        debugger;
         // Check form data
         if (formDataState.get()) {
             rptInitState.set(true);
             rptDataState.set(null);
 
+
+            rptInitStateForAllCurrency.set(false);
+            rptDataStateForAllCurrency.set(null);
             let params = formDataState.get();
 
             Meteor.call('acc_trialBalanceReport', params, function (err, result) {
@@ -82,6 +90,26 @@ reportTpl.onCreated(function () {
 
         }
 
+        // Check form data
+        if (formDataStateForAllCurency.get()) {
+            createNewAlertify('acc_trialBalanceReportForAll');
+
+            rptInitStateForAllCurrency.set(true);
+            rptDataStateForAllCurrency.set(null);
+
+            rptInitState.set(false);
+            rptDataState.set(null);
+            let params = formDataStateForAllCurency.get();
+
+            Meteor.call('acc_trialBalanceReportAllCurrency', params, function (err, result) {
+                if (result) {
+                    rptDataStateForAllCurrency.set(result);
+                } else {
+                    console.log(err.message);
+                }
+            })
+        }
+
     });
 });
 
@@ -90,6 +118,8 @@ tmplPrintData.helpers({
     rptInit(){
         if (rptInitState.get() == true) {
             return rptInitState.get();
+        } else {
+            return rptInitState.get();
         }
     },
     rptData: function () {
@@ -97,29 +127,70 @@ tmplPrintData.helpers({
     }
 });
 
+tmplPrintForAllData.helpers({
+    rptInit(){
+        debugger;
+        if (rptInitStateForAllCurrency.get() == true) {
+            return rptInitStateForAllCurrency.get();
+        } else {
+            return rptInitStateForAllCurrency.get();
+        }
+    },
+    rptData: function () {
+        debugger;
+        return rptDataStateForAllCurrency.get();
+    }
+});
+
 tmplPrintData.events({
-    'dblclick .transactionDetail'(e,t){
+    'dblclick .transactionDetail'(e, t){
 
-        let self=this;
-        let pa={};
-        let datePick=$("[name='date']").val();
-        let startDate=moment(moment(datePick,"DD/MM/YYYY").startOf('months').toDate()).format("DD/MM/YYYY");
-        let dateRange=startDate+" - "+moment(datePick,"DD/MM/YYYY").format("DD/MM/YYYY");
+        let self = this;
+        let pa = {};
+        let datePick = $("[name='date']").val();
+        let startDate = moment(moment(datePick, "DD/MM/YYYY").startOf('months').toDate()).format("DD/MM/YYYY");
+        let dateRange = startDate + " - " + moment(datePick, "DD/MM/YYYY").format("DD/MM/YYYY");
 
-        pa.branchId=$("[name='branchId']").val();
-        pa.currencyId=$("[name='currencyId']").val();
-        pa.exchangeDate=$("[name='exchangeDate']").val();
-        pa.dateRange=dateRange;
+        pa.branchId = $("[name='branchId']").val();
+        pa.currencyId = $("[name='currencyId']").val();
+        pa.exchangeDate = $("[name='exchangeDate']").val();
+        pa.dateRange = dateRange;
 
-        pa.chartAccount=self.account;
-        pa.accountType=['10','11','12','20','21','30','40','41','50','51'];
+        pa.chartAccount = self.account;
+        pa.accountType = ['10', '11', '12', '20', '21', '30', '40', '41', '50', '51'];
 
-        var path='/acc/transactionDetailReport?branchId='+pa.branchId+'&accountType='+
-            pa.accountType+'&chartAccount='+pa.chartAccount
-            +'&date='+pa.dateRange+'&exchangeDate='+pa.exchangeDate
-            +'&currencyId='+pa.currencyId;
+        var path = '/acc/transactionDetailReport?branchId=' + pa.branchId + '&accountType=' +
+            pa.accountType + '&chartAccount=' + pa.chartAccount
+            + '&date=' + pa.dateRange + '&exchangeDate=' + pa.exchangeDate
+            + '&currencyId=' + pa.currencyId;
 
-        window.open(path,'_blank');
+        window.open(path, '_blank');
+
+    }
+});
+tmplPrintForAllData.events({
+    'dblclick .transactionDetail'(e, t){
+
+        let self = this;
+        let pa = {};
+        let datePick = $("[name='date']").val();
+        let startDate = moment(moment(datePick, "DD/MM/YYYY").startOf('months').toDate()).format("DD/MM/YYYY");
+        let dateRange = startDate + " - " + moment(datePick, "DD/MM/YYYY").format("DD/MM/YYYY");
+
+        pa.branchId = $("[name='branchId']").val();
+        pa.currencyId = $("[name='currencyId']").val();
+        pa.exchangeDate = $("[name='exchangeDate']").val();
+        pa.dateRange = dateRange;
+
+        pa.chartAccount = self.account;
+        pa.accountType = ['10', '11', '12', '20', '21', '30', '40', '41', '50', '51'];
+
+        var path = '/acc/transactionDetailReport?branchId=' + pa.branchId + '&accountType=' +
+            pa.accountType + '&chartAccount=' + pa.chartAccount
+            + '&date=' + pa.dateRange + '&exchangeDate=' + pa.exchangeDate
+            + '&currencyId=' + pa.currencyId;
+
+        window.open(path, '_blank');
 
     }
 });
@@ -127,7 +198,7 @@ tmplPrintData.events({
 
 reportTpl.events({
     'click .run ': function (e, t) {
-
+        debugger;
         let result = {};
         result.branchId = $('[name="branchId"]').val();
         result.date = $('[name="date"]').val();
@@ -141,14 +212,24 @@ reportTpl.events({
             return false;
         }
 
-        formDataState.set(result);
+        if (result.currencyId == "All") {
+            formDataStateForAllCurency.set(result);
+            formDataState.set(null);
+        } else {
+            formDataState.set(result);
+            formDataStateForAllCurency.set(null);
+        }
     },
     'change [name="accountType"]': function (e) {
         Session.set('accountTypeIdSession', $(e.currentTarget).val());
     },
     'click .fullScreen'(event, instance){
+        if (rptInitStateForAllCurrency.get() == true) {
+            alertify.acc_trialBalanceReportForAll(fa('', ''), renderTemplate(tmplPrintForAllData)).maximize();
+        } else {
+            alertify.acc_trialBalanceReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
 
-        alertify.acc_trialBalanceReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
+        }
     },
     'click .btn-print'(event, instance){
         $('#print-data').printThis();
@@ -161,6 +242,10 @@ reportTpl.onDestroyed(function () {
     formDataState.set(null);
     rptDataState.set(null);
     rptInitState.set(false);
+
+    formDataStateForAllCurency.set(null);
+    rptDataStateForAllCurrency.set(null);
+    rptInitStateForAllCurrency.set(false);
 });
 
 
@@ -212,6 +297,30 @@ generateTpl.helpers({
          return false;
          }
          return call.result();*/
+    }
+});
+
+generateForAllTpl.helpers({
+    options: function () {
+        // font size = null (default), bg
+        // paper = a4, a5, mini
+        // orientation = portrait, landscape
+        return {
+            //fontSize: 'bg',
+            paper: 'a4',
+            orientation: 'landscape'
+        };
+    }
+    , data: function () {
+        // Get query params
+        //FlowRouter.watchPathChange();
+        var q = FlowRouter.current().queryParams;
+
+        Fetcher.setDefault('data', false);
+        Fetcher.retrieve('data', 'acc_trialBalanceReportAllCurrency', q);
+
+        return Fetcher.get('data');
+
     }
 });
 

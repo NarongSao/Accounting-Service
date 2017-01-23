@@ -46,6 +46,7 @@
             </div>
         {{/autoForm}}
         {{> acc_trialBalanceReportPrintData}}
+        {{> acc_trialBalanceReportForAllPrintData}}
     </div>
 </template>
 
@@ -144,15 +145,153 @@
     {{else}}
         {{> loading}}
     {{/if}}
-
-
 </template>
+
+<template name="acc_trialBalanceForAllReportGen">
+    {{#if data}}
+        {{#ReportContent options}}
+
+            {{#with data}}
+
+
+                {{#with title}}
+                    <div class="title">
+                        <div class="title-1x-kh-muol">{{khName}}</div>
+                        <div class="title-1x">{{enName}}</div>
+                        <div><u>Trial Balance Report</u></div>
+                        <div class="title-2x">{{enAddress}}</div>
+                    </div>
+                {{/with}}
+
+
+                {{#with header}}
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Branch:</strong> {{getBranch branchId}}</li>
+                            </ul>
+                        </div>
+
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                <li class="pull-right"><strong>Date:</strong> {{date}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="width: 100%">
+                        <div style="width: 50%; float: left">
+                            <ul class="list-unstyled">
+                                <li><strong>Exchange:</strong> {{exchangeData}}</li>
+                            </ul>
+                        </div>
+                        <div style="width: 50%; float: right">
+                            <ul class="list-unstyled">
+                                <li class="pull-right"><strong>Currency:</strong> {{currencyId}}</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                {{/with}}
+
+
+                <table class="report-content" border="1">
+                    <thead class="report-content-header">
+                    <tr>
+                        <th rowspan="2" width="40px">No</th>
+                        <th rowspan="2">Account</th>
+                        <th colspan="4">Debit</th>
+                        <th colspan="4">Credit</th>
+                    </tr>
+                    <tr>
+                        <th>Riel</th>
+                        <th>Dollar</th>
+                        <th>Baht</th>
+                        <th>Total</th>
+                        <th>Riel</th>
+                        <th>Dollar</th>
+                        <th>Baht</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody class="report-content-body">
+                    {{#each result}}
+                        <tr>
+                            <td align="center">
+                                {{order}}
+                            </td>
+                            <td>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{{code}}:{{name}}
+                            </td>
+
+
+                            <td align="right">
+                                {{#if isNegative valRiel}} {{else}}R{{formatMoney valRiel}}{{/if}}
+                            </td>
+                            <td align="right">
+                                {{#if isNegative valDollar}} {{else}}${{formatMoney valDollar}}{{/if}}
+                            </td>
+                            <td align="right">
+                                {{#if isNegative valBaht}} {{else}}B{{formatMoney valBaht}}{{/if}}
+                            </td>
+                            <td align="right">
+                                {{#if isNegative result}} {{else}}{{getCurrency currency}}{{formatMoney result}}{{/if}}
+                            </td>
+
+
+                            <td align="right">
+                                {{#if isNegative valRiel}} R{{formatMoneyABS
+                                        valRiel}}{{else}}{{/if}}
+                            </td>
+                            <td align="right">
+                                {{#if isNegative valDollar}} ${{formatMoneyABS
+                                        valDollar}}{{else}}{{/if}}
+                            </td>
+                            <td align="right">
+                                {{#if isNegative valBaht}} B{{formatMoneyABS
+                                        valBaht}}{{else}}{{/if}}
+                            </td>
+                            <td align="right">
+                                {{#if isNegative result}} {{getCurrency currency}}{{formatMoneyABS
+                                        result}}{{else}}{{/if}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                    <tr>
+
+                        <td align="right" colspan="2"><b>Total </b></td>
+                        <td align="right"><b>R{{formatMoney grandTotalDrKHR}}  </b></td>
+                        <td align="right"><b>${{formatMoney grandTotalDrUSD}}  </b></td>
+                        <td align="right"><b>B{{formatMoney grandTotalDrTHB}}  </b></td>
+                        <td align="right"><b>{{getCurrency currencySelect}}{{formatMoney grandTotalDr}}  </b></td>
+
+
+                        <td align="right"><b>R{{formatMoney grandTotalCrKHR}}  </b></td>
+                        <td align="right"><b>${{formatMoney grandTotalCrUSD}}  </b></td>
+                        <td align="right"><b>B{{formatMoney grandTotalCrTHB}}  </b></td>
+                        <td align="right"><b>{{getCurrency currencySelect}}{{formatMoney grandTotalCr}}  </b></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            {{/with}}
+
+
+            {{> ReportSignFooter}}
+
+        {{/ReportContent}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
+</template>
+
+
 <!--Run-->
 <template name="acc_trialBalanceReportPrintData">
     <!--#print-data-->
-    <div id="print-data">
-        <div class="sub-div display-on-print-div">
-            {{#if rptInit}}
+    {{#if rptInit}}
+        <div id="print-data">
+            <div class="sub-div display-on-print-div">
+
                 {{#if rptData}}
                     {{#with rptData}}
 
@@ -248,8 +387,159 @@
                         {{> iconLoading size="fa-5x"}}
                     </div>
                 {{/if}}
-            {{/if}}
+
+            </div>
         </div>
-    </div>
+    {{/if}}
+    <!--/#print-data-->
+</template>
+<template name="acc_trialBalanceReportForAllPrintData">
+    <!--#print-data-->
+    {{#if rptInit}}
+        <div id="print-data">
+            <div class="sub-div display-on-print-div-landscape">
+
+                {{#if rptData}}
+                    {{#with rptData}}
+
+                        <!--Title-->
+                        {{#with title}}
+                            <div class="rpt-title">
+                                <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                                <div class="rpt-title-2x">{{enName}}</div>
+                                <div class="rpt-title-2x"><u>Trial Balance Report</u></div>
+                                <div class="rpt-title-2x">{{enAddress}}</div>
+                            </div>
+                        {{/with}}
+
+                        <!--Header-->
+                        {{#with header}}
+                            <div style="width: 100%">
+                                <div style="width: 50%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Branch:</strong> {{getBranch branchId}}</li>
+                                    </ul>
+                                </div>
+
+                                <div style="width: 50%; float: right">
+                                    <ul class="list-unstyled">
+                                        <li class="pull-right"><strong>Date:</strong> {{date}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="width: 100%">
+                                <div style="width: 50%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Exchange:</strong> {{exchangeData}}</li>
+                                    </ul>
+                                </div>
+                                <div style="width: 50%; float: right">
+                                    <ul class="list-unstyled">
+                                        <li class="pull-right"><strong>Currency:</strong> {{currencyId}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        {{/with}}
+
+                        <!--Content-->
+                        <table class="sub-table table table-striped  table-hover diplay-on-print-table">
+                            <thead class="sub-header diplay-on-print-header">
+                            <tr>
+                                <th rowspan="2" width="40px">No</th>
+                                <th rowspan="2">Account</th>
+                                <th colspan="4">Debit</th>
+                                <th colspan="4">Credit</th>
+                            </tr>
+                            <tr>
+                                <th>Riel</th>
+                                <th>Dollar</th>
+                                <th>Baht</th>
+                                <th>Total</th>
+                                <th>Riel</th>
+                                <th>Dollar</th>
+                                <th>Baht</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody class="sub-body display-on-print-body">
+                            {{#each result}}
+                                <tr class="transactionDetail report-pointer">
+                                    <td align="center">
+                                        {{order}}
+                                    </td>
+                                    <td>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{{code}}:{{name}}
+                                    </td>
+
+
+                                    <td align="right">
+                                        {{#if isNegative valRiel}} {{else}}R{{formatMoney valRiel}}{{/if}}
+                                    </td>
+                                    <td align="right">
+                                        {{#if isNegative valDollar}} {{else}}${{formatMoney valDollar}}{{/if}}
+                                    </td>
+                                    <td align="right">
+                                        {{#if isNegative valBaht}} {{else}}B{{formatMoney valBaht}}{{/if}}
+                                    </td>
+                                    <td align="right">
+                                        {{#if isNegative result}} {{else}}{{getCurrency currency}}{{formatMoney
+                                                result}}{{/if}}
+                                    </td>
+
+
+                                    <td align="right">
+                                        {{#if isNegative valRiel}} R{{formatMoneyABS
+                                                valRiel}}{{else}}{{/if}}
+                                    </td>
+                                    <td align="right">
+                                        {{#if isNegative valDollar}} ${{formatMoneyABS
+                                                valDollar}}{{else}}{{/if}}
+                                    </td>
+                                    <td align="right">
+                                        {{#if isNegative valBaht}} B{{formatMoneyABS
+                                                valBaht}}{{else}}{{/if}}
+                                    </td>
+                                    <td align="right">
+                                        {{#if isNegative result}} {{getCurrency currency}}{{formatMoneyABS
+                                                result}}{{else}}{{/if}}
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            <tr>
+
+                                <td align="right" colspan="2"><b>Total </b></td>
+                                <td align="right"><b>R{{formatMoney grandTotalDrKHR}}  </b></td>
+                                <td align="right"><b>${{formatMoney grandTotalDrUSD}}  </b></td>
+                                <td align="right"><b>B{{formatMoney grandTotalDrTHB}}  </b></td>
+                                <td align="right"><b>{{getCurrency currencySelect}}{{formatMoney grandTotalDr}}  </b>
+                                </td>
+
+
+                                <td align="right"><b>R{{formatMoney grandTotalCrKHR}}  </b></td>
+                                <td align="right"><b>${{formatMoney grandTotalCrUSD}}  </b></td>
+                                <td align="right"><b>B{{formatMoney grandTotalCrTHB}}  </b></td>
+                                <td align="right"><b>{{getCurrency currencySelect}}{{formatMoney grandTotalCr}}  </b>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!--Footer-->
+
+                    {{/with}}
+                    <!--Sign-->
+                    {{> ReportSignFooter}}
+
+
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+
+            </div>
+        </div>
+    {{/if}}
     <!--/#print-data-->
 </template>
