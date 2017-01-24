@@ -150,26 +150,26 @@ SavingAcc.generalSchema = new SimpleSchema({
         label: 'Opening amount',
         decimal: true,
         /*min: function () {
-            if (Meteor.isClient) {
-                let min = 0,
-                    currencyId = AutoForm.getFieldValue('currencyId'),
-                    minOpeningAmount = state.get('minOpeningAmount'),
-                    exchange = state.get('exchange');
+         if (Meteor.isClient) {
+         let min = 0,
+         currencyId = AutoForm.getFieldValue('currencyId'),
+         minOpeningAmount = state.get('minOpeningAmount'),
+         exchange = state.get('exchange');
 
-                if (minOpeningAmount && currencyId) {
-                    min = minOpeningAmount;
-                    if (currencyId == 'KHR') {
-                        min = roundKhr(min * exchange.KHR);
-                    } else if (currencyId == 'THB') {
-                        min = math.round(min * exchange.THB);
-                    }
-                }
+         if (minOpeningAmount && currencyId) {
+         min = minOpeningAmount;
+         if (currencyId == 'KHR') {
+         min = roundKhr(min * exchange.KHR);
+         } else if (currencyId == 'THB') {
+         min = math.round(min * exchange.THB);
+         }
+         }
 
-                state.set('minLoanAmountByCurrency', min);
+         state.set('minLoanAmountByCurrency', min);
 
-                return min;
-            }
-        },*/
+         return min;
+         }
+         },*/
         autoform: {
             type: "inputmask",
             afFieldInput: {

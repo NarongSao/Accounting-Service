@@ -268,6 +268,7 @@ DateEndOfProcess.after.insert(function (userId, doc) {
     } catch (err) {
         DateEndOfProcess.remove({_id: doc._id});
         Journal.remove({endId: doc._id});
+        NetInCome.remove({endId: doc._id});
         Closing.update({month: doc.month, year: doc.year}, {$set: {endId: ""}});
 
     }
