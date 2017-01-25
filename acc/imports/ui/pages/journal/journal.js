@@ -28,6 +28,7 @@ import '../../../../../core/client/components/form-footer.js';
 
 // Collection
 import {Journal} from '../../../api/collections/journal';
+import {Setting} from "../../../../../core/common/collections/setting"
 
 
 // Tabular
@@ -127,7 +128,7 @@ insertTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'KHR');
+        Session.set('currencyId', Session.get('baseCurrencySetupDefault'));
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -173,6 +174,9 @@ insertTpl.helpers({
     },
     journalDetailCollection: function (e, t) {
         return journalDetailCollection;
+    },
+    baseCurrencySetupDefault(){
+        return Session.get('baseCurrencySetupDefault');
     }
 });
 updateTpl.helpers({
@@ -215,7 +219,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'KHR';
+        data.currencyId = Session.get('baseCurrencySetupDefault');
         data.memo = 'test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -245,7 +249,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'KHR';
+        data.currencyId = Session.get('baseCurrencySetupDefault');
         data.memo = 'update test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -905,6 +909,9 @@ insertPaymentTpl.helpers({
     },
     journalDetailPaymentReceiveCollection: function (e, t) {
         return journalDetailPaymentReceiveCollection;
+    },
+    baseCurrencySetupDefault(){
+        return Session.get('baseCurrencySetupDefault');
     }
 });
 
@@ -943,6 +950,9 @@ insertReceiveTpl.helpers({
     },
     journalDetailPaymentReceiveCollection: function (e, t) {
         return journalDetailPaymentReceiveCollection;
+    },
+    baseCurrencySetupDefault(){
+        return Session.get('baseCurrencySetupDefault');
     }
 });
 
@@ -989,7 +999,7 @@ insertPaymentTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'KHR');
+        Session.set('currencyId', Session.get('baseCurrencySetupDefault'));
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -997,7 +1007,7 @@ insertReceiveTpl.onRendered(function () {
     disableDate();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'KHR');
+        Session.set('currencyId', Session.get('baseCurrencySetupDefault'));
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });

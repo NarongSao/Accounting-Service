@@ -73,7 +73,7 @@ Meteor.methods({
             if (self.currencyId != "All") {
                 var baseCurrency = self.currencyId;
             } else {
-                baseCurrency = Setting.findOne().baseCurrency;
+                baseCurrency =Setting.findOne().baseCurrency;
             }
 
 

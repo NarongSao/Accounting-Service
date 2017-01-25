@@ -18,6 +18,7 @@ import '../../client/components/form-footer.js';
 
 // Schema
 import {WelcomeSchema} from '../../common/collections/welcome-schema.js';
+import {Setting} from '../../common/collections/setting';
 
 // Page
 import './welcome.html';
@@ -127,6 +128,8 @@ AutoForm.hooks({
             // Set current session
             Session.setAuth('currentModule', result.module);
             Session.setAuth('currentBranch', result.branch);
+            let baseCurrency=Setting.findOne().baseCurrency;
+            Session.setAuth('baseCurrencySetupDefault',baseCurrency);
 
             let routerName = _.camelCase(result.module) + '.home';
 

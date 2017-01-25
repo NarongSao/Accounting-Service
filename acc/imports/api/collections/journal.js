@@ -5,6 +5,7 @@ import {moment} from 'meteor/momentjs:moment';
 
 import {__} from '../../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../ui/libs/select-opts';
+import {Setting} from "../../../../core/common/collections/setting"
 
 export const Journal = new Mongo.Collection('accJournal');
 /*
@@ -46,11 +47,13 @@ Journal.schema = new SimpleSchema({
         label: "Currency",
         autoform: {
             type: "select2",
+
             options: function () {
                 return SelectOpts.currency(false);
             }
-        },
-        defaultValue: "KHR"
+        }
+
+
     },
     branchId: {
         type: String,
