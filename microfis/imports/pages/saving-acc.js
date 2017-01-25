@@ -220,7 +220,6 @@ let hooksObject = {
     before: {
         insert: function (doc) {
             doc.status = {value: 'Inactive'};
-
             return doc;
         }
     },

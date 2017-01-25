@@ -104,7 +104,7 @@ Tracker.autorun(function () {
         state.set('totalDr', math.round(totalDr, 2));
         state.set('totalCr', math.round(totalCr, 2));
 
-        let fixAssetLength=fixAssetDepCollection.find().count();
+        let fixAssetLength = fixAssetDepCollection.find().count();
 
         if (math.round(totalDr, 2) == math.round(totalCr, 2) && (math.round(totalDr, 2) != 0 || fixAssetLength > 0)) {
             state.set('cssClassForSubmit', '');
@@ -127,12 +127,11 @@ insertTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
 updateTpl.onRendered(function () {
-
     let id = this.data._id;
     disableDateUpdate(id);
     switcherFun();
@@ -216,7 +215,7 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'USD';
+        data.currencyId = 'KHR';
         data.memo = 'test migrate';
         data.refId = "001";
         data.refFrom = "Sale";
@@ -246,10 +245,11 @@ indexTpl.events({
         data.journalDate = moment().toDate();
         data.branchId = Session.get("currentBranch");
         data.voucherId = 2089;
-        data.currencyId = 'USD';
+        data.currencyId = 'KHR';
         data.memo = 'update test migrate';
         data.refId = "001";
-        data.refFrom = "Sale";            totalCr += obj.cr;
+        data.refFrom = "Sale";
+        totalCr += obj.cr;
 
         data.total = 400;
 
@@ -336,7 +336,7 @@ indexTpl.events({
         }
 
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
-            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId != "0" || data.closingId != undefined ) && data.refId == undefined)) {
+            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined)) {
                 if (lastDate != null) {
                     if (new Date(lastDate.closeDate) < data.journalDate) {
                         alertify.journal(fa("plus", "Journal"), renderTemplate(Template.acc_journalUpdate, data)).maximize();
@@ -377,7 +377,7 @@ indexTpl.events({
         selectorGetLastDate.branchId = Session.get("currentBranch");
 
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
-            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId != "0" || data.closingId != undefined ) && data.refId == undefined )) {
+            if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined )) {
                 if (lastDate != undefined) {
                     if (new Date(lastDate.closeDate) < data.journalDate) {
                         alertify.journal(fa("plus", "Journal"), renderTemplate(Template.acc_journalUpdate, data)).maximize();
@@ -403,7 +403,7 @@ indexTpl.events({
         selector._id = this._id;
         Meteor.call('getDateEndOfProcess', selectorGetLastDate, function (err, lastDate) {
             Meteor.call('getJournal', selector, function (err, data) {
-                if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId != "0" || data.closingId != undefined ) && data.refId == undefined)) {
+                if ((data && (data.endId == "0" || data.endId == undefined) ) && ((data.fixAssetExpenseId == "0" || data.fixAssetExpenseId == undefined) && (data.closingId == "0" || data.closingId == undefined ) && data.refId == undefined)) {
                     if (lastDate != null) {
                         if (new Date(lastDate.closeDate) < data.journalDate) {
 
@@ -621,7 +621,18 @@ AutoForm.hooks({
             let curDate = Session.get('dobSelect');
             Session.set('dobSelect', undefined);
 
-            alertify.journal().close();
+            if (Session.get('saveNew')) {
+                Meteor.setTimeout(function () {
+                    $("#currencyId").val(Session.get('currencyId')).trigger("change");
+                    // $('#currencyId').select2('val', Session.get('currencyId'));
+                    Session.set('dobSelect', curDate);
+                    $("#journalDate").val(curDate).trigger("change");
+
+                }, 100);
+                Session.set('saveNew', false);
+            } else {
+                alertify.journal().close();
+            }
 
             stateFixAsset.set('isFixAsset', false);
             // displaySuccess();
@@ -683,7 +694,19 @@ AutoForm.hooks({
             let curDate = Session.get('dobSelect');
             Session.set('dobSelect', undefined);
 
-            alertify.journal().close();
+            if (Session.get('saveNew')) {
+                Meteor.setTimeout(function () {
+                    $("#currencyId").val(Session.get('currencyId')).trigger("change");
+                    // $('#currencyId').select2('val', Session.get('currencyId'));
+                    Session.set('dobSelect', curDate);
+                    $("#journalDate").val(curDate).trigger("change");
+
+                }, 100);
+                Session.set('saveNew', false);
+            } else {
+                alertify.journal().close();
+            }
+
             stateFixAsset.set('isFixAsset', false);
             // displaySuccess();
             alertify.success("Success");
@@ -761,6 +784,7 @@ insertTpl.onDestroyed(function () {
     state.set('totalCr', 0);
 
     stateFixAsset.set('isFixAsset', false);
+    Session.set('saveNew', false);
 
     removeCollectionNull();
 
@@ -884,6 +908,12 @@ insertPaymentTpl.helpers({
     }
 });
 
+insertPaymentTpl.events({
+    'click .save-new': function (e, t) {
+        Session.set('saveNew', true);
+    }
+})
+
 insertReceiveTpl.helpers({
     total(){
         let amount = 0;
@@ -916,6 +946,12 @@ insertReceiveTpl.helpers({
     }
 });
 
+insertReceiveTpl.events({
+    'click .save-new': function (e, t) {
+        Session.set('saveNew', true);
+    }
+})
+
 
 insertPaymentTpl.onDestroyed(function () {
 
@@ -928,6 +964,7 @@ insertPaymentTpl.onDestroyed(function () {
 
 
     stateFixAsset.set('isFixAsset', false);
+    Session.set('saveNew', false);
     removeCollectionNull();
 })
 insertReceiveTpl.onDestroyed(function () {
@@ -941,7 +978,7 @@ insertReceiveTpl.onDestroyed(function () {
 
 
     stateFixAsset.set('isFixAsset', false);
-
+    Session.set('saveNew', false);
     removeCollectionNull();
 })
 
@@ -952,7 +989,7 @@ insertPaymentTpl.onRendered(function () {
     switcherFun();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });
@@ -960,7 +997,7 @@ insertReceiveTpl.onRendered(function () {
     disableDate();
 
     Meteor.setTimeout(function () {
-        Session.set('currencyId', 'USD');
+        Session.set('currencyId', 'KHR');
         Session.set('dobSelect', moment().toDate());
     }, 100);
 });

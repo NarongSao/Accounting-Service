@@ -105,13 +105,14 @@ journalDetailTpl.helpers({
 updateTpl.helpers({
     schema(){
         return Journal.journalDetal;
-    },
-    tmpDr(){
-        return state.get('drUpdate');
-    },
-    tmpCr(){
-        return state.get('crUpdate');
     }
+    // ,
+    //  tmpDr(){
+    //      return state.get('drUpdate');
+    //  },
+    //  tmpCr(){
+    //      return state.get('crUpdate');
+    //  }
 });
 
 
@@ -146,7 +147,7 @@ journalDetailTpl.events({
         state.set('dr', 0);
     },
     'click .addItem': function (e, t) {
-        var journal = {};
+        let journal = {};
         // journal.account = (t.$('[name="account"]').val()).split('\u00A0')[(t.$('[name="account"]').val()).split('\u00A0').length - 1];
         journal.account = t.$('[name="account"]').val();
         journal.dr = parseFloat(t.$('[name="dr"]').val());
@@ -179,9 +180,13 @@ journalDetailTpl.events({
         }
     },
     'click .js-update-item': function (e, t) {
-        var self = this;
-        var doc = journalDetailCollection.findOne(self._id);
+        let self = this;
+        let doc = journalDetailCollection.findOne(self._id);
         Session.set('accountUpdate', doc.account);
+
+        // state.set('drUpdate',doc.dr);
+        // state.set('crUpdate',doc.cr);
+
         alertify.journalDetail(fa("pencil", "Journal Detail"), renderTemplate(updateTpl, doc));
     }
 });
@@ -218,6 +223,7 @@ var disableSubmit = function () {
 
 journalDetailTpl.onDestroyed(function () {
     Session.set('isTotal', undefined);
+    AutoForm.resetForm('acc_journalDetailUpdate');
 });
 
 

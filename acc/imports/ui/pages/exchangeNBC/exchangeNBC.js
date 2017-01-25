@@ -33,119 +33,119 @@ import './exchangeNBC.html';
 
 // Declare template
 var indexTpl = Template.acc_exchangeNBC,
-  insertTpl = Template.acc_exchangeNBCInsert,
-  updateTpl = Template.acc_exchangeNBCUpdate,
-  showTpl = Template.acc_exchangeNBCShow;
+    insertTpl = Template.acc_exchangeNBCInsert,
+    updateTpl = Template.acc_exchangeNBCUpdate,
+    showTpl = Template.acc_exchangeNBCShow;
 
 // Index
-indexTpl.onCreated(function() {
-  createNewAlertify("exchangeNBC");
+indexTpl.onCreated(function () {
+    createNewAlertify("exchangeNBC");
 });
 
 
 insertTpl.events({
-  'submit .preventDef': function(evt) {
-    evt.preventDefault();
-  }
+    'submit .preventDef': function (evt) {
+        evt.preventDefault();
+    }
 });
 
 updateTpl.events({
-  'submit .preventDef': function(evt) {
-    evt.preventDefault();
-  }
+    'submit .preventDef': function (evt) {
+        evt.preventDefault();
+    }
 });
 
 
 indexTpl.events({
-  'click .insert': function(e, t) {
-    alertify.exchangeNBC(fa("plus", "Exchange"), renderTemplate(insertTpl))
-      .maximize();
-  },
-  'click .update': function(e, t) {
-    var data = ExchangeNBC.findOne(this._id);
-    alertify.exchangeNBC(fa("pencil", "Exchange"), renderTemplate(
-        updateTpl, data))
-      .maximize();
-  },
-  'click .remove': function(e, t) {
-    var id = this._id;
+    'click .insert': function (e, t) {
+        alertify.exchangeNBC(fa("plus", "Exchange"), renderTemplate(insertTpl))
+            .minimize();
+    },
+    'click .update': function (e, t) {
+        var data = ExchangeNBC.findOne(this._id);
+        alertify.exchangeNBC(fa("pencil", "Exchange"), renderTemplate(
+            updateTpl, data))
+            .minimize();
+    },
+    'click .remove': function (e, t) {
+        var id = this._id;
 
-    alertify.confirm(
-      fa("remove", "Exchange"),
-      "Are you sure to delete [" + this.dateTime + "]?",
-      function() {
-        ExchangeNBC.remove(id, function(error) {
-          if (error) {
-            alertify.error(error.message);
-          } else {
-            alertify.success("Success");
-          }
-        });
-      },
-      null);
-  },
-  'click .show': function(e, t) {
-    this.ratesVal = JSON.stringify(this.rates);
-    alertify.alert(fa("eye", "Exchange"), renderTemplate(showTpl, this).html);
-  }
+        alertify.confirm(
+            fa("remove", "Exchange"),
+            "Are you sure to delete [" + this.dateTime + "]?",
+            function () {
+                ExchangeNBC.remove(id, function (error) {
+                    if (error) {
+                        alertify.error(error.message);
+                    } else {
+                        alertify.success("Success");
+                    }
+                });
+            },
+            null);
+    },
+    'click .show': function (e, t) {
+        this.ratesVal = JSON.stringify(this.rates);
+        alertify.alert(fa("eye", "Exchange"), renderTemplate(showTpl, this).html);
+    }
 });
 
 indexTpl.helpers({
-  tabularTable(){
-    return ExchangeNBCTabular;
-  },
+    tabularTable(){
+        return ExchangeNBCTabular;
+    },
 })
 
 insertTpl.helpers({
-  collection(){
-    return ExchangeNBC;
-  },
+    collection(){
+        return ExchangeNBC;
+    },
 
-  doc: function() {
-    var baseCurrency = 'KHR';
+    doc: function () {
+        var baseCurrency = 'KHR';
 
-    if (baseCurrency == 'KHR') {
-      var khr = 1;
-    } else if (baseCurrency == 'USD') {
-      var usd = 1;
-    } else {
-      var thb = 1;
+        if (baseCurrency == 'KHR') {
+            var khr = 1;
+        } else if (baseCurrency == 'USD') {
+            var usd = 1;
+        } else {
+            var thb = 1;
+        }
+
+        return {
+            base: baseCurrency,
+            khr: khr,
+            usd: usd,
+            thb: thb
+        };
     }
-
-    return {
-      base: baseCurrency,
-      khr: khr,
-      usd: usd,
-      thb: thb
-    };
-  }
 });
 
 updateTpl.helpers({
-  collection(){
-    return ExchangeNBC;
-  }
+    collection(){
+        return ExchangeNBC;
+    }
 })
-
 
 
 // Hook
 AutoForm.hooks({
-  acc_exchangeNBCInsert: {
-    onSuccess: function(formType, result) {
-      alertify.success('Success');
+    acc_exchangeNBCInsert: {
+        onSuccess: function (formType, result) {
+            alertify.exchangeNBC().close();
+            alertify.success('Success');
+        },
+        onError: function (formType, error) {
+            alertify.error(error.message);
+        }
     },
-    onError: function(formType, error) {
-      alertify.error(error.message);
+    acc_exchangeNBCUpdate: {
+        onSuccess: function (formType, error) {
+            alertify.exchangeNBC().close();
+            alertify.success('Success');
+        },
+        onError: function (formType, error) {
+            alertify.error(error.message);
+        }
     }
-  },
-  acc_exchangeNBCUpdate: {
-    onSuccess: function(formType, error) {
-      alertify.exchangeNBC().close();
-      alertify.success('Success');
-    },
-    onError: function(formType, error) {
-      alertify.error(error.message);
-    }
-  }
 });

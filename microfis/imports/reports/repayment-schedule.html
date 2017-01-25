@@ -1,199 +1,220 @@
 <!--Form-->
 <template name="Microfis_repaymentScheduleReport">
     <div class="box-body">
-        {{#autoForm schema=schema id="Microfis_repaymentScheduleReport" type="normal"}}
-            <div class="row" style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
-                <div class="col-md-6">
-                    {{> afQuickField name="clientId"}}
-                </div>
-                <div class="col-md-6">
-                    {{> afQuickField name="loanAccId"}}
+        {{#autoForm schema=schema id="Microfis_repaymentScheduleReport"  target="normal"}}
+            <div class="animated fadeIn">
+                <div class="box box-primary direct-chat direct-chat-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="font-family: 'Khmer OS Battambang'">ចុចទីនេះដើម្បីបង្ហាញ ឬ លាក់
+                            <span
+                                    class="font-head-panel-en">Form</span></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
+                            <div class="col-md-6">
+                                {{> afQuickField name="clientId"}}
+                            </div>
+                            <div class="col-md-6">
+                                {{> afQuickField name="loanAccId"}}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        {{> formFooterWithButtonReport}}
+                    </div>
+                    <!-- /.box-footer-->
                 </div>
             </div>
-
-            {{> formFooterWithButton}}
         {{/autoForm}}
+        {{> Microfis_repaymentScheduleReportPrintData}}
+    </div>
+</template>
 
-        <hr>
-        <button type="button" class="btn btn-info pull-right btn-print"><i class="fa fa-print"></i> Print</button>
 
-        <!--#print-data-->
-        <div id="print-data">
-            <div class="rpt rpt-2x rpt-portrait-a4">
-                {{#if rptInit}}
-                    {{#if rptData}}
-                        {{#with rptData}}
+<template name="Microfis_repaymentScheduleReportPrintData">
+    <!--#print-data-->
+    <div id="print-data">
+        <div class="sub-div display-on-print-div">
+            {{#if rptInit}}
+                {{#if rptData}}
+                    {{#with rptData}}
 
-                            <!--Title-->
-                            {{#with title}}
-                                <div class="rpt-title">
-                                    <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
-                                    <div class="rpt-title-2x">{{company.enName}}</div>
-                                    <div>សាខា: {{branch.khName}}</div>
-                                    <div class="rpt-title-2x"><u>កាលវិភាគសងប្រាក់</u></div>
-                                    <div>
-                                        <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
-                                        <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
-                                    </div>
+                        <!--Title-->
+                        {{#with title}}
+                            <div class="rpt-title">
+                                <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
+                                <div class="rpt-title-2x">{{company.enName}}</div>
+                                <div>សាខា: {{branch.khName}}</div>
+                                <div class="rpt-title-2x"><u>កាលវិភាគសងប្រាក់</u></div>
+                                <div>
+                                    <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
+                                    <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
                                 </div>
-                            {{/with}}
-
-                            <!--Header-->
-                            {{#with header}}
-                                <div style="width: 100%">
-                                    <div style="width: 35%; float: left">
-                                        <div><strong>លេខគណនីឥណទាន:</strong> {{_id}} ({{accountType}})</div>
-                                        <div>
-                                            <strong>ឈ្មោះអ្នកខ្ចី:</strong> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}
-                                        </div>
-                                        <div>
-                                            <strong>ថ្ងៃផ្តល់ទុន:</strong> {{moFormat disbursementDate "DD/MM/YYYY"}}
-                                        </div>
-                                        <div>
-                                            <strong>ចំនួនប្រាក់ខ្ចី:</strong> {{numFormat microfisAmount "0,0.00"}} {{currencyId}}
-                                        </div>
-                                        <div><strong>ប្រភេទការសង:</strong> {{khNameForPaymentMethod paymentMethod}}
-                                        </div>
-                                        <div>
-                                            <strong>សងការប្រាក់រៀងរាល់:</strong> {{repaidFrequency}} {{khNameForPaymentMethod
-                                                paymentMethod}}
-                                            ម្តង
-                                        </div>
-                                        <div><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង</div>
-                                    </div>
-
-                                    <div style="width: 65%; float: right">
-                                        <div style="width: 100%">
-                                            <div style="width: 50%; float: left">
-                                                <div>
-                                                    <strong>សងប្រាកដើមរៀងរាល់:</strong> {{principalInstallment.frequency}}
-                                                    វគ្គម្តង
-                                                </div>
-                                                <div>
-                                                    <strong>វិធីរំលស់ប្រាក់ដើម:</strong> {{principalInstallment.calculateType}}
-                                                </div>
-                                                <div>
-                                                    <strong>ចំនួនប្រាក់ដើមរំលស់:</strong> {{principalInstallment.amount}}
-                                                </div>
-                                                <div>
-                                                    <strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate "0,0.00"}}
-                                                    %
-                                                    ក្នុងមួយ{{khNameForPaymentMethod paymentMethod}}</div>
-                                                <div>
-                                                    <strong>កាលបរិច្ឆេទសងបញ្ចប់:</strong> {{moFormat maturityDate
-                                                                                                     "DD/MM/YYYY"}}
-                                                </div>
-                                                <div><strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
-                                            </div>
-
-                                            <div style="width: 50%; float: right">
-                                                <div><strong>ចំនួនដងនៃការខ្ចី:</strong> {{cycle}}</div>
-                                                <div><strong>ទីកន្លែងបង់ប្រាក់:</strong> {{paymentLocation}}</div>
-                                                <div><strong>ប្រភពទុន:</strong> {{fundDoc.name}}</div>
-                                                <div><strong>មន្រ្តីឥណទាន:</strong> {{creditOfficerDoc.khName}}</div>
-                                                <div><strong>ទូរស័ព្ទ:</strong> {{creditOfficerDoc.telephone}}</div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            {{/with}}
-
-                            <!--Content-->
-                            <table class="rpt rpt-2x rpt-content">
-                                <thead class="rpt-content-header">
-                                <tr>
-                                    <th>ល.រ</th>
-                                    <th>ថ្ងៃសងប្រាក់</th>
-                                    <th>ចំនួនថ្ងៃ</th>
-                                    <th>ប្រាក់ដើម</th>
-                                    <th>ប្រាក់ការ</th>
-                                    <th>ប្រាក់សរុប</th>
-                                    <th>សមតុល្យប្រាក់ដើម</th>
-                                    <th width="150px">ព័ត៌មានទទួលប្រាក់</th>
-                                </tr>
-                                </thead>
-
-                                <tbody class="rpt-content-body">
-                                {{#each content.data}}
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-square-o"></i>
-                                            {{#if allowClosing}}
-                                                <u>{{installment}}</u>
-                                            {{else}}
-                                                {{installment}}
-                                            {{/if}}
-
-                                        </td>
-                                        <td>{{khDayForDueDate dueDate}} {{moFormat dueDate "DD/MM/YYYY"}}</td>
-                                        <td>{{numOfDay}}</td>
-                                        <td>{{numFormat principalDue "0,0.00"}}</td>
-                                        <td>{{numFormat interestDue "0,0.00"}}</td>
-                                        <td>{{numFormat totalDue "0,0.00"}}</td>
-                                        <td>{{numFormat balance "0,0.00"}}</td>
-                                        <td></td>
-                                    </tr>
-                                {{/each}}
-                                </tbody>
-
-                                <tfoot class="report-content-footer">
-                                <tr>
-                                    {{#with content}}
-                                        <td colspan="2" class="text-right"><u>សរុប</u></td>
-                                        <td>{{sumNumOfDay}}</td>
-                                        <td>{{numFormat sumPrincipalDue "0,0.00"}}</td>
-                                        <td>{{numFormat sumInterestDue "0,0.00"}}</td>
-                                        <td>{{numFormat sumTotalDue "0,0.00"}}</td>
-                                        <td>0</td>
-                                        <td></td>
-                                    {{/with}}
-                                </tr>
-                                </tfoot>
-
-                            </table>
-
-                            <!--Note-->
-                            <strong><i class="fa fa-clock-o"></i> ម៉ោងធ្វើការ: </strong>
-                            ពីថ្ងៃចន្ទ ដល់សុក្រ ចាប់ពិម៉ោង 07:30 ព្រឹក ដល់ម៉ោង 04:00 រសៀល។
-                            សូមមកបង់ប្រាក់ឳ្យបានមុនម៉ោង 03:00 រសៀល ហើយបើសិនថ្ងៃសងប្រាក់ចំថ្ងៃឈប់សម្រាក
-                            នោះត្រូវមកបង់ប្រាក់ឳ្យបានមុខ។
-
-                            <br>
-                            <br>
-                            <!--Sign-->
-                            <table width="100%" border="0" style="text-align: center">
-                                <tr>
-                                    <td width="50%">
-                                        ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
-                                        <br>
-                                        <strong>អ្នកបើកប្រាក់</strong>
-                                        <br><br><br><br><br><br><br>
-                                        __________________<br>
-                                    </td>
-                                    <td>
-                                        ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
-                                        <br>
-                                        <strong>ស្នាមមេដៃ និងឈ្មោះអ្នកខ្ចីប្រាក់</strong>
-                                        <br><br><br><br><br><br>
-                                        <strong>{{header.clientDoc.khSurname}} {{header.clientDoc.khGivenName}}</strong>
-                                        <br>
-                                        __________________<br>
-                                    </td>
-                                </tr>
-
-                            </table>
+                            </div>
                         {{/with}}
 
-                    {{else}}
-                        <div class="text-center">
-                            {{> iconLoading size="fa-5x"}}
-                        </div>
-                    {{/if}}
-                {{/if}}
-            </div>
-        </div>
-        <!--/#print-data-->
+                        <!--Header-->
+                        {{#with header}}
+                            <div style="width: 100%">
+                                <div style="width: 35%; float: left">
+                                    <div><strong>លេខគណនីឥណទាន:</strong> {{_id}} ({{accountType}})</div>
+                                    <div>
+                                        <strong>ឈ្មោះអ្នកខ្ចី:</strong> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}
+                                    </div>
+                                    <div>
+                                        <strong>ថ្ងៃផ្តល់ទុន:</strong> {{moFormat disbursementDate "DD/MM/YYYY"}}
+                                    </div>
+                                    <div>
+                                        <strong>ចំនួនប្រាក់ខ្ចី:</strong> {{numFormat microfisAmount "0,0.00"}} {{currencyId}}
+                                    </div>
+                                    <div><strong>ប្រភេទការសង:</strong> {{khNameForPaymentMethod paymentMethod}}
+                                    </div>
+                                    <div>
+                                        <strong>សងការប្រាក់រៀងរាល់:</strong> {{repaidFrequency}} {{khNameForPaymentMethod
+                                            paymentMethod}}
+                                        ម្តង
+                                    </div>
+                                    <div><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង</div>
+                                </div>
 
+                                <div style="width: 65%; float: right">
+                                    <div style="width: 100%">
+                                        <div style="width: 50%; float: left">
+                                            <div>
+                                                <strong>សងប្រាកដើមរៀងរាល់:</strong> {{principalInstallment.frequency}}
+                                                វគ្គម្តង
+                                            </div>
+                                            <div>
+                                                <strong>វិធីរំលស់ប្រាក់ដើម:</strong> {{principalInstallment.calculateType}}
+                                            </div>
+                                            <div>
+                                                <strong>ចំនួនប្រាក់ដើមរំលស់:</strong> {{principalInstallment.amount}}
+                                            </div>
+                                            <div>
+                                                <strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate "0,0.00"}}
+                                                %
+                                                ក្នុងមួយ{{khNameForPaymentMethod paymentMethod}}</div>
+                                            <div>
+                                                <strong>កាលបរិច្ឆេទសងបញ្ចប់:</strong> {{moFormat maturityDate
+                                                                                                 "DD/MM/YYYY"}}
+                                            </div>
+                                            <div><strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
+                                        </div>
+
+                                        <div style="width: 50%; float: right">
+                                            <div><strong>ចំនួនដងនៃការខ្ចី:</strong> {{cycle}}</div>
+                                            <div><strong>ទីកន្លែងបង់ប្រាក់:</strong> {{paymentLocation}}</div>
+                                            <div><strong>ប្រភពទុន:</strong> {{fundDoc.name}}</div>
+                                            <div><strong>មន្រ្តីឥណទាន:</strong> {{creditOfficerDoc.khName}}</div>
+                                            <div><strong>ទូរស័ព្ទ:</strong> {{creditOfficerDoc.telephone}}</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {{/with}}
+
+                        <!--Content-->
+                        <table class="sub-table table table-striped  table-hover diplay-on-print-table">
+                            <thead class="sub-header diplay-on-print-header">
+                            <tr>
+                                <th>ល.រ</th>
+                                <th>ថ្ងៃសងប្រាក់</th>
+                                <th>ចំនួនថ្ងៃ</th>
+                                <th>ប្រាក់ដើម</th>
+                                <th>ប្រាក់ការ</th>
+                                <th>ប្រាក់សរុប</th>
+                                <th>សមតុល្យប្រាក់ដើម</th>
+                                <th width="150px">ព័ត៌មានទទួលប្រាក់</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="sub-body display-on-print-body">
+                            {{#each content.data}}
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-square-o"></i>
+                                        {{#if allowClosing}}
+                                            <u>{{installment}}</u>
+                                        {{else}}
+                                            {{installment}}
+                                        {{/if}}
+
+                                    </td>
+                                    <td>{{khDayForDueDate dueDate}} {{moFormat dueDate "DD/MM/YYYY"}}</td>
+                                    <td>{{numOfDay}}</td>
+                                    <td>{{numFormat principalDue "0,0.00"}}</td>
+                                    <td>{{numFormat interestDue "0,0.00"}}</td>
+                                    <td>{{numFormat totalDue "0,0.00"}}</td>
+                                    <td>{{numFormat balance "0,0.00"}}</td>
+                                    <td></td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+
+                            <tfoot class="report-content-footer">
+                            <tr>
+                                {{#with content}}
+                                    <td colspan="2" class="text-right"><u>សរុប</u></td>
+                                    <td>{{sumNumOfDay}}</td>
+                                    <td>{{numFormat sumPrincipalDue "0,0.00"}}</td>
+                                    <td>{{numFormat sumInterestDue "0,0.00"}}</td>
+                                    <td>{{numFormat sumTotalDue "0,0.00"}}</td>
+                                    <td>0</td>
+                                    <td></td>
+                                {{/with}}
+                            </tr>
+                            </tfoot>
+
+                        </table>
+
+                        <!--Note-->
+                        <strong><i class="fa fa-clock-o"></i> ម៉ោងធ្វើការ: </strong>
+                        ពីថ្ងៃចន្ទ ដល់សុក្រ ចាប់ពិម៉ោង 07:30 ព្រឹក ដល់ម៉ោង 04:00 រសៀល។
+                        សូមមកបង់ប្រាក់ឳ្យបានមុនម៉ោង 03:00 រសៀល ហើយបើសិនថ្ងៃសងប្រាក់ចំថ្ងៃឈប់សម្រាក
+                        នោះត្រូវមកបង់ប្រាក់ឳ្យបានមុខ។
+
+                        <br>
+                        <br>
+                        <!--Sign-->
+                        <table width="100%" border="0" style="text-align: center">
+                            <tr>
+                                <td width="50%">
+                                    ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
+                                    <br>
+                                    <strong>អ្នកបើកប្រាក់</strong>
+                                    <br><br><br><br><br><br><br>
+                                    __________________<br>
+                                </td>
+                                <td>
+                                    ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
+                                    <br>
+                                    <strong>ស្នាមមេដៃ និងឈ្មោះអ្នកខ្ចីប្រាក់</strong>
+                                    <br><br><br><br><br><br>
+                                    <strong>{{header.clientDoc.khSurname}} {{header.clientDoc.khGivenName}}</strong>
+                                    <br>
+                                    __________________<br>
+                                </td>
+                            </tr>
+
+                        </table>
+                    {{/with}}
+
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
     </div>
+    <!--/#print-data-->
 </template>

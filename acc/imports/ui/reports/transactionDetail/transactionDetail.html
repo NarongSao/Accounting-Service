@@ -1,7 +1,8 @@
-<template name="acc_ledgerReport">
+<template name="acc_transactionDetailReport">
 
     <div class="box-body">
-        {{#autoForm schema=schema id="acc_ledgerReport"  action="ledgerReportGen" target="_blank"}}
+        {{#autoForm schema=schema id="acc_transactionDetailReport"  action="transactionDetailReportGen"
+                    target="_blank"}}
             <div class="animated fadeIn">
                 <div class="box box-primary direct-chat direct-chat-success">
                     <div class="box-header with-border">
@@ -10,7 +11,8 @@
                                     class="font-head-panel-en">Form</span></h3>
 
                         <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
                             </button>
                         </div>
                     </div>
@@ -19,15 +21,15 @@
 
                         <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
                             <div class="col-md-6">
-                                {{> afQuickField name='branchId'}}
-                                {{> afQuickField name='currencyId'}}
-                                {{> afQuickField name='date'}}
-                                {{> afQuickField name='exchangeDate'}}
+                                {{> afQuickField name='branchId' value=param.branchId}}
+                                {{> afQuickField name='currencyId' value=param.currencyId}}
+                                {{> afQuickField name='date' value=param.date}}
+                                {{> afQuickField name='exchangeDate'  value=param.exchangeDate}}
                             </div>
 
                             <div class="col-md-6">
-                                {{> afQuickField name='accountType' size=10}}
-                                {{> afQuickField name='chartAccount'}}
+                                {{> afQuickField name='accountType' size=10 value=param.accountType id=accountType}}
+                                {{> afQuickField name='chartAccount' value=param.chartAccount}}
                             </div>
 
                         </div>
@@ -41,13 +43,15 @@
                 </div>
             </div>
         {{/autoForm}}
-        {{> acc_ledgerReportPrintData}}
+        {{> acc_transactionDetailReportPrintData}}
+
     </div>
+
 </template>
 
 
 <!--Generate-->
-<template name="acc_ledgerReportGen">
+<template name="acc_transactionDetailReportGen">
 
     <!--Is ready-->
     {{#if data}}
@@ -60,7 +64,7 @@
                     <div class="title">
                         <div class="title-1x-kh-muol">{{khName}}</div>
                         <div class="title-1x">{{enName}}</div>
-                        <div><u>Ledger Report</u></div>
+                        <div><u>Transaction Detail By Item Report</u></div>
                         <div class="title-2x">{{enAddress}}</div>
                     </div>
                 {{/with}}
@@ -102,7 +106,6 @@
                         <th width="40px">No</th>
                         <th>Date</th>
                         <th>Invoice</th>
-                        <th>Name</th>
                         <th>Memo</th>
                         <th>Split Account</th>
                         <th>Debit</th>
@@ -115,7 +118,7 @@
                     {{#each content}}
                         {{#if isHeader}}
                             <tr style="background-color:#EFFFEF;">
-                                <td colspan="8" align="left">
+                                <td colspan="7" align="left">
                                     <b>{{name}}</b>
                                 </td>
                                 <td align="right">
@@ -125,7 +128,7 @@
                         {{else}}
                             {{#if isFooter}}
                                 <tr style="background-color:#EFFFEF;">
-                                    <td colspan="6" align="left">
+                                    <td colspan="5" align="left">
                                         <b>{{name}}</b>
                                     </td>
                                     <td align="right">
@@ -143,7 +146,7 @@
                                 </tr>
                             {{else}}
 
-                                <tr>
+                                <tr class="journalRow report-pointer">
                                     <td align="center">
                                         {{order}}
                                     </td>
@@ -154,12 +157,9 @@
                                         {{voucherId}}
                                     </td>
                                     <td align="left">
-                                        {{cusAndVenname}}
-                                    </td>
-                                    <td align="left">
                                         {{memo}}
                                     </td>
-                                    <td align="left" class="report-pointer">
+                                    <td align="left">
                                         <span class="split-account-detail" style="cursor: pointer">{{name}}</span>
                                     </td>
                                     <td align="right">
@@ -179,7 +179,7 @@
                         {{/if}}
                     {{/each}}
                     <tr style="background-color:gray;">
-                        <td colspan="6" align="left">
+                        <td colspan="5" align="left">
                             <b>Total</b>
                         </td>
                         <td align="right">
@@ -214,54 +214,22 @@
 </template>
 
 
-<template name="acc_LedgerShow">
-    <div class="box-body">
-        <table>
-            <tr>
-                <td width="200px"><b> Currency</b></td>
-                <td>{{currencyId}}</td>
-                <td></td>
-            </tr>
-        </table>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Account</th>
-                <th>Debit</th>
-                <th>Credit</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            {{#each transaction}}
-                <tr>
-                    <td>{{accountDoc.code}} | {{accountDoc.name}}</td>
-                    <td>{{formatMoneyNormal dr}}</td>
-                    <td>{{formatMoneyNormal cr}}</td>
-                </tr>
-            {{/each}}
-
-            </tbody>
-        </table>
-    </div>
-</template>
-
-
 <!--Run-->
-<template name="acc_ledgerReportPrintData">
-    <!--#print-data-->
+<template name="acc_transactionDetailReportPrintData">
+
     <div id="print-data">
         <div class="sub-div display-on-print-div">
             {{#if rptInit}}
                 {{#if rptData}}
                     {{#with rptData}}
+
                         <!--Title-->
                         {{#with title}}
+
                             <div class="rpt-title">
                                 <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
                                 <div class="rpt-title-2x">{{enName}}</div>
-                                <div class="rpt-title-2x"><u>Ledger Report</u></div>
+                                <div class="rpt-title-2x"><u>Transaction Detail By Item Report</u></div>
                                 <div class="rpt-title-2x">{{enAddress}}</div>
                             </div>
                         {{/with}}
@@ -297,13 +265,12 @@
                         {{/with}}
 
                         <!--Content-->
-                        <table class="sub-table table table-striped  table-hover diplay-on-print-table">
+                        <table class="sub-table table table-striped  table-hover diplay-on-print-table" border="1">
                             <thead class="sub-header diplay-on-print-header">
                             <tr>
                                 <th width="40px">No</th>
                                 <th>Date</th>
                                 <th>Invoice</th>
-                                <th>Name</th>
                                 <th>Memo</th>
                                 <th>Split Account</th>
                                 <th>Debit</th>
@@ -316,7 +283,7 @@
                             {{#each content}}
                                 {{#if isHeader}}
                                     <tr style="background-color:#EFFFEF;">
-                                        <td colspan="8" align="left">
+                                        <td colspan="7" align="left">
                                             <b>{{name}}</b>
                                         </td>
                                         <td align="right">
@@ -326,7 +293,7 @@
                                 {{else}}
                                     {{#if isFooter}}
                                         <tr style="background-color:#EFFFEF;">
-                                            <td colspan="6" align="left">
+                                            <td colspan="5" align="left">
                                                 <b>{{name}}</b>
                                             </td>
                                             <td align="right">
@@ -344,7 +311,7 @@
                                         </tr>
                                     {{else}}
 
-                                        <tr>
+                                        <tr class="journalRow report-pointer">
                                             <td align="center">
                                                 {{order}}
                                             </td>
@@ -355,12 +322,9 @@
                                                 {{voucherId}}
                                             </td>
                                             <td align="left">
-                                                {{cusAndVenname}}
-                                            </td>
-                                            <td align="left">
                                                 {{memo}}
                                             </td>
-                                            <td align="left" class="report-pointer">
+                                            <td align="left">
                                                 <span class="split-account-detail"
                                                       style="cursor: pointer">{{name}}</span>
                                             </td>
@@ -381,7 +345,7 @@
                                 {{/if}}
                             {{/each}}
                             <tr style="background-color:gray;">
-                                <td colspan="6" align="left">
+                                <td colspan="5" align="left">
                                     <b>Total</b>
                                 </td>
                                 <td align="right">
@@ -400,11 +364,12 @@
                             </tbody>
                         </table>
 
-
                         <!--Footer-->
                     {{/with}}
                     <!--Sign-->
                     {{> ReportSignFooter}}
+
+
                 {{else}}
                     <div class="text-center">
                         {{> iconLoading size="fa-5x"}}
@@ -413,5 +378,6 @@
             {{/if}}
         </div>
     </div>
-    <!--/#print-data-->
+
+
 </template>

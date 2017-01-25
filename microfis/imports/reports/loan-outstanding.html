@@ -1,49 +1,60 @@
 <!--Form-->
 <template name="Microfis_loanOutstandingReport">
-    <div class="box-body">
-        {{#autoForm schema=schema id="Microfis_loanOutstandingReport" type="normal"}}
-            <div class="panel panel-default report-heading">
-                <div class="panel-heading">
-                    <h3 class="panel-title font-head-panel-kh">ចុចទីនេះដើម្បីបង្ហាញ ឬ លាក់ <span
-                            class="font-head-panel-en">Form</span></h3>
-                    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                </div>
-                <div class="panel-body">
-                    <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
-                        <div class="col-md-4">
-                            {{> afQuickField name="branchId"}}
-                            {{> afQuickField name="creditOfficerId"}}
-                            {{> afQuickField name="paymentMethod"}}
-                            {{> afQuickField name="date"}}
 
-                        </div>
-                        <div class="col-md-4">
-                            {{> afQuickField name="currencyId"}}
-                            {{> afQuickField name="productId"}}
-                            {{> afQuickField name="locationId" options=locationOpt}}
-                        </div>
-                        <div class="col-md-4">
-                            {{> afQuickField name="fundId"}}
-                            {{> afQuickField name="classifyId"}}
-                            {{> afQuickField name="exchangeId"}}
+
+    <div class="box-body">
+        {{#autoForm schema=schema id="Microfis_loanOutstandingReport"  target="normal"}}
+            <div class="animated fadeIn">
+                <div class="box box-primary direct-chat direct-chat-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="font-family: 'Khmer OS Battambang'">ចុចទីនេះដើម្បីបង្ហាញ ឬ លាក់
+                            <span
+                                    class="font-head-panel-en">Form</span></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
                         </div>
                     </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
 
+                        <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
+                            <div class="col-md-4">
+                                {{> afQuickField name="branchId"}}
+                                {{> afQuickField name="creditOfficerId"}}
+                                {{> afQuickField name="currencyId"}}
+                                {{> afQuickField name="exchangeId"}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="date"}}
+                                {{> afQuickField name="productId"}}
+                                {{> afQuickField name="locationId" options=locationOpt}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="fundId"}}
+                                {{> afQuickField name="classifyId"}}
+                                {{> afQuickField name="paymentMethod"}}
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        {{> formFooterWithButtonReport}}
+                    </div>
+                    <!-- /.box-footer-->
                 </div>
             </div>
-
-            {{> formFooterWithButtonReport}}
-
         {{/autoForm}}
-
-        <hr>
         {{> Microfis_loanOutstandingReportPrintData}}
     </div>
 </template>
 <template name="Microfis_loanOutstandingReportPrintData">
     <!--#print-data-->
     <div id="print-data">
-        <div class="rpt rpt-3x sub-div">
+        <div class="sub-div display-on-print-div-landscape-loan">
             {{#if rptInit}}
                 {{#if rptData}}
                     {{#with rptData}}
@@ -64,7 +75,79 @@
 
                         <!--Header-->
                         {{#with header}}
+                            <div style="width: 100%">
 
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Date:</strong> {{date}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Fund:</strong> {{fundId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Branch:</strong> {{getBranch branchId}}</li>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                            <div style="width: 100%">
+
+                                <div style="width: 60%;float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Credit Officer:</strong> {{creditOfficerId}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Product:</strong> {{productId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Classify:</strong> {{classifyId}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="width: 100%">
+
+                                <div style="width: 60%;float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Currency:</strong> {{currencyId}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Location:</strong> {{locationId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Payment Method:</strong> {{paymentMethod}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="width: 100%">
+                                <ul class="list-unstyled">
+                                    <li><strong>Exchange:</strong> {{exchangeData}}</li>
+                                </ul>
+                            </div>
                         {{/with}}
 
                         <!--Content-->

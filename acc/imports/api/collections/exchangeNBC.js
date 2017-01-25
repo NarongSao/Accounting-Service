@@ -15,19 +15,22 @@ export const ExchangeNBC = new Mongo.Collection("acc_exchangeNBC");
  */
 var Rates = new SimpleSchema({
     KHR: {
-        type: String,
+        type: Number,
         decimal: true,
-        label: "KHR"
+        min:1,
+        label: "KHR Ex: 1"
     },
     USD: {
-        type: String,
+        type: Number,
         decimal: true,
-        label: "USD"
+        min: 1,
+        label: "USD Ex: 4070"
     },
     THB: {
-        type: String,
+        type: Number,
         decimal: true,
-        label: "THB"
+        min:1,
+        label: "THB Ex: 130"
     }
 });
 

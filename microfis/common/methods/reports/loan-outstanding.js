@@ -8,6 +8,7 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Branch} from '../../../../core/common/collections/branch.js';
+import {Exchange} from '../../../../core/common/collections/exchange.js';
 import {Setting} from '../../../../core/common/collections/setting.js';
 import {LoanAcc} from '../../../common/collections/loan-acc.js';
 import {ProductStatus} from '../../../common/collections/productStatus.js';
@@ -40,7 +41,60 @@ export const loanOutstandingReport = new ValidatedMethod({
             data.title.branch = Branch.findOne();
 
             /****** Header *****/
-            data.header = "";
+
+
+            let exchangeData=Exchange.findOne({_id: params.exchangeId});
+
+            let header = {};
+
+            header.branchId="All";
+            header.creditOfficerId="All";
+            header.currencyId="All";
+            header.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
+
+            header.date= moment(params.date).format("DD/MM/YYYY");
+            header.productId="All";
+            header.locationId="All";
+
+            header.fundId="All";
+            header.classifyId="All";
+            header.paymentMethod="All";
+
+
+
+            if (params.branchId && params.branchId.includes("All") == false) {
+                header.branchId = Branch.find({_id: {$in: params.branchId}});
+            }
+            if (params.creditOfficerId && params.creditOfficerId.includes("All") == false) {
+                selector.creditOfficerId = {$in: params.creditOfficerId};
+            }
+
+            if (params.paymentMethod && params.paymentMethod.includes("All") == false) {
+                selector.paymentMethod = {$in: params.paymentMethod};
+            }
+
+            if (params.currencyId && params.currencyId.includes("All") == false) {
+                selector.currencyId = {$in: params.currencyId};
+            }
+            if (params.productId && params.productId.includes("All") == false) {
+                selector.productId = {$in: params.productId};
+            }
+
+            if (params.locationId && params.locationId.includes("All") == false) {
+                selector.locationId = {$in: params.locationId};
+            }
+
+            if (params.fundId && params.fundId.includes("All") == false) {
+                selector.fundId = {$in: params.fundId};
+            }
+
+            if (params.classifyId && params.classifyId.includes("All") == false) {
+                selector.classifyId = {$in: params.classifyId};
+            }
+
+
+            data.header = params;
+
 
             /****** Content *****/
 
@@ -48,8 +102,8 @@ export const loanOutstandingReport = new ValidatedMethod({
             let baseCurrency = Setting.findOne().baseCurrency;
 
             let content = "";
-            content += `<table class="sub-table table table-hover">
-                            <thead class=" sub-header rpt rpt-3x">
+            content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
+                            <thead class="sub-header diplay-on-print-header-loan">
                                 <tr> 
                                     <th>No</th>
                                     <th>LA Code</th>
@@ -62,7 +116,7 @@ export const loanOutstandingReport = new ValidatedMethod({
                                     <th>Pro Int</th>
                                     <th>Classify</th>
                                     <th>CO</th>
-                                    <th>Vill</th>
+                                    <th>Vill</th>	
                                     <th>Due Prin</th>
                                     <th>Due Int</th>
                                     <th>Total Due</th>
@@ -70,7 +124,7 @@ export const loanOutstandingReport = new ValidatedMethod({
                                     <th>Loan Out Int</th>
                                 </tr>
                             </thead>
-                            <tbody class="rpt rpt-3x sub-body">`;
+                            <tbody class="sub-body display-on-print-body-loan">`;
 
 
             //Param
@@ -106,11 +160,17 @@ export const loanOutstandingReport = new ValidatedMethod({
             }
 
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
+
             selector.disbursementDate = {$lte: dateParam};
-            selector.status = "Active";
+            selector['$or'] = [{status: "Active"},
+                {closeDate: {$exists: true, $gt: dateParam}},
+                {writeOffDate: {$exists: true, $gt: dateParam}},
+                {restructureDate: {$exists: true, $gt: dateParam}}
+            ];
 
             //All Active Loan in check date
 
+            console.log(selector);
             let loanDoc = LoanAcc.aggregate([
                 {$match: selector},
                 {
@@ -191,6 +251,7 @@ export const loanOutstandingReport = new ValidatedMethod({
                 {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
             ]);
 
+            console.log(loanDoc);
             let i = 1;
 
             let checkDate = moment(params.date, "DD/MM/YYYY").toDate();

@@ -48,8 +48,8 @@ export const loanClosingReport = new ValidatedMethod({
             let baseCurrency = Setting.findOne().baseCurrency;
 
             let content = "";
-            content += `<table class="sub-table table table-hover">
-                            <thead class=" sub-header rpt rpt-3x">
+            content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
+                            <thead class="sub-header diplay-on-print-header-loan">
                                 <tr> 
                                     <th>No</th>
                                     <th>LA Code</th>
@@ -70,7 +70,7 @@ export const loanClosingReport = new ValidatedMethod({
                                    
                                 </tr>
                             </thead>
-                            <tbody class="rpt rpt-3x sub-body">`;
+                            <tbody class="sub-body display-on-print-body-loan">`;
 
 
             //Param

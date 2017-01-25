@@ -30,10 +30,10 @@
         {{#autoForm collection=collection id="acc_exchangeNBCInsert" type="insert"}}
             <div class="container-fluid ">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         {{> afQuickField name='dateTime'}}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         {{> afQuickField name='base' value=doc.base readonly="true"}}
                     </div>
                 </div>
@@ -42,14 +42,14 @@
                     <div class="panel-heading">Rates</div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 {{> afQuickField name='rates.KHR' value=doc.khr}}
                             </div>
-                            <div class="col-md-4">
-                                {{> afQuickField name='rates.USD' placeholder="1/rate" value=doc.usd}}
+                            <div class="col-md-12">
+                                {{> afQuickField name='rates.USD' placeholder="rate" value=doc.usd}}
                             </div>
-                            <div class="col-md-4">
-                                {{> afQuickField name='rates.THB' placeholder="1/rate" value=doc.thb}}
+                            <div class="col-md-12">
+                                {{> afQuickField name='rates.THB' placeholder="rate" value=doc.thb}}
                             </div>
                         </div>
                     </div>
@@ -68,26 +68,30 @@
         {{#autoForm collection=collection id="acc_exchangeNBCUpdate" doc=this type="update"}}
             <div class="container-fluid ">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         {{> afQuickField name='dateTime'}}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         {{> afQuickField name='base' readonly="true"}}
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        {{> afQuickField name='rates.KHR'}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField placeholder="1/rate" name='rates.USD'}}
-                    </div>
-                    <div class="col-md-4">
-                        {{> afQuickField name='rates.THB' placeholder="1/rate"}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">Rates</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{> afQuickField name='rates.KHR'}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField placeholder="1/rate" name='rates.USD'}}
+                            </div>
+                            <div class="col-md-12">
+                                {{> afQuickField name='rates.THB' placeholder="1/rate"}}
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <button type="submit" class="btn btn-primary preventDef">{{fa "floppy-o"}} Save</button>
                 <button type="reset" class="btn btn-default">{{fa "refresh"}} Reset</button>
             </div>
