@@ -1,0 +1,96 @@
+@media print {
+
+    .display-on-print-div-loan {
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        font-size: 9px;
+        color: #000000;
+        margin: 0px auto;
+        padding: 0px;
+        width: 1020px;
+    }
+
+    .display-on-print-div-landscape-loan {
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        /*font-size: 9px;*/
+        /*font-size: 75%;*/
+        font-size: 9px !important;
+        color: #000000;
+        padding: 0px;
+
+        width: 100%;
+        height: 100%;
+        margin: 0% 0% 0% 0%;
+        filter: progid:DXImageTransform.Microsoft.BasicImage(Rotation=1);
+    }
+
+    .diplay-on-print-table-loan {
+        width: 100%;
+        margin-top: 30px;
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        color: #000000;
+        font-size: 8px !important;
+        border-collapse: collapse;
+        border: 1px solid black !important;
+    }
+
+    .diplay-on-print-header-loan {
+        margin: 0px auto;
+        width: 100%;
+        padding: 0px;
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        font-size: 8px !important;
+        color: #000000;
+        border-collapse: collapse;
+        padding: 0px !important;
+    }
+
+    .diplay-on-print-header-loan > tr > th {
+        font-weight: bold;
+        background-color: lightgray !important;
+        -webkit-print-color-adjust: exact;
+        text-align: center !important;
+    }
+
+    .display-on-print-body-loan {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 8px !important;
+        margin-top: 30px;
+        padding: 0px !important;
+    }
+
+    .display-on-print-div-loan > .table > thead > tr > th, .display-on-print-div-loan > .table > tbody > tr > th,.display-on-print-div-loan > .table > tfoot > tr > th,.display-on-print-div-loan > .table > thead > tr > td,.display-on-print-div-loan > .table > tbody > tr > td,.display-on-print-div-loan > .table > tfoot > tr > td {
+        border: 1px solid black !important;
+    }
+
+}
+
+.sub-div {
+    font-family: Arial, Verdana, Geneva, sans-serif;
+    color: #000000;
+    font-size: 14px;
+}
+
+.sub-body {
+    font-family: Arial, Verdana, Geneva, sans-serif;
+    color: #000000;
+    font-size: 14px;
+}
+
+.sub-header {
+    font-family: Arial, Verdana, Geneva, sans-serif;
+    color: #000000;
+    font-size: 14px;
+}
+
+.display-on-print-div-loan > .table > thead > tr > th, .display-on-print-div-loan > .table > tbody > tr > th,.display-on-print-div-loan > .table > tfoot > tr > th,.display-on-print-div-loan > .table > thead > tr > td,.display-on-print-div-loan > .table > tbody > tr > td,.display-on-print-div-loan > .table > tfoot > tr > td {
+    border: 1px solid black !important;
+}
+
+.display-on-print-div-landscape-loan > .table > thead > tr > th, .display-on-print-div-landscape-loan > .table > tbody > tr > th,.display-on-print-div-landscape-loan > .table > tfoot > tr > th,.display-on-print-div-landscape-loan > .table > thead > tr > td,.display-on-print-div-landscape-loan > .table > tbody > tr > td,.display-on-print-div-landscape-loan > .table > tfoot > tr > td {
+    border: 1px solid black !important;
+}
+
+
+
+

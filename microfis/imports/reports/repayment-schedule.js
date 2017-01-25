@@ -9,6 +9,8 @@ import 'printthis';
 
 // Lib
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
+import {createNewAlertify} from '../../../core/client/libs/create-new-alertify';
+import {renderTemplate} from '../../../core/client/libs/render-template';
 
 // Component
 import '../../../core/imports/layouts/report/content.html';
@@ -26,30 +28,33 @@ import {RepaymentScheduleSchema} from '../../common/collections/reports/repaymen
 import './repayment-schedule.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_repaymentScheduleReport;
+let indexTmpl = Template.Microfis_repaymentScheduleReport,
+    tmplPrintData = Template.Microfis_repaymentScheduleReportPrintData;
 
 // Form state
 let formDataState = new ReactiveVar(null);
 
+let rptInitState = new ReactiveVar(false);
+let rptDataState = new ReactiveVar(null);
+
 // Index
 indexTmpl.onCreated(function () {
-    this.rptInitState = new ReactiveVar(false);
-    this.rptDataState = new ReactiveVar(null);
 
+    createNewAlertify('Microfis_repaymentScheduleReport');
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
-            this.rptInitState.set(true);
-            this.rptDataState.set(null);
+            rptInitState.set(true);
+            rptDataState.set(null);
 
             let params = {
                 loanAccId: formDataState.get().loanAccId
             };
 
             repaymentScheduleReport.callPromise(params)
-                .then((result)=> {
-                    this.rptDataState.set(result);
-                }).catch((err)=> {
+                .then((result) => {
+                    rptDataState.set(result);
+                }).catch((err) => {
                     console.log(err.message);
                 }
             );
@@ -60,14 +65,32 @@ indexTmpl.onCreated(function () {
 indexTmpl.helpers({
     schema(){
         return RepaymentScheduleSchema;
+    }
+});
+
+indexTmpl.events({
+
+    'click .fullScreen'(event, instance){
+        alertify.Microfis_repaymentScheduleReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     },
+    'click .btn-print'(event, instance){
+        $('#print-data').printThis();
+    }
+});
+
+indexTmpl.onDestroyed(function () {
+    formDataState.set(null);
+    rptDataState.set(null);
+    rptInitState.set(false);
+});
+
+
+tmplPrintData.helpers({
     rptInit(){
-        let instance = Template.instance();
-        return instance.rptInitState.get();
+        return rptInitState.get();
     },
     rptData: function () {
-        let instance = Template.instance();
-        return instance.rptDataState.get();
+        return rptDataState.get();
     },
     khNameForPaymentMethod(paymentMethod){
         let khName;
@@ -118,30 +141,6 @@ indexTmpl.helpers({
 
         return khName;
     }
-});
-
-indexTmpl.events({
-    'click .btn-print'(event, instance){
-        let opts = {
-            // debug: true,               // show the iframe for debugging
-            // importCSS: true,            // import page CSS
-            // importStyle: true,         // import style tags
-            // printContainer: true,       // grab outer container as well as the contents of the selector
-            // loadCSS: "path/to/my.css",  // path to additional css file - us an array [] for multiple
-            // pageTitle: "",              // add title to print page
-            // removeInline: false,        // remove all inline styles from print elements
-            // printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
-            // header: null,               // prefix to html
-            // formValues: true            // preserve input/form values
-        };
-
-
-        $('#print-data').printThis();
-    }
-});
-
-indexTmpl.onDestroyed(function () {
-    formDataState.set(null);
 });
 
 // hook
