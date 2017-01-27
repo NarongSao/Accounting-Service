@@ -76,6 +76,7 @@ Meteor.methods({
               }
           }).fetch();
           /*  var j = ReactiveMethod.call('getJournal',selector);*/
+
           j.forEach(function (c) {
               c.order = i;
               c.journalDateFm = moment(c.journalDate).format('DD/MM/YYYY');

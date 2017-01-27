@@ -251,7 +251,6 @@ export const loanOutstandingReport = new ValidatedMethod({
                 {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
             ]);
 
-            console.log(loanDoc);
             let i = 1;
 
             let checkDate = moment(params.date, "DD/MM/YYYY").toDate();
@@ -292,6 +291,7 @@ export const loanOutstandingReport = new ValidatedMethod({
                     checkDate: checkDate,
                     opts: loanAccDoc
                 });
+
 
 
                 let finProductStatus = function (obj) {

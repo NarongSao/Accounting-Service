@@ -55,7 +55,8 @@ export let checkRepayment = new ValidatedMethod({
             } else {
                 let repaymentDoc = RepaymentSchedule.findOne({
                     loanAccId: loanAccId,
-                }, {sort: {scheduleDate: 1}}).scheduleDate;
+                }, {sort: {scheduleDate: 1}});
+
                 if (repaymentDoc) {
                     lastScheduleDate = repaymentDoc.scheduleDate;
                 }
@@ -93,7 +94,6 @@ export let checkRepayment = new ValidatedMethod({
             let scheduleDue = [],
                 schedulePrevious = [],
                 scheduleNext = [];
-
             scheduleDoc.forEach((o) => {
                 let checker = {};
 
@@ -162,6 +162,8 @@ export let checkRepayment = new ValidatedMethod({
 
                     // Check due date
                     checker.dueDateIsSameOrBeforeCheckDate = moment(o.dueDate).isSameOrBefore(checkDate, 'day');
+
+
                     if (checker.dueDateIsSameOrBeforeCheckDate) {
                         scheduleDue.push(o);
                     } else {
@@ -176,6 +178,7 @@ export let checkRepayment = new ValidatedMethod({
 
             // Total schedule due
             let totalScheduleDue = _.reduce(scheduleDue, (result, val, key) => {
+
                 // Head
                 if (key == 0) {
                     result.installment.from = val.installment;
