@@ -39,8 +39,6 @@ export let checkRepayment = new ValidatedMethod({
     }).validator(),
     run({loanAccId, checkDate, opts}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
-
 
             // Get loan acc and schedule
             let lastScheduleDateTemp = RepaymentSchedule.findOne({
@@ -69,7 +67,6 @@ export let checkRepayment = new ValidatedMethod({
             } else {
                 loanAccDoc = lookupLoanAcc.call({_id: loanAccId});
             }
-
             let scheduleDoc = RepaymentSchedule.find({loanAccId: loanAccId, scheduleDate: lastScheduleDate}).fetch(),
                 penaltyDoc = loanAccDoc.penaltyDoc,
                 penaltyClosingDoc = loanAccDoc.penaltyClosingDoc;
@@ -94,6 +91,7 @@ export let checkRepayment = new ValidatedMethod({
             let scheduleDue = [],
                 schedulePrevious = [],
                 scheduleNext = [];
+
             scheduleDoc.forEach((o) => {
                 let checker = {};
 
@@ -116,8 +114,9 @@ export let checkRepayment = new ValidatedMethod({
 
                 } // detail on repayment doc don't exist
 
+
                 // Check total principal & interest due
-                if (totalPrincipalInterestDue > 0) {
+                if (totalPrincipalInterestDue > 0 ) {
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
@@ -162,7 +161,6 @@ export let checkRepayment = new ValidatedMethod({
 
                     // Check due date
                     checker.dueDateIsSameOrBeforeCheckDate = moment(o.dueDate).isSameOrBefore(checkDate, 'day');
-
 
                     if (checker.dueDateIsSameOrBeforeCheckDate) {
                         scheduleDue.push(o);
