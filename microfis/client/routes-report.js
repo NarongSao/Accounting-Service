@@ -88,3 +88,37 @@ MicrofisRoutes.route('/loanClosing-report', {
         parent: 'microfis.home'
     }
 });
+
+// Loan Disbursment
+import '../imports/reports/loan-disbursment.js';
+MicrofisRoutes.route('/loanDisbursment-report', {
+    name: 'microfis.loanDisbursmentReport',
+    title: 'Loan Disbursment Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanDisbursmentReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Disbursment Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Loan History
+import '../imports/reports/loanHistory.js';
+MicrofisRoutes.route('/loanHistory-report', {
+    name: 'microfis.loanHistoryReport',
+    title: 'Loan History Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanHistoryReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan History Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

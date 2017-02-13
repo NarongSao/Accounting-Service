@@ -166,7 +166,7 @@ let hooksObject = {
     onSuccess: function (formType, result) {
         formDataState.set(result);
 
-        $('[name="branchId"]').val(result.branchId);
+        /*$('[name="branchId"]').val(result.branchId);
         $('[name="creditOfficerId"]').val(result.creditOfficerId);
         $('[name="paymentMethod"]').val(result.paymentMethod);
         $('[name="currencyId"]').val(result.currencyId);
@@ -175,8 +175,8 @@ let hooksObject = {
         $('[name="fundId"]').val(result.fundId);
         $('[name="classifyId"]').val(result.classifyId);
 
-        $('[name="date"]').val(moment(result.date).format("DD/MM/YYYY"));
-        $('[name="exchangeId"]').val(result.exchangeId);
+        // $('[name="date"]').val(result.date);
+        $('[name="exchangeId"]').val(result.exchangeId);*/
     },
     onError: function (formType, error) {
         displayError(error.message);

@@ -92,6 +92,16 @@
                         <i class="fa fa-circle-o"></i> <span>Loan Closing</span>
                     </a>
                 </li>
+                <li class="{{isActiveRoute name='microfis.loanDisbursmentReport'}}">
+                    <a href="{{pathFor 'microfis.loanDisbursmentReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Loan Disbursment</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.loanHistoryReport'}}">
+                    <a href="{{pathFor 'microfis.loanHistoryReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Loan History</span>
+                    </a>
+                </li>
             </ul>
         </li>
     {{/if}}

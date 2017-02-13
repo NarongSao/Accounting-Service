@@ -18,15 +18,12 @@ import {Product} from '../../../common/collections/product.js';
 import {Location} from '../../../common/collections/location.js';
 import {Fund} from '../../../common/collections/fund.js';
 
-
-import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
-
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepayment} from '../check-repayment.js';
 
-export const loanOutstandingReport = new ValidatedMethod({
-    name: 'microfis.loanOutstandingReport',
+export const loanDisbursmentReport = new ValidatedMethod({
+    name: 'microfis.loanDisbursmentReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         params: {type: Object, optional: true, blackbox: true}
@@ -48,6 +45,9 @@ export const loanOutstandingReport = new ValidatedMethod({
             data.title.branch = Branch.findOne();
 
             /****** Header *****/
+            let date = params.date;
+            let fDate = moment(date[0], 'DD/MM/YYYY').startOf("days").toDate();
+            let tDate = moment(date[1], 'DD/MM/YYYY').endOf("days").toDate();
 
 
             let exchangeData = Exchange.findOne({_id: params.exchangeId});
@@ -59,13 +59,15 @@ export const loanOutstandingReport = new ValidatedMethod({
             header.currencyId = "All";
             header.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
 
-            header.date = moment(params.date).format("DD/MM/YYYY");
+            header.date = moment(fDate).format("DD/MM/YYYY") + " - " + moment(tDate).format("DD/MM/YYYY");
             header.productId = "All";
             header.locationId = "All";
 
             header.fundId = "All";
             header.classifyId = "All";
             header.paymentMethod = "All";
+            header.cycle = "All";
+            header.repayFrequency = "All";
 
 
             /****** Content *****/
@@ -78,22 +80,21 @@ export const loanOutstandingReport = new ValidatedMethod({
                             <thead class="sub-header diplay-on-print-header-loan">
                                 <tr> 
                                     <th>No</th>
+                                    <th>Voucher Code</th>
                                     <th>LA Code</th>
-                                    <th>Clent Name</th>
+                                    <th>KH Clent Name</th>
+                                    <th>KH Staff Name</th>
                                     <th>CRC</th>
-                                    <th>Type</th>
+                                    <th>Acc Type</th>
                                     <th>Dis Date</th>
                                     <th>Mat Date</th>
+                                    <th>Installment</th>
+                                    <th>Rate</th>                                   
+                                    <th>Cycle</th>
                                     <th>Loan Amount</th>
+                                    <th>Fee</th>
                                     <th>Pro Int</th>
-                                    <th>Classify</th>
-                                    <th>CO</th>
-                                    <th>Vill</th>	
-                                    <th>Due Prin</th>
-                                    <th>Due Int</th>
                                     <th>Total Due</th>
-                                    <th>Loan Out Prin</th>
-                                    <th>Loan Out Int</th>
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;
@@ -189,37 +190,32 @@ export const loanOutstandingReport = new ValidatedMethod({
 
             }
 
+            if (params.cycle >0) {
+                selector.cycle = params.cycle;
+                header.cycle = params.cycle;
 
-            if (params.classifyId && params.classifyId.includes("All") == false) {
-                // selector.classifyId = {$in: params.classifyId};
-                let classifyListOrigin = ProductStatus.find({_id: {$in: params.classifyId}}, {
-                    fields: {
-                        name: 1,
-                        _id: 0
-                    }
-                }).fetch();
-
-                let classifyList = classifyListOrigin.map(function (obj) {
-                    return obj.name;
-                });
-
-                header.classifyId = classifyList;
             }
 
-
-            let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
-            selector.disbursementDate = {$lte: dateParam};
-            selector['$or'] = [{status: "Active"},
-                {closeDate: {$exists: true, $gt: dateParam}},
-                {writeOffDate: {$exists: true, $gt: dateParam}},
-                {restructureDate: {$exists: true, $gt: dateParam}}
-            ];
+            if (params.repayFrequency > 0) {
+                selector.repaidFrequency = params.repayFrequency;
+                header.repayFrequency = params.repayFrequency;
+            }
 
 
             data.header = header;
 
-            //All Active Loan in check date
+            selector.disbursementDate = {
+                $gte: fDate,
+                $lte: tDate
+            };
 
+            selector['$or'] = [{status: "Active"},
+                {closeDate: {$exists: true, $gte: tDate}},
+                {writeOffDate: {$exists: true, $gte: tDate}},
+                {restructureDate: {$exists: true, $gte: tDate}}
+            ];
+
+            //All Active Loan in check date
 
             let loanDoc = LoanAcc.aggregate([
                 {$match: selector},
@@ -303,203 +299,161 @@ export const loanOutstandingReport = new ValidatedMethod({
 
             let i = 1;
 
-            let checkDate = moment(params.date, "DD/MM/YYYY").toDate();
-
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
-
-            let totalDuePrinKHR = 0;
-            let totalDueIntKHR = 0;
-            let totalLoanOutPrinKHR = 0;
-            let totalLoanOutIntKHR = 0;
+            let totalLoanAmountKHR = 0;
+            let totalFeeKHR = 0;
+            let totalProIntKHR = 0;
 
 
-            let totalDuePrinUSD = 0;
-            let totalDueIntUSD = 0;
-            let totalLoanOutPrinUSD = 0;
-            let totalLoanOutIntUSD = 0;
+            let totalLoanAmountUSD = 0;
+            let totalFeeUSD = 0;
+            let totalProIntUSD = 0;
 
 
-            let totalDuePrinTHB = 0;
-            let totalDueIntTHB = 0;
-            let totalLoanOutPrinTHB = 0;
-            let totalLoanOutIntTHB = 0;
+            let totalLoanAmountTHB = 0;
+            let totalFeeTHB = 0;
+            let totalProIntTHB = 0;
 
 
-            let totalDuePrinBase = 0;
-            let totalDueIntBase = 0;
-            let totalLoanOutPrinBase = 0;
-            let totalLoanOutIntBase = 0;
+            let totalLoanAmountBase = 0;
+            let totalFeeBase = 0;
+            let totalProIntBase = 0;
 
+
+            let checkDate = tDate;
 
             loanDoc.forEach(function (loanAccDoc) {
 
-                let result = checkRepayment.run({
-                    loanAccId: loanAccDoc._id,
-                    checkDate: checkDate,
-                    opts: loanAccDoc
-                });
+                if (loanAccDoc.currencyId == "KHR") {
 
-                let checkClassify=true;
-                if (params.classifyId && params.classifyId.includes("All") == false) {
-                    checkClassify=false;
+                    totalLoanAmountKHR += loanAccDoc.loanAmount;
+                    totalFeeKHR += loanAccDoc.feeAmount;
+                    totalProIntKHR += loanAccDoc.projectInterest;
+
+                } else if (loanAccDoc.currencyId == "USD") {
+                    totalLoanAmountUSD += loanAccDoc.loanAmount;
+                    totalFeeUSD += loanAccDoc.feeAmount;
+                    totalProIntUSD += loanAccDoc.projectInterest;
+                } else if (loanAccDoc.currencyId == "THB") {
+                    totalLoanAmountTHB += loanAccDoc.loanAmount;
+                    totalFeeTHB += loanAccDoc.feeAmount;
+                    totalProIntTHB += loanAccDoc.projectInterest;
                 }
 
 
-                let finProductStatus = function (obj) {
-                    return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
-                }
-                let proStatus = productStatusList.find(finProductStatus);
-                //check product status (Classify)
-                if (params.classifyId.includes(proStatus._id) == true || checkClassify==true) {
-                    if (loanAccDoc.currencyId == "KHR") {
-                        totalDuePrinKHR += result.totalScheduleDue.principalDue;
-                        totalDueIntKHR += result.totalScheduleDue.interestDue;
-                        totalLoanOutPrinKHR += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-                        totalLoanOutIntKHR += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
-                    } else if (loanAccDoc.currencyId == "USD") {
-                        totalDuePrinUSD += result.totalScheduleDue.principalDue;
-                        totalDueIntUSD += result.totalScheduleDue.interestDue;
-                        totalLoanOutPrinUSD += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-                        totalLoanOutIntUSD += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
-                    } else if (loanAccDoc.currencyId == "THB") {
-                        totalDuePrinTHB += result.totalScheduleDue.principalDue;
-                        totalDueIntTHB += result.totalScheduleDue.interestDue;
-                        totalLoanOutPrinTHB += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-                        totalLoanOutIntTHB += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
-                    }
-
-
-                    content += `<tr>
+                content += `<tr>
                                 <td>${i}</td>
+                                <td>${loanAccDoc.voucherCode}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
+
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
+                                
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
+                                <td> ${loanAccDoc.term}</td>
+                                <td> ${loanAccDoc.interestRate}</td>
+                                <td> ${loanAccDoc.cycle}</td>
+               
                                 <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
+                                <td> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
                                 <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
-                                <td> ${proStatus.name}</td>
-                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
-                                <td> ${loanAccDoc.locationDoc.name}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue)}</td>
-                            </tr>`;
+                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount + loanAccDoc.feeAmount + loanAccDoc.projectInterest)}</td>
+                              </tr>`;
 
-                    i++;
-                }
+                i++;
+
             })
 
-
-            totalDuePrinBase = Meteor.call('microfis_exchange',
+            totalLoanAmountBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
-                    totalDuePrinKHR,
+                    totalLoanAmountKHR,
                     params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
-                    totalDuePrinUSD,
+                    totalLoanAmountUSD,
                     params.exchangeId)
                 + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
-                    totalDuePrinTHB,
+                    totalLoanAmountTHB,
                     params.exchangeId);
-            totalDueIntBase = Meteor.call('microfis_exchange',
+            totalFeeBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
-                    totalDueIntKHR,
+                    totalFeeKHR,
                     params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
-                    totalDueIntUSD,
+                    totalFeeUSD,
                     params.exchangeId)
                 + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
-                    totalDueIntTHB,
+                    totalFeeTHB,
                     params.exchangeId);
 
-            totalLoanOutPrinBase = Meteor.call('microfis_exchange',
+            totalProIntBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
-                    totalLoanOutPrinKHR,
+                    totalProIntKHR,
                     params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
-                    totalLoanOutPrinUSD,
-                    params.exchangeId
-                )
+                    totalProIntUSD,
+                    params.exchangeId)
                 + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
-                    totalLoanOutPrinTHB,
-                    params.exchangeId
-                );
-            totalLoanOutIntBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalLoanOutIntKHR,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "USD",
-                    baseCurrency,
-                    totalLoanOutIntUSD,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "THB",
-                    baseCurrency,
-                    totalLoanOutIntTHB,
-                    params.exchangeId
-                );
-            content += `<tr>
+                    totalProIntTHB,
+                    params.exchangeId);
+
+
+            content += `
+
+                        <tr>
                             <td colspan="12" align="right">Subtotal-KHR</td>
-                            <td>${microfis_formatNumber(totalDuePrinKHR)}</td>
-                            <td>${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinKHR)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntKHR)}</td>
+                            <td>${microfis_formatNumber(totalLoanAmountKHR)}</td>
+                            <td>${microfis_formatNumber(totalFeeKHR)}</td>
+                            <td>${microfis_formatNumber(totalProIntKHR)}</td>
+                            <td>${microfis_formatNumber(totalProIntKHR + totalFeeKHR + totalLoanAmountKHR)}</td>
+
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Subtotal-USD</td>
-                            <td>${microfis_formatNumber(totalDuePrinUSD)}</td>
-                            <td>${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinUSD)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntUSD)}</td>
+                      <td>${microfis_formatNumber(totalLoanAmountUSD)}</td>
+                            <td>${microfis_formatNumber(totalFeeUSD)}</td>
+                            <td>${microfis_formatNumber(totalProIntUSD)}</td>
+                            <td>${microfis_formatNumber(totalProIntUSD + totalFeeUSD + totalLoanAmountUSD)}</td>
+                        
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Subtotal-THB</td>
-                            <td>${microfis_formatNumber(totalDuePrinTHB)}</td>
-                            <td>${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinTHB)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntTHB)}</td>
+                         <td>${microfis_formatNumber(totalLoanAmountTHB)}</td>
+                            <td>${microfis_formatNumber(totalFeeTHB)}</td>
+                            <td>${microfis_formatNumber(totalProIntTHB)}</td>
+                            <td>${microfis_formatNumber(totalProIntTHB + totalFeeTHB + totalLoanAmountTHB)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Total-${baseCurrency}</td>
-                            <td>${microfis_formatNumber(totalDuePrinBase)}</td>
-                            <td>${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutPrinBase)}</td>
-                            <td>${microfis_formatNumber(totalLoanOutIntBase)}</td>
-
+                            <td>${microfis_formatNumber(totalLoanAmountBase)}</td>
+                            <td>${microfis_formatNumber(totalFeeBase)}</td>
+                            <td>${microfis_formatNumber(totalProIntBase)}</td>
+                            <td>${microfis_formatNumber(totalProIntBase + totalFeeBase + totalLoanAmountBase)}</td>
+                  
                         </tr>
                         
                         
@@ -513,7 +467,11 @@ export const loanOutstandingReport = new ValidatedMethod({
 });
 
 let microfis_formatDate = function (val) {
-    return moment(val).format("DD/MM/YYYY");
+    if (val != null) {
+        return moment(val).format("DD/MM/YYYY");
+    } else {
+        return "-";
+    }
 }
 
 let microfis_formatNumber = function (val) {

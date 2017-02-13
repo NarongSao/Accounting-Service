@@ -421,7 +421,11 @@ Repayment.after.insert(function (userId, doc) {
             }
         }
 
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: doc.amountPaid}}, function (err) {
+        LoanAcc.direct.update({_id: doc.loanAccId}, {
+            $set: {
+                feeAmount: doc.amountPaid
+            }
+        }, function (err) {
             if (err) {
                 console.log(err);
             }

@@ -319,7 +319,8 @@ export const SelectOptsReport = {
             });
 
         return list;
-    }, branch: function () {
+    },
+    branch: function () {
         var list = [];
         list.push({label: "(Select All)", value: "All"});
         Branch.find()

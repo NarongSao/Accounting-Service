@@ -39,6 +39,7 @@ LoanAcc.after.insert(function (userId, doc) {
         Client.direct.update({_id: doc.clientId}, {$inc: {cycle: 1}});
     }
 
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}})
 });
 
 // Before update
@@ -62,6 +63,13 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
         RepaymentSchedule.remove({loanAccId: modifier.$set._id});
         _makeSchedule(modifier.$set);
     });
+
+    let loanDoc = this.previous;
+
+    SavingAcc.direct.update({_id: loanDoc.savingAccId}, {$inc: {savingLoanNumber: -1}})
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}})
+
+
 });
 
 // After remove
@@ -77,6 +85,7 @@ LoanAcc.after.remove(function (userId, doc) {
     if (doc.status != "Restructure") {
         Client.direct.update({_id: doc.clientId}, {$inc: {cycle: -1}});
     }
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: -1}})
 });
 
 // Create repayment schedule
@@ -101,8 +110,6 @@ function _makeSchedule(doc) {
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;
 
-
-        console.log(value);
 
         RepaymentSchedule.insert(value);
     });

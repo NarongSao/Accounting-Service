@@ -249,9 +249,12 @@ LoanAcc.generalSchema = new SimpleSchema({
         decimal: true,
         defaultValue: 0,
         optional: true
+    },
+    voucherCode: {
+        type: String,
+        optional: true,
+        defaultValue: ""
     }
-
-
 });
 
 // Account
@@ -1088,7 +1091,7 @@ LoanAcc.reStructure = new SimpleSchema({
                     if (Meteor.isClient) {
                         let currencyId = AutoForm.getFieldValue('currencyId');
                         let calculateType = AutoForm.getFieldValue('principalInstallment.calculateType');
-                        console.log(currencyId);
+
                         let prefix = "";
                         if (currencyId == 'KHR') {
                             prefix = '៛ ';

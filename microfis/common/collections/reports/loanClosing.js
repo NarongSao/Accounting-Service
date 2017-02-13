@@ -5,9 +5,8 @@ import {AutoForm} from 'meteor/aldeed:autoform';
 import {moment} from 'meteor/momentjs:moment';
 
 // Lib
-import {SelectOpts} from '../../../imports/libs/select-opts.js';
 import {SelectOptsReport} from '../../../imports/libs/select-opts.js';
-import {SelectOptMethods} from '../../methods/select-opts.js';
+// import {dateRangePickerOpts} from '../../../../core/client/libs/date-range-picker-opts.js';
 
 export const LoanClosingSchema = new SimpleSchema({
     creditOfficerId: {
@@ -114,18 +113,15 @@ export const LoanClosingSchema = new SimpleSchema({
         }
     },
     date: {
-        type: Date,
-        label: "Date As",
-        defaultValue: moment().toDate(),
+        type: [Date],
+        label: 'Date',
         autoform: {
+            type: "bootstrap-daterangepicker",
             afFieldInput: {
-                type: "bootstrap-datetimepicker",
-                dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
-                    showTodayButton: true
+                dateRangePickerOptions: function () {
+                    return dateRangePickerOptions;
                 }
             }
         }
-
     }
 });

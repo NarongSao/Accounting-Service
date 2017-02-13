@@ -8,10 +8,15 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Branch} from '../../../../core/common/collections/branch.js';
+import {Currency} from '../../../../core/common/collections/currency.js';
+import {Exchange} from '../../../../core/common/collections/exchange.js';
 import {Setting} from '../../../../core/common/collections/setting.js';
 import {LoanAcc} from '../../../common/collections/loan-acc.js';
 import {ProductStatus} from '../../../common/collections/productStatus.js';
-import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
+import {CreditOfficer} from '../../../common/collections/credit-officer.js';
+import {Product} from '../../../common/collections/product.js';
+import {Location} from '../../../common/collections/location.js';
+import {Fund} from '../../../common/collections/fund.js';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
@@ -40,7 +45,29 @@ export const collectionSheetReport = new ValidatedMethod({
             data.title.branch = Branch.findOne();
 
             /****** Header *****/
-            data.header = "";
+            let date = params.date;
+            let fDate = moment(date[0], 'DD/MM/YYYY').startOf("days").toDate();
+            let tDate = moment(date[1], 'DD/MM/YYYY').endOf("days").toDate();
+
+
+
+            let exchangeData = Exchange.findOne({_id: params.exchangeId});
+
+            let header = {};
+
+            header.branchId = "All";
+            header.creditOfficerId = "All";
+            header.currencyId = "All";
+            header.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
+
+            header.date = moment(fDate).format("DD/MM/YYYY")+" - "+ moment(tDate).format("DD/MM/YYYY");
+            header.productId = "All";
+            header.locationId = "All";
+
+            header.fundId = "All";
+            header.classifyId = "All";
+            header.paymentMethod = "All";
+
 
             /****** Content *****/
 
@@ -73,41 +100,116 @@ export const collectionSheetReport = new ValidatedMethod({
             let selector = {};
             if (params.branchId && params.branchId.includes("All") == false) {
                 selector.branchId = {$in: params.branchId};
+                let branchList = Branch.find({_id: {$in: params.branchId}}, {
+                    fields: {
+                        enName: 1,
+                        _id: 0
+                    }
+                }).fetch().map(function (obj) {
+                    return obj.enName;
+                });
+                header.branchId = branchList.toString();
+
             }
             if (params.creditOfficerId && params.creditOfficerId.includes("All") == false) {
                 selector.creditOfficerId = {$in: params.creditOfficerId};
+                let creditOfficerList = CreditOfficer.find({_id: {$in: params.creditOfficerId}}, {
+                    fields: {
+                        enName: 1,
+                        _id: 0
+                    }
+                }).fetch().map(function (obj) {
+                    return obj.enName;
+                });
+                header.creditOfficerId = creditOfficerList.toString();
+
             }
 
             if (params.paymentMethod && params.paymentMethod.includes("All") == false) {
                 selector.paymentMethod = {$in: params.paymentMethod};
+                header.paymentMethod = params.paymentMethod.toString();
+
             }
 
             if (params.currencyId && params.currencyId.includes("All") == false) {
                 selector.currencyId = {$in: params.currencyId};
+                let currencyList = Currency.find({_id: {$in: params.currencyId}}, {
+                    fields: {
+                        _id: 1
+                    }
+                }).fetch().map(function (obj) {
+                    return obj._id;
+                });
+                header.currencyId = currencyList;
+
             }
             if (params.productId && params.productId.includes("All") == false) {
                 selector.productId = {$in: params.productId};
+                let productList = Product.find({_id: {$in: params.productId}}, {
+                    fields: {
+                        name: 1,
+                        _id: 0
+                    }
+                }).fetch().map(function (obj) {
+                    return obj.name;
+                });
+                header.productId = productList;
+
             }
 
             if (params.locationId && params.locationId.includes("All") == false) {
                 selector.locationId = {$in: params.locationId};
+                let locationList = Location.find({_id: {$in: params.locationId}}, {
+                    fields: {
+                        name: 1,
+                        _id: 0
+                    }
+                }).fetch().map(function (obj) {
+                    return obj.name;
+                });
+                header.locationId = locationList;
+
             }
 
             if (params.fundId && params.fundId.includes("All") == false) {
                 selector.fundId = {$in: params.fundId};
+                let fundList = Fund.find({_id: {$in: params.fundId}}, {
+                    fields: {
+                        name: 1,
+                        _id: 0
+                    }
+                }).fetch().map(function (obj) {
+                    return obj.name;
+                });
+                header.fundId = fundList;
+
+
             }
 
             if (params.classifyId && params.classifyId.includes("All") == false) {
-                selector.classifyId = {$in: params.classifyId};
+                let classifyList = ProductStatus.find({_id: {$in: params.classifyId}}, {
+                    fields: {
+                        name: 1,
+                        _id: 0
+                    }
+                }).fetch().map(function (obj) {
+                    return obj.name;
+                });
+                header.classifyId = classifyList;
+
             }
 
-            let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
-            selector.disbursementDate = {$lte: dateParam};
+            data.header = header;
+
+            selector.disbursementDate = {
+                // $gte: fDate,
+                $lte: tDate
+            };
 
             selector['$or'] = [{status: "Active"},
-                {closeDate: {$exists: true, $gt: dateParam}},
-                {writeOffDate: {$exists: true, $gt: dateParam}},
-                {restructureDate: {$exists: true, $gt: dateParam}}
+                {closeDate: {$exists: true, $gte: tDate}},
+                {writeOffDate: {$exists: true, $gte: tDate}},
+                {restructureDate: {$exists: true, $gte: tDate}}
             ];
 
             //All Active Loan in check date
@@ -194,7 +296,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
             let i = 1;
 
-            let checkDate = moment(params.date, "DD/MM/YYYY").toDate();
+            let checkDate = tDate;
 
             //Loop Active Loan in check date
 
@@ -227,9 +329,14 @@ export const collectionSheetReport = new ValidatedMethod({
 
 
                 if (result.totalScheduleDue.dueDate.from) {
-                    if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date,"DD/MM/YYYY").startOf("day").toDate().getTime()) {
+                    if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
                         result.totalScheduleDue.dueDate.from = null;
                     }
+                }
+
+                let checkClassify = true;
+                if (params.classifyId && params.classifyId.includes("All") == false) {
+                    checkClassify = false;
                 }
 
                 let finProductStatus = function (obj) {
@@ -237,20 +344,23 @@ export const collectionSheetReport = new ValidatedMethod({
                 }
                 let proStatus = productStatusList.find(finProductStatus);
 
-                if (loanAccDoc.currencyId == "KHR") {
-                    totalDuePrinKHR += result.totalScheduleDue.principalDue;
-                    totalDueIntKHR += result.totalScheduleDue.interestDue;
 
-                } else if (loanAccDoc.currencyId == "USD") {
-                    totalDuePrinUSD += result.totalScheduleDue.principalDue;
-                    totalDueIntUSD += result.totalScheduleDue.interestDue;
-                } else if (loanAccDoc.currencyId == "THB") {
-                    totalDuePrinTHB += result.totalScheduleDue.principalDue;
-                    totalDueIntTHB += result.totalScheduleDue.interestDue;
-                }
+                //check product status (Classify)
+                if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
+                    if (loanAccDoc.currencyId == "KHR") {
+                        totalDuePrinKHR += result.totalScheduleDue.principalDue;
+                        totalDueIntKHR += result.totalScheduleDue.interestDue;
+
+                    } else if (loanAccDoc.currencyId == "USD") {
+                        totalDuePrinUSD += result.totalScheduleDue.principalDue;
+                        totalDueIntUSD += result.totalScheduleDue.interestDue;
+                    } else if (loanAccDoc.currencyId == "THB") {
+                        totalDuePrinTHB += result.totalScheduleDue.principalDue;
+                        totalDueIntTHB += result.totalScheduleDue.interestDue;
+                    }
 
 
-                content += `<tr>
+                    content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
@@ -271,7 +381,8 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.clientDoc.telephone}</td>
                               </tr>`;
 
-                i++;
+                    i++;
+                }
             })
 
             totalDuePrinBase = Meteor.call('microfis_exchange',

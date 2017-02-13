@@ -7,9 +7,8 @@ import {moment} from 'meteor/momentjs:moment';
 
 // Lib
 import {SelectOptsReport} from '../../../imports/libs/select-opts.js';
-// import {dateRangePickerOpts} from '../../../../core/client/libs/date-range-picker-opts.js';
 
-export const CollectionSheetSchema = new SimpleSchema({
+export const LoanDisbursmentSchema = new SimpleSchema({
     creditOfficerId: {
         type: [String],
         label: 'Credit Officer',
@@ -89,18 +88,39 @@ export const CollectionSheetSchema = new SimpleSchema({
             }
         }
     },
-    classifyId: {
-        type: [String],
-        label: 'Classify',
-        defaultValue: ["All"],
+    cycle: {
+        type: Number,
+        label: 'Cycle',
+        defaultValue: 0,
         autoform: {
             type: "select2",
-            multiple: true,
             options: function () {
-                return SelectOptsReport.classify();
+                let cycleList = [{label: "All", value: 0}];
+                let i = 1;
+                for (i; i < 100; i++) {
+                    cycleList.push({label: i.toString(), value: i})
+                }
+                return cycleList;
             }
         }
     },
+    repayFrequency: {
+        type: Number,
+        label: 'Repay Frequency',
+        defaultValue: 0,
+        autoform: {
+            type: "select2",
+            options: function () {
+                let repayFrequency = [{label: "All", value: 0}];
+                let i = 1;
+                for (i; i < 100; i++) {
+                    repayFrequency.push({label: i.toString(), value: i})
+                }
+                return repayFrequency;
+            }
+        }
+    },
+
     branchId: {
         type: [String],
         label: "Branch",

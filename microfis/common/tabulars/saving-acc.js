@@ -32,6 +32,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {data: 'accountType', title: 'Acc Type'},
+        {data: 'savingLoanNumber', title: 'Saving Loan'},
         {data: 'status.value', title: 'Status'},
     ],
 

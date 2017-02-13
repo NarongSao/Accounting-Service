@@ -91,32 +91,41 @@ export let checkRepayment = new ValidatedMethod({
             let scheduleDue = [],
                 schedulePrevious = [],
                 scheduleNext = [];
-
             scheduleDoc.forEach((o) => {
+
                 let checker = {};
 
                 let principalDue = o.principalDue,
                     interestDue = o.interestDue,
                     totalPrincipalInterestDue = o.totalDue;
 
+
                 // Check detail on repayment doc exist
                 checker.detailOnRepaymentDocExist = o.repaymentDoc && o.repaymentDoc.detail.length > 0;
                 if (checker.detailOnRepaymentDocExist) {
-                    let detailOnRepaymentDoc = o.repaymentDoc.detail;
+
+                    let detailOnRepaymentDoc = [];
+                    o.repaymentDoc.detail.forEach(function (obj) {
+                        if (moment(obj.repaidDate).isSameOrBefore(checkDate, 'day')) {
+                            detailOnRepaymentDoc.push(obj);
+                        }
+                    })
+
                     let maxRepaidOnDetail = _.maxBy(detailOnRepaymentDoc, function (obj) {
                         return obj.repaymentId;
                     });
 
                     // Set max repaid value
-                    principalDue = maxRepaidOnDetail.principalBal;
-                    interestDue = maxRepaidOnDetail.interestBal;
-                    totalPrincipalInterestDue = maxRepaidOnDetail.totalPrincipalInterestBal;
-
+                    if (maxRepaidOnDetail) {
+                        principalDue = maxRepaidOnDetail.principalBal;
+                        interestDue = maxRepaidOnDetail.interestBal;
+                        totalPrincipalInterestDue = maxRepaidOnDetail.totalPrincipalInterestBal;
+                    }
                 } // detail on repayment doc don't exist
 
 
                 // Check total principal & interest due
-                if (totalPrincipalInterestDue > 0 ) {
+                if (totalPrincipalInterestDue > 0) {
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
@@ -158,9 +167,8 @@ export let checkRepayment = new ValidatedMethod({
                         totalAmount: totalAmountDue
                     };
 
-
-                    // Check due date
                     checker.dueDateIsSameOrBeforeCheckDate = moment(o.dueDate).isSameOrBefore(checkDate, 'day');
+
 
                     if (checker.dueDateIsSameOrBeforeCheckDate) {
                         scheduleDue.push(o);
@@ -389,12 +397,14 @@ export let checkRepayment = new ValidatedMethod({
             // ReSchedule
             let balanceUnPaid = 0;
             let interestUnPaid = 0;
+            let penaltyTotal = 0;
             scheduleDoc.forEach(function (obj) {
                 balanceUnPaid += obj.principalDue;
                 interestUnPaid += obj.interestDue;
                 if (obj.repaymentDoc) {
                     balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
                     interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
+                    penaltyTotal += obj.repaymentDoc.totalPenaltyPaid;
                 }
             })
 
@@ -428,7 +438,8 @@ export let checkRepayment = new ValidatedMethod({
                 principalInstallment: principalInstallment,
                 lastRepayment: lastRepayment,
                 balanceUnPaid: math.round(balanceUnPaid, 2),
-                interestUnPaid: math.round(interestUnPaid, 2)
+                interestUnPaid: math.round(interestUnPaid, 2),
+                penaltyTotal: math.round(penaltyTotal, 2)
             };
         }
     }

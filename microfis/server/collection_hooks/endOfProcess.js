@@ -26,8 +26,7 @@ EndOfProcess.before.insert(function (userId, doc) {
 EndOfProcess.after.insert(function (userId, doc) {
 
     let tDate = moment(doc.closeDate).endOf('day').toDate();
-    console.log(moment.tz.guess());
-    console.log(moment(doc.closeDate).endOf('day').toDate());
+
     let selectorPay = {};
     selectorPay.dueDate = {$lte: tDate};
     selectorPay.branchId = doc.branchId;

@@ -357,6 +357,7 @@ indexTpl.events({
         $.unblockUI();
 
     }, 'click .update': function (e, t) {
+        debugger;
         $.blockUI();
         removeCollectionNull();
 

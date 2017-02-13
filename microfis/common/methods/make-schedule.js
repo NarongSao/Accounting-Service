@@ -343,7 +343,6 @@ function findDueDate(opts) {
 
         let dueDate = moment(opts.previousDate).startOf("day").add(opts.repaidFrequency, opts.addingTime).toDate();
         let curTimezone = moment.tz.guess();
-        console.log(moment.tz.guess());
         // let orgDate = moment(opts.previousDate).tz("Asia/Bangkok").format('YYYY/MM/DD HH:mm:ss');
         // console.log(orgDate);
         // let dueDate = moment(orgDate).add(opts.repaidFrequency, opts.addingTime).toDate();
@@ -354,14 +353,11 @@ function findDueDate(opts) {
 
         // Check due date on
         if (opts.paymentMethod == 'W') {
-            console.log("Find Day Of Week : " + moment(dueDate).isoWeekday(opts.dueDateOn).toDate());
             dueDate = moment(dueDate).isoWeekday(opts.dueDateOn).toDate();
         } else if (opts.paymentMethod == 'M' || opts.paymentMethod == 'Y') {
             dueDate = moment(dueDate).date(opts.dueDateOn).toDate();
         }
 
-        console.log("After ");
-        console.log(dueDate);
         // Check day escape
         if (opts.escapeDayMethod == 'GR') { // General = Previous & Next
             let inEscapeDay = _isInEscapeDayAndDate(dueDate, opts.dayOfWeekToEscape, opts.holiday);

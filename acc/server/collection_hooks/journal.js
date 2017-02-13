@@ -42,7 +42,7 @@ Journal.before.insert(function (userId, doc) {
     // Check currency
     let _round = {
         type: 'general',
-        precision: -2 // KHR
+        precision: 0 // KHR
     };
 
     switch (doc.currencyId) {
@@ -181,7 +181,7 @@ Journal.before.insert(function (userId, doc) {
 
                 for (let i = 1; i <= obj.life; i++) {
                     let depPerYear = 0;
-                    let maxMonth = i == 1 ? 12 - parseInt(curMonth) : parseInt(curMonth);
+                    let maxMonth = (i == 1 || i == obj.life) && curMonth != 12 ? 12 - parseInt(curMonth) : 12;
 
                     if (i == obj.life) {
                         depPerYear = round2(obj.value - obj.estSalvage, _round.precision, _round.type);
@@ -195,7 +195,7 @@ Journal.before.insert(function (userId, doc) {
                         perMonth: round2(depPerYear / maxMonth, _round.precision, _round.type),
                         perYear: depPerYear,
                         month: 0,
-                        maxMonth: 12,
+                        maxMonth: maxMonth,
                         status: false
                     })
                     obj.value -= depPerYear;
@@ -250,7 +250,7 @@ Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
     // Check currency
     let _round = {
         type: 'general',
-        precision: -2 // KHR
+        precision: 0 // KHR
     };
 
     switch (modifier.$set.currencyId) {
@@ -394,7 +394,7 @@ Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
 
                 for (let i = 1; i <= obj.life; i++) {
                     let depPerYear = 0;
-                    let maxMonth = i == 1 ? 12 - parseInt(curMonth) : parseInt(curMonth);
+                    let maxMonth = (i == 1 || i == obj.life) && curMonth != 12 ? 12 - parseInt(curMonth) : 12;
 
                     if (i == obj.life) {
                         depPerYear = round2(obj.value - obj.estSalvage, _round.precision, _round.type);
@@ -402,13 +402,12 @@ Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
                         depPerYear = round2(((obj.value - obj.estSalvage) * (obj.percent / 100) ), _round.precision, _round.type);
 
                     }
-
                     transactionList.push({
                         year: i,
                         perMonth: round2(depPerYear / maxMonth, _round.precision, _round.type),
                         perYear: depPerYear,
                         month: 0,
-                        maxMonth: 12,
+                        maxMonth: maxMonth,
                         status: false
                     })
                     obj.value -= depPerYear;
@@ -419,7 +418,6 @@ Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
                 obj.value = value;
 
                 selectorFixAssetExpList.transactionAsset = transactionList;
-
                 DepExpList.insert(selectorFixAssetExpList);
             }
 

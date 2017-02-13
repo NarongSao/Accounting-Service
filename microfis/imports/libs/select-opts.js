@@ -12,6 +12,7 @@ import {Product} from '../../../microfis/common/collections/product.js';
 import {Location} from '../../../microfis/common/collections/location.js';
 import {Fund} from '../../../microfis/common/collections/fund.js';
 import {ProductStatus} from '../../../microfis/common/collections/productStatus.js';
+import {Client} from '../../../microfis/common/collections/client';
 import {LookupValue} from '../../common/collections/lookup-value.js';
 import {SavingAcc} from '../../common/collections/saving-acc.js';
 
@@ -266,6 +267,18 @@ export const SelectOptsReport = {
         CreditOfficer.find()
             .forEach(function (obj) {
                 list.push({label: obj.khName, value: obj._id});
+            });
+
+        return list;
+    },
+    client: function () {
+        Meteor.subscribe('microfis.client');
+
+        var list = [];
+        list.push({label: "(Select One)", value: ""});
+        Client.find()
+            .forEach(function (obj) {
+                list.push({label: obj.khSurname + " " + obj.khGivenName, value: obj._id});
             });
 
         return list;

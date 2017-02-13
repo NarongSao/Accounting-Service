@@ -1,7 +1,7 @@
 <!--Form-->
 <template name="Microfis_collectionSheetReport">
     <div class="box-body">
-        {{#autoForm schema=schema id="Microfis_collectionSheetReport"  target="normal"}}
+        {{#autoForm schema=schema id="Microfis_collectionSheetReport"  target="normal" resetOnSuccess=false}}
             <div class="animated fadeIn">
                 <div class="box box-primary direct-chat direct-chat-success">
                     <div class="box-header with-border">
@@ -23,11 +23,11 @@
                                 {{> afQuickField name="branchId"}}
                                 {{> afQuickField name="creditOfficerId"}}
                                 {{> afQuickField name="paymentMethod"}}
-                                {{> afQuickField name="date"}}
+                                {{> afQuickField name="currencyId"}}
 
                             </div>
                             <div class="col-md-4">
-                                {{> afQuickField name="currencyId"}}
+                                {{> afQuickField name="date"}}
                                 {{> afQuickField name="productId"}}
                                 {{> afQuickField name="locationId" options=locationOpt}}
                             </div>
@@ -76,6 +76,80 @@
 
                         <!--Header-->
                         {{#with header}}
+
+                            <div style="width: 100%">
+
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Date:</strong> {{date}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Fund:</strong> {{fundId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Branch:</strong> {{branchId}}</li>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                            <div style="width: 100%">
+
+                                <div style="width: 60%;float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Credit Officer:</strong> {{creditOfficerId}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Product:</strong> {{productId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Classify:</strong> {{classifyId}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="width: 100%">
+
+                                <div style="width: 60%;float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Currency:</strong> {{currencyId}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Location:</strong> {{locationId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Payment Method:</strong> {{paymentMethod}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="width: 100%">
+                                <ul class="list-unstyled">
+                                    <li><strong>Exchange:</strong> {{exchangeData}}</li>
+                                </ul>
+                            </div>
 
                         {{/with}}
 

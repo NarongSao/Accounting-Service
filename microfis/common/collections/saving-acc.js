@@ -287,6 +287,12 @@ SavingAcc.generalSchema = new SimpleSchema({
     },
     savingNumber: {
         type: Number,
+        optional: true,
+        defaultValue: 0
+    },
+    savingLoanNumber: {
+        type: Number,
+        optional: true,
         defaultValue: 0
     }
 });

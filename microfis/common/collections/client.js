@@ -139,7 +139,7 @@ Client.idTypeSchema = new SimpleSchema({
                 if (idType == 'N') {
                     let checkIdNumber = false;
                     if (this.value) {
-                        let lengthValue = parseInt(this.value).toString().length;
+                        let lengthValue = this.value.length;
                         checkIdNumber = (lengthValue == 9 || lengthValue == 10) ? true : false;
                     }
 

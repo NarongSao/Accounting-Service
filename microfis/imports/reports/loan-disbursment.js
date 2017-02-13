@@ -18,18 +18,18 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {collectionSheetReport} from '../../common/methods/reports/collectionSheet.js';
+import {loanDisbursmentReport} from '../../common/methods/reports/loan-disbursment';
 import {SelectOptMethods} from '../../common/methods/select-opts.js';
 
 // Schema
-import {CollectionSheetSchema} from '../../common/collections/reports/collectionSheet.js';
+import {LoanDisbursmentSchema} from '../../common/collections/reports/loan-disbursment';
 
 // Page
-import './collectionSheet.html';
+import './loan-disbursment.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_collectionSheetReport,
-    tmplPrintData = Template.Microfis_collectionSheetReportPrintData;
+let indexTmpl = Template.Microfis_loanDisbursmentReport,
+    tmplPrintData = Template.Microfis_loanDisbursmentReportPrintData;
 // Form state
 let formDataState = new ReactiveVar(null);
 
@@ -38,7 +38,7 @@ let formDataState = new ReactiveVar(null);
 let rptInitState = new ReactiveVar(false);
 let rptDataState = new ReactiveVar(null);
 indexTmpl.onCreated(function () {
-    createNewAlertify('Microfis_collectionSheetReport');
+    createNewAlertify('Microfis_loanDisbursmentReport');
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
@@ -47,7 +47,7 @@ indexTmpl.onCreated(function () {
 
             let params = formDataState.get();
 
-            collectionSheetReport.callPromise({params: params})
+            loanDisbursmentReport.callPromise({params: params})
                 .then((result) => {
                     rptDataState.set(result);
                 }).catch((err) => {
@@ -75,7 +75,7 @@ tmplPrintData.helpers({
 
 indexTmpl.helpers({
     schema(){
-        return CollectionSheetSchema;
+        return LoanDisbursmentSchema;
     },
     khNameForPaymentMethod(paymentMethod){
         let khName;
@@ -138,7 +138,7 @@ indexTmpl.helpers({
 indexTmpl.events({
     'click .fullScreen'(event, instance){
 
-        alertify.Microfis_collectionSheetReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
+        alertify.Microfis_loanDisbursmentReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     },
     'click .btn-print'(event, instance){
 
@@ -186,4 +186,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
+AutoForm.addHooks('Microfis_loanDisbursmentReport', hooksObject);

@@ -345,7 +345,6 @@ Meteor.methods({
                     });
 
 
-
                     if (temporary !== o.parent && isPush == false) {
                         if (dataOld != null) {
                             variable.push({
@@ -449,7 +448,10 @@ Meteor.methods({
                                     account: dataOld.account,
                                     code: SpaceChar.space(15 + (6 * dataOld.level)) +
                                     'Total : ' + dataOld.code,
-                                    amount: subTotal
+                                    amount: subTotal,
+                                    amountUsd: subTotalUSD,
+                                    amountRiel: subTotalRiel,
+                                    amountThb: subTotalTHB
                                 });
                                 isPush = true;
 
@@ -562,7 +564,10 @@ Meteor.methods({
                                     account: dataOld.account,
                                     code: SpaceChar.space(15 + (6 * dataOld.level)) +
                                     'Total : ' + dataOld.code,
-                                    amount: subTotal
+                                    amount: subTotal,
+                                    amountUsd: subTotalUSD,
+                                    amountRiel: subTotalRiel,
+                                    amountThb: subTotalTHB
 
                                 });
                                 isPush = true;
@@ -668,7 +673,10 @@ Meteor.methods({
                                 account: dataOld.account,
                                 code: SpaceChar.space(15 + (6 * dataOld.level)) +
                                 'Total : ' + dataOld.code,
-                                amount: subTotal
+                                amount: subTotal,
+                                amountUsd: subTotalUSD,
+                                amountRiel: subTotalRiel,
+                                amountThb: subTotalTHB
                             });
                             isPush = true;
                         }
@@ -685,9 +693,9 @@ Meteor.methods({
                                 code: SpaceChar.space(22 + (6 * dataOld.level)) +
                                 'Total : ' + dataOld.code,
                                 amount: x * subTotal,
-                                amountUsd: subTotalUSD,
-                                amountRiel: subTotalRiel,
-                                amountThb: subTotalTHB
+                                amountUsd: x * subTotalUSD,
+                                amountRiel: x * subTotalRiel,
+                                amountThb: x * subTotalTHB
                             });
                             isPush = true;
                         }
@@ -774,7 +782,10 @@ Meteor.methods({
                                     account: dataOld.account,
                                     code: SpaceChar.space(22 + (6 * dataOld.level)) +
                                     'Total : ' + dataOld.code,
-                                    amount: x * subTotal
+                                    amount: x * subTotal,
+                                    amountUsd: x * subTotalUSD,
+                                    amountRiel: x * subTotalRiel,
+                                    amountThb: x * subTotalTHB
                                 });
                                 isPush = true;
 
@@ -793,9 +804,9 @@ Meteor.methods({
                                 code: SpaceChar.space(22 + (6 * dataOld.level)) +
                                 'Total : ' + dataOld.code,
                                 amount: x * subTotal,
-                                amountUsd: subTotalUSD,
-                                amountRiel: subTotalRiel,
-                                amountThb: subTotalTHB
+                                amountUsd: x * subTotalUSD,
+                                amountRiel: x * subTotalRiel,
+                                amountThb: x * subTotalTHB
                             });
                             isPush = true;
                         }
@@ -881,7 +892,10 @@ Meteor.methods({
                                     account: dataOld.account,
                                     code: SpaceChar.space(22 + (6 * dataOld.level)) +
                                     'Total : ' + dataOld.code,
-                                    amount: x * subTotal
+                                    amount: x * subTotal,
+                                    amountUsd: x * subTotalUSD,
+                                    amountRiel: x * subTotalRiel,
+                                    amountThb: x * subTotalTHB
                                 });
                                 isPush = true;
                             }
@@ -900,9 +914,9 @@ Meteor.methods({
                                 code: SpaceChar.space(15 + (6 * dataOld.level)) +
                                 'Total : ' + dataOld.code,
                                 amount: x * subTotal,
-                                amountUsd: subTotalUSD,
-                                amountRiel: subTotalRiel,
-                                amountThb: subTotalTHB
+                                amountUsd: x * subTotalUSD,
+                                amountRiel: x * subTotalRiel,
+                                amountThb: x * subTotalTHB
                             });
                             isPush = true;
                         }
@@ -991,9 +1005,9 @@ Meteor.methods({
                         code: SpaceChar.space(len + (6 * dataOld.level)) +
                         'Total : ' + dataOld.code,
                         amount: x * subTotal,
-                        amountUsd: subTotalUSD,
-                        amountRiel: subTotalRiel,
-                        amountThb: subTotalTHB
+                        amountUsd: x * subTotalUSD,
+                        amountRiel: x * subTotalRiel,
+                        amountThb: x * subTotalTHB
                     });
                     isPush = true;
                 }
@@ -1635,7 +1649,7 @@ Meteor.methods({
                                 account: dataOld.account,
                                 code: SpaceChar.space(15 + (6 * dataOld.level)) +
                                 'Total : ' + dataOld.code,
-                                amount: subTotal
+                                amount:  subTotal
                             });
                             isPush = true;
                         }

@@ -128,14 +128,13 @@ newTmpl.events({
     },
     'click [name="closeDate"]'(e, t){
         let $closeDate = $('[name="closeDate"]');
-        if (stateEndOfProcess.get("closeDate")) {
-            // $closeDate.data("DateTimePicker").maxDate(moment().startOf('day').toDate());
-            $closeDate.data("DateTimePicker").minDate(moment(stateEndOfProcess.get("closeDate")).add(1, 'days').startOf('day').toDate());
-        } else {
-            // $closeDate.data("DateTimePicker").maxDate(moment().startOf('day').toDate());
-            $closeDate.data("DateTimePicker").minDate(moment().add(-200, 'years').startOf('day').toDate());
-
-        }
+        Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), function (err, result) {
+            if (result.closeDate) {
+                $closeDate.data("DateTimePicker").minDate(moment(result.closeDate).add(1, 'days').startOf('day').toDate());
+            } else {
+                $closeDate.data("DateTimePicker").minDate(moment().add(-200, 'years').startOf('day').toDate());
+            }
+        })
     }
 })
 

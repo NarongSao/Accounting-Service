@@ -18,18 +18,18 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {collectionSheetReport} from '../../common/methods/reports/collectionSheet.js';
+import {loanHistoryReport} from '../../common/methods/reports/loanHistory';
 import {SelectOptMethods} from '../../common/methods/select-opts.js';
 
 // Schema
-import {CollectionSheetSchema} from '../../common/collections/reports/collectionSheet.js';
+import {LoanHistorySchema} from '../../common/collections/reports/loanHistory';
 
 // Page
-import './collectionSheet.html';
+import './loanHistory.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_collectionSheetReport,
-    tmplPrintData = Template.Microfis_collectionSheetReportPrintData;
+let indexTmpl = Template.Microfis_loanHistoryReport,
+    tmplPrintData = Template.Microfis_loanHistoryReportPrintData;
 // Form state
 let formDataState = new ReactiveVar(null);
 
@@ -38,7 +38,7 @@ let formDataState = new ReactiveVar(null);
 let rptInitState = new ReactiveVar(false);
 let rptDataState = new ReactiveVar(null);
 indexTmpl.onCreated(function () {
-    createNewAlertify('Microfis_collectionSheetReport');
+    createNewAlertify('Microfis_loanHistoryReport');
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
@@ -47,7 +47,7 @@ indexTmpl.onCreated(function () {
 
             let params = formDataState.get();
 
-            collectionSheetReport.callPromise({params: params})
+            loanHistoryReport.callPromise({params: params})
                 .then((result) => {
                     rptDataState.set(result);
                 }).catch((err) => {
@@ -56,11 +56,6 @@ indexTmpl.onCreated(function () {
             );
         }
 
-    });
-
-    this.locationOpt = new ReactiveVar();
-    Meteor.call('locationForReport', (err, result) => {
-        this.locationOpt.set(result);
     });
 
 });
@@ -75,7 +70,7 @@ tmplPrintData.helpers({
 
 indexTmpl.helpers({
     schema(){
-        return CollectionSheetSchema;
+        return LoanHistorySchema;
     },
     khNameForPaymentMethod(paymentMethod){
         let khName;
@@ -125,34 +120,25 @@ indexTmpl.helpers({
         }
 
         return khName;
-    },
-    locationOpt(){
-        let instance = Template.instance();
-        if (instance.locationOpt.get()) {
-            return instance.locationOpt.get();
-        }
-        return [];
     }
 });
 
 indexTmpl.events({
     'click .fullScreen'(event, instance){
-
-        alertify.Microfis_collectionSheetReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
+        alertify.Microfis_loanHistoryReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     },
     'click .btn-print'(event, instance){
 
-            $('#print-data').printThis();
-
+        $('#print-data').printThis();
 
     }
 });
 
 tmplPrintData.onDestroyed(function () {
 
+
 });
 indexTmpl.onDestroyed(function () {
-
     formDataState.set(null);
     rptDataState.set(null);
     rptInitState.set(false);
@@ -169,21 +155,10 @@ let hooksObject = {
     onSuccess: function (formType, result) {
         formDataState.set(result);
 
-        /*$('[name="branchId"]').val(result.branchId);
-        $('[name="creditOfficerId"]').val(result.creditOfficerId);
-        $('[name="paymentMethod"]').val(result.paymentMethod);
-        $('[name="currencyId"]').val(result.currencyId);
-        $('[name="productId"]').val(result.productId);
-        $('[name="locationId"]').val(result.locationId);
-        $('[name="fundId"]').val(result.fundId);
-        $('[name="classifyId"]').val(result.classifyId);
-
-        // $('[name="date"]').val(result.date);
-        $('[name="exchangeId"]').val(result.exchangeId);*/
     },
     onError: function (formType, error) {
         displayError(error.message);
     }
 };
 
-AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
+AutoForm.addHooks('Microfis_loanHistoryReport', hooksObject);

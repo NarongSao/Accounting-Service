@@ -69,7 +69,7 @@ indexTmpl.events({
         }
     },
     'click .js-destroy'(event, instance){
-        if (this.savingNumber == 0) {
+        if (this.savingNumber == 0 && this.savingLoanNumber == 0) {
             destroyAction(
                 SavingAcc,
                 {_id: this._id},
@@ -193,11 +193,11 @@ formTmpl.helpers({
             let amount = 0;
             let data = Session.get('savingProductDoc');
             if (stateSaving.get("currencyId") && stateSaving.get("currencyId") == "KHR") {
-                 amount = data.minOpeningAmount * data.exchange.KHR;
+                amount = data.minOpeningAmount * data.exchange.KHR;
             } else if (stateSaving.get("currencyId") && stateSaving.get("currencyId") == "THB") {
-                 amount = data.minOpeningAmount * data.exchange.THB;
+                amount = data.minOpeningAmount * data.exchange.THB;
             } else {
-                 amount = data.minOpeningAmount;
+                amount = data.minOpeningAmount;
             }
 
             return amount;
