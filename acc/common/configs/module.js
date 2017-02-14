@@ -27,7 +27,8 @@ Module.Acc = {
             'accMapFixAsset',
             'accConfigDep',
             'accPaymentReceiveMethod',
-            'core_exchange'
+            'core_exchange',
+            'core_branch'
         ],
         data: [
             'accJournal',

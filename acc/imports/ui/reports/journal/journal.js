@@ -71,10 +71,10 @@ reportTpl.onCreated(function () {
             let params = formDataState.get();
 
             Meteor.call('acc_journalReport', params, function (err, result) {
+
                 if (result) {
                     let arrResult=[];
                     let contentDocs=result.content;
-                    console.log(contentDocs);
                     contentDocs.forEach(function (contentDoc) {
                         contentDoc.firstTransaction=[];
                         contentDoc.secondTransaction=[];
@@ -320,12 +320,12 @@ generateTpl.helpers({
 
         if(doc.content){
             let contentDocs=doc.content;
-
             let arrResult=[];
             contentDocs.forEach(function (contentDoc) {
                 contentDoc.firstTransaction=[];
                 contentDoc.secondTransaction=[];
                 let transactions=contentDoc.transaction;
+
                 for(let i=0;i<transactions.length;i++ ){
                     if(i==0){
                         contentDoc.firstTransaction.push(transactions[i]);

@@ -246,6 +246,7 @@ Meteor.methods({
 
             var content = Meteor.call("getTrialBalance", selector, baseCurrency,
                 exchangeDate, selectorGetLastBalance, lastDate, self.showNonActive);
+
             content.reduce(function (key, val) {
                 if (!key[val.account]) {
                     key[val.account] = {

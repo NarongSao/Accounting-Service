@@ -43,7 +43,6 @@ if (Meteor.isClient) {
         createChartDailyIncomeExpense: function () {
 
             Meteor.call('chart_dailyIncomeExpense', Session.get("currentBranch"), function (err, obj) {
-                console.log(obj);
                 Meteor.defer(function () {
                     // Create standard Highcharts chart with options:
                     if (obj.dataIncome[0] != undefined || obj.dataExpense[0] != undefined) {
