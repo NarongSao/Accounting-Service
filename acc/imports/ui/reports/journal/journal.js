@@ -79,6 +79,7 @@ reportTpl.onCreated(function () {
                         contentDoc.firstTransaction=[];
                         contentDoc.secondTransaction=[];
                         let transactions=contentDoc.transaction;
+			if (data.transactionAsset != undefined) {
                         for(let i=0;i<transactions.length;i++ ){
                             if(i==0){
                                 contentDoc.firstTransaction.push(transactions[i]);
@@ -87,6 +88,7 @@ reportTpl.onCreated(function () {
                             }
                         }
                         arrResult.push(contentDoc);
+			}
                     });
                     result.content=arrResult;
 
