@@ -118,12 +118,10 @@
                     {{#each content}}
                         {{#if isHeader}}
                             <tr style="background-color:#EFFFEF;">
-                                <td colspan="7" align="left">
+                                <td colspan="8" align="left">
                                     <b>{{name}}</b>
                                 </td>
-                                <td align="right">
-                                    <b>{{getCurrency currencyId}}{{formatMoneyNormal balance}}</b>
-                                </td>
+
                             </tr>
                         {{else}}
                             {{#if isFooter}}
@@ -178,7 +176,7 @@
                             {{/if}}
                         {{/if}}
                     {{/each}}
-                    <tr style="background-color:gray;">
+                    <!--<tr style="background-color:gray;">
                         <td colspan="5" align="left">
                             <b>Total</b>
                         </td>
@@ -188,13 +186,13 @@
                         <td align="right">
                             <b>{{getCurrency content.currencyId}}{{formatMoneyNormal endingCr}}</b>
                         </td>
-                        <!--<td align="right">
+                        &lt;!&ndash;<td align="right">
                             <b>{{getCurrency content.currencyId}}{{formatMoneyNormal endingAmount}}</b>
-                        </td>-->
+                        </td>&ndash;&gt;
                         <td align="right">
                             <b>{{getCurrency content.currencyId}}{{formatMoneyNormal endingBalance}}</b>
                         </td>
-                    </tr>
+                    </tr>-->
                     </tbody>
                 </table>
 
@@ -283,12 +281,10 @@
                             {{#each content}}
                                 {{#if isHeader}}
                                     <tr style="background-color:#EFFFEF;">
-                                        <td colspan="7" align="left">
+                                        <td colspan="8" align="left">
                                             <b>{{name}}</b>
                                         </td>
-                                        <td align="right">
-                                            <b>{{getCurrency currencyId}}{{formatMoneyNormal balance}}</b>
-                                        </td>
+
                                     </tr>
                                 {{else}}
                                     {{#if isFooter}}
@@ -344,7 +340,7 @@
                                     {{/if}}
                                 {{/if}}
                             {{/each}}
-                            <tr style="background-color:gray;">
+                            <!--<tr style="background-color:gray;">
                                 <td colspan="5" align="left">
                                     <b>Total</b>
                                 </td>
@@ -354,13 +350,13 @@
                                 <td align="right">
                                     <b>{{getCurrency content.currencyId}}{{formatMoneyNormal endingCr}}</b>
                                 </td>
-                                <!--<td align="right">
+                                &lt;!&ndash;<td align="right">
                             <b>{{getCurrency content.currencyId}}{{formatMoneyNormal endingAmount}}</b>
-                        </td>-->
+                        </td>&ndash;&gt;
                                 <td align="right">
                                     <b>{{getCurrency content.currencyId}}{{formatMoneyNormal endingBalance}}</b>
                                 </td>
-                            </tr>
+                            </tr>-->
                             </tbody>
                         </table>
 

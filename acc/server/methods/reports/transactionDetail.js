@@ -15,7 +15,7 @@ import {CloseChartAccount} from '../../../imports/api/collections/closeChartAcco
 import {Journal} from '../../../imports/api/collections/journal';
 
 Meteor.methods({
-    acc_ledgerReport: function (params) {
+    acc_transactionDetailReport: function (params) {
         if (!this.isSimulation) {
             var data = {
                 title: {},
@@ -34,18 +34,13 @@ Meteor.methods({
             data.title = Company.findOne();
 
             /****** Header *****/
-            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
-            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
-
-
+            let exchangeData = Exchange.findOne({_id: params.exchangeDate});
+            params.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
 
             data.header = params;
             /****** Content *****/
             var self = params;
             var selector = {};
-            var selectorAdvanced = {};
-            var selectorGetLastDate = {};
-            var selectorGetLastBalance = {};
             var selectorChartAccount = {};
 
             var exchangeDate = self.exchangeDate;
@@ -89,7 +84,6 @@ Meteor.methods({
             }
 
 
-
             if (self.accountType != null) {
                 selectorChartAccount.accountTypeId = {
                     $in: accountTypeList
@@ -104,106 +98,14 @@ Meteor.methods({
             var endingCr = 0;
 
             ChartAccount.find(selectorChartAccount, {
-                    sort: {
-                        code: 1
-                    }
-                })
+                sort: {
+                    code: 1
+                }
+            })
                 .forEach(function (obj) {
 
-
-                    selectorAdvanced['transaction.accountDoc._id'] = obj._id;
-                    var balanceOld = 0;
-
-                    //Get Last Date Balance by Date Condition
-                    if (self.date != null) {
-                        selectorGetLastDate.closeDate = {
-                            $lt: fDate
-                        };
-                    }
-                    if (self.currencyId != "All") {
-                        selectorGetLastDate.currencyId = self.currencyId;
-                    }
-                    if (self.branchId != "All") {
-                        selectorGetLastDate.branchId = self.branchId;
-                    }
-                    /* if (self.chartAccount != "All") {
-                     selectorGetLastDate.closeChartAccountId = self.chartAccount;
-                     }*/
-                    // selectorGetLastDate.closeChartAccountId = obj._id;
-                    var lastDate = CloseChartAccount.findOne(
-                        selectorGetLastDate, {
-                            sort: {
-                                closeDate: -1
-                            }
-                        });
-                    //Get Balance From Close to Date Query
-                    if (lastDate != null) {
-                        selectorGetLastBalance.closeDate = {$gte: moment(lastDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(lastDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
-                    }
-                    if (self.currencyId != "All") {
-                        selectorGetLastBalance.currencyId = self.currencyId;
-                    }
-                    if (self.branchId != "All") {
-                        selectorGetLastBalance.branchId = self.branchId;
-                    }
-                    selectorGetLastBalance.closeChartAccountId = obj._id;
-                    var lastBalanceClose = 0;
-                    if (lastDate != null) {
-                        var resultLast = CloseChartAccount.find(
-                            selectorGetLastBalance).fetch();
-                        if (resultLast.length != 0) {
-                            resultLast.forEach(function (lastBal) {
-                                var re = Meteor.call('exchange', lastBal.currencyId,
-                                    baseCurrency, lastBal.value, exchangeDate);
-                                lastBalanceClose += re;
-                            });
-                        }
-                    }
-
-                    //Get Balance from Last Date Balance Until the Lowest Date Condition
-                    if (lastDate != null) {
-                        selectorAdvanced.journalDate = {
-                            $gte: moment(moment(lastDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').startOf('days').toDate(),
-                            $lt: fDate
-                        };
-                    } else {
-                        selectorAdvanced.journalDate = {
-                            $lt: fDate
-                        };
-                    }
-                    if (self.currencyId != "All") {
-                        selectorAdvanced.currencyId = self.currencyId;
-                    }
-                    if (self.branchId != "All") {
-                        selectorAdvanced.branchId = self.branchId;
-                    }
-
-                    var resultLast1 = Journal.find(selectorAdvanced,{sort: {voucherId: 1}}).fetch();
-                    if (resultLast1.length != 0) {
-                        resultLast1.forEach(function (oldData) {
-                            if (oldData != undefined) {
-                                oldData.transaction.forEach(function (oldDataTran) {
-                                        if (oldDataTran.accountDoc._id == obj._id) {
-                                            var convertDrcrOld = Meteor.call('exchange',
-                                                oldData.currencyId, baseCurrency, oldDataTran
-                                                    .drcr, exchangeDate);
-                                            balanceOld += convertDrcrOld;
-                                        }
-
-                                    }
-                                )
-                            }
-                        });
-                    }
-                    content.push({
-                        isHeader: true,
-                        isFooter: false,
-                        name: obj.code + ":" + obj.name,
-                        balance: lastBalanceClose + balanceOld
-                    });
-
                     //Get The latest Balance
-                    var balance = lastBalanceClose + balanceOld;
+                    var balance = 0;
                     var totalDr = 0;
                     var totalCr = 0;
                     var totalDrCr = 0;
@@ -211,16 +113,27 @@ Meteor.methods({
                     selector['transaction.accountDoc._id'] = obj._id;
                     var i = 0;
                     /*var resultData = ReactiveMethod.call("getJournalTran", selector);*/
-                    var resultData = Journal.find(selector,{sort: {voucherId: 1}}).fetch();
+                    var resultData = Journal.find(selector, {sort: {journalDate: 1}});
+
+                    content.push({
+                        isHeader: true,
+                        isFooter: false,
+                        name: obj.code + ":" + obj.name,
+                        balance: ""
+                    });
+
+                    let cof = 1;
 
                     resultData.forEach(function (ob) {
                         var detailObj = {};
                         detailObj._id = ob._id;
                         detailObj.journalDate = ob.journalDate;
                         detailObj.memo = ob.memo;
-                        detailObj.voucherId =ob.voucherId.substr(8, ob.voucherId.length);
+                        detailObj.cusAndVenname = ob.cusAndVenname;
+                        detailObj.voucherId = ob.voucherId.substr(8, ob.voucherId.length);
 
                         //Loop for Detail Transaction
+
 
                         ob.transaction.forEach(function (o) {
                             if (o.accountDoc._id == obj._id) {
@@ -248,6 +161,11 @@ Meteor.methods({
                                 endingCr += convertCr;
 
 
+                                if (['20', '21', '30', '40'].includes(o.accountDoc.accountTypeId) == true) {
+                                    cof = -1;
+                                }
+
+
                             } else {
                                 if (ob.splitAccount == "0") {
                                     detailObj.name = o.accountDoc.code + ":" + o.accountDoc
@@ -260,20 +178,22 @@ Meteor.methods({
 
                         detailObj.totalDr = totalDr;
                         detailObj.totalCr = totalCr;
-                        detailObj.balance = balance;
+                        detailObj.balance = cof * balance;
                         detailObj.isHeader = false;
                         detailObj.isFooter = false;
                         content.push(detailObj);
 
 
                     });
+
+
                     endingBalance += balance;
                     content.push({
                         isHeader: false,
                         isFooter: true,
                         name: "Total " + obj.code + ":" + obj.name,
                         drcr: math.round(totalDrCr, 2),
-                        balance: math.round(balance, 2),
+                        balance: math.round(cof * balance, 2),
                         dr: math.round(totalDr, 2),
                         cr: math.round(totalCr, 2),
                         endingCr: math.round(endingCr, 2),

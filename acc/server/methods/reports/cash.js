@@ -29,8 +29,8 @@ Meteor.methods({
             };
 
             var date = s.words(params.date, ' - ');
-            var fDate = moment(date[0], "DD/MM/YYYY").toDate();
-            var tDate = moment(date[1], "DD/MM/YYYY").add(1, 'days').toDate();
+            var fDate = moment(date[0], "DD/MM/YYYY").startOf('days').toDate();
+            var tDate = moment(date[1], "DD/MM/YYYY").add(1, 'days').startOf('days').toDate();
 
             /****** Title *****/
             data.title = Company.findOne();
@@ -147,7 +147,7 @@ Meteor.methods({
                         });
                     //Get Balance From Close to Date Query
                     if (lastDate != null) {
-                        selectorGetLastBalance.closeDate = lastDate.closeDate;
+                        selectorGetLastBalance.closeDate = {$gte: moment(lastDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(lastDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
                     }
                     if (self.currencyId != "All") {
                         selectorGetLastBalance.currencyId = self.currencyId;
@@ -172,7 +172,7 @@ Meteor.methods({
                     //Get Balance from Last Date Balance Until the Lowest Date Condition
                     if (lastDate != null) {
                         selectorAdvanced.journalDate = {
-                            $gte: moment(moment(lastDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').toDate(),
+                            $gte: moment(moment(lastDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').startOf('days').toDate(),
                             $lt: fDate
                         };
                     } else {

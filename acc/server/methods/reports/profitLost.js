@@ -27,8 +27,8 @@ Meteor.methods({
             };
 
             var date = s.words(params.date, ' - ');
-            var fDate = moment(date[0], 'DD/MM/YYYY').toDate();
-            var tDate = moment(date[1], 'DD/MM/YYYY').add(1, 'days').toDate();
+            var fDate = moment(date[0], 'DD/MM/YYYY').startOf('days').toDate();
+            var tDate = moment(date[1], 'DD/MM/YYYY').add(1, 'days').startOf('days').toDate();
 
             var startYear = moment(fDate).year();
             var startDate = moment('01-01-' + startYear, "DD/MM/YYYY").toDate();
@@ -98,7 +98,7 @@ Meteor.methods({
             }
             selectorEnd.closeDate = {
                 $gte: startDate,
-                $lt: moment(date[0], "DD/MM/YYYY").add(1, 'days').toDate()
+                $lt: moment(date[0], "DD/MM/YYYY").add(1, 'days').startOf('days').toDate()
             }
             var endDate = CloseChartAccount.findOne(selectorEnd, {
                 sort: {
@@ -119,16 +119,14 @@ Meteor.methods({
                     $gte: "40",
                     $lte: "59"
                 };
-                selectorEndDate.closeDate = {
-                    $eq: endDate.closeDate
-                }
+                selectorEndDate.closeDate = {$gte: moment(endDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(endDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
             }
 
             // Selector Middle
             var selectorMiddle = {};
             if (!_.isUndefined(endDate)) {
                 selectorMiddle.journalDate = {
-                    $gte: moment(moment(endDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').toDate(),
+                    $gte: moment(moment(endDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').startOf('days').toDate(),
                     $lt: fDate
                 };
             } else {
@@ -484,7 +482,7 @@ Meteor.methods({
             }
             selectorEnd.closeDate = {
                 $gte: startDate,
-                $lt: moment(date[0], "DD/MM/YYYY").add(1, 'days').toDate()
+                $lt: moment(date[0], "DD/MM/YYYY").add(1, 'days').startOf('days').toDate()
             }
             var endDate = CloseChartAccount.findOne(selectorEnd, {
                 sort: {
@@ -506,16 +504,14 @@ Meteor.methods({
                     $gte: "40",
                     $lte: "59"
                 };
-                selectorEndDate.closeDate = {
-                    $eq: endDate.closeDate
-                }
+                selectorEndDate.closeDate ={$gte: moment(endDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(endDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
             }
 
             // Selector Middle
             var selectorMiddle = {};
             if (!_.isUndefined(endDate)) {
                 selectorMiddle.journalDate = {
-                    $gte: moment(moment(endDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').toDate(),
+                    $gte: moment(moment(endDate.closeDate).format("DD/MM/YYYY"), "DD/MM/YYYY").add(1, 'days').startOf('days').toDate(),
                     $lt: fDate
                 };
             } else {

@@ -29,8 +29,8 @@ Meteor.methods({
             };
 
             var date = s.words(params.date, ' - ');
-            var fDate = moment(date[0], 'DD/MM/YYYY').toDate();
-            var tDate = moment(date[1], 'DD/MM/YYYY').add(1, 'days').toDate();
+            var fDate = moment(date[0], 'DD/MM/YYYY').startOf('days').toDate();
+            var tDate = moment(date[1], 'DD/MM/YYYY').add(1, 'days').startOf('days').toDate();
 
             var startYear = moment(fDate).year();
             var startDate = moment('01-01-' + startYear, "DD/MM/YYYY").toDate();
@@ -766,8 +766,8 @@ Meteor.methods({
             };
 
             var date = s.words(params.date, ' - ');
-            var fDate = moment(date[0], 'DD/MM/YYYY').toDate();
-            var tDate = moment(date[1], 'DD/MM/YYYY').add(1, 'days').toDate();
+            var fDate = moment(date[0], 'DD/MM/YYYY').startOf('days').toDate();
+            var tDate = moment(date[1], 'DD/MM/YYYY').add(1, 'days').startOf('days').toDate();
 
             var startYear = moment(fDate).year();
             var startDate = moment('01-01-' + startYear, "DD/MM/YYYY").toDate();
