@@ -88,14 +88,19 @@
                 <table class="report-content">
                     <thead class="report-content-header">
                     <tr>
-                        <th rowspan="2"></th>
+                        <th rowspan="3"></th>
                         <th colspan="3">ត្រីមាស</th>
-                        <th rowspan="2">ក្នុងឆ្នាំជារៀល</th>
+                        <th rowspan="3">បង្គរពីដើមឆ្នាំ</th>
                     </tr>
                     <tr>
                         <th style="width: 15%">រៀល</th>
                         <th style="width: 15%">រូបិយប័ណ្ណផ្សេងៗគិតជារៀល</th>
-                        <th style="width: 15%">បង្គរពីដើមឆ្នាំ</th>
+                        <th style="width: 15%">សរុបជារៀល</th>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3=1+2</th>
                     </tr>
                     </thead>
                     <tbody class="report-content-body">
@@ -307,7 +312,7 @@
                         <td>{{formatMoneyNormal materialExpenseToDate}}</td>
                     </tr>
                     <tr>
-                        <td>&nbsp;   ៦.៦ ចំណាយរដ្ជបាល</td>
+                        <td>&nbsp;   ៦.៦ ចំណាយរដ្ឋបាល</td>
                         <td>{{formatMoneyNormal officedExpense}}</td>
                         <td>{{formatMoneyNormal officedExpenseOther}}</td>
                         <td>{{formatMoneyNormal officedExpenseTotal}}</td>
@@ -321,7 +326,7 @@
                         <td>{{formatMoneyNormal depreExpenseToDate}}</td>
                     </tr>
                     <tr>
-                        <td>&nbsp;   ៦.៨ កាតព្វកិច្ច, អាជ្ញាប័ណ្ណ និងរងពិន័យ</td>
+                        <td>&nbsp;   ៦.៨ កាតព្វកិច្ច, ថ្លៃអាជ្ញាប័ណ្ណ និងរងពិន័យ</td>
                         <td>{{formatMoneyNormal occupancyExpense}}</td>
                         <td>{{formatMoneyNormal occupancyExpenseOther}}</td>
                         <td>{{formatMoneyNormal occupancyExpenseTotal}}</td>
@@ -516,14 +521,19 @@
                         <table class="sub-table table table-striped  table-hover diplay-on-print-table">
                             <thead class="sub-header diplay-on-print-header">
                             <tr>
-                                <th rowspan="2"></th>
+                                <th rowspan="3"></th>
                                 <th colspan="3">ត្រីមាស</th>
-                                <th rowspan="2">ក្នុងឆ្នាំជារៀល</th>
+                                <th rowspan="3">បង្គរពីដើមឆ្នាំ</th>
                             </tr>
                             <tr>
                                 <th style="width: 15%">រៀល</th>
                                 <th style="width: 15%">រូបិយប័ណ្ណផ្សេងៗគិតជារៀល</th>
-                                <th style="width: 15%">បង្គរពីដើមឆ្នាំ</th>
+                                <th style="width: 15%">សរុបជារៀល</th>
+                            </tr>
+                            <tr>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3=1+2</th>
                             </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body">
@@ -749,11 +759,11 @@
                                 <td>{{formatMoneyNormal depreExpenseToDate}}</td>
                             </tr>
                             <tr>
-                                <td>&nbsp;   ៦.៨ កាតព្វកិច្ច, អាជ្ញាប័ណ្ណ និងរងពិន័យ</td>
-                                <td>{{formatMoneyNormal occupancyExpense}}</td>
-                                <td>{{formatMoneyNormal occupancyExpenseOther}}</td>
-                                <td>{{formatMoneyNormal occupancyExpenseTotal}}</td>
-                                <td>{{formatMoneyNormal occupancyExpenseToDate}}</td>
+                                <td>&nbsp;   ៦.៨ កាតព្វកិច្ច, ថ្លៃអាជ្ញាប័ណ្ណ និងរងពិន័យ</td>
+                                <td>{{formatMoneyNormal occupancyWithBank}}</td>
+                                <td>{{formatMoneyNormal occupancyWithBankOther}}</td>
+                                <td>{{formatMoneyNormal occupancyWithBankTotal}}</td>
+                                <td>{{formatMoneyNormal occupancyWithBankToDate}}</td>
                             </tr>
                             <tr>
                                 <td>&nbsp;&nbsp; &nbsp; &nbsp;    ៦.៨.១ ក្នុងនោះជាមួយធនាគារជាតិនៃកម្ពុជា</td>

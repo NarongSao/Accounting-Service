@@ -597,13 +597,13 @@ Meteor.methods({
           /*
            * Liability
            * */
-          else if (nbcCode.accountDocNBC.code == "5.1.1") {
+          else if (nbcCode.accountDocNBC.code == "5.1") {
             data.owingNBC += (-1) * obj.amountRiel / 1000000;
             data.owingNBCOther += (-1) * (obj.amountUsd + obj.amountThb) /
                 1000000;
-          } else if (nbcCode.accountDocNBC.code == "5.2.1") {
-            data.owingNBCLessThanMonth += (-1) * obj.amountRiel / 1000000;
-            data.owingNBCLessThanMonthOther += (-1) * (obj.amountUsd + obj.amountThb) /
+          } else if (nbcCode.accountDocNBC.code == "5.2") {
+            data.owingOther += (-1) * obj.amountRiel / 1000000;
+            data.owingOtherOther += (-1) * (obj.amountUsd + obj.amountThb) /
                 1000000;
           } else if (nbcCode.accountDocNBC.code == "5.3") {
             data.interestNBC += (-1) * obj.amountRiel / 1000000;
@@ -837,18 +837,11 @@ Meteor.methods({
        * Liability
        * */
 
-      data.owingNBCLessThanMonthTotal = math.round(data.owingNBCLessThanMonth, 2) + math.round(data.owingNBCLessThanMonthOther, 2);
-      data.owingOtherLessThanMonthTotal = math.round(data.owingOtherLessThanMonth, 2) + math.round(data.owingOtherLessThanMonthOther, 2);
       data.interestNBCTotal = math.round(data.interestNBC, 2) + math.round(data.interestNBCOther, 2);
 
 
-      data.owingNBC = math.round(data.owingNBCLessThanMonth, 2);
-      data.owingNBCOther = math.round(data.owingNBCLessThanMonthOther, 2);
-      data.owingNBCTotal = math.round(data.owingNBCLessThanMonthTotal, 2);
-
-      data.owingOther = math.round(data.owingOtherLessThanMonth, 2);
-      data.owingOtherOther = math.round(data.owingOtherLessThanMonthOther, 2);
-      data.owingOtherTotal = math.round(data.owingOtherLessThanMonthTotal, 2);
+      data.owingNBCTotal = math.round(data.owingNBC, 2) + math.round(data.owingNBCOther, 2);
+      data.owingOtherTotal = math.round(data.owingOther, 2) + math.round(data.owingOtherOther, 2);
 
       data.owingNBCandOther = (math.round(data.owingNBC, 2) +
       math.round(data.owingOther, 2) + math.round(data.interestNBC, 2));

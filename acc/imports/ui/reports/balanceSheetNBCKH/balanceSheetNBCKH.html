@@ -91,10 +91,15 @@
                 <table class="report-content">
                     <thead class="report-content-header">
                     <tr>
-                        <th>ទ្រព្យសកម្ម</th>
+                        <th rowspan="2">ទ្រព្យសកម្ម</th>
                         <th style="width: 20%">ជារៀល</th>
                         <th style="width: 20%">រូបិយប័ណ្ណផ្សេងៗគិតជារៀល</th>
                         <th style="width: 20%">សរុបជារៀល</th>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3=1+2</th>
                     </tr>
                     </thead>
                     <tbody class="report-content-body">
@@ -105,7 +110,7 @@
                         <td></td>
                     </tr>
                     <tr style="background-color: lightgray">
-                        <td>១. សាច់ប្រាក់និងប្រាក់បញ្ញើនៅធនាគារជាតិនៃកម្ពុជា និងនៅធនាគារផ្សេងៗ</td>
+                        <td>១. សាច់ប្រាក់ និងប្រាក់បញ្ញើនៅធនាគារជាតិនៃកម្ពុជា និងនៅធនាគារផ្សេងៗ</td>
                         <td>{{formatMoneyNormal cashAndBalanceWithNBC}}</td>
                         <td>{{formatMoneyNormal cashAndBalanceWithNBCOther}}</td>
                         <td>{{formatMoneyNormal cashAndBalanceWithNBCTotal}}</td>
@@ -117,7 +122,7 @@
                         <td>{{formatMoneyNormal cashOnHandTotal}}</td>
                     </tr>
                     <tr>
-                        <td>&nbsp; ​​  ១.២ ប្រាក់បញ្ចើនៅធនាគារជាតិនៃកម្ពុជា</td>
+                        <td>&nbsp; ​​  ១.២ ប្រាក់បញ្ញើនៅធនាគារជាតិនៃកម្ពុជា</td>
                         <td>{{formatMoneyNormal balanceNBC}}</td>
                         <td>{{formatMoneyNormal balanceNBCOther}}</td>
                         <td>{{formatMoneyNormal balanceNBCTotal}}</td>
@@ -173,7 +178,7 @@
                         <td>{{formatMoneyNormal netCreditBalanceTotal}}</td>
                     </tr>
                     <tr>
-                        <td>&nbsp; ​​  ២.៣ ការប្រាក់បង្គរដែលត្រូវទទួល</td>
+                        <td>&nbsp; ​​  ២.៣ ការប្រាក់បង្គរត្រូវទទួល</td>
                         <td>{{formatMoneyNormal interestReceivableCredit}}</td>
                         <td>{{formatMoneyNormal interestReceivableCreditOther}}</td>
                         <td>{{formatMoneyNormal interestReceivableCreditTotal}}</td>
@@ -282,7 +287,7 @@
                         <td></td>
                     </tr>
                     <tr style="background-color: lightgray">
-                        <td>៤. ទ្រព្យសកម្មដែលត្រូវទទួលនិងទ្រព្យសកម្មផ្សេងៗ</td>
+                        <td>៤. ទ្រព្យសកម្មដែលត្រូវទទួល និងទ្រព្យសកម្មផ្សេងៗ</td>
                         <td>{{formatMoneyNormal fixAssetReceivable}}</td>
                         <td>{{formatMoneyNormal fixAssetReceivableOther}}</td>
                         <td>{{formatMoneyNormal fixAssetReceivableTotal}}</td>
@@ -316,10 +321,15 @@
                     <br>
                     <thead class="report-content-header">
                     <tr>
-                        <th>ទ្រព្យអកម្មនិងមូលនិធិរបស់ភាគទុនិក</th>
-                        <th>រៀល</th>
+                        <th rowspan="2">ទ្រព្យអកម្ម និងមូលនិធិរបស់ភាគទុនិក</th>
+                        <th>ជារៀល</th>
                         <th>រូបិយប័ណ្ណផ្សេងៗ គិតជារៀល</th>
                         <th>សរុបជារៀល</th>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3=1+2</th>
                     </tr>
                     </thead>
                     <tbody class="report-content-body">
@@ -331,35 +341,35 @@
                     </tr>
 
                     <tr style="background-color: lightgray">
-                        <td>៥. ជំពាក់ធនាគារជាតិនៃកម្ពុជា និងធនាគារផ្សេងៗ</td>
+                        <td>៥. ប្រាក់ជំពាក់ធនាគារជាតិនៃកម្ពុជា និងធនាគារផ្សេងៗ</td>
                         <td>{{formatMoneyNormal owingNBCandOther}}</td>
                         <td>{{formatMoneyNormal owingNBCandOtherOther}}</td>
                         <td>{{formatMoneyNormal owingNBCandOtherTotal}}</td>
                     </tr>
                     <tr>
-                        <td>&nbsp; ​​  ៥.១ ជំពាក់ធនាគារជាតិនៃកម្ពុជា</td>
+                        <td>&nbsp; ​​  ៥.១ ប្រាក់ជំពាក់ធនាគារជាតិនៃកម្ពុជា</td>
                         <td>{{formatMoneyNormal owingNBC}}</td>
                         <td>{{formatMoneyNormal owingNBCOther}}</td>
                         <td>{{formatMoneyNormal owingNBCTotal}}</td>
                     </tr>
-                    <tr>
+                    <!--<tr>
                         <td>&nbsp;&nbsp; &nbsp; &nbsp;    ៥.១.១ ដែលក្នុងនោះតិចជាងមួយខែ</td>
                         <td>{{formatMoneyNormal owingNBCLessThanMonth}}</td>
                         <td>{{formatMoneyNormal owingNBCLessThanMonthOther}}</td>
                         <td>{{formatMoneyNormal owingNBCLessThanMonthTotal}}</td>
-                    </tr>
+                    </tr>-->
                     <tr>
-                        <td>&nbsp; ​​  ៥.២ ជំពាក់ធនាគារផ្សេងៗ</td>
+                        <td>&nbsp; ​​  ៥.២ ប្រាក់ជំពាក់ធនាគារផ្សេងៗ</td>
                         <td>{{formatMoneyNormal owingOther}}</td>
                         <td>{{formatMoneyNormal owingOtherOther}}</td>
                         <td>{{formatMoneyNormal owingOtherTotal}}</td>
                     </tr>
-                    <tr>
+                   <!-- <tr>
                         <td>&nbsp;&nbsp; &nbsp; &nbsp;    ៥.២.១ ដែលក្នុងនោះតិចជាងមួយខែ</td>
                         <td>{{formatMoneyNormal owingOtherLessThanMonth}}</td>
                         <td>{{formatMoneyNormal owingOtherLessThanMonthOther}}</td>
                         <td>{{formatMoneyNormal owingOtherLessThanMonthTotal}}</td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td>&nbsp; ​​  ៥.៣ ការប្រាក់បង្គរត្រូវសង</td>
                         <td>{{formatMoneyNormal interestNBC}}</td>
@@ -603,10 +613,15 @@
                         <table class="sub-table table table-striped  table-hover diplay-on-print-table">
                             <thead class="sub-header diplay-on-print-header">
                             <tr>
-                                <th>ទ្រព្យសកម្ម</th>
+                                <th rowspan="2">ទ្រព្យសកម្ម</th>
                                 <th style="width: 20%">ជារៀល</th>
                                 <th style="width: 20%">រូបិយប័ណ្ណផ្សេងៗគិតជារៀល</th>
                                 <th style="width: 20%">សរុបជារៀល</th>
+                            </tr>
+                            <tr>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3=1+2</th>
                             </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body">
@@ -617,7 +632,7 @@
                                 <td></td>
                             </tr>
                             <tr style="background-color: lightgray">
-                                <td>១. សាច់ប្រាក់និងប្រាក់បញ្ញើនៅធនាគារជាតិនៃកម្ពុជា និងនៅធនាគារផ្សេងៗ</td>
+                                <td>១. សាច់ប្រាក់ និងប្រាក់បញ្ញើនៅធនាគារជាតិនៃកម្ពុជា និងនៅធនាគារផ្សេងៗ</td>
                                 <td>{{formatMoneyNormal cashAndBalanceWithNBC}}</td>
                                 <td>{{formatMoneyNormal cashAndBalanceWithNBCOther}}</td>
                                 <td>{{formatMoneyNormal cashAndBalanceWithNBCTotal}}</td>
@@ -653,7 +668,7 @@
                                 <td></td>
                             </tr>
                             <tr style="background-color: lightgray">
-                                <td>២. ឥណទាននិងបុរេប្រទានចំពេាះអតិថិជន</td>
+                                <td>២. ឥណទាន និងបុរេប្រទានចំពេាះអតិថិជន</td>
                                 <td>{{formatMoneyNormal loanAndAdvancedToCustomer}}</td>
                                 <td>{{formatMoneyNormal loanAndAdvancedToCustomerOther}}</td>
                                 <td>{{formatMoneyNormal loanAndAdvancedToCustomerTotal}}</td>
@@ -685,7 +700,7 @@
                                 <td>{{formatMoneyNormal netCreditBalanceTotal}}</td>
                             </tr>
                             <tr>
-                                <td>&nbsp; ​​  ២.៣ ការប្រាក់បង្គរដែលត្រូវទទួល</td>
+                                <td>&nbsp; ​​  ២.៣ ការប្រាក់បង្គរត្រូវទទួល</td>
                                 <td>{{formatMoneyNormal interestReceivableCredit}}</td>
                                 <td>{{formatMoneyNormal interestReceivableCreditOther}}</td>
                                 <td>{{formatMoneyNormal interestReceivableCreditTotal}}</td>
@@ -794,7 +809,7 @@
                                 <td></td>
                             </tr>
                             <tr style="background-color: lightgray">
-                                <td>៤. ទ្រព្យសកម្មដែលត្រូវទទួលនិងទ្រព្យសកម្មផ្សេងៗ</td>
+                                <td>៤. ទ្រព្យសកម្មដែលត្រូវទទួល និងទ្រព្យសកម្មផ្សេងៗ</td>
                                 <td>{{formatMoneyNormal fixAssetReceivable}}</td>
                                 <td>{{formatMoneyNormal fixAssetReceivableOther}}</td>
                                 <td>{{formatMoneyNormal fixAssetReceivableTotal}}</td>
@@ -828,10 +843,15 @@
                             <br>
                             <thead class="sub-header diplay-on-print-header">
                             <tr>
-                                <th>ទ្រព្យអកម្មនិងមូលនិធិរបស់ភាគទុនិក</th>
-                                <th>រៀល</th>
+                                <th rowspan="2">ទ្រព្យអកម្ម និងមូលនិធិរបស់ភាគទុនិក</th>
+                                <th>ជារៀល</th>
                                 <th>រូបិយប័ណ្ណផ្សេងៗ គិតជារៀល</th>
                                 <th>សរុបជារៀល</th>
+                            </tr>
+                            <tr>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3=1+2</th>
                             </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body">
@@ -843,35 +863,35 @@
                             </tr>
 
                             <tr style="background-color: lightgray">
-                                <td>៥. ជំពាក់ធនាគារជាតិនៃកម្ពុជា និងធនាគារផ្សេងៗ</td>
+                                <td>៥. ប្រាក់ជំពាក់ធនាគារជាតិនៃកម្ពុជា និងធនាគារផ្សេងៗ</td>
                                 <td>{{formatMoneyNormal owingNBCandOther}}</td>
                                 <td>{{formatMoneyNormal owingNBCandOtherOther}}</td>
                                 <td>{{formatMoneyNormal owingNBCandOtherTotal}}</td>
                             </tr>
                             <tr>
-                                <td>&nbsp; ​​  ៥.១ ជំពាក់ធនាគារជាតិនៃកម្ពុជា</td>
+                                <td>&nbsp; ​​  ៥.១ ប្រាក់ជំពាក់ធនាគារជាតិនៃកម្ពុជា</td>
                                 <td>{{formatMoneyNormal owingNBC}}</td>
                                 <td>{{formatMoneyNormal owingNBCOther}}</td>
                                 <td>{{formatMoneyNormal owingNBCTotal}}</td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td>&nbsp;&nbsp; &nbsp; &nbsp;    ៥.១.១ ដែលក្នុងនោះតិចជាងមួយខែ</td>
                                 <td>{{formatMoneyNormal owingNBCLessThanMonth}}</td>
                                 <td>{{formatMoneyNormal owingNBCLessThanMonthOther}}</td>
                                 <td>{{formatMoneyNormal owingNBCLessThanMonthTotal}}</td>
-                            </tr>
+                            </tr>-->
                             <tr>
-                                <td>&nbsp; ​​  ៥.២ ជំពាក់ធនាគារផ្សេងៗ</td>
+                                <td>&nbsp; ​​  ៥.២ ប្រាក់ជំពាក់ធនាគារផ្សេងៗ</td>
                                 <td>{{formatMoneyNormal owingOther}}</td>
                                 <td>{{formatMoneyNormal owingOtherOther}}</td>
                                 <td>{{formatMoneyNormal owingOtherTotal}}</td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td>&nbsp;&nbsp; &nbsp; &nbsp;    ៥.២.១ ដែលក្នុងនោះតិចជាងមួយខែ</td>
                                 <td>{{formatMoneyNormal owingOtherLessThanMonth}}</td>
                                 <td>{{formatMoneyNormal owingOtherLessThanMonthOther}}</td>
                                 <td>{{formatMoneyNormal owingOtherLessThanMonthTotal}}</td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td>&nbsp; ​​  ៥.៣ ការប្រាក់បង្គរត្រូវសង</td>
                                 <td>{{formatMoneyNormal interestNBC}}</td>

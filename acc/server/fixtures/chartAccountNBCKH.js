@@ -50,7 +50,7 @@ Meteor.startup(function () {
             {
                 _id: "0006",
                 code: '2.1.2',
-                name: 'ដកធនបម្រុងសម្រាប់ការខាតបង់',
+                name: 'ដក៖ ធនបម្រុងសម្រាប់ការខាតបង់',
                 accountTypeNBC: "Balance"
             }
         );
@@ -153,7 +153,7 @@ Meteor.startup(function () {
         ChartAccountNBCKH.insert(
             {
                 _id: "0019",
-                code: '5.1.1',
+                code: '5.1',
                 name: 'ដែលក្នុងនោះតិចជាងមួយខែ',
                 accountTypeNBC: "Balance"
             }
@@ -161,7 +161,7 @@ Meteor.startup(function () {
         ChartAccountNBCKH.insert(
             {
                 _id: "0020",
-                code: '5.2.1',
+                code: '5.2',
                 name: 'ដែលក្នុងនោះតិចជាងមួយខែ',
                 accountTypeNBC: "Balance"
             }
@@ -186,7 +186,7 @@ Meteor.startup(function () {
             {
                 _id: "0023",
                 code: '6.2.1',
-                name: 'ចរន្ត',
+                name: 'ប្រាក់បញ្ញើសន្សំសំចៃ',
                 accountTypeNBC: "Balance"
             }
         );
@@ -194,7 +194,7 @@ Meteor.startup(function () {
             {
                 _id: "0024",
                 code: '6.2.2',
-                name: 'សំចៃ',
+                name: 'ប្រាក់បញ្ញើចរន្ត',
                 accountTypeNBC: "Balance"
             }
         );
@@ -202,7 +202,7 @@ Meteor.startup(function () {
             {
                 _id: "0025",
                 code: '6.2.3',
-                name: 'មានកាលកំណត់',
+                name: 'ប្រាក់បញ្ញើមានកាលកំណត់',
                 accountTypeNBC: "Balance"
             }
         );
@@ -210,7 +210,7 @@ Meteor.startup(function () {
             {
                 _id: "0026",
                 code: '6.3',
-                name: 'ការប្រាក់បង្គរ',
+                name: 'ការប្រាក់បង្គរត្រូវសង',
                 accountTypeNBC: "Balance"
             }
         );
@@ -250,7 +250,7 @@ Meteor.startup(function () {
             {
                 _id: "0031",
                 code: '8.1.1',
-                name: 'ដើមទុនបង់ហើយ',
+                name: 'បុព្វលាភដើមទុនជាភាគហ៊ុន',
                 accountTypeNBC: "Balance"
             }
         );
@@ -266,7 +266,7 @@ Meteor.startup(function () {
             {
                 _id: "0033",
                 code: '8.2',
-                name: 'បំណុលបន្ទាប់បន្សំ (ទទួលស្គាល់ពីធនាគារជាតិ)',
+                name: 'បំណុលបន្ទាប់បន្សំ (បានទទួលស្គាល់ពីធនាគារជាតិនៃកម្ពុជា)',
                 accountTypeNBC: "Balance"
             }
         );
@@ -274,7 +274,7 @@ Meteor.startup(function () {
             {
                 _id: "0034",
                 code: '8.3',
-                name: 'ប្រាក់បម្រុងនិងសំវិធានធន',
+                name: 'ទុនបម្រុងនិងសំវិធានធន',
                 accountTypeNBC: "Balance"
             }
         );
@@ -290,7 +290,7 @@ Meteor.startup(function () {
             {
                 _id: "0036",
                 code: '8.5',
-                name: 'ចំណេញខាតក្នុងឆ្នាំ',
+                name: 'ចំណេញខាតក្នុងគ្រា',
                 accountTypeNBC: "Balance"
             }
         );
@@ -310,6 +310,15 @@ Meteor.startup(function () {
                 accountTypeNBC: "Balance"
             }
         );
+
+
+
+
+
+
+
+
+
 
 
         ChartAccountNBCKH.insert(
@@ -412,7 +421,7 @@ Meteor.startup(function () {
             {
                 _id: "0049",
                 code: '6.1',
-                name: 'បៀវត្សនិងឧបត្ថម្ភ',
+                name: 'ចំណាយលើបៀវត្ស និងឧបត្ថម្ភរបស់បុគ្គលិក',
                 accountTypeNBC: "Income"
             }
         );
@@ -428,7 +437,7 @@ Meteor.startup(function () {
             {
                 _id: "0051",
                 code: '6.3',
-                name: 'ចំណាយជួល',
+                name: 'ចំណាយលើការជួល',
                 accountTypeNBC: "Income"
             }
         );
@@ -436,7 +445,7 @@ Meteor.startup(function () {
             {
                 _id: "0052",
                 code: '6.4',
-                name: 'ចំណាយលើអគារ',
+                name: 'ចំណាយលើការថែទាំអគារ',
                 accountTypeNBC: "Income"
             }
         );
@@ -444,7 +453,7 @@ Meteor.startup(function () {
             {
                 _id: "0053",
                 code: '6.5',
-                name: 'ចំណាយលើទព្វសំភារៈ',
+                name: 'ចំណាយលើទ្រព្យសំភារៈ',
                 accountTypeNBC: "Income"
             }
         );
@@ -468,7 +477,7 @@ Meteor.startup(function () {
             {
                 _id: "0056",
                 code: '6.8.1',
-                name: 'ក្នុងនោះជាមួយធនាគារជាតិ',
+                name: 'ដែលក្នុងនោះជាមួយធនាគារជាតិនៃកម្ពុជា',
                 accountTypeNBC: "Income"
             }
         );
