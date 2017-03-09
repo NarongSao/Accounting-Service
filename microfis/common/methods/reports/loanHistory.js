@@ -21,6 +21,8 @@ import {Fund} from '../../../common/collections/fund.js';
 
 
 import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
+import {Repayment} from '../../../common/collections/repayment';
+import {PaymentStatus} from '../../../common/collections/paymentStatus';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
@@ -67,29 +69,6 @@ export const loanHistoryReport = new ValidatedMethod({
             let baseCurrency = Setting.findOne().baseCurrency;
 
             let content = "";
-            content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
-                            <thead class="sub-header diplay-on-print-header-loan">
-                                <tr> 
-                                    <th>No</th>
-                                    <th>LA Code</th>
-                                    <th>Clent Name</th>
-                                    <th>CRC</th>
-                                    <th>Type</th>
-                                    <th>Dis Date</th>
-                                    <th>Mat Date</th>
-                                    <th>Loan Amount</th>
-                                    <th>Pro Int</th>
-                                    <th>Classify</th>
-                                    <th>CO</th>
-                                    <th>Vill</th>	
-                                    <th>Due Prin</th>
-                                    <th>Due Int</th>
-                                    <th>Total Due</th>
-                                    <th>Loan Out Prin</th>
-                                    <th>Loan Out Int</th>
-                                </tr>
-                            </thead>
-                            <tbody class="sub-body display-on-print-body-loan">`;
 
 
             //Param
@@ -127,6 +106,9 @@ export const loanHistoryReport = new ValidatedMethod({
             data.header = header;
 
             //All Active Loan in check date
+
+
+            let paymentStatusList = PaymentStatus.find({}).fetch();
 
 
             let loanDoc = LoanAcc.aggregate([
@@ -206,44 +188,538 @@ export const loanHistoryReport = new ValidatedMethod({
                         as: "penaltyClosingDoc"
                     }
                 },
-                {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
+                {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}},
+
+                {$sort: {cycle: 1}}
             ]);
 
-            let i = 1;
 
             let checkDate = moment(params.date, "DD/MM/YYYY").toDate();
 
             //Loop Active Loan in check date
+            content += `<hr>
+                    <div class="row">
+                        <div class="col-md-12"><b><u>Customer Information</u></b></div>              
+                    </div>
+                        <br>
+                
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Customer Code:</strong> ${loanDoc[0].clientId}</li>
+                                        </ul>
+                                    </div>
 
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>En Name:</strong> ${loanDoc[0].clientDoc.enSurname} ${loanDoc[0].clientDoc.enGivenName}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Kh Name:</strong> ${loanDoc[0].clientDoc.khSurname} ${loanDoc[0].clientDoc.khGivenName}</li>
+                                    </ul>
+                                </div>
+                            </div>  
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><b>Kh Nick Name:</b> ${loanDoc[0].clientDoc.khNickname}</li>
+                                        </ul>
+                                    </div>
 
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><b>Sex:</b> ${loanDoc[0].clientDoc.gender}</div></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><b>En Nick Name:</b> ${loanDoc[0].clientDoc.enNickname}</li>
+                                    </ul>
+                                </div>
+                            </div> 
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><b>Date Of Birth:</b> ${microfis_formatDate(loanDoc[0].clientDoc.dob)}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><b>Branch Office:</b> ${loanDoc[0].branchId}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><b>Nationality:</b></li>
+                                    </ul>
+                                </div>
+                            </div>`;
             loanDoc.forEach(function (loanAccDoc) {
+                console.log(loanAccDoc);
+                let collateralNote = "";
+
+                if (loanAccDoc.collateralNote) {
+                    collateralNote = loanAccDoc.collateralNote;
+                }
+                content += `
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12"><b><u>Loan Disbursment Information (Cycle: ${loanAccDoc.cycle})</u></b></div>              
+                    </div>
+                    
+                    <br>
+                    
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Disbursment Date:</strong> ${microfis_formatDate(loanAccDoc.disbursementDate)}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Fund:</strong> ${loanAccDoc.fundDoc.name}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Product:</strong> ${loanAccDoc.productDoc.name}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Currency:</strong> ${loanAccDoc.currencyId}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Staff Name:</strong> ${loanAccDoc.creditOfficerDoc.enName}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Account Type:</strong> ${loanAccDoc.accountType}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Number Install:</strong> ${microfis_formatDate(loanAccDoc.term)}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Install Frequency:</strong> ${loanAccDoc.repaidFrequency}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Meeting Schedule:</strong> ${loanAccDoc.dueDateOn}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Principal Frequency:</strong> ${loanAccDoc.principalInstallment.frequency}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Principal :</strong> ${microfis_formatNumber(loanAccDoc.principalInstallment.amount)}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Number Payment:</strong> ${loanAccDoc.paymentNumber}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div style="width: 100%">
+                               
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Interest Rate:</strong> ${loanAccDoc.interestRate}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            <br>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Business:</strong></li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Activity:</strong> ${loanAccDoc.purposeActivity}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Disbursment Code:</strong> ${loanAccDoc._id}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Poverty Status:</strong> ${loanAccDoc.povertyLevel}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Collateral Type:</strong> ${loanAccDoc.collateralType}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Client Id:</strong> ${loanAccDoc.clientId}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Income Amount:</strong> </li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Security:</strong> ${loanAccDoc.collateralSecurity}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>ID Type:</strong> ${loanAccDoc.clientDoc.idType}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Handicap:</strong> </li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Security Des:</strong> ${collateralNote}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>ID Number:</strong> ${loanAccDoc.clientDoc.idNumber}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Contact:</strong> ${loanAccDoc.clientDoc.telephone}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Loan Amount:</strong> ${microfis_formatNumber(loanAccDoc.loanAmount)}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Expire Date:</strong> ${microfis_formatDate(loanAccDoc.clientDoc.idExpiryDate)}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>History:</strong> ${loanAccDoc.history}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Education:</strong> </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Marital Status:</strong> ${loanAccDoc.clientDoc.maritalStatus}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Purpose:</strong> ${loanAccDoc.purpose}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Voucher Code:</strong> ${loanAccDoc.voucherCode}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Family Member:</strong> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                                <div style="width: 60%; float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Purpose Des:</strong> </li>
+                                        </ul>
+                                    </div>
+
+                                  
+                                </div>
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Number Dependent:</strong> ${loanAccDoc.productDoc.name}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div style="width: 100%">
+                               
+                                <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Address:</strong> ${loanAccDoc.clientDoc.address}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                    
+                    <br>
+                    
+                    <div class="row">
+                        <div class="col-md-12"><b><u>Repayment Schedule</u></b></div>              
+                    </div>
+                        
+                    <br>
+
+                            <table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
+                            <thead class="sub-header diplay-on-print-header-loan" style="display: table-row-group;">
+                                <tr> 
+                                    <th>No</th>
+                                    <th>Due Date</th>
+                                    <th>Day Num</th>
+                                    <th>Principal</th>
+                                    <th>Interest</th>
+                                    <th>Fee</th>
+                                    <th>Total</th>
+                                    <th>Loan Outstanding</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sub-body display-on-print-body-loan">`;
 
 
-                content += `<tr>
-                                <td>${i}</td>
-                                <td>${loanAccDoc._id}</td>
-                                <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
-                                <td> ${loanAccDoc.currencyId}</td>
-                                <td> ${loanAccDoc.accountType}</td>
-                                <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
-                                <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
-                                <td></td>
-                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
-                                <td> ${loanAccDoc.locationDoc.name}</td>
-                                
+                let lastScheduleDate = RepaymentSchedule.findOne({
+                    loanAccId: loanAccDoc._id,
+                    scheduleDate: {$lte: checkDate}
+                }, {$sort: {scheduleDate: -1}});
+
+                let scheduleDoc = RepaymentSchedule.find({
+                    loanAccId: loanAccDoc._id,
+                    scheduleDate: lastScheduleDate.scheduleDate
+                }).fetch();
+
+
+                let paymentDetail = [];
+
+                scheduleDoc.forEach(function (obj) {
+                    if (obj.repaymentDoc && obj.repaymentDoc.detail.length > 0) {
+                        paymentDetail = paymentDetail.concat(obj.repaymentDoc.detail);
+                    }
+
+                    content += `<tr>
+                                <td>${obj.installment}</td>
+                                <td>${microfis_formatDate(obj.dueDate)}</td>
+                                <td> ${obj.numOfDay}</td>
+                                <td> ${microfis_formatNumber(obj.principalDue)}</td>
+                                <td> ${microfis_formatNumber(obj.interestDue)}</td>
+                                <td> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
+                                <td> ${microfis_formatNumber(obj.totalDue + loanAccDoc.feeAmount)}</td>
+                                <td> ${microfis_formatNumber(obj.balance)}</td>    
                             </tr>`;
 
-                i++;
+                    loanAccDoc.feeAmount = 0;
+                })
+
+                content += `                      
+                        
+                        </tbody>
+                      </table>
+                    
+                 
+                    <div class="row">
+                        <div class="col-md-12"><b><u>Loan Collection Information</u></b></div>              
+                    </div>
+                    <br>
+                                   
+                    
+                     <table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
+                            <thead class="sub-header diplay-on-print-header-loan" style="display: table-row-group;">
+                                <tr> 
+                                    <th>No</th>
+                                    <th>Ref Code</th>
+                                    <th>Mention</th>
+                                    <th>Classify</th>
+                                    <th>Col Date</th>
+                                    <th>Col Principal</th>
+                                    <th>Col Interest</th>
+                                    <th>Col Fee</th>
+                                    <th>Col Penalty</th>
+                                    <th>Total Collection</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sub-body display-on-print-body-loan">
+
+                `;
+
+                let repaymentDoc = Repayment.find({loanAccId: loanAccDoc._id}, {sort: {voucherId: -1}});
+                let i = 1;
+
+                let totalPrincipal = 0;
+                let totalInterest = 0;
+                let totalFee = 0;
+                let totalPenalty = 0;
+                let total = 0;
+
+                repaymentDoc.forEach(function (obj) {
+                    let principal = 0;
+                    let interest = 0;
+                    let fee = 0;
+
+                    let paymentDoc = paymentDetail.find(function (val) {
+                        return val.repaymentId = obj._id;
+                    })
+
+                    let paymentStatusDoc={};
+                    paymentStatusDoc.name="";
+
+                    if (obj.type == "Fee") {
+                        fee = obj.amountPaid;
+                    } else {
+                        principal = paymentDoc.principalPaid;
+                        interest = paymentDoc.interestPaid;
+
+
+                        paymentStatusDoc = paymentStatusList.find(function (val) {
+                            return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
+                        });
+
+                    }
+
+
+
+
+                    totalPrincipal += principal;
+                    totalInterest += interest;
+                    totalFee += fee;
+                    totalPenalty += obj.penaltyPaid;
+                    total += principal + interest + fee + obj.penaltyPaid;
+
+                    content += `<tr>
+                                <td>${i}</td>
+                                <td>${(obj.voucherId).substr(8, 6)}</td>
+                                <td> ${obj.type}</td>
+                                <td> ${paymentStatusDoc.name}</td>
+                                <td> ${microfis_formatDate(obj.repaidDate)}</td>
+                                <td> ${microfis_formatNumber(principal)}</td>
+                                <td> ${microfis_formatNumber(interest)}</td>
+                                <td> ${microfis_formatNumber(fee)}</td>
+                                <td> ${microfis_formatNumber(obj.penaltyPaid)}</td>
+                                <td> ${microfis_formatNumber(principal + interest + fee + obj.penaltyPaid)}</td>    
+                            </tr>`;
+
+                    i++;
+                })
+
+                content += `                      
+                        <tr>
+                                <th colspan="5" style="text-align: right"><strong>Total: </strong></th>
+                                <th> ${microfis_formatNumber(totalPrincipal)}</th>
+                                <th> ${microfis_formatNumber(totalInterest)}</th>
+                                <th> ${microfis_formatNumber(totalFee)}</th>
+                                <th> ${microfis_formatNumber(totalPenalty)}</th>
+                                <th> ${microfis_formatNumber(total)}</th>    
+                        </tr>
+                        </tbody>
+                      </table>`;
+
 
             })
 
-
-            content += `                      
-                        
-                        </tbody>
-                      </table>`;
 
             data.content = content;
             return data

@@ -122,3 +122,70 @@ MicrofisRoutes.route('/loanHistory-report', {
         parent: 'microfis.home'
     }
 });
+
+// Loan Arrear
+import '../imports/reports/loan-arrears.js';
+MicrofisRoutes.route('/loanArrears-report', {
+    name: 'microfis.loanArrearsReport',
+    title: 'Loan Arrears Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanArrearsReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Arrears Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+// Loan Repayment
+import '../imports/reports/loan-repayment';
+MicrofisRoutes.route('/loanRepayment-report', {
+    name: 'microfis.loanRepaymentReport',
+    title: 'Loan Repayment Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanRepaymentReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Repayment Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Loan Repayment Fee
+import '../imports/reports/loan-repaymentFee';
+MicrofisRoutes.route('/loanRepaymentFee-report', {
+    name: 'microfis.loanRepaymentFeeReport',
+    title: 'Loan Repayment Fee Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentFeeReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Repayment Fee Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Product Activity
+import '../imports/reports/productActivity.js';
+MicrofisRoutes.route('/productActivity-report', {
+    name: 'microfis.productActivityReport',
+    title: 'Product Activity Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_productActivityReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Product Activity Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

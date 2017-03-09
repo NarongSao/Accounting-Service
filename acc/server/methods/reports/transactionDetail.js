@@ -145,6 +145,7 @@ Meteor.methods({
                                     baseCurrency, o.dr, exchangeDate);
                                 var convertCr = Meteor.call('exchange', ob.currencyId,
                                     baseCurrency, o.cr, exchangeDate);
+
                                 detailObj.currencyid = baseCurrency;
                                 detailObj.drcr = convertDrcr;
                                 balance += convertDrcr;

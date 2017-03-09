@@ -1,9 +1,9 @@
 <!--Form-->
-<template name="Microfis_loanHistoryReport">
+<template name="Microfis_loanArrearsReport">
 
 
     <div class="box-body">
-        {{#autoForm schema=schema id="Microfis_loanHistoryReport"  target="normal" resetOnSuccess=false}}
+        {{#autoForm schema=schema id="Microfis_loanArrearsReport"  target="normal" resetOnSuccess=false}}
             <div class="animated fadeIn">
                 <div class="box box-primary direct-chat direct-chat-success">
                     <div class="box-header with-border">
@@ -23,14 +23,19 @@
                         <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
                             <div class="col-md-4">
                                 {{> afQuickField name="branchId"}}
-
+                                {{> afQuickField name="creditOfficerId"}}
+                                {{> afQuickField name="currencyId"}}
+                                {{> afQuickField name="exchangeId"}}
                             </div>
                             <div class="col-md-4">
                                 {{> afQuickField name="date"}}
+                                {{> afQuickField name="productId"}}
+                                {{> afQuickField name="locationId" options=locationOpt}}
                             </div>
                             <div class="col-md-4">
-                                {{> afQuickField name="clientId"}}
-
+                                {{> afQuickField name="fundId"}}
+                                {{> afQuickField name="classifyId"}}
+                                {{> afQuickField name="paymentMethod"}}
 
                             </div>
                         </div>
@@ -43,10 +48,10 @@
                 </div>
             </div>
         {{/autoForm}}
-        {{> Microfis_loanHistoryReportPrintData}}
+        {{> Microfis_loanArrearsReportPrintData}}
     </div>
 </template>
-<template name="Microfis_loanHistoryReportPrintData">
+<template name="Microfis_loanArrearsReportPrintData">
     <!--#print-data-->
     <div id="print-data">
         <div class="sub-div display-on-print-div-landscape-loan">
@@ -60,7 +65,7 @@
                                 <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
                                 <div class="rpt-title-2x">{{company.enName}}</div>
                                 <div>សាខា: {{branch.khName}}</div>
-                                <div class="rpt-title-2x"><u>របាយការណ៍ប្រវត្តិអតិថិជន</u></div>
+                                <div class="rpt-title-2x"><u>របាយការណ៍អតិថិជនយឺត</u></div>
                                 <div>
                                     <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
                                     <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
@@ -71,6 +76,7 @@
                         <!--Header-->
                         {{#with header}}
                             <div style="width: 100%">
+
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
                                         <ul class="list-unstyled">
@@ -80,7 +86,7 @@
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>clientId:</strong> {{clientId}}</li>
+                                            <li class="pull-right"><strong>Fund:</strong> {{fundId}}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -93,7 +99,55 @@
 
 
                             </div>
+                            <div style="width: 100%">
 
+                                <div style="width: 60%;float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Credit Officer:</strong> {{creditOfficerId}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Product:</strong> {{productId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Arrears:</strong> {{classifyId}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="width: 100%">
+
+                                <div style="width: 60%;float: right">
+                                    <div style="width: 50%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Currency:</strong> {{currencyId}}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <ul class="list-unstyled">
+                                            <li class="pull-right"><strong>Location:</strong> {{locationId}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="width: 40%; float: left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Payment Method:</strong> {{paymentMethod}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div style="width: 100%">
+                                <ul class="list-unstyled">
+                                    <li><strong>Exchange:</strong> {{exchangeData}}</li>
+                                </ul>
+                            </div>
                         {{/with}}
 
                         <!--Content-->

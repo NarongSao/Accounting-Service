@@ -13,8 +13,28 @@ Meteor.methods({
                 _id: -1
             }
         });
+
         if (curFrom != curTo) {
-            return amount / ex.rates[curFrom];
+
+            if(curTo=="KHR"){
+                if(curFrom=="USD"){
+                    return amount * ex.rates[curFrom];
+                }else if(curFrom=="THB"){
+                    return amount * ex.rates[curFrom];
+                }
+            }else if(curTo=="USD"){
+                if(curFrom=="KHR"){
+                    return amount / ex.rates[curFrom];
+                }else if(curFrom=="THB"){
+                    return amount / ex.rates[curFrom];
+                }
+            }else if(curTo=="THB"){
+                if(curFrom=="KHR"){
+                    return amount / ex.rates[curFrom];
+                }else if(curFrom=="USD"){
+                    return amount * ex.rates[curFrom];
+                }
+            }
         } else {
             return amount;
         }

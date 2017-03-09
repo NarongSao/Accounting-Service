@@ -475,6 +475,11 @@ LoanAcc.repaymentSchema = new SimpleSchema({
             }
         }
     },
+    feeDate: {
+        type: Date,
+        optional: true
+    },
+
     principalInstallment: {
         type: Object,
         label: 'Principal installment'

@@ -25,7 +25,7 @@ Meteor.startup(function () {
                     "USD",
                     "THB"
                 ],
-                "minOpeningAmount": 10,
+                "minOpeningAmount": 0,
                 "exchange": {
                     "USD": 1,
                     "KHR": 4000,
@@ -38,7 +38,7 @@ Meteor.startup(function () {
                 "interestMethod": "Y",
                 "daysInMethod": 365,
                 "interestRate": {
-                    "min": 7,
+                    "min": 0,
                     "max": 12
                 },
             },

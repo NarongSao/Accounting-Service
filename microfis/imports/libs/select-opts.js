@@ -366,6 +366,17 @@ export const SelectOptsReport = {
             });
 
         return list;
+    },
+    repaidFrequency(){
+        let i = 1;
+        let list = [{
+            label: "(Select All)",
+            value: "All"
+        }]
+        for (i; i < 15; i++) {
+            list.push({label: i + "", value: i + ""});
+        }
+        return list;
     }
 
 };

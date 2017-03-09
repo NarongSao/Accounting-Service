@@ -423,7 +423,8 @@ Repayment.after.insert(function (userId, doc) {
 
         LoanAcc.direct.update({_id: doc.loanAccId}, {
             $set: {
-                feeAmount: doc.amountPaid
+                feeAmount: doc.amountPaid,
+                feeDate: doc.repaidDate
             }
         }, function (err) {
             if (err) {
@@ -540,13 +541,16 @@ Repayment.after.remove(function (userId, doc) {
             }
         });
     } else {
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {feeAmount: 0}}, function (err) {
-            if (err) {
-                console.log(err);
+        LoanAcc.direct.update({_id: doc.loanAccId}, {
+                $set: {feeAmount: 0}, $unset: {feeDate: ""}
             }
-        });
-
-
+            ,
+            function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            }
+        );
     }
 
     LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}});
@@ -555,7 +559,8 @@ Repayment.after.remove(function (userId, doc) {
     SavingAcc.direct.update({_id: doc.savingAccId}, {$set: {savingNumber: countSaving}});
 
 
-});
+})
+;
 
 
 // Create repayment schedule when principal installment
