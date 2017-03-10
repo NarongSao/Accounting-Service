@@ -374,7 +374,7 @@ export const SelectOptsReport = {
             value: "All"
         }]
         for (i; i < 15; i++) {
-            list.push({label: i + "", value: i + ""});
+            list.push({label: i + "", value: i});
         }
         return list;
     }

@@ -191,7 +191,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             }
 
             if (params.repaidFrequency !== "All") {
-                selector.repaidFrequency = params.repaidFrequency;
+                selector.repaidFrequency = parseInt(params.repaidFrequency);
                 header.repaidFrequency = params.repaidFrequency;
             }
 

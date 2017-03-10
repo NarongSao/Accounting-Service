@@ -20,6 +20,7 @@ import {Fund} from '../../../common/collections/fund.js';
 
 
 import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
+import {Repayment} from '../../../common/collections/repayment';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
@@ -149,8 +150,12 @@ export const productActivityReport = new ValidatedMethod({
                     return obj._id;
                 });
                 header.currencyId = currencyList;
-
+                if (params.currencyId.length == 1) {
+                    baseCurrency = params.currencyId[0];
+                }
             }
+
+
             if (params.productId && params.productId.includes("All") == false) {
                 selector.productId = {$in: params.productId};
                 let productList = Product.find({_id: {$in: params.productId}}, {
@@ -196,7 +201,7 @@ export const productActivityReport = new ValidatedMethod({
 
 
             if (params.repaidFrequency !== "All") {
-                selector.repaidFrequency = params.repaidFrequency;
+                selector.repaidFrequency = parseInt(params.repaidFrequency);
                 header.repaidFrequency = params.repaidFrequency;
             }
 
@@ -211,28 +216,25 @@ export const productActivityReport = new ValidatedMethod({
 
             data.header = header;
 
+            let exchange = Exchange.findOne({_id: params.exchangeId});
+
+
             //All Active Loan in check date
 
-
-            let loanDoc = LoanAcc.aggregate([
-                {$match: selector},
-
-                {
-                    $lookup: {
-                        from: "microfis_creditOfficer",
-                        localField: "creditOfficerId",
-                        foreignField: "_id",
-                        as: "creditOfficerDoc"
-                    }
-                },
-                {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}}
-            ]);
-
-
-
-
             //Method From Mongo
-            /*var loan = db.microfis_loanAcc.aggregate([
+            let coefficientLoanDisburment = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$loanAmount',
+                baseCurrency
+            });
+            let coefficientTotalFee = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$feeAmount',
+                baseCurrency
+            });
+
+            let loan = LoanAcc.aggregate([
+                {$match: selector},
                 {
                     $lookup: {
                         from: "microfis_repayment",
@@ -249,17 +251,41 @@ export const productActivityReport = new ValidatedMethod({
                         as: "creditOfficerDoc"
                     }
                 },
-                { $unwind: { path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
+
+                {
+                    $project: {
+
+                        creditOfficerDoc: "$creditOfficerDoc",
+                        cycle: "$cycle",
+                        _id: "$_id",
+                        loanAmount: {
+                            $cond: {
+                                if: {$eq: ['$currencyId', 'USD']},
+                                then: coefficientLoanDisburment.USD,
+                                else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientLoanDisburment.KHR, coefficientLoanDisburment.THB]}
+                            }
+                        },
+                        feeAmount: {
+                            $cond: {
+                                if: {$eq: ['$currencyId', 'USD']},
+                                then: coefficientTotalFee.USD,
+                                else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientTotalFee.KHR, coefficientTotalFee.THB]}
+                            }
+                        }
+
+                    }
+                },
                 {
                     $group: {
                         _id: {
                             creditOfficerDoc: '$creditOfficerDoc'
                         },
                         newClient: {
-                            $sum: { $cond: [{ $gt: ['$cycle', 1] }, 0, 1] }
+                            $sum: {$cond: [{$gt: ['$cycle', 1]}, 0, 1]}
                         },
                         oldClient: {
-                            $sum: { $cond: [{ $gt: ['$cycle', 1] }, 1, 0] }
+                            $sum: {$cond: [{$gt: ['$cycle', 1]}, 1, 0]}
                         },
                         loanDisbursment: {
                             $sum: '$loanAmount'
@@ -267,75 +293,16 @@ export const productActivityReport = new ValidatedMethod({
                         totalFee: {
                             $sum: '$feeAmount'
                         },
-                        loanAccIdList: { $push: "$_id" }
+                        loanAccIdList: {$push: "$_id"}
                     }
 
-                },
-                {
-                    $lookup: {
-                        from: "microfis_repayment",
-                        localField: "loanAccId",
-                        foreignField: "_id",
-                        as: "repaymentDoc"
-                    }
                 }
 
             ]);
-            data;
-            var data;
-            var data2;
-            loan.forEach(function(obj) {
-                data = db.microfis_repayment.aggregate([
-                    { $match: { loanAccId: { $in: obj.loanAccIdList } } },
-                    { $unwind: { path: "$detailDoc.schedulePaid", preserveNullAndEmptyArrays: true } },
-                    {
-                        $group: {
-                            _id: {},
-                            collPrin: {
-                                $sum: { $cond: [{ $lte: ['$detailDoc.schedulePaid.repaidDate', moment().toDate()] }, '$detailDoc.schedulePaid.principalPaid', 0] }
-                            },
-                            collInt: {
-                                $sum: { $cond: [{ $lte: ['$detailDoc.schedulePaid.repaidDate', moment().toDate()] }, '$detailDoc.schedulePaid.interestPaid', 0] }
-                            },
-                            collPenalty: {
-                                $sum: { $cond: [{ $lte: ['$detailDoc.schedulePaid.repaidDate', moment().toDate()] }, '$detailDoc.schedulePaid.penaltyPaid', 0] }
-                            },
-                            collTotal: {
-                                $sum: { $cond: [{ $lte: ['$detailDoc.schedulePaid.repaidDate', moment().toDate()] }, '$detailDoc.schedulePaid.totalAmountPaid', 0] }
-                            }
-
-                        }
-                    }
-                ])
-
-
-            })
-            data;*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             let i = 1;
-
-            let checkDate = params[1];
-
-            //Loop Active Loan in check date
-
+            let checkDate = date[1];
 
             let totalLoanDisbursment = 0;
             let totalNewClient = 0;
@@ -351,63 +318,260 @@ export const productActivityReport = new ValidatedMethod({
             let totalArrearsInt = 0;
 
 
-            loanDoc.forEach(function (loanAccDoc) {
+            let coefficientPrincipalPaid = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$detailDoc.schedulePaid.principalPaid',
+                baseCurrency
+            });
+            let coefficientInterestPaid = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$detailDoc.schedulePaid.interestPaid',
+                baseCurrency
+            });
+            let coefficientPenaltyPaid = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$detailDoc.schedulePaid.penaltyPaid',
+                baseCurrency
+            });
+            let coefficientAmountPaid = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$detailDoc.schedulePaid.totalAmountPaid',
+                baseCurrency
+            });
 
-                let result = checkRepayment.run({
-                    loanAccId: loanAccDoc._id,
-                    checkDate: checkDate,
-                    opts: loanAccDoc
-                });
+
+            loan.forEach(function (obj) {
+
+                let dataCollection = Repayment.aggregate([
+                    {$match: {loanAccId: {$in: obj.loanAccIdList}}},
+                    {$unwind: {path: "$detailDoc.schedulePaid", preserveNullAndEmptyArrays: true}},
+                    {
+                        $project: {
+                            collPrin: {
+                                $cond: {
+                                    if: {$eq: ['$currencyId', 'USD']},
+                                    then: coefficientPrincipalPaid.USD,
+                                    else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientPrincipalPaid.KHR, coefficientPrincipalPaid.THB]}
+                                }
+                            },
+                            collInt: {
+                                $cond: {
+                                    if: {$eq: ['$currencyId', 'USD']},
+                                    then: coefficientInterestPaid.USD,
+                                    else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientInterestPaid.KHR, coefficientInterestPaid.THB]}
+                                }
+                            },
+                            collPenalty: {
+                                $cond: {
+                                    if: {$eq: ['$currencyId', 'USD']},
+                                    then: coefficientPenaltyPaid.USD,
+                                    else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientPenaltyPaid.KHR, coefficientPenaltyPaid.THB]}
+                                }
+                            },
+                            collTotal: {
+                                $cond: {
+                                    if: {$eq: ['$currencyId', 'USD']},
+                                    then: coefficientAmountPaid.USD,
+                                    else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientAmountPaid.KHR, coefficientAmountPaid.THB]}
+                                }
+                            },
+                            repaidDate: '$detailDoc.schedulePaid.repaidDate'
+
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: {},
+                            collPrin: {
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collPrin', 0]}
+                            },
+                            collInt: {
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collInt', 0]}
+                            },
+                            collPenalty: {
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collPenalty', 0]}
+                            },
+                            collTotal: {
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collTotal', 0]}
+                            }
+
+                        }
+                    }
+                ])
 
 
-                if (loanAccDoc.currencyId == "KHR") {
+                let dataArrears = LoanAcc.aggregate([
+                    {$match: {_id: {$in: obj.loanAccIdList}}},
+                    {
+                        $lookup: {
+                            from: "microfis_client",
+                            localField: "clientId",
+                            foreignField: "_id",
+                            as: "clientDoc"
+                        }
+                    },
+                    {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $lookup: {
+                            from: "microfis_fund",
+                            localField: "fundId",
+                            foreignField: "_id",
+                            as: "fundDoc"
+                        }
+                    },
+                    {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $lookup: {
+                            from: "microfis_creditOfficer",
+                            localField: "creditOfficerId",
+                            foreignField: "_id",
+                            as: "creditOfficerDoc"
+                        }
+                    },
+                    {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $lookup: {
+                            from: "microfis_location",
+                            localField: "locationId",
+                            foreignField: "_id",
+                            as: "locationDoc"
+                        }
+                    },
+                    {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
 
-                } else if (loanAccDoc.currencyId == "USD") {
+                    {
+                        $lookup: {
+                            from: "microfis_product",
+                            localField: "productId",
+                            foreignField: "_id",
+                            as: "productDoc"
+                        }
+                    },
+                    {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
 
-                } else if (loanAccDoc.currencyId == "THB") {
+                    {
+                        $lookup: {
+                            from: "microfis_fee",
+                            localField: "productDoc.feeId",
+                            foreignField: "_id",
+                            as: "feeDoc"
+                        }
+                    },
+                    {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
 
-                }
+                    {
+                        $lookup: {
+                            from: "microfis_penalty",
+                            localField: "productDoc.penaltyId",
+                            foreignField: "_id",
+                            as: "penaltyDoc"
+                        }
+                    },
+                    {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
 
+                    {
+                        $lookup: {
+                            from: "microfis_penaltyClosing",
+                            localField: "productDoc.penaltyClosingId",
+                            foreignField: "_id",
+                            as: "penaltyClosingDoc"
+                        }
+                    },
+                    {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
+                ]);
+
+
+                //Loop Active Loan in check date
+
+
+                let subTotalLoanOut = 0;
+                let subTotalArrearsPrin = 0;
+                let subTotalArrearsInt = 0;
+
+                let subTotalArrearsPrinNBC = 0;
+
+                let par = 0;
+                let parNBC = 0;
+
+
+                dataArrears.forEach(function (loanAccDoc) {
+
+                    let result = checkRepayment.run({
+                        loanAccId: loanAccDoc._id,
+                        checkDate: checkDate,
+                        opts: loanAccDoc
+                    });
+
+                    subTotalLoanOut += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                    subTotalArrearsPrin += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
+                    subTotalArrearsInt += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.interestDue, params.exchangeId);
+
+                    if (result.totalScheduleDue.numOfDayLate > 30) {
+                        subTotalArrearsPrinNBC += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
+                    }
+
+                })
+
+                par = subTotalArrearsPrin / subTotalLoanOut;
+                parNBC = subTotalArrearsPrinNBC / subTotalLoanOut;
+
+                let numberOfClient = obj.loanAccIdList.length;
 
                 content += `<tr>
                                 <td>${i}</td>
-                                <td>${loanAccDoc.creditOfficerDoc._id}</td>
-                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>${obj._id.creditOfficerDoc._id}</td>
+                                <td> ${obj._id.creditOfficerDoc.khName}</td>
+                                <td>${microfis_formatNumber(obj.loanDisbursment)}</td>
+                                <td>${obj.newClient}</td>
+                                <td>${obj.oldClient}</td>
+                                <td>${microfis_formatNumber(obj.totalFee)}</td>
+                                <td>${microfis_formatNumber(dataCollection[0].collPrin)}</td>
+                                <td>${microfis_formatNumber(dataCollection[0].collInt)}</td>
+                                <td>${microfis_formatNumber(dataCollection[0].collPenalty)}</td>
+                                <td>${microfis_formatNumber(dataCollection[0].collTotal)}</td>
+                                <td>${microfis_formatNumber(subTotalLoanOut)}</td>
+                                <td>${numberOfClient}</td>
+                                <td>${microfis_formatNumber(subTotalArrearsPrin)}</td>
+                                <td>${microfis_formatNumber(subTotalArrearsInt)}</td>
+                                <td>${microfis_formatNumber(par * 100)}%</td>
+                                <td>${microfis_formatNumber(parNBC * 100)}%</td>
                             </tr>`;
 
                 i++;
+
+                totalLoanDisbursment += obj.loanDisbursment;
+                totalNewClient += obj.newClient;
+                totalOldClient += obj.oldClient;
+                totalFee += obj.totalFee;
+
+                totalCollPrin += dataCollection[0].collPrin;
+                totalCollInt += dataCollection[0].collInt;
+                totalCollPen += dataCollection[0].collPenalty;
+                totalColl += dataCollection[0].collTotal;
+
+                totalLoanOut += subTotalLoanOut;
+                totalAllClient += numberOfClient;
+                totalArrearsPrin += subTotalArrearsPrin;
+                totalArrearsInt += subTotalArrearsInt;
+
 
             })
 
 
             content += `<tr>
                             <td colspan="3" align="right">Total</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>${microfis_formatNumber(totalLoanDisbursment)}</td>
+                            <td>${totalNewClient}</td>
+                            <td>${totalOldClient}</td>
+                            <td>${microfis_formatNumber(totalFee)}</td>
+                            <td>${microfis_formatNumber(totalCollPrin)}</td>
+                            <td>${microfis_formatNumber(totalCollInt)}</td>
+                            <td>${microfis_formatNumber(totalCollPen)}</td>
+                            <td>${microfis_formatNumber(totalColl)}</td>
+                            <td>${microfis_formatNumber(totalLoanOut)}</td>
+                            <td>${totalAllClient}</td>
+                            <td>${microfis_formatNumber(totalArrearsPrin)}</td>
+                            <td>${microfis_formatNumber(totalArrearsInt)}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -430,4 +594,27 @@ let microfis_formatDate = function (val) {
 let microfis_formatNumber = function (val) {
     return numeral(val).format("(0,00.00)");
 }
+
+let exchangeCoefficient = function ({exchange, fieldToCalculate, baseCurrency}) {
+    let coefficient = {
+        KHR: {},
+        THB: {},
+        USD: {}
+    };
+    if (baseCurrency == 'USD') {
+        coefficient.KHR.$divide = [fieldToCalculate, exchange.rates.KHR];
+        coefficient.THB.$divide = [fieldToCalculate, exchange.rates.THB];
+        coefficient.USD.$multiply = [fieldToCalculate, 1];
+    } else if (baseCurrency == 'THB') {
+        coefficient.KHR.$divide = [fieldToCalculate, exchange.rates.KHR];
+        coefficient.USD.$divide = [fieldToCalculate, exchange.rates.USD];
+        coefficient.THB.$multiply = [fieldToCalculate, 1];
+    } else {
+        coefficient.THB.$multiply = [fieldToCalculate, exchange.rates.THB];
+        coefficient.USD.$multiply = [fieldToCalculate, exchange.rates.USD];
+        coefficient.KHR.$multiply = [fieldToCalculate, 1];
+    }
+    return coefficient;
+};
+
 
