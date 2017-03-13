@@ -24,6 +24,7 @@ import {Client} from '../../common/collections/client.js';
 import {LoanAcc} from '../../common/collections/loan-acc.js';
 
 import {SavingAcc} from '../../common/collections/saving-acc.js';
+import {EndOfProcess} from '../../common/collections/endOfProcess'
 
 // Method
 import {lookupProduct} from '../../common/methods/lookup-product.js';
@@ -329,6 +330,17 @@ formTmpl.events({
     },
     'change [name="savingAccId"]'(e, t){
         state.set("currencyId", $('[name="savingAccId"] option:selected').text().split(" : ")[2]);
+    },
+    'click [name="submitDate"]'(e, t){
+
+        let $submitDate = $('[name="submitDate"]');
+
+        Meteor.call('microfis_getLastEndOfProcess', Session.get("currentBranch"), function (err,obj) {
+            console.log(obj);
+            if (obj) {
+                $submitDate.data("DateTimePicker").minDate(moment(obj.closeDate).startOf('day'));
+            }
+        })
     }
 });
 

@@ -169,6 +169,8 @@ MakeSchedule.declinig = new ValidatedMethod({
     }
 });
 
+
+
 MakeSchedule.annuity = new ValidatedMethod({
     name: 'microfis.makeSchedule.annuity',
     mixins: [CallPromiseMixin],

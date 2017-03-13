@@ -71,14 +71,14 @@ formTmpl.onCreated(function () {
             var dobSelect = repaidDate;
 
             var startYear = moment(dobSelect).year();
-            var startDate = moment('01/01/' + startYear,"DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate,Session.get("currentBranch"), function (err, result) {
+            var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
                 if (result != undefined) {
                     Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
                 } else {
                     Session.set('lastVoucherId', "000001");
                 }
-                stateRepayment.set("isVoucherId",false);
+                stateRepayment.set("isVoucherId", false);
             });
         }
 
@@ -118,15 +118,15 @@ formTmpl.onCreated(function () {
                             if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
                                 stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
                             } else {
-                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                stateRepayment.set('lastTransactionDate', moment(result.lastRepayment.repaidDate).startOf("days").toDate());
                             }
                         } else {
-                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            stateRepayment.set('lastTransactionDate', moment(result.lastRepayment.repaidDate).startOf("days").toDate());
                         }
                     })
                 }
 
-                Meteor.setTimeout(()=> {
+                Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
 
@@ -149,7 +149,7 @@ formTmpl.onRendered(function () {
         stateRepayment.set('repaidDate', repaidDate);
 
         // Repaid date picker
-        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
         $repaidDateObj.on("dp.change", function (e) {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
             stateRepayment.set("isVoucherId", true);
@@ -179,7 +179,7 @@ formTmpl.helpers({
     jsonViewData(data){
         if (data) {
             if (_.isArray(data) && data.length > 0) {
-                _.forEach(data, (o, k)=> {
+                _.forEach(data, (o, k) => {
                     o.scheduleDate = moment(o.scheduleDate).format('DD/MM/YYY');
                     o.dueDate = moment(o.dueDate).format('DD/MM/YYY');
                     delete  o.repaymentDoc;

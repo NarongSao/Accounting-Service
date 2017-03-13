@@ -206,12 +206,12 @@ export const productActivityReport = new ValidatedMethod({
             }
 
 
-            /*selector.disbursementDate = {$lte: dateParam};
-             selector['$or'] = [{status: "Active"},
-             {closeDate: {$exists: true, $gt: dateParam}},
-             {writeOffDate: {$exists: true, $gt: dateParam}},
-             {restructureDate: {$exists: true, $gt: dateParam}}
-             ];*/
+            selector.disbursementDate = {$lte: tDate};
+            selector['$or'] = [{status: "Active"},
+                {closeDate: {$exists: true, $gt: tDate}},
+                {writeOffDate: {$exists: true, $gt: tDate}},
+                {restructureDate: {$exists: true, $gt: tDate}}
+            ];
 
 
             data.header = header;

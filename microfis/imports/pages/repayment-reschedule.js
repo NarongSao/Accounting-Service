@@ -151,7 +151,7 @@ formTmpl.onRendered(function () {
         stateRepayment.set('repaidDate', repaidDate);
 
         // Repaid date picker
-        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day'));
+        $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
         $repaidDateObj.on("dp.change", function (e) {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
             stateRepayment.set("isVoucherId", true);
@@ -204,10 +204,10 @@ formTmpl.events({
     'click [name="repaidDate"]'(){
         let $repaidDateObj = $('[name="repaidDate"]');
         if (stateRepayment.get('lastTransactionDate')) {
-            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).add(1,"days").startOf('day').toDate());
         } else {
             let loanDoc = stateRepayment.get("loanAccDoc");
-            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).add(1,"days").startOf('day').toDate());
         }
     }
 })

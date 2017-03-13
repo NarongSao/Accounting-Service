@@ -64,7 +64,6 @@ formTmpl.onCreated(function () {
     Session.set('maxPenaltyPaid', minMaxAmount);
 
 
-    debugger;
     // Track autorun
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate');
@@ -121,10 +120,10 @@ formTmpl.onCreated(function () {
                             if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
                                 stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
                             } else {
-                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                stateRepayment.set('lastTransactionDate', moment(result.lastRepayment.repaidDate).startOf("days").toDate());
                             }
                         } else {
-                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            stateRepayment.set('lastTransactionDate', moment(result.lastRepayment.repaidDate).startOf("days").toDate());
                         }
                     })
                 }

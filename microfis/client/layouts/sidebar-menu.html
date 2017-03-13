@@ -126,6 +126,27 @@
         </li>
     {{/if}}
 
+
+    <!--Report-->
+    {{#if isInRole 'reporter' 'Microfis'}}
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-file-o"></i>
+                <span>REPORT For NBC</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.repaymentScheduleReport'}}">
+                    <a href="{{pathFor 'microfis.repaymentScheduleReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Loan BreakingDown</span>
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+    {{/if}}
+
     <!--Settings-->
     {{#if isInRole 'setting' 'Microfis'}}
         <li class="treeview active">

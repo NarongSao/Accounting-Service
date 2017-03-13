@@ -136,15 +136,15 @@ formTmpl.onRendered(function () {
         let $firstRepaymentDate = $('[name="firstRepaymentDate"]');
         let productDoc = Session.get('productDoc');
 
-        $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
-        $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
+        $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day').toDate());
+        $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day').toDate());
 
-        $firstRepaymentDate.data("DateTimePicker").minDate(moment().add(1, 'days').startOf('day'));
+        $firstRepaymentDate.data("DateTimePicker").minDate(moment().add(1, 'days').startOf('day').toDate());
 
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
             stateRepayment.set('disbursmentDate', moment(e.date).toDate());
-            $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day'));
+            $firstRepaymentDate.data("DateTimePicker").minDate(moment(e.date).add(1, 'days').startOf('day').toDate());
         });
 
     }, 100);
@@ -169,7 +169,7 @@ formTmpl.events({
     'click [name="disbursementDate"]'(){
         let $repaidDateObj = $('[name="disbursementDate"]');
         if (stateRepayment.get('lastTransactionDate')) {
-            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).add(1, "days").startOf('day').toDate());
         } else {
             let loanDoc = stateRepayment.get("loanAccDoc");
             $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
