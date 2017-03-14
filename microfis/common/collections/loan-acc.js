@@ -511,7 +511,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
         label: 'Calculate type',
         autoform: {
             type: "select-radio-inline",
-            defaultValue: 'A',
+            defaultValue: 'P',
             options: function () {
                 return SelectOpts.calculateType(false);
             }
@@ -634,7 +634,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
         label: 'Escape day method',
         autoform: {
             type: "select-radio-inline",
-            defaultValue: 'NO',
+            defaultValue: 'GR',
             options: function () {
                 return SelectOpts.escapeDayMethod(false);
             }
