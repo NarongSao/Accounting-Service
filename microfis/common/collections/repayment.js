@@ -25,7 +25,7 @@ Repayment.schema = new SimpleSchema({
                 dateTimePickerOptions: {
                     format: 'DD/MM/YYYY',
                     showTodayButton: true,
-                    // maxDate: moment().toDate()
+                    maxDate: moment().toDate()
                 }
             }
         },

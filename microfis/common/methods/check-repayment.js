@@ -336,11 +336,11 @@ export let checkRepayment = new ValidatedMethod({
             //check should be penalty
             let isPenalty = true;
             if (loanAccDoc.paymentMethod == "M") {
-                if (moment(checkDate).format("MM/YYYY") == moment(totalScheduleNext.dueDate.from).format("MM/YYYY")) {
+                if (totalScheduleDue.installment.to && totalScheduleDue.installment.to + 1 == loanAccDoc.installmentAllowClosing && moment(checkDate).format("MM/YYYY") == moment(totalScheduleNext.dueDate.from).format("MM/YYYY")) {
                     isPenalty = false;
                 }
             } else if (loanAccDoc.paymentMethod == "W") {
-                if (moment(checkDate).week() == moment(totalScheduleNext.dueDate.from).week()) {
+                if (totalScheduleDue.installment.to && totalScheduleDue.installment.to + 1 == loanAccDoc.installmentAllowClosing && moment(checkDate).week() == moment(totalScheduleNext.dueDate.from).week()) {
                     isPenalty = false;
                 }
             }

@@ -401,7 +401,7 @@ SelectOptMethods.loanAcc = new ValidatedMethod({
 
             let data = LoanAcc.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id} | Dis Date: ` + moment(value.disbursementDate).format('DD/MM/YYYY') + ` | Amount: ${value.currencyId} ` + numeral(value.microfisAmount).format('0,0.00');
+                let label = `${value._id} | Dis Date: ` + moment(value.disbursementDate).format('DD/MM/YYYY') + ` | Amount: ${value.currencyId} ` + numeral(value.loanAmount).format('0,0.00');
                 list.push({label: label, value: value._id});
             });
 
