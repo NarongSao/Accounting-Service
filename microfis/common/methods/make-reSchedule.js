@@ -24,8 +24,9 @@ export const makeReSchedule = new ValidatedMethod({
             data.term = opts.term;
             data.firstRepaymentDate = opts.firstRepaymentDate;
             data.dueDateOn = opts.dueDateOn;
-            data.parentId = loanAccId;
+            data.interestRate=opts.interestRate;
 
+            data.parentId = loanAccId;
             data.paymentNumber = 0;
             data.feeAmount=0;
 

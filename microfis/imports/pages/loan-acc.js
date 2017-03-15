@@ -62,7 +62,7 @@ indexTmpl.onCreated(function () {
     createNewAlertify('loanAccShow');
     createNewAlertify('savingAccProduct');
 
-    stateClient.set('escapeFrequency', false);
+    stateClient.set('escapeFrequency', true);
 });
 
 indexTmpl.helpers({
@@ -280,8 +280,8 @@ formTmpl.helpers({
             doc = LoanAcc.findOne({_id: currentData.loanAccId});
             formType = 'update';
 
-            if (doc.escapeDayMethod != "NO") {
-                stateClient.set('escapeFrequency', true);
+            if (doc.escapeDayMethod == "NO") {
+                stateClient.set('escapeFrequency', false);
             }
         }
 
@@ -335,7 +335,7 @@ formTmpl.events({
 
         let $submitDate = $('[name="submitDate"]');
 
-        Meteor.call('microfis_getLastEndOfProcess', Session.get("currentBranch"), function (err,obj) {
+        Meteor.call('microfis_getLastEndOfProcess', Session.get("currentBranch"), function (err, obj) {
             console.log(obj);
             if (obj) {
                 $submitDate.data("DateTimePicker").minDate(moment(obj.closeDate).startOf('day'));

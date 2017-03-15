@@ -959,6 +959,35 @@ LoanAcc.reStructure = new SimpleSchema({
             }
         }
     },
+    interestRate: {
+        type: Number,
+        label: 'Interest rate (%)',
+        decimal: true,
+        min: function () {
+            let interestRate = state.get('interestRate');
+            if (interestRate) {
+                return interestRate.min;
+            }
+        },
+        max: function () {
+            let interestRate = state.get('interestRate');
+            if (interestRate) {
+                return interestRate.max;
+            }
+        },
+        autoform: {
+            type: "inputmask",
+            afFieldInput: {
+                placeholder: function () {
+                    let interestRate = state.get('interestRate');
+                    if (interestRate) {
+                        return numeral(interestRate.min).format('0.00') + ' - ' + numeral(interestRate.max).format('0.00');
+                    }
+                },
+                inputmaskOptions: inputmaskOptions.percentage()
+            }
+        }
+    },
     currencyId: {
         type: String,
         label: 'Currency',
