@@ -6,11 +6,11 @@ import './_init.js';
  */
 
 ExchangeNBC.permit(['insert'])
-    .Acc_ifDataInsert()
+    .Acc_ifSuperOrAdmin()
     .allowInClientCode();
 ExchangeNBC.permit(['update'])
-    .Acc_ifDataUpdate()
+    .Acc_ifSuperOrAdmin()
     .allowInClientCode();
 ExchangeNBC.permit(['remove'])
-    .Acc_ifDataRemove()
+    .Acc_ifSuperOrAdmin()
     .allowInClientCode();

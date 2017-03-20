@@ -54,6 +54,7 @@ stateSavingAddOn = new ReactiveObj({
     isAddmoreSaving: false
 });
 
+let isPreloader = true;
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -81,6 +82,7 @@ Tracker.autorun(function () {
             Session.set("savingList", result);
         })
     }
+
     if (stateSavingAddOn.get("isAddmoreSaving") == true) {
         Meteor.call("microfis_getSavingAccByDate", state.get("disbursmentDate"), FlowRouter.getParam('clientId'), function (err, result) {
             Session.set("savingList", result);
@@ -98,7 +100,7 @@ indexTmpl.events({
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
-        // $.blockUI();
+        $.blockUI();
 
         let self = this;
         state.set("disbursmentDate", self.disbursementDate);
@@ -111,11 +113,11 @@ indexTmpl.events({
             }).then(function (result) {
                 Session.set('productDoc', result);
 
-                // Meteor.setTimeout(function () {
-                alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
 
-                // $.unblockUI();
-                // }, 100);
+                alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
+                Meteor.setTimeout(function () {
+                    $.unblockUI();
+                }, 300)
 
             }).catch(function (err) {
                 console.log(err.message);
@@ -233,8 +235,8 @@ formTmpl.onRendered(function () {
         $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
         $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
 
-        $disbursementDate.data("DateTimePicker").minDate(moment().startOf('day').toDate());
-        state.set('disbursmentDate', moment().startOf('day').toDate());
+        // $disbursementDate.data("DateTimePicker").minDate(moment().startOf('day').toDate());
+        // state.set('disbursmentDate', moment().startOf('day').toDate());
 
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
@@ -332,15 +334,20 @@ formTmpl.events({
         state.set("currencyId", $('[name="savingAccId"] option:selected').text().split(" : ")[2]);
     },
     'click [name="submitDate"]'(e, t){
-
         let $submitDate = $('[name="submitDate"]');
-
         Meteor.call('microfis_getLastEndOfProcess', Session.get("currentBranch"), function (err, obj) {
-            console.log(obj);
             if (obj) {
-                $submitDate.data("DateTimePicker").minDate(moment(obj.closeDate).startOf('day'));
+                $submitDate.data("DateTimePicker").minDate(moment(obj.closeDate).startOf('day').toDate());
             }
         })
+    },
+    'click [name="disbursementDate"]'(e, t){
+        let $disbursementDate = $('[name="disbursementDate"]');
+        let $submitDate = $('[name="submitDate"]').val();
+
+        if ($submitDate) {
+            $disbursementDate.data("DateTimePicker").minDate(moment($submitDate, "DD/MM/YYYY").startOf('day').toDate());
+        }
     }
 });
 

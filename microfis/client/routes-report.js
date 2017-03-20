@@ -189,3 +189,71 @@ MicrofisRoutes.route('/productActivity-report', {
         parent: 'microfis.home'
     }
 });
+
+// Loan BreakDown By Currency
+import '../imports/reports/loan-breakDownByCurrency';
+MicrofisRoutes.route('/loanBreakDownByCurrency-report', {
+    name: 'microfis.loanBreakDownByCurrencyReport',
+    title: 'Loan Break Down By Currency Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanBreakDownByCurrencyReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Break Down By Currency Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Loan BreakDown By Purpose
+import '../imports/reports/loan-breakDownByPurpose';
+MicrofisRoutes.route('/loanBreakDownByPurpose-report', {
+    name: 'microfis.loanBreakDownByPurposeReport',
+    title: 'Loan Break Down By Purpose Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanBreakDownByPurposeReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Break Down By Purpose Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Loan Classification
+import '../imports/reports/loan-classification';
+MicrofisRoutes.route('/loanClassification-report', {
+    name: 'microfis.loanClassificationReport',
+    title: 'Loan Classification Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanClassificationReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Classification Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Loan NetworkInformation
+import '../imports/reports/loan-networkInformation';
+MicrofisRoutes.route('/loanNetworkInformation-report', {
+    name: 'microfis.loanNetworkInformationReport',
+    title: 'Loan Network Information Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_loanNetworkInformationReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Network Information Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

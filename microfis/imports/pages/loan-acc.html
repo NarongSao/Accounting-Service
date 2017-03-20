@@ -62,9 +62,9 @@
     <!-- /.box-header -->
 
     <div class="box-body">
-        {{#if Template.subscriptionsReady}} {{#autoForm collection=collection id="Microfis_loanAccForm" doc=data.doc
-                                                        type=data.formType}}
 
+        {{#autoForm collection=collection id="Microfis_loanAccForm" doc=data.doc
+                    type=data.formType}}
             <fieldset>
                 <div class="col-md-7">
                     <legend>General</legend>
@@ -75,6 +75,7 @@
                             {{> afQuickField name="submitDate"}}
                             {{> afQuickField name="disbursementDate" value=disbursmentDate}}
                             {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+
                             <div class="form-group{{#if afFieldIsInvalid name="savingAccId"}} has-error{{/if}}"
                                  data-required="true">
                                 <label class="control-label" for="savingAccId">Saving Account</label>
@@ -186,7 +187,7 @@
                 </div>
             </fieldset>
 
-            {{> formFooterWithButton}} {{/autoForm}} {{else}} {{> loading}} {{/if}}
+            {{> formFooterWithButton}} {{/autoForm}}
     </div>
 </template>
 

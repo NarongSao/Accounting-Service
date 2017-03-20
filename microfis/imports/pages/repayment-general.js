@@ -115,7 +115,7 @@ formTmpl.onCreated(function () {
                 // Set last repayment
 
                 if (result.lastRepayment) {
-                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'),loanAccDoc._id, function (err, endDoc) {
+                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
                         if (endDoc) {
                             if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
                                 stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
@@ -145,8 +145,6 @@ formTmpl.onCreated(function () {
 });
 
 formTmpl.onRendered(function () {
-
-
     let $repaidDateObj = $('[name="repaidDate"]');
     if ($repaidDateObj) {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
@@ -171,7 +169,6 @@ formTmpl.helpers({
         return Repayment;
     },
     checkRepayment(){
-        debugger;
         return stateRepayment.get('checkRepayment');
     },
     defaultValue(){

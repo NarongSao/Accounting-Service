@@ -520,7 +520,12 @@ Repayment.after.remove(function (userId, doc) {
             } else if (["Reschedule", "Write Off"].includes(doc.type) == true) {
 
                 if (doc.type == "Reschedule") {
-                    RepaymentSchedule.remove({scheduleDate: doc.repaidDate, loanAccId: doc.loanAccId});
+                    RepaymentSchedule.remove({
+                        scheduleDate: {
+                            $gte: moment(doc.repaidDate).startOf("day").toDate(),
+                            $lte: moment(doc.repaidDate).endOf("day").toDate()
+                        }, loanAccId: doc.loanAccId
+                    });
                 }
 
             }

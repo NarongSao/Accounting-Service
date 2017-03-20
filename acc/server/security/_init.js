@@ -43,3 +43,13 @@ Security.defineMethod("Acc_ifReporter", {
         return Roles.userIsInRole(userId, ['reporter'], 'Acc');
     }
 });
+
+
+// Super or admin
+Security.defineMethod("Acc_ifSuperOrAdmin", {
+    fetch: [],
+    transform: null,
+    allow (type, arg, userId) {
+        return Roles.userIsInRole(userId, ['super', 'admin'], 'Core');
+    }
+});

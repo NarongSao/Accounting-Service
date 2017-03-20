@@ -13,6 +13,8 @@ import {Location} from '../../../microfis/common/collections/location.js';
 import {Fund} from '../../../microfis/common/collections/fund.js';
 import {ProductStatus} from '../../../microfis/common/collections/productStatus.js';
 import {Client} from '../../../microfis/common/collections/client';
+
+import {ExchangeNBC} from '../../../acc/imports/api/collections/exchangeNBC';
 import {LookupValue} from '../../common/collections/lookup-value.js';
 import {SavingAcc} from '../../common/collections/saving-acc.js';
 
@@ -313,6 +315,22 @@ export const SelectOptsReport = {
                 });
         }
 
+
+        return list;
+    },
+
+    exchangeNBC: function () {
+        Meteor.subscribe('acc.exchangeNBC');
+
+        var list = [];
+        list.push({label: "(Select One)", value: ""});
+        ExchangeNBC.find({base: 'KHR'}, {sort: {dateTime: -1}})
+            .forEach(function (obj) {
+                list.push({
+                    label: moment(obj.dateTime).format("DD/MM/YYYY") + ' | ' + JSON.stringify(obj.rates),
+                    value: obj._id
+                });
+            });
 
         return list;
     },

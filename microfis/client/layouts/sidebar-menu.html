@@ -34,7 +34,13 @@
                 <!--Exchange-->
                 <li class="{{isActiveRoute name='core.exchange'}}">
                     <a href="{{pathFor 'core.exchange'}}">
-                        <i class="fa fa-circle-o"></i> <span>Exchange Report</span>
+                        <i class="fa fa-circle-o"></i> <span>Exchange</span>
+                    </a>
+                </li>
+
+                <li class="{{isActiveRoute name='acc.exchangeNBC'}}">
+                    <a href="{{pathFor 'acc.exchangeNBC'}}">
+                        <i class="fa fa-angle-right"></i> <span>{{_ "acc.sidebarMenu.exchangeNBC"}}</span>
                     </a>
                 </li>
 
@@ -137,9 +143,24 @@
             </a>
 
             <ul class="treeview-menu" style="display: none">
-                <li class="{{isActiveRoute name='microfis.repaymentScheduleReport'}}">
-                    <a href="{{pathFor 'microfis.repaymentScheduleReport'}}">
-                        <i class="fa fa-circle-o"></i> <span>Loan BreakingDown</span>
+                <li class="{{isActiveRoute name='microfis.loanBreakDownByCurrencyReport'}}">
+                    <a href="{{pathFor 'microfis.loanBreakDownByCurrencyReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>BreakingDown Currency</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.loanBreakDownByPurposeReport'}}">
+                    <a href="{{pathFor 'microfis.loanBreakDownByPurposeReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>BreakingDown Purpose</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.loanClassificationReport'}}">
+                    <a href="{{pathFor 'microfis.loanClassificationReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Loan Classification</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.loanNetworkInformationReport'}}">
+                    <a href="{{pathFor 'microfis.loanNetworkInformationReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Network Information</span>
                     </a>
                 </li>
 

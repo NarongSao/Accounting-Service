@@ -44,6 +44,7 @@ Meteor.methods({
             return amount;
         }
     },
+
     exchangeNBC: function (curFrom, curTo, amount, id) {
         var ex = ExchangeNBC.findOne({
             base: curTo,

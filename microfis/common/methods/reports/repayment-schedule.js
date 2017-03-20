@@ -38,6 +38,12 @@ export const repaymentScheduleReport = new ValidatedMethod({
             data.title.branch = Branch.findOne(loanAccDoc.branchId);
 
             /****** Header *****/
+            if (loanAccDoc.principalInstallment.calculateType == "P") {
+                loanAccDoc.isPercentage = true;
+            } else {
+                loanAccDoc.isPercentage = false;
+            }
+
             data.header = loanAccDoc;
 
             /****** Content *****/
