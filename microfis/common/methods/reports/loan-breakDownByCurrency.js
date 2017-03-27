@@ -211,7 +211,6 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
             let loanDoc = LoanAcc.aggregate([
                 {$match: selector},
                 {
@@ -321,7 +320,31 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
                         checkDate: checkDate,
                         opts: loanAccDoc
                     });
-                    console.log(result);
+                    let productStatusList;
+
+                    if (loanAccDoc.paymentMethod == "D") {
+                        if (loanAccDoc.term <= 365) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+
+                    } else if (loanAccDoc.paymentMethod == "W") {
+                        if (loanAccDoc.term <= 52) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else if (loanAccDoc.paymentMethod == "M") {
+                        if (loanAccDoc.term <= 12) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+
 
                     let checkClassify = true;
                     if (params.classifyId && params.classifyId.includes("All") == false) {
@@ -387,39 +410,37 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
             content += `
                         <tr>
                             <td>១. ប្រាក់រៀល</td>
-                            <td>${numberLoanRiel}</td>
-                            <td>${microfis_formatNumber(totalRiel)}</td>
-                            <td>${microfis_formatNumber(totalRielInRiel)}</td>
-                            <td>${averageRateRiel}</td>
+                            <td class="numberAlign">${numberLoanRiel}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalRiel)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalRielInRiel)}</td>
+                            <td class="numberAlign">${averageRateRiel}%</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>២. ប្រាក់ដុល្លារអាមេរិក</td>
-                            <td>${numberLoanDollar}</td>
-                            <td>${microfis_formatNumber(totalDollar)}</td>
-                            <td>${microfis_formatNumber(totalDollarInRiel)}</td>
-                            <td>${averageRateDollar}</td>
+                            <td class="numberAlign">${numberLoanDollar}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDollar)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDollarInRiel)}</td>
+                            <td class="numberAlign">${averageRateDollar}%</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>៣. ប្រាក់បាតថៃ</td>
-                            <td>${numberLoanBaht}</td>
-                            <td>${microfis_formatNumber(totalBaht)}</td>
-                            <td>${microfis_formatNumber(totalBahtInRiel)}</td>
-                            <td>${averageRateBaht}</td>
+                            <td class="numberAlign">${numberLoanBaht}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalBaht)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalBahtInRiel)}</td>
+                            <td class="numberAlign">${averageRateBaht}%</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><b>សរុប</b></td>
-                            <td>${totalNumberLoan}</td>
+                            <td class="numberAlign">${totalNumberLoan}</td>
                             <td></td>
-                            <td>${microfis_formatNumber(totalInRiel)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalInRiel)}</td>
                             <td></td>
                             <td></td>
                         </tr>
-
-
-                    
+                  
                     `
 
 

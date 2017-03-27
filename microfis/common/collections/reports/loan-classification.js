@@ -90,18 +90,31 @@ export const LoanClassificationSchema = new SimpleSchema({
         }
     },
     date: {
-        type: Date,
-        label: "Date As",
-        defaultValue: moment().toDate(),
+        type: [Date],
+        label: 'Date',
         autoform: {
+            type: "bootstrap-daterangepicker",
             afFieldInput: {
-                type: "bootstrap-datetimepicker",
-                dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
-                    showTodayButton: true
+                dateRangePickerOptions: function () {
+                    return dateRangePickerOptions;
                 }
             }
         }
-
+    },
+    repaidFrequency: {
+        type: Number,
+        label: 'Repay Frequency',
+        defaultValue: 0,
+        autoform: {
+            type: "select2",
+            options: function () {
+                let repayFrequency = [{label: "All", value: 0}];
+                let i = 1;
+                for (i; i < 100; i++) {
+                    repayFrequency.push({label: i.toString(), value: i})
+                }
+                return repayFrequency;
+            }
+        }
     }
 });

@@ -149,14 +149,13 @@
                                         {{else}}
                                             {{installment}}
                                         {{/if}}
-
                                     </td>
                                     <td>{{khDayForDueDate dueDate}} {{moFormat dueDate "DD/MM/YYYY"}}</td>
                                     <td>{{numOfDay}}</td>
-                                    <td>{{numFormat principalDue "0,0.00"}}</td>
-                                    <td>{{numFormat interestDue "0,0.00"}}</td>
-                                    <td>{{numFormat totalDue "0,0.00"}}</td>
-                                    <td>{{numFormat balance "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat principalDue "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat interestDue "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat totalDue "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat balance "0,0.00"}}</td>
                                     <td></td>
                                 </tr>
                             {{/each}}
@@ -167,9 +166,9 @@
                                 {{#with content}}
                                     <td colspan="2" class="text-right"><u>សរុប</u></td>
                                     <td>{{sumNumOfDay}}</td>
-                                    <td>{{numFormat sumPrincipalDue "0,0.00"}}</td>
-                                    <td>{{numFormat sumInterestDue "0,0.00"}}</td>
-                                    <td>{{numFormat sumTotalDue "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat sumPrincipalDue "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat sumInterestDue "0,0.00"}}</td>
+                                    <td class="numberAlign">{{numFormat sumTotalDue "0,0.00"}}</td>
                                     <td>0</td>
                                     <td></td>
                                 {{/with}}

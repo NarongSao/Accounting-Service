@@ -304,8 +304,6 @@ export const loanClosingReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
-
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
             let totalSumLossIntKHR = 0;
@@ -337,6 +335,31 @@ export const loanClosingReport = new ValidatedMethod({
                     checkDate: checkDate,
                     opts: loanAccDoc
                 });
+
+                let productStatusList;
+                
+                if (loanAccDoc.paymentMethod == "D") {
+                    if (loanAccDoc.term <= 365) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+
+                } else if (loanAccDoc.paymentMethod == "W") {
+                    if (loanAccDoc.term <= 52) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else if (loanAccDoc.paymentMethod == "M") {
+                    if (loanAccDoc.term <= 12) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else {
+                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                }
 
 
                 let checkClassify = true;
@@ -385,18 +408,18 @@ export const loanClosingReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
                                 
                                 <td> ${microfis_formatDate(result.lastRepayment.repaidDate)}</td>
-                                <td> ${microfis_formatNumber(result.interestUnPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.interestUnPaid)}</td>
 
                                
-                                <td> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid)}</td>
-                                <td> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid)}</td>
-                                <td> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.totalPrincipalInterestPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.totalPrincipalInterestPaid)}</td>
                                 
-                                <td> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid)}</td>
                                 
                               </tr>`;
 
@@ -473,38 +496,38 @@ export const loanClosingReport = new ValidatedMethod({
 
             content += `<tr>
                             <td colspan="11" align="right">Subtotal-KHR</td>
-                            <td>${microfis_formatNumber(totalSumLossIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinKHR)}</td>
-                            <td>${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalPenaltyKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyKHR)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="11" align="right">Subtotal-USD</td>
-                            <td>${microfis_formatNumber(totalSumLossIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinUSD)}</td>
-                            <td>${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalPenaltyUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyUSD)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="11" align="right">Subtotal-THB</td>
-                            <td>${microfis_formatNumber(totalSumLossIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinTHB)}</td>
-                            <td>${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalPenaltyTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyTHB)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="11" align="right">Total-${baseCurrency}</td>
-                            <td>${microfis_formatNumber(totalSumLossIntBase)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinBase)}</td>
-                            <td>${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
-                            <td>${microfis_formatNumber(totalPenaltyBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyBase)}</td>
 
                         </tr>
                         

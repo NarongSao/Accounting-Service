@@ -44,9 +44,12 @@ Meteor.startup(function () {
                 name: 'Purpose',
                 private: true,
                 options: [
-                    {label: 'Purpose0', value: 'Purpose0', order: 0},
-                    {label: 'Purpose1', value: 'Purpose1', order: 1},
-                    {label: 'Purpose2', value: 'Purpose2', order: 2},
+                    {label: 'Agriculture', value: 'Agriculture', order: 0},
+                    {label: 'Business', value: 'Business', order: 1},
+                    {label: 'Service', value: 'Service', order: 2},
+                    {label: 'Construction', value: 'Construction', order: 3},
+                    {label: 'Family', value: 'Family', order: 4},
+                    {label: 'Other', value: 'Other', order: 5},
                 ]
             },
             // Purpose Activity

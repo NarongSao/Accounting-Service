@@ -68,12 +68,12 @@ formTmpl.onCreated(function () {
         let repaidDate = stateRepayment.get('repaidDate');
         //Auto Voucher
         if (stateRepayment.get("isVoucherId")) {
-            var currentCurrency = loanAccDoc.currencyId;
-            var dobSelect = repaidDate;
 
-            var startYear = moment(dobSelect).year();
+            var currentCurrency = loanAccDoc.currencyId;
+
+            var startYear = moment(repaidDate).year();
             var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate,Session.get("currentBranch"), function (err, result) {
+            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
                 if (result != undefined) {
                     Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
                 } else {
@@ -114,6 +114,7 @@ formTmpl.onRendered(function () {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
         stateRepayment.set('repaidDate', repaidDate);
 
+        stateRepayment.set("isVoucherId", true);
         // Repaid date picker
 
         $repaidDateObj.on("dp.change", function (e) {

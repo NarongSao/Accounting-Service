@@ -17,7 +17,6 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-
                         <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
                             <div class="col-md-4">
                                 {{> afQuickField name="branchId"}}
@@ -31,6 +30,7 @@
                             </div>
                             <div class="col-md-4">
                                 {{> afQuickField name="fundId"}}
+                                {{> afQuickField name="repaidFrequency"}}
                                 {{> afQuickField name="exchangeId"}}
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                 <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
                                 <div class="rpt-title-2x">{{company.enName}}</div>
                                 <div>សាខា: {{branch.khName}}</div>
-                                <div class="rpt-title-2x"><u>របាយការណ៍ប្រចាំត្រីមាសស្តីពី ឥណទានចំណាត់ថ្នាក់តាមប្រភេទរូបិយប័ណ្</u></div>
+                                <div class="rpt-title-2x"><u>របាយការណ៍ប្រចាំត្រីមាសស្តីពី ការធ្វើចំណាត់ថ្នាក់ឥណទាន សំវិធានធន និងអនុបាតឥណទានមិនដំណើរការ</u></div>
                                 <div>
                                     <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
                                     <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
@@ -111,7 +111,7 @@
                                 </div>
                                 <div style="width: 40%; float: left">
                                     <ul class="list-unstyled">
-                                        <li><strong>Classify:</strong> {{classifyId}}</li>
+                                        <li><strong>Repaid Frequency:</strong> {{repaidFrequency}}</li>
                                     </ul>
                                 </div>
 

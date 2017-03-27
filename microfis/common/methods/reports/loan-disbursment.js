@@ -359,10 +359,10 @@ export const loanDisbursmentReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.interestRate}</td>
                                 <td> ${loanAccDoc.cycle}</td>
                
-                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount + loanAccDoc.feeAmount + loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount + loanAccDoc.feeAmount + loanAccDoc.projectInterest)}</td>
                               </tr>`;
 
                 i++;
@@ -424,35 +424,35 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
                         <tr>
                             <td colspan="12" align="right">Subtotal-KHR</td>
-                            <td>${microfis_formatNumber(totalLoanAmountKHR)}</td>
-                            <td>${microfis_formatNumber(totalFeeKHR)}</td>
-                            <td>${microfis_formatNumber(totalProIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalProIntKHR + totalFeeKHR + totalLoanAmountKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanAmountKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalFeeKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntKHR + totalFeeKHR + totalLoanAmountKHR)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Subtotal-USD</td>
-                      <td>${microfis_formatNumber(totalLoanAmountUSD)}</td>
-                            <td>${microfis_formatNumber(totalFeeUSD)}</td>
-                            <td>${microfis_formatNumber(totalProIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalProIntUSD + totalFeeUSD + totalLoanAmountUSD)}</td>
+                      <td class="numberAlign">${microfis_formatNumber(totalLoanAmountUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalFeeUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntUSD + totalFeeUSD + totalLoanAmountUSD)}</td>
                         
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Subtotal-THB</td>
-                         <td>${microfis_formatNumber(totalLoanAmountTHB)}</td>
-                            <td>${microfis_formatNumber(totalFeeTHB)}</td>
-                            <td>${microfis_formatNumber(totalProIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalProIntTHB + totalFeeTHB + totalLoanAmountTHB)}</td>
+                         <td class="numberAlign">${microfis_formatNumber(totalLoanAmountTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalFeeTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntTHB + totalFeeTHB + totalLoanAmountTHB)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Total-${baseCurrency}</td>
-                            <td>${microfis_formatNumber(totalLoanAmountBase)}</td>
-                            <td>${microfis_formatNumber(totalFeeBase)}</td>
-                            <td>${microfis_formatNumber(totalProIntBase)}</td>
-                            <td>${microfis_formatNumber(totalProIntBase + totalFeeBase + totalLoanAmountBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanAmountBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalFeeBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntBase + totalFeeBase + totalLoanAmountBase)}</td>
                   
                         </tr>
                         

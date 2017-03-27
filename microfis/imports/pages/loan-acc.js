@@ -107,6 +107,9 @@ indexTmpl.events({
 
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
             alertify.error("Can't Update this account!!!");
+            Meteor.setTimeout(function () {
+                $.unblockUI();
+            }, 300)
         } else {
             lookupProduct.callPromise({
                 _id: self.productId
@@ -117,10 +120,13 @@ indexTmpl.events({
                 alertify.loanAcc(fa('pencil', 'Loan Account'), renderTemplate(formTmpl, {loanAccId: self._id})).maximize();
                 Meteor.setTimeout(function () {
                     $.unblockUI();
-                }, 300)
+                }, 200)
 
             }).catch(function (err) {
                 console.log(err.message);
+                Meteor.setTimeout(function () {
+                    $.unblockUI();
+                }, 300)
             });
         }
 

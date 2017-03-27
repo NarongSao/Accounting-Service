@@ -147,6 +147,7 @@ formTmpl.onRendered(function () {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
         stateRepayment.set('repaidDate', repaidDate);
+        stateRepayment.set("isVoucherId", true);
 
         // Repaid date picker
         $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());

@@ -28,8 +28,8 @@ import {LoanNetworkInformationSchema} from '../../common/collections/reports/loa
 import './loan-networkInformation.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_loanBreakDownByPurposeReport,
-    tmplPrintData = Template.Microfis_loanBreakDownByPurposeReportPrintData;
+let indexTmpl = Template.Microfis_loanNetworkInformationReport,
+    tmplPrintData = Template.Microfis_loanNetworkInformationReportPrintData;
 // Form state
 let formDataState = new ReactiveVar(null);
 

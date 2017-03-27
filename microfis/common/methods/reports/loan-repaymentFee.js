@@ -317,12 +317,12 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
                          
                                 <td> ${microfis_formatDate(loanAccDoc.feeDate)}</td>
                                 <td> Fee</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
                                
                             </tr>`;
 

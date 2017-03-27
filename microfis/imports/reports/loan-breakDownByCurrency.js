@@ -67,6 +67,7 @@ indexTmpl.onCreated(function () {
 });
 tmplPrintData.helpers({
     rptInit(){
+        debugger;
         return rptInitState.get();
     },
     rptData: function () {

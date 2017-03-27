@@ -42,6 +42,7 @@
         color: #000000;
         border-collapse: collapse;
         padding: 0px !important;
+        vertical-align: middle !important;
     }
 
     .diplay-on-print-header-loan > tr > th {
@@ -49,6 +50,7 @@
         background-color: lightgray !important;
         -webkit-print-color-adjust: exact;
         text-align: center !important;
+        vertical-align: top;
     }
 
     .display-on-print-body-loan {
@@ -59,7 +61,7 @@
         padding: 0px !important;
     }
 
-    .display-on-print-div-loan > .table > thead > tr > th, .display-on-print-div-loan > .table > tbody > tr > th,.display-on-print-div-loan > .table > tfoot > tr > th,.display-on-print-div-loan > .table > thead > tr > td,.display-on-print-div-loan > .table > tbody > tr > td,.display-on-print-div-loan > .table > tfoot > tr > td {
+    .display-on-print-div-loan > .table > thead > tr > th, .display-on-print-div-loan > .table > tbody > tr > th, .display-on-print-div-loan > .table > tfoot > tr > th, .display-on-print-div-loan > .table > thead > tr > td, .display-on-print-div-loan > .table > tbody > tr > td, .display-on-print-div-loan > .table > tfoot > tr > td {
         border: 1px solid black !important;
     }
 }
@@ -82,11 +84,18 @@
     font-size: 14px;
 }
 
-.display-on-print-div-loan > .table > thead > tr > th, .display-on-print-div-loan > .table > tbody > tr > th,.display-on-print-div-loan > .table > tfoot > tr > th,.display-on-print-div-loan > .table > thead > tr > td,.display-on-print-div-loan > .table > tbody > tr > td,.display-on-print-div-loan > .table > tfoot > tr > td {
+.sub-header > tr > th {
+    text-align: center;
+    vertical-align: middle !important;
+    color: black !important;
+    font-weight: bold !important;
+}
+
+.display-on-print-div-loan > .table > thead > tr > th, .display-on-print-div-loan > .table > tbody > tr > th, .display-on-print-div-loan > .table > tfoot > tr > th, .display-on-print-div-loan > .table > thead > tr > td, .display-on-print-div-loan > .table > tbody > tr > td, .display-on-print-div-loan > .table > tfoot > tr > td {
     border: 1px solid black !important;
 }
 
-.display-on-print-div-landscape-loan > .table > thead > tr > th, .display-on-print-div-landscape-loan > .table > tbody > tr > th,.display-on-print-div-landscape-loan > .table > tfoot > tr > th,.display-on-print-div-landscape-loan > .table > thead > tr > td,.display-on-print-div-landscape-loan > .table > tbody > tr > td,.display-on-print-div-landscape-loan > .table > tfoot > tr > td {
+.display-on-print-div-landscape-loan > .table > thead > tr > th, .display-on-print-div-landscape-loan > .table > tbody > tr > th, .display-on-print-div-landscape-loan > .table > tfoot > tr > th, .display-on-print-div-landscape-loan > .table > thead > tr > td, .display-on-print-div-landscape-loan > .table > tbody > tr > td, .display-on-print-div-landscape-loan > .table > tfoot > tr > td {
     border: 1px solid black !important;
 }
 

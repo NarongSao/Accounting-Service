@@ -521,20 +521,20 @@ export const productActivityReport = new ValidatedMethod({
                                 <td>${i}</td>
                                 <td>${obj._id.creditOfficerDoc._id}</td>
                                 <td> ${obj._id.creditOfficerDoc.khName}</td>
-                                <td>${microfis_formatNumber(obj.loanDisbursment)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(obj.loanDisbursment)}</td>
                                 <td>${obj.newClient}</td>
                                 <td>${obj.oldClient}</td>
-                                <td>${microfis_formatNumber(obj.totalFee)}</td>
-                                <td>${microfis_formatNumber(dataCollection[0].collPrin)}</td>
-                                <td>${microfis_formatNumber(dataCollection[0].collInt)}</td>
-                                <td>${microfis_formatNumber(dataCollection[0].collPenalty)}</td>
-                                <td>${microfis_formatNumber(dataCollection[0].collTotal)}</td>
-                                <td>${microfis_formatNumber(subTotalLoanOut)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(obj.totalFee)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collPrin)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collInt)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collPenalty)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collTotal)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(subTotalLoanOut)}</td>
                                 <td>${numberOfClient}</td>
-                                <td>${microfis_formatNumber(subTotalArrearsPrin)}</td>
-                                <td>${microfis_formatNumber(subTotalArrearsInt)}</td>
-                                <td>${microfis_formatNumber(par * 100)}%</td>
-                                <td>${microfis_formatNumber(parNBC * 100)}%</td>
+                                <td class="numberAlign">${microfis_formatNumber(subTotalArrearsPrin)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(subTotalArrearsInt)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(par * 100)}%</td>
+                                <td class="numberAlign">${microfis_formatNumber(parNBC * 100)}%</td>
                             </tr>`;
 
                 i++;
@@ -560,18 +560,18 @@ export const productActivityReport = new ValidatedMethod({
 
             content += `<tr>
                             <td colspan="3" align="right">Total</td>
-                            <td>${microfis_formatNumber(totalLoanDisbursment)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanDisbursment)}</td>
                             <td>${totalNewClient}</td>
                             <td>${totalOldClient}</td>
-                            <td>${microfis_formatNumber(totalFee)}</td>
-                            <td>${microfis_formatNumber(totalCollPrin)}</td>
-                            <td>${microfis_formatNumber(totalCollInt)}</td>
-                            <td>${microfis_formatNumber(totalCollPen)}</td>
-                            <td>${microfis_formatNumber(totalColl)}</td>
-                            <td>${microfis_formatNumber(totalLoanOut)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalFee)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalCollPrin)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalCollInt)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalCollPen)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColl)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanOut)}</td>
                             <td>${totalAllClient}</td>
-                            <td>${microfis_formatNumber(totalArrearsPrin)}</td>
-                            <td>${microfis_formatNumber(totalArrearsInt)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalArrearsPrin)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalArrearsInt)}</td>
                             <td></td>
                             <td></td>
                         </tr>

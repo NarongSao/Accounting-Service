@@ -90,7 +90,8 @@ indexTmpl.onCreated(function () {
         lastTransactionDate: null,
         repaidDate: null,
         checkRepayment: null,
-        disbursmentDate: null
+        disbursmentDate: null,
+        isVoucherId: false
     });
 
     let loanAccId = FlowRouter.getParam('loanAccId');
@@ -365,84 +366,96 @@ indexTmpl.events({
         let loanAccDoc = stateRepayment.get('loanAccDoc');
         stateRepayment.set("repaidDate", self.repaidDate);
 
-        if (self.endId == "0") {
-            getLastRepayment.callPromise({
-                loanAccId: loanAccDoc._id
-            }).then(function (doc) {
-                if (doc.repaidDate.getTime() == self.repaidDate.getTime()) {
-                    swal({
-                        title: 'Are you sure?',
-                        text: `You won't be able to revert this <span class="text-red text-bold">[${self._id}]</span>!`,
-                        type: 'warning',
-                        allowEscapeKey: false,
-                        allowOutsideClick: true,
-                        showCloseButton: true,
-                        showConfirmButton: true,
-                        confirmButtonColor: "#dd4b39",
-                        confirmButtonText: 'Yes, delete it!',
-                        showCancelButton: true
-                    }).then(function () {
-                        Repayment.remove({_id: self._id}, function (error) {
-                            if (error) {
-                                // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
-                                displayError(options.errorMsg, options.i18n);
-                            } else {
 
-                                updateLoanAccPaymentWrteOff.callPromise({
-                                    loanAccId: loanAccDoc._id,
-                                    opts: loanAccDoc,
-                                    repaidDate: stateRepayment.get('repaidDate')
-                                }).then(function (result) {
+        Meteor.call('microfis_getLastEndOfProcess', self.branchId, function (err, endOfProcess) {
+            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.repaidDate.getTime()) {
+                if (self.endId == "0") {
+                    getLastRepayment.callPromise({
+                        loanAccId: loanAccDoc._id
+                    }).then(function (doc) {
+                        if (loanAccDoc.status !== "Active") {
+                            alertify.warning("Not in Active Status!!!!!!!!");
+                            return false;
+                        }
 
-                                }).catch(function (err) {
-                                    console.log(err.message);
-                                });
+                        if (doc.repaidDate.getTime() == self.repaidDate.getTime()) {
+                            swal({
+                                title: 'Are you sure?',
+                                text: `You won't be able to revert this <span class="text-red text-bold">[${self._id}]</span>!`,
+                                type: 'warning',
+                                allowEscapeKey: false,
+                                allowOutsideClick: true,
+                                showCloseButton: true,
+                                showConfirmButton: true,
+                                confirmButtonColor: "#dd4b39",
+                                confirmButtonText: 'Yes, delete it!',
+                                showCancelButton: true
+                            }).then(function () {
+                                Repayment.remove({_id: self._id}, function (error) {
+                                    if (error) {
+                                        // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
+                                        displayError(options.errorMsg, options.i18n);
+                                    } else {
 
-                                Meteor.setTimeout(function () {
-                                    lookupLoanAcc.callPromise({
-                                        _id: loanAccDoc._id
-                                    }).then(function (docLoanAcc) {
-                                        if (docLoanAcc) {
+                                        updateLoanAccPaymentWrteOff.callPromise({
+                                            loanAccId: loanAccDoc._id,
+                                            opts: loanAccDoc,
+                                            repaidDate: stateRepayment.get('repaidDate')
+                                        }).then(function (result) {
 
-                                            stateRepayment.set('loanAccDoc', docLoanAcc);
+                                        }).catch(function (err) {
+                                            console.log(err.message);
+                                        });
 
+                                        Meteor.setTimeout(function () {
+                                            lookupLoanAcc.callPromise({
+                                                _id: loanAccDoc._id
+                                            }).then(function (docLoanAcc) {
+                                                if (docLoanAcc) {
+
+                                                    stateRepayment.set('loanAccDoc', docLoanAcc);
+
+                                                }
+                                            }).catch(function (err) {
+                                                console.log(err.message);
+                                            });
+                                        }, 200)
+
+                                        if (self.type == "Fee") {
+                                            stateRepayment.set("feeAmount", 0);
                                         }
-                                    }).catch(function (err) {
-                                        console.log(err.message);
-                                    });
-                                }, 200)
-
-                                if (self.type == "Fee") {
-                                    stateRepayment.set("feeAmount", 0);
-                                }
 
 
-                                checkRepayment.callPromise({
-                                    loanAccId: stateRepayment.get('loanAccDoc')._id,
-                                    checkDate: stateRepayment.get('repaidDate')
-                                }).then(function (result) {
-                                    // Set state
-                                    stateRepayment.set('checkRepayment', result);
+                                        checkRepayment.callPromise({
+                                            loanAccId: stateRepayment.get('loanAccDoc')._id,
+                                            checkDate: stateRepayment.get('repaidDate')
+                                        }).then(function (result) {
+                                            // Set state
+                                            stateRepayment.set('checkRepayment', result);
 
-                                }).catch(function (err) {
-                                    console.log(err.message);
+                                        }).catch(function (err) {
+                                            console.log(err.message);
+                                        });
+
+
+                                        displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
+                                    }
                                 });
-
-
-
-                                displaySuccess(`Your doc <span class="text-red">[${self._id}]</span> has been deleted`);
-                            }
-                        });
-                    }).done();
+                            }).done();
+                        } else {
+                            alertify.error("Not the last payment!!!");
+                        }
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
                 } else {
-                    alertify.error("Not the last payment!!!");
+                    alertify.error("Already End Of Process!!!");
                 }
-            }).catch(function (err) {
-                console.log(err.message);
-            });
-        } else {
-            alertify.error("Already End Of Process!!!");
-        }
+            } else {
+                alertify.error("Already End Of Process!!!");
+            }
+        })
+
 
     },
     'click .js-removeWriteOff'(event, instance) {

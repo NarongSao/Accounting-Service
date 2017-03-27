@@ -67,22 +67,37 @@ export const loanNetworkInformationReport = new ValidatedMethod({
             header.classifyId = "All";
             header.paymentMethod = "All";
 
+            header.repaidFrequency = "All";
+
 
             /****** Content *****/
 
-
-            let baseCurrency = Setting.findOne().baseCurrency;
+            let settingDoc = Setting.findOne();
+            let baseCurrency = settingDoc.baseCurrency;
 
             let content = "";
             content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
                             <thead class="sub-header diplay-on-print-header-loan">
                                 <tr> 
-                                    <th>ប្រភេទរូបិយប័ណ្ណ</th>
-                                    <th>ចំនួនឥណទាន</th>
-                                    <th>ចំនួនទឹកប្រាក់តាមប្រភេទរូបិយប័ណ្ណ</th>
-                                    <th>ចំនួនទឹកប្រាក់គិតជារៀល</th>
-                                    <th>អត្រាការប្រាក់ដែលយក</th>
-                                    <th>កំណត់សំគាល់</th>
+                                    <th rowspan="3" colspan="2">ឈ្មេាះខេត្ត-រាជធានី</th>
+                                    <th colspan="5">ចំនួន</th>
+                                    <th colspan="4">សមតុល្យឥណទាន</th>
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">ស្នាក់ការកណ្តាល</th>
+                                    <th rowspan="2">ខេត្ត-ក្រុង</th>
+                                    <th rowspan="2">ខណ្ឌ-ស្រុក</th>
+                                    <th rowspan="2">ឃុំ</th>
+                                    <th rowspan="2">ភូមិ</th>
+                                    
+                                    <th rowspan="2">ចំនួនទឹកប្រាក់</th>
+                                    <th colspan="3">ចំនួនអ្នកខ្ចី</th>
+                                    
+                                </tr>
+                                <tr>
+                                    <th>ប្រុស</th>
+                                    <th>ស្រី</th>
+                                    <th>សរុប</th>
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;
@@ -191,6 +206,12 @@ export const loanNetworkInformationReport = new ValidatedMethod({
             }
 
 
+            if (params.repaidFrequency && params.repaidFrequency != "All") {
+                selector.repaidFrequency = params.repaidFrequency;
+                header.repaidFrequency = params.repaidFrequency;
+            }
+
+
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
             selector.disbursementDate = {$lte: dateParam};
             selector['$or'] = [{status: "Active"},
@@ -211,36 +232,10 @@ export const loanNetworkInformationReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
-            let loanDoc = LoanAcc.aggregate([
+            //Get Village
+
+            let loanByProvince = LoanAcc.aggregate([
                 {$match: selector},
-                {
-                    $lookup: {
-                        from: "microfis_client",
-                        localField: "clientId",
-                        foreignField: "_id",
-                        as: "clientDoc"
-                    }
-                },
-                {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
-                {
-                    $lookup: {
-                        from: "microfis_fund",
-                        localField: "fundId",
-                        foreignField: "_id",
-                        as: "fundDoc"
-                    }
-                },
-                {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
-                {
-                    $lookup: {
-                        from: "microfis_creditOfficer",
-                        localField: "creditOfficerId",
-                        foreignField: "_id",
-                        as: "creditOfficerDoc"
-                    }
-                },
-                {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
                 {
                     $lookup: {
                         from: "microfis_location",
@@ -249,177 +244,271 @@ export const loanNetworkInformationReport = new ValidatedMethod({
                         as: "locationDoc"
                     }
                 },
-                {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
-
+                {$unwind: "$locationDoc"},
                 {
-                    $lookup: {
-                        from: "microfis_product",
-                        localField: "productId",
-                        foreignField: "_id",
-                        as: "productDoc"
-                    }
-                },
-                {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
-
-                {
-                    $lookup: {
-                        from: "microfis_fee",
-                        localField: "productDoc.feeId",
-                        foreignField: "_id",
-                        as: "feeDoc"
-                    }
-                },
-                {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
-
-                {
-                    $lookup: {
-                        from: "microfis_penalty",
-                        localField: "productDoc.penaltyId",
-                        foreignField: "_id",
-                        as: "penaltyDoc"
-                    }
-                },
-                {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
-
-                {
-                    $lookup: {
-                        from: "microfis_penaltyClosing",
-                        localField: "productDoc.penaltyClosingId",
-                        foreignField: "_id",
-                        as: "penaltyClosingDoc"
-                    }
-                },
-                {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
-            ]);
-
-            let totalRiel = 0;
-            let totalDollar = 0;
-            let totalBaht = 0;
-
-            let totalRielInRiel = 0;
-            let totalDollarInRiel = 0;
-            let totalBahtInRiel = 0;
-
-            let totalInRiel = 0;
-
-            let numberLoanRiel = 0;
-            let numberLoanDollar = 0;
-            let numberLoanBaht = 0;
-
-            let totalNumberLoan = 0;
-
-            let totalRateRiel = 0;
-            let totalRateDollar = 0;
-            let totalRateBaht = 0;
-
-
-            loanDoc.forEach(function (loanAccDoc) {
-                if (loanAccDoc) {
-
-                    let result = checkRepayment.run({
-                        loanAccId: loanAccDoc._id,
-                        checkDate: checkDate,
-                        opts: loanAccDoc
-                    });
-                    console.log(result);
-
-                    let checkClassify = true;
-                    if (params.classifyId && params.classifyId.includes("All") == false) {
-                        checkClassify = false;
-                    }
-
-
-                    let finProductStatus = function (obj) {
-                        return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
-                    }
-                    let proStatus = productStatusList.find(finProductStatus);
-
-
-                    //check product status (Classify)
-                    if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
-                        if (loanAccDoc.currencyId == "KHR") {
-                            numberLoanRiel++;
-                            totalRateRiel += loanAccDoc.interestRate;
-                            totalRiel = result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-
-
-                        } else if (loanAccDoc.currencyId == "USD") {
-                            numberLoanDollar++;
-                            totalRateDollar += loanAccDoc.interestRate;
-                            totalDollar = result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
-
-                        } else if (loanAccDoc.currencyId == "THB") {
-                            numberLoanBaht++;
-                            totalRateBaht += loanAccDoc.interestRate;
-                            totalBaht = result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
+                    $group: {
+                        _id: {
+                            villageCode: "$locationDoc.code"
+                        },
+                        loanAccList: {
+                            $addToSet: "$_id"
                         }
+                    }
+                }, {
+
+                    $project: {
+                        loanAccList: 1,
+                        villageCode: "$_id.villageCode",
+                        communeCode: {$substr: ["$_id.villageCode", 0, 6]},
+                        districtCode: {$substr: ["$_id.villageCode", 0, 4]},
+                        provinceCode: {$substr: ["$_id.villageCode", 0, 2]}
 
                     }
+                },
+                {
+                    $unwind: {path: "$loanAccList", preserveNullAndEmptyArrays: true}
+                },
+
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$provinceCode"
+                        },
+                        loanAccList: {
+                            $push: "$loanAccList"
+                        },
+                        districtList: {$push: "$districtCode"},
+                        communeList: {$push: "$communeCode"},
+                        villageList: {$push: "$villageCode"},
+
+                    }
+                },
+                {
+                    $unwind: {path: "$villageList", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$_id.provinceCode",
+                            villageCode: "$villageList"
+                        },
+                        districtList: {$last: "$districtList"},
+                        communeList: {$last: "$communeList"},
+                        loanAccList: {$last: "$loanAccList"}
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$_id.provinceCode",
+                            villageCode: "$villageList"
+                        },
+                        districtList: {$last: "$districtList"},
+                        communeList: {$last: "$communeList"},
+                        loanAccList: {$last: "$loanAccList"},
+                        villageCount: {$sum: 1}
+                    }
+                },
+                {
+                    $unwind: {path: "$communeList", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$_id.provinceCode",
+                            communeList: "$communeList"
+                        },
+                        districtList: {$last: "$districtList"},
+                        villageCount: {$last: "$villageCount"},
+                        loanAccList: {$last: "$loanAccList"}
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$_id.provinceCode",
+                            communeList: "$communeList"
+                        },
+                        districtList: {$last: "$districtList"},
+                        loanAccList: {$last: "$loanAccList"},
+                        villageCount: {$last: "$villageCount"},
+                        communeCount: {$sum: 1}
+                    }
+                },
+                {
+                    $unwind: {path: "$districtList", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$_id.provinceCode",
+                            districtList: "$districtList"
+                        },
+
+                        villageCount: {$last: "$villageCount"},
+                        communeCount: {$last: "$communeCount"},
+                        loanAccList: {$last: "$loanAccList"}
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            provinceCode: "$_id.provinceCode",
+                            districtList: "$districtList"
+                        },
+
+                        loanAccList: {$last: "$loanAccList"},
+                        villageCount: {$last: "$villageCount"},
+                        communeCount: {$last: "$communeCount"},
+                        districtCount: {$sum: 1}
+                    }
+                }
+
+            ])
 
 
+            let k = 1;
+            let isHeadOffice = 0;
+            loanByProvince.forEach(function (dataByProvince) {
+                if (dataByProvince) {
+                    let provinceDoc = Location.findOne({type: "P", code: dataByProvince._id.provinceCode});
+
+                    if (provinceDoc._id == settingDoc.headOffice) {
+                        isHeadOffice = 1;
+                    }
+
+                    let numberMale = 0;
+                    let numberFemale = 0;
+                    let loanOutstanding = 0;
+                    dataByProvince.loanAccList.forEach(function (obj) {
+                        if (obj) {
+                            let loanDoc = LoanAcc.aggregate([
+                                {$match: {_id: obj}},
+                                {
+                                    $lookup: {
+                                        from: "microfis_client",
+                                        localField: "clientId",
+                                        foreignField: "_id",
+                                        as: "clientDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
+                                {
+                                    $lookup: {
+                                        from: "microfis_fund",
+                                        localField: "fundId",
+                                        foreignField: "_id",
+                                        as: "fundDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
+                                {
+                                    $lookup: {
+                                        from: "microfis_creditOfficer",
+                                        localField: "creditOfficerId",
+                                        foreignField: "_id",
+                                        as: "creditOfficerDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
+                                {
+                                    $lookup: {
+                                        from: "microfis_location",
+                                        localField: "locationId",
+                                        foreignField: "_id",
+                                        as: "locationDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
+
+                                {
+                                    $lookup: {
+                                        from: "microfis_product",
+                                        localField: "productId",
+                                        foreignField: "_id",
+                                        as: "productDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
+
+                                {
+                                    $lookup: {
+                                        from: "microfis_fee",
+                                        localField: "productDoc.feeId",
+                                        foreignField: "_id",
+                                        as: "feeDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
+
+                                {
+                                    $lookup: {
+                                        from: "microfis_penalty",
+                                        localField: "productDoc.penaltyId",
+                                        foreignField: "_id",
+                                        as: "penaltyDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
+
+                                {
+                                    $lookup: {
+                                        from: "microfis_penaltyClosing",
+                                        localField: "productDoc.penaltyClosingId",
+                                        foreignField: "_id",
+                                        as: "penaltyClosingDoc"
+                                    }
+                                },
+                                {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
+                            ]);
+
+                            loanDoc.forEach(function (loanAccDoc) {
+                                let result = checkRepayment.run({
+                                    loanAccId: loanAccDoc._id,
+                                    checkDate: checkDate,
+                                    opts: loanAccDoc
+                                });
+
+                                if (loanAccDoc.clientDoc.gender == "M") {
+                                    numberMale++;
+                                } else if (loanAccDoc.clientDoc.gender == "F") {
+                                    numberFemale++;
+                                }
+                                loanOutstanding += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                            });
+
+
+                        }
+                    })
+
+                    content += `
+                            <tr>
+                                <td>${k}</td>
+                                <td>${provinceDoc.khName}</td>
+                                <td>${isHeadOffice}</td>
+                                <td>1</td>
+                                <td  class="numberAlign">${dataByProvince.districtCount}</td>
+                                <td class="numberAlign">${dataByProvince.communeCount}</td>
+                                <td class="numberAlign">${dataByProvince.villageCount}</td>
+                                <td class="numberAlign">${microfis_formatNumber(loanOutstanding)}</td>
+                                <td class="numberAlign">${numberMale}</td>  
+                                <td class="numberAlign">${numberFemale}</td>
+                                <td class="numberAlign">${numberMale + numberFemale}</td>
+                                
+                            </tr>
+
+
+
+                        `
+
+                    k++;
                 }
             })
 
-
-
-
-            totalInRiel = totalRielInRiel + totalDollarInRiel + totalBahtInRiel;
-
-            let averageRateRiel = 0;
-            let averageRateDollar = 0;
-            let averageRateBaht = 0;
-
-            if (numberLoanRiel > 0) {
-                averageRateRiel = totalRateRiel / numberLoanRiel;
-            }
-
-            if (numberLoanDollar > 0) {
-                averageRateDollar = totalRateDollar / numberLoanDollar;
-            }
-
-            if (numberLoanBaht > 0) {
-                averageRateBaht = totalRateBaht / numberLoanBaht;
-            }
-
-            totalNumberLoan = numberLoanRiel + numberLoanDollar + numberLoanBaht;
             content += `
-                        <tr>
-                            <td>១. ប្រាក់រៀល</td>
-                            <td>${numberLoanRiel}</td>
-                            <td>${microfis_formatNumber(totalRiel)}</td>
-                            <td>${microfis_formatNumber(totalRielInRiel)}</td>
-                            <td>${averageRateRiel}</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>២. ប្រាក់ដុល្លារអាមេរិក</td>
-                            <td>${numberLoanDollar}</td>
-                            <td>${microfis_formatNumber(totalDollar)}</td>
-                            <td>${microfis_formatNumber(totalDollarInRiel)}</td>
-                            <td>${averageRateDollar}</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>៣. ប្រាក់បាតថៃ</td>
-                            <td>${numberLoanBaht}</td>
-                            <td>${microfis_formatNumber(totalBaht)}</td>
-                            <td>${microfis_formatNumber(totalBahtInRiel)}</td>
-                            <td>${averageRateBaht}</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><b>សរុប</b></td>
-                            <td>${totalNumberLoan}</td>
-                            <td></td>
-                            <td>${microfis_formatNumber(totalInRiel)}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-
-
-                    
-                    `
-
+                        </tbody>
+                      </table>`
 
             data.content = content;
             return data

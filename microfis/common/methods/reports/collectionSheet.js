@@ -50,7 +50,6 @@ export const collectionSheetReport = new ValidatedMethod({
             let tDate = moment(date[1], 'DD/MM/YYYY').endOf("days").toDate();
 
 
-
             let exchangeData = Exchange.findOne({_id: params.exchangeId});
 
             let header = {};
@@ -60,7 +59,7 @@ export const collectionSheetReport = new ValidatedMethod({
             header.currencyId = "All";
             header.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
 
-            header.date = moment(fDate).format("DD/MM/YYYY")+" - "+ moment(tDate).format("DD/MM/YYYY");
+            header.date = moment(fDate).format("DD/MM/YYYY") + " - " + moment(tDate).format("DD/MM/YYYY");
             header.productId = "All";
             header.locationId = "All";
 
@@ -301,8 +300,6 @@ export const collectionSheetReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
-
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
 
@@ -320,6 +317,30 @@ export const collectionSheetReport = new ValidatedMethod({
 
 
             loanDoc.forEach(function (loanAccDoc) {
+                let productStatusList;
+                if (loanAccDoc.paymentMethod == "D") {
+                    if (loanAccDoc.term <= 365) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+
+                } else if (loanAccDoc.paymentMethod == "W") {
+                    if (loanAccDoc.term <= 52) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else if (loanAccDoc.paymentMethod == "M") {
+                    if (loanAccDoc.term <= 12) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else {
+                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                }
+
 
                 let result = checkRepayment.run({
                     loanAccId: loanAccDoc._id,
@@ -374,9 +395,9 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td> ${microfis_formatDate(result.totalScheduleDue.dueDate.to)}</td>
                                 
                                
-                                <td> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
-                                <td> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone}</td>
                               </tr>`;
@@ -421,33 +442,33 @@ export const collectionSheetReport = new ValidatedMethod({
 
             content += `<tr>
                             <td colspan="9" align="right">Subtotal-KHR</td>
-                            <td>${microfis_formatNumber(totalDuePrinKHR)}</td>
-                            <td>${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
                             <td></td>
 
                         </tr>
                         <tr>
                             <td colspan="9" align="right">Subtotal-USD</td>
-                            <td>${microfis_formatNumber(totalDuePrinUSD)}</td>
-                            <td>${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
                             <td></td>
 
                         </tr>
                         <tr>
                             <td colspan="9" align="right">Subtotal-THB</td>
-                            <td>${microfis_formatNumber(totalDuePrinTHB)}</td>
-                            <td>${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
                             <td></td>
 
                         </tr>
                         <tr>
                             <td colspan="9" align="right">Total-${baseCurrency}</td>
-                            <td>${microfis_formatNumber(totalDuePrinBase)}</td>
-                            <td>${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td>${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
                             <td></td>
 
                         </tr>

@@ -311,7 +311,6 @@ export const loanRepaymentReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
 
             let totalColPrinKHR = 0;
             let totalColIntKHR = 0;
@@ -345,6 +344,33 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                 selectorRepayment.loanAccId = loanAccDoc._id;
                 selectorRepayment.type = {$ne: "Fee"};
+
+                let productStatusList;
+                
+                if (loanAccDoc.paymentMethod == "D") {
+                    if (loanAccDoc.term <= 365) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+
+                } else if (loanAccDoc.paymentMethod == "W") {
+                    if (loanAccDoc.term <= 52) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else if (loanAccDoc.paymentMethod == "M") {
+                    if (loanAccDoc.term <= 12) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else {
+                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                }
+
+
 
                 let repaymentDoc = Repayment.find(selectorRepayment).fetch();
 
@@ -404,15 +430,15 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
                               
                                 <td> ${microfis_formatDate(repaymentObj.repaidDate)}</td>
                                 <td> ${repaymentObj.type}</td>
-                                <td> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid)}</td>
-                                <td> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
-                                <td> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
-                                <td> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid)}</td>
                             </tr>`;
 
                             i++;
@@ -494,33 +520,33 @@ export const loanRepaymentReport = new ValidatedMethod({
                 );
             content += `<tr>
                             <td colspan="12" align="right">Subtotal-KHR</td>
-                            <td>${microfis_formatNumber(totalColPrinKHR)}</td>
-                            <td>${microfis_formatNumber(totalColIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalColPrinIntKHR)}</td>
-                            <td>${microfis_formatNumber(totalColPenKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPenKHR)}</td>
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Subtotal-USD</td>
-                            <td>${microfis_formatNumber(totalColPrinUSD)}</td>
-                            <td>${microfis_formatNumber(totalColIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalColPrinIntUSD)}</td>
-                            <td>${microfis_formatNumber(totalColPenUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPenUSD)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Subtotal-THB</td>
-                            <td>${microfis_formatNumber(totalColPrinTHB)}</td>
-                            <td>${microfis_formatNumber(totalColIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalColPrinIntTHB)}</td>
-                            <td>${microfis_formatNumber(totalColPenTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPenTHB)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="12" align="right">Total-${baseCurrency}</td>
-                            <td>${microfis_formatNumber(totalColPrinBase)}</td>
-                            <td>${microfis_formatNumber(totalColIntBase)}</td>
-                            <td>${microfis_formatNumber(totalColPrinIntBase)}</td>
-                            <td>${microfis_formatNumber(totalColPenBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPrinIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColPenBase)}</td>
 
                         </tr>
                         

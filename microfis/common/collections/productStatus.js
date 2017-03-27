@@ -23,6 +23,10 @@ ProductStatus.schema = new SimpleSchema({
             }
         }
     },
+    type: {
+        type: String,
+        label: "Type"
+    },
     name: {
         type: String,
         label: 'Name',
@@ -31,6 +35,20 @@ ProductStatus.schema = new SimpleSchema({
     code: {
         type: String,
         optional: true
+    },
+    provision: {
+        type: Number,
+        decimal: true,
+        label: "Provision(%)",
+        autoform: {
+            type: "inputmask",
+            afFieldInput: {
+                // placeholder: '',
+                inputmaskOptions: function () {
+                    return inputmaskOptions.percentage()
+                }
+            }
+        }
     }
 });
 

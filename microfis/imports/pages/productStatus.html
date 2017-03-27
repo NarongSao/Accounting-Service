@@ -29,9 +29,11 @@
             <div class="row">
                 <div class="col-md-12">
                     {{> afQuickField name='name'}}
+                    {{> afQuickField name='type'}}
                     {{> afQuickField name="code"}}
                     {{> afQuickField name='from'}}
                     {{> afQuickField name='to'}}
+                    {{> afQuickField name='provision'}}
                 </div>
             </div>
 
@@ -48,9 +50,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         {{> afQuickField name='name'}}
+                        {{> afQuickField name='type'}}
                         {{> afQuickField name="code"}}
                         {{> afQuickField name='from'}}
                         {{> afQuickField name='to'}}
+                        {{> afQuickField name='provision'}}
                     </div>
                 </div>
 
@@ -78,6 +82,8 @@
                     <dd>{{from}}</dd>
                     <dt>To</dt>
                     <dd>{{to}}</dd>
+                    <dt>Provision(%)</dt>
+                    <dd>{{provision}}</dd>
                 </dl>
             {{/with}}
         {{else}}

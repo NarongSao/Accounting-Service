@@ -25,8 +25,10 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: '_id', title: 'ID'},
         {data: 'code', title: 'Code'},
         {data: 'name', title: 'Name'},
+        {data: 'type', title: 'Type'},
         {data: 'from', title: 'From (Days)'},
-        {data: 'to', title: 'To (Days)'}
+        {data: 'to', title: 'To (Days)'},
+        {data: 'provision', title: 'Provision(%)'}
 
     ],
 });

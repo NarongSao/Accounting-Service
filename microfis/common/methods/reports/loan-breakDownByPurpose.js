@@ -77,12 +77,30 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
             content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
                             <thead class="sub-header diplay-on-print-header-loan">
                                 <tr> 
-                                    <th>ប្រភេទរូបិយប័ណ្ណ</th>
-                                    <th>ចំនួនឥណទាន</th>
-                                    <th>ចំនួនទឹកប្រាក់តាមប្រភេទរូបិយប័ណ្ណ</th>
-                                    <th>ចំនួនទឹកប្រាក់គិតជារៀល</th>
-                                    <th>អត្រាការប្រាក់ដែលយក</th>
-                                    <th>កំណត់សំគាល់</th>
+                                    <th rowspan="3">ប្រភេទ</th>
+                                    <th colspan="2">ឥណទានក្រុម</th>
+                                    <th colspan="2">ឥណទានឯកត្តជន</th>
+                                   
+                                    <th colspan="2">សរុប</th>
+                                </tr>
+                                <tr>
+                                    <th>ចំនួនគណនី</th>
+                                    <th>សមតុល្យឥណទាន</th>
+                                    <th>ចំនួនគណនី</th>
+                                    <th>សមតុល្យឥណទាន</th>
+                                  
+                                    <th>ចំនួនគណនី</th>
+                                    <th>សមតុល្យឥណទាន</th>
+                                </tr>
+                                <tr>
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                   
+                                    
+                                    <th>7=1+3</th>
+                                    <th>8=2+4</th>
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;
@@ -211,7 +229,6 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let productStatusList = ProductStatus.find().fetch();
             let loanDoc = LoanAcc.aggregate([
                 {$match: selector},
                 {
@@ -292,25 +309,72 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                 {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
             ]);
 
-            let totalRiel = 0;
-            let totalDollar = 0;
-            let totalBaht = 0;
 
-            let totalRielInRiel = 0;
-            let totalDollarInRiel = 0;
-            let totalBahtInRiel = 0;
+            let numberAgriculterGroup = 0;
+            let numberAgriculterIndividual = 0;
+            let numberAgriculterTotal = 0;
 
-            let totalInRiel = 0;
+            let numberBusinessGroup = 0;
+            let numberBusinessIndividual = 0;
+            let numberBusinessTotal = 0;
 
-            let numberLoanRiel = 0;
-            let numberLoanDollar = 0;
-            let numberLoanBaht = 0;
+            let numberServiceGroup = 0;
+            let numberServiceIndividual = 0;
+            let numberServiceTotal = 0;
 
-            let totalNumberLoan = 0;
+            let numberConstructGroup = 0;
+            let numberConstructIndividual = 0;
+            let numberConstructTotal = 0;
 
-            let totalRateRiel = 0;
-            let totalRateDollar = 0;
-            let totalRateBaht = 0;
+            let numberFamilyGroup = 0;
+            let numberFamilyIndividual = 0;
+            let numberFamilyTotal = 0;
+
+            let numberOtherGroup = 0;
+            let numberOtherIndividual = 0;
+            let numberOtherTotal = 0;
+
+            let numberTotalGroup = 0;
+            let numberTotalIndividual = 0;
+            let numberTotalTotal = 0;
+
+
+            let balanceAgriculterGroup = 0;
+            let balanceAgriculterIndividual = 0;
+            let balanceAgriculterTotal = 0;
+
+            let balanceBusinessGroup = 0;
+            let balanceBusinessIndividual = 0;
+            let balanceBusinessTotal = 0;
+
+            let balanceServiceGroup = 0;
+            let balanceServiceIndividual = 0;
+            let balanceServiceTotal = 0;
+
+            let balanceConstructGroup = 0;
+            let balanceConstructIndividual = 0;
+            let balanceConstructTotal = 0;
+
+            let balanceFamilyGroup = 0;
+            let balanceFamilyIndividual = 0;
+            let balanceFamilyTotal = 0;
+
+            let balanceOtherGroup = 0;
+            let balanceOtherIndividual = 0;
+            let balanceOtherTotal = 0;
+
+            let balanceTotalGroup = 0;
+            let balanceTotalIndividual = 0;
+            let balanceTotalTotal = 0;
+
+
+            let totalRateIndividual = 0;
+            let totalRateGroup = 0;
+            let totalRate = 0;
+
+            let averageRateIndividual = 0;
+            let averageRateGroup = 0;
+            let averageRate = 0;
 
 
             loanDoc.forEach(function (loanAccDoc) {
@@ -321,7 +385,31 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                         checkDate: checkDate,
                         opts: loanAccDoc
                     });
-                    console.log(result);
+                    let productStatusList;
+
+                    if (loanAccDoc.paymentMethod == "D") {
+                        if (loanAccDoc.term <= 365) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+
+                    } else if (loanAccDoc.paymentMethod == "W") {
+                        if (loanAccDoc.term <= 52) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else if (loanAccDoc.paymentMethod == "M") {
+                        if (loanAccDoc.term <= 12) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+
 
                     let checkClassify = true;
                     if (params.classifyId && params.classifyId.includes("All") == false) {
@@ -337,91 +425,225 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
 
                     //check product status (Classify)
                     if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
-                        if (loanAccDoc.currencyId == "KHR") {
-                            numberLoanRiel++;
-                            totalRateRiel += loanAccDoc.interestRate;
-                            totalRiel = result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
+                        if (loanAccDoc.purpose == "Agriculture") {
+
+                            if (loanAccDoc.accountType == "IL") {
+                                numberAgriculterIndividual++;
+                                balanceAgriculterIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                                totalRateIndividual += loanAccDoc.interestRate;
+
+                            } else if (loanAccDoc.accountType == "GL") {
+                                numberAgriculterGroup++;
+                                balanceAgriculterGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                                totalRateGroup += loanAccDoc.interestRate;
+                            }
+
+                        } else if (loanAccDoc.purpose == "Business") {
+
+                            if (loanAccDoc.accountType == "IL") {
+                                numberBusinessIndividual++;
+                                balanceBusinessIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                                totalRateIndividual += loanAccDoc.interestRate;
+                            } else if (loanAccDoc.accountType == "GL") {
+                                numberBusinessGroup++;
+                                balanceBusinessGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                                totalRateGroup += loanAccDoc.interestRate;
+                            }
 
 
-                        } else if (loanAccDoc.currencyId == "USD") {
-                            numberLoanDollar++;
-                            totalRateDollar += loanAccDoc.interestRate;
-                            totalDollar = result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
+                        } else if (loanAccDoc.purpose == "Service") {
 
-                        } else if (loanAccDoc.currencyId == "THB") {
-                            numberLoanBaht++;
-                            totalRateBaht += loanAccDoc.interestRate;
-                            totalBaht = result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
+                            if (loanAccDoc.accountType == "IL") {
+                                numberServiceIndividual++;
+                                balanceServiceIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                                totalRateIndividual += loanAccDoc.interestRate;
+                            } else if (loanAccDoc.accountType == "GL") {
+                                numberServiceGroup++;
+                                balanceServiceGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                                totalRateGroup += loanAccDoc.interestRate;
+                            }
+
+
+                        } else if (loanAccDoc.purpose == "Construction") {
+
+                            if (loanAccDoc.accountType == "IL") {
+                                numberConstructIndividual++;
+                                balanceConstructIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                                totalRateIndividual += loanAccDoc.interestRate;
+                            } else if (loanAccDoc.accountType == "GL") {
+                                numberConstructGroup++;
+                                balanceConstructGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                                totalRateGroup += loanAccDoc.interestRate;
+                            }
+
+                        } else if (loanAccDoc.purpose == "Family") {
+
+                            if (loanAccDoc.accountType == "IL") {
+                                numberFamilyIndividual++;
+                                balanceFamilyIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                                totalRateIndividual += loanAccDoc.interestRate;
+                            } else if (loanAccDoc.accountType == "GL") {
+                                numberFamilyGroup++;
+                                balanceFamilyGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                                totalRateGroup += loanAccDoc.interestRate;
+                            }
+
+
+                        } else if (loanAccDoc.purpose =="Other") {
+
+                            if (loanAccDoc.accountType == "IL") {
+                                numberOtherIndividual++;
+                                balanceOtherIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+
+                                totalRateIndividual += loanAccDoc.interestRate;
+                            } else if (loanAccDoc.accountType == "GL") {
+                                numberOtherGroup++;
+                                balanceOtherGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                                totalRateGroup += loanAccDoc.interestRate;
+                            }
+
+
                         }
-
                     }
 
 
                 }
             })
 
+            numberAgriculterTotal = numberAgriculterGroup + numberAgriculterIndividual;
+            numberBusinessTotal = numberBusinessGroup + numberBusinessIndividual;
+            numberServiceTotal = numberServiceGroup + numberServiceIndividual;
+            numberConstructTotal = numberConstructGroup + numberConstructIndividual;
+            numberFamilyTotal = numberFamilyGroup + numberFamilyIndividual;
+            numberOtherTotal = numberOtherGroup + numberOtherIndividual;
+
+
+            numberTotalGroup = numberAgriculterGroup + numberBusinessGroup + numberServiceGroup + numberConstructGroup + numberFamilyGroup + numberOtherGroup;
+            numberTotalIndividual = numberAgriculterIndividual + numberBusinessIndividual + numberServiceIndividual + numberConstructIndividual + numberFamilyIndividual + numberOtherIndividual;
+            numberTotalTotal = numberTotalGroup + numberTotalIndividual;
+
+
+            balanceAgriculterTotal = balanceAgriculterGroup + balanceAgriculterIndividual;
+            balanceBusinessTotal = balanceBusinessGroup + balanceBusinessIndividual;
+            balanceServiceTotal = balanceServiceGroup + balanceServiceIndividual;
+            balanceConstructTotal = balanceConstructGroup + balanceConstructIndividual;
+            balanceFamilyTotal = balanceFamilyGroup + balanceFamilyIndividual;
+            balanceOtherTotal = balanceOtherGroup + balanceOtherIndividual;
+            balanceTotalTotal = balanceTotalGroup + balanceTotalIndividual;
+
+            balanceTotalGroup = balanceAgriculterGroup + balanceBusinessGroup + balanceServiceGroup + balanceConstructGroup + balanceFamilyGroup + balanceOtherGroup;
+            balanceTotalIndividual = balanceAgriculterIndividual + balanceBusinessIndividual + balanceServiceIndividual + balanceConstructIndividual + balanceFamilyIndividual + balanceOtherIndividual;
+            balanceTotalTotal = balanceTotalGroup + balanceTotalIndividual;
 
 
 
-            totalInRiel = totalRielInRiel + totalDollarInRiel + totalBahtInRiel;
+            if(totalRateGroup>0){
 
-            let averageRateRiel = 0;
-            let averageRateDollar = 0;
-            let averageRateBaht = 0;
-
-            if (numberLoanRiel > 0) {
-                averageRateRiel = totalRateRiel / numberLoanRiel;
+                averageRateGroup = totalRateGroup/numberTotalGroup;
             }
 
-            if (numberLoanDollar > 0) {
-                averageRateDollar = totalRateDollar / numberLoanDollar;
+            if(totalRateIndividual>0){
+                averageRateIndividual=totalRateIndividual/numberTotalIndividual;
             }
 
-            if (numberLoanBaht > 0) {
-                averageRateBaht = totalRateBaht / numberLoanBaht;
+            let k = 0;
+            if (averageRateIndividual > 0) {
+                k++;
             }
 
-            totalNumberLoan = numberLoanRiel + numberLoanDollar + numberLoanBaht;
+            if (averageRateGroup > 0) {
+                k++;
+            }
+
+
+
+            if (averageRateIndividual + averageRateGroup > 0) {
+                averageRate = (averageRateIndividual + averageRateGroup) / k;
+            }
+
+
             content += `
                         <tr>
-                            <td>១. ប្រាក់រៀល</td>
-                            <td>${numberLoanRiel}</td>
-                            <td>${microfis_formatNumber(totalRiel)}</td>
-                            <td>${microfis_formatNumber(totalRielInRiel)}</td>
-                            <td>${averageRateRiel}</td>
-                            <td></td>
+                            <td>កសិកម្ម</td>
+                            <td class="numberAlign">${numberAgriculterGroup}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceAgriculterGroup)}</td>
+                            <td class="numberAlign">${numberAgriculterIndividual}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceAgriculterIndividual)}</td>
+                            <td class="numberAlign">${numberAgriculterTotal}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceAgriculterTotal)}</td>
                         </tr>
                         <tr>
-                            <td>២. ប្រាក់ដុល្លារអាមេរិក</td>
-                            <td>${numberLoanDollar}</td>
-                            <td>${microfis_formatNumber(totalDollar)}</td>
-                            <td>${microfis_formatNumber(totalDollarInRiel)}</td>
-                            <td>${averageRateDollar}</td>
-                            <td></td>
+                            <td>ពាណិជ្ជកម្ម</td>
+                            <td class="numberAlign">${numberBusinessGroup}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceBusinessGroup)}</td>
+                            <td class="numberAlign">${numberBusinessIndividual}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceBusinessIndividual)}</td>
+                            <td class="numberAlign">${numberBusinessTotal}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceBusinessTotal)}</td>
                         </tr>
                         <tr>
-                            <td>៣. ប្រាក់បាតថៃ</td>
-                            <td>${numberLoanBaht}</td>
-                            <td>${microfis_formatNumber(totalBaht)}</td>
-                            <td>${microfis_formatNumber(totalBahtInRiel)}</td>
-                            <td>${averageRateBaht}</td>
-                            <td></td>
+                            <td>សេវាកម្ម</td>
+                            <td class="numberAlign">${numberServiceGroup}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceServiceGroup)}</td>
+                            <td class="numberAlign">${numberServiceIndividual}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceServiceIndividual)}</td>
+                            <td class="numberAlign">${numberServiceTotal}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceServiceTotal)}</td>
                         </tr>
                         <tr>
-                            <td><b>សរុប</b></td>
-                            <td>${totalNumberLoan}</td>
-                            <td></td>
-                            <td>${microfis_formatNumber(totalInRiel)}</td>
-                            <td></td>
-                            <td></td>
+                            <td>សំណង់</td>
+                            <td class="numberAlign">${numberConstructGroup}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceConstructGroup)}</td>
+                            <td class="numberAlign">${numberConstructIndividual}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceConstructIndividual)}</td>
+                            <td class="numberAlign">${numberConstructTotal}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceConstructTotal)}</td>
+                        </tr>
+                        <tr>
+                            <td>ក្រុមគ្រួសារ</td>
+                            <td class="numberAlign">${numberFamilyGroup}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceFamilyGroup)}</td>
+                            <td class="numberAlign">${numberFamilyIndividual}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceFamilyIndividual)}</td>
+                            <td class="numberAlign">${numberFamilyTotal}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceFamilyTotal)}</td>
+                        </tr>
+                        <tr>
+                            <td>ផ្សេងៗ</td>
+                            <td class="numberAlign">${numberOtherGroup}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceOtherGroup)}</td>
+                            <td class="numberAlign">${numberOtherIndividual}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceOtherIndividual)}</td>
+                            <td class="numberAlign">${numberOtherTotal}</td>
+                            <td class="numberAlign">${microfis_formatNumber(balanceOtherTotal)}</td>
+                        </tr>
+                        
+                        <tr>
+                            <th>សរុប</th>
+                            <th class="numberAlign">${numberTotalGroup}</th>
+                            <th class="numberAlign">${microfis_formatNumber(balanceTotalGroup)}</th>
+                            <th class="numberAlign">${numberTotalIndividual}</th>
+                            <th class="numberAlign">${microfis_formatNumber(balanceTotalIndividual)}</th>
+                            <th class="numberAlign">${numberTotalTotal}</th>
+                            <th class="numberAlign">${microfis_formatNumber(balanceTotalTotal)}</th>
+                        </tr>   
+                        <tr>
+                            <th>អត្រាការប្រាក់ដែលបានយក</th>
+                            <th colspan="2"  class="numberAlign">${averageRateGroup}%</th>
+                            <th colspan="2"  class="numberAlign">${averageRateIndividual}%</th>
+                            <th colspan="2"  class="numberAlign">${averageRate}%</th>
                         </tr>
 
-
-                    
-                    `
+                    `;
 
 
             data.content = content;
+
             return data
         }
     }

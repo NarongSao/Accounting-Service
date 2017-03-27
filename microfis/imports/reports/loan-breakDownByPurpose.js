@@ -30,6 +30,7 @@ import './loan-breakDownByPurpose.html';
 // Declare template
 let indexTmpl = Template.Microfis_loanBreakDownByPurposeReport,
     tmplPrintData = Template.Microfis_loanBreakDownByPurposeReportPrintData;
+
 // Form state
 let formDataState = new ReactiveVar(null);
 
@@ -43,6 +44,7 @@ indexTmpl.onCreated(function () {
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
+
             rptInitState.set(true);
             rptDataState.set(null);
 
@@ -63,7 +65,6 @@ indexTmpl.onCreated(function () {
     Meteor.call('locationForReport', (err, result) => {
         this.locationOpt.set(result);
     });
-
 });
 tmplPrintData.helpers({
     rptInit(){

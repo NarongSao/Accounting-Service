@@ -266,7 +266,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 </div>
                             </div>`;
             loanDoc.forEach(function (loanAccDoc) {
-                console.log(loanAccDoc);
+
                 let collateralNote = "";
 
                 if (loanAccDoc.collateralNote) {
@@ -605,11 +605,11 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <td>${obj.installment}</td>
                                 <td>${microfis_formatDate(obj.dueDate)}</td>
                                 <td> ${obj.numOfDay}</td>
-                                <td> ${microfis_formatNumber(obj.principalDue)}</td>
-                                <td> ${microfis_formatNumber(obj.interestDue)}</td>
-                                <td> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
-                                <td> ${microfis_formatNumber(obj.totalDue + loanAccDoc.feeAmount)}</td>
-                                <td> ${microfis_formatNumber(obj.balance)}</td>    
+                                <td class="numberAlign"> ${microfis_formatNumber(obj.principalDue)}</td>
+                                <td class="numberAlign"d> ${microfis_formatNumber(obj.interestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(obj.totalDue + loanAccDoc.feeAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(obj.balance)}</td>    
                             </tr>`;
 
                     loanAccDoc.feeAmount = 0;
@@ -695,11 +695,11 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <td> ${obj.type}</td>
                                 <td> ${paymentStatusDoc.name}</td>
                                 <td> ${microfis_formatDate(obj.repaidDate)}</td>
-                                <td> ${microfis_formatNumber(principal)}</td>
-                                <td> ${microfis_formatNumber(interest)}</td>
-                                <td> ${microfis_formatNumber(fee)}</td>
-                                <td> ${microfis_formatNumber(obj.penaltyPaid)}</td>
-                                <td> ${microfis_formatNumber(principal + interest + fee + obj.penaltyPaid)}</td>    
+                                <td class="numberAlign"> ${microfis_formatNumber(principal)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(interest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(fee)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(obj.penaltyPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(principal + interest + fee + obj.penaltyPaid)}</td>    
                             </tr>`;
 
                     i++;
@@ -708,11 +708,11 @@ export const loanHistoryReport = new ValidatedMethod({
                 content += `                      
                         <tr>
                                 <th colspan="5" style="text-align: right"><strong>Total: </strong></th>
-                                <th> ${microfis_formatNumber(totalPrincipal)}</th>
-                                <th> ${microfis_formatNumber(totalInterest)}</th>
-                                <th> ${microfis_formatNumber(totalFee)}</th>
-                                <th> ${microfis_formatNumber(totalPenalty)}</th>
-                                <th> ${microfis_formatNumber(total)}</th>    
+                                <th class="numberAlign"> ${microfis_formatNumber(totalPrincipal)}</th>
+                                <th class="numberAlign"> ${microfis_formatNumber(totalInterest)}</th>
+                                <th class="numberAlign"> ${microfis_formatNumber(totalFee)}</th>
+                                <th class="numberAlign"> ${microfis_formatNumber(totalPenalty)}</th>
+                                <th class="numberAlign"> ${microfis_formatNumber(total)}</th>    
                         </tr>
                         </tbody>
                       </table>`;
