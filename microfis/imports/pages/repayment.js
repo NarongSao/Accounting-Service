@@ -373,10 +373,10 @@ indexTmpl.events({
                     getLastRepayment.callPromise({
                         loanAccId: loanAccDoc._id
                     }).then(function (doc) {
-                        if (loanAccDoc.status !== "Active") {
+                        /*if (loanAccDoc.status !== "Active") {
                             alertify.warning("Not in Active Status!!!!!!!!");
                             return false;
-                        }
+                        }*/
 
                         if (doc.repaidDate.getTime() == self.repaidDate.getTime()) {
                             swal({

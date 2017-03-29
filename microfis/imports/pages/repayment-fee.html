@@ -1,21 +1,34 @@
 <!--General Payment Form-->
 <template name="Microfis_repaymentFeeForm">
     <div class="box-header with-border">
-        <h3 class="box-title text-blue">
-            {{#with loanAccDoc}}
-                <b>Product:</b> {{productId}},
-                <b>Disbursement Date:</b> {{moFormat disbursementDate "DD/MM/YYYY"}},
-                <b>Currency:</b> {{currencyId}}
-            {{/with}}
-        </h3>
+        {{#with loanAccDoc}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="box-title text-blue">
+                        <b>Product:</b> {{productId}},
+                        <b>Disbursement Date:</b> {{moFormat disbursementDate "DD/MM/YYYY"}},
+                        <b>Currency:</b> {{currencyId}}
+                    </h3>
+                </div>
+                <div class="col-md-6 text-bold">
+                    <h3 class="box-title text-blue pull-right">
+                        <span class="badge bg-orange-active"><i class="fa fa-heart-o"></i> {{status}} </span>
+
+                        <a href="#" class="js-display-disbursement">
+                            {{clientId}} : {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</a>
+                    </h3>
+                </div>
+            </div>
+        {{/with}}
+
     </div>
     <!-- /.box-header -->
 
     <div class="box-body">
-        <div class="row">
+        <div class="row animated fadeIn">
             <div class="col-md-12">
                 {{#autoForm collection=collection id="Microfis_repaymentFeeForm" type="insert"}}
-                    {{> afQuickField type="hidden" name="loanAccId" value=(param "loanAccId") readonly=true}}
+                    {{> afQuickField type="hidden" name="loanAccId" value=loanAccId readonly=true}}
                     {{> afQuickField name="repaidDate" value=feeDate readonly=true}}
                     {{> afQuickField name="amountType"}}
                     {{#with defaultValue}}

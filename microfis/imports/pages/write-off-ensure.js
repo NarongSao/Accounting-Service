@@ -71,65 +71,66 @@ formTmpl.onCreated(function () {
             }).catch(function (err) {
                 console.log(err.message);
             });
-        }
 
-        if (loanAccDoc) {
-            lookupLoanAcc.callPromise({
-                _id: loanAccDoc._id
-            }).then(function (result) {
-                stateRepayment.set('loanAccDoc', result);
-            }).catch(function (err) {
-                console.log(err.message);
-            });
-        }
 
-        if (disbursementDate) {
-            $.blockUI();
-
-            let currentData = Template.currentData();
-            stateRepayment.set('curData', currentData);
-
-            if (currentData) {
-                stateRepayment.set('lastTransactionDate', currentData.disbursementDate);
-                this.subscribe('microfis.loanAccById', loanAccDoc._id);
+            if (loanAccDoc) {
+                lookupLoanAcc.callPromise({
+                    _id: loanAccDoc._id
+                }).then(function (result) {
+                    stateRepayment.set('loanAccDoc', result);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
             }
 
+            if (disbursementDate) {
+                $.blockUI();
 
-            // Call check repayment from method
-            checkRepayment.callPromise({
-                loanAccId: loanAccDoc._id,
-                checkDate: disbursementDate
-            }).then(function (result) {
-                // Set state
-                stateRepayment.set('checkRepayment', result);
-                stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
-                stateRepayment.set('interestUnPaid', result.interestUnPaid);
-                // Set last repayment
-                if (result.lastRepayment) {
-                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'),loanAccDoc._id, function (err, endDoc) {
-                        if (endDoc) {
-                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
-                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
-                            } else {
-                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-                            }
-                        } else {
-                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-                        }
-                    })
+                let currentData = Template.currentData();
+                stateRepayment.set('curData', currentData);
+
+                if (currentData) {
+                    stateRepayment.set('lastTransactionDate', currentData.disbursementDate);
+                    this.subscribe('microfis.loanAccById', loanAccDoc._id);
                 }
 
 
-                Meteor.setTimeout(() => {
-                    $.unblockUI();
-                }, 200);
+                // Call check repayment from method
+                checkRepayment.callPromise({
+                    loanAccId: loanAccDoc._id,
+                    checkDate: disbursementDate
+                }).then(function (result) {
+                    // Set state
+                    stateRepayment.set('checkRepayment', result);
+                    stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
+                    stateRepayment.set('interestUnPaid', result.interestUnPaid);
+                    // Set last repayment
+                    if (result.lastRepayment) {
+                        Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
+                            if (endDoc) {
+                                if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                    stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                                } else {
+                                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                }
+                            } else {
+                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            }
+                        })
+                    }
 
-            }).catch(function (err) {
-                console.log(err.message);
-            });
 
-        } else {
-            stateRepayment.set('checkRepayment', null);
+                    Meteor.setTimeout(() => {
+                        $.unblockUI();
+                    }, 200);
+
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+
+            } else {
+                stateRepayment.set('checkRepayment', null);
+            }
         }
 
     });
@@ -258,6 +259,7 @@ let hooksObject = {
                     }).catch(function (err) {
                         console.log(err.message);
                     });
+                    
                 }
             }
         }).catch(function (err) {
@@ -265,6 +267,9 @@ let hooksObject = {
             alertify.error("Can't put in write Off");
         });
         return false;
+    },
+    onError (formType, error) {
+        displayError(error.message);
     }
 
 };

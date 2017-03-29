@@ -32,7 +32,7 @@ import {Calculate} from '../../common/libs/calculate.js';
 import {checkWriteOff} from '../../common/methods/check-writeOff.js';
 import {makeWriteOffEnsure} from '../../common/methods/make-writeOffEnsure.js';
 import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
-
+import {checkRepayment} from '../../common/methods/check-repayment';
 
 // Collection
 import {Repayment} from '../../common/collections/repayment.js';
@@ -46,85 +46,87 @@ let formTmpl = Template.Microfis_repaymentWriteOffForm;
 
 //-------- General Form ------------
 formTmpl.onCreated(function () {
-    let currentData = Template.currentData(),
-        loanAccDoc = stateRepayment.get("loanAccDoc");
+    let currentData = Template.currentData();
 
     // Set min/max amount to simple schema
     let minMaxAmount;
-    switch (loanAccDoc.currencyId) {
-        case 'KHR':
-            minMaxAmount = 100;
-            break;
-        case 'USD':
-            minMaxAmount = 0.01;
-            break;
-        case 'THB':
-            minMaxAmount = 1;
-            break;
-    }
-    Session.set('minAmountPaid', minMaxAmount);
-    Session.set('maxAmountPaid', minMaxAmount);
+
 
     // Track autorun
     this.autorun(function () {
-        let repaidDate = stateRepayment.get('repaidDate');
+        let repaidDate = stateRepayment.get('repaidDate'),
+            loanAccDoc = stateRepayment.get("loanAccDoc")
 
-        if (stateRepayment.get("isVoucherId")) {
-            var currentCurrency = loanAccDoc.currencyId;
-            var dobSelect = repaidDate;
+        if (loanAccDoc) {
+            switch (loanAccDoc.currencyId) {
+                case 'KHR':
+                    minMaxAmount = 100;
+                    break;
+                case 'USD':
+                    minMaxAmount = 0.01;
+                    break;
+                case 'THB':
+                    minMaxAmount = 1;
+                    break;
+            }
+            Session.set('minAmountPaid', minMaxAmount);
+            Session.set('maxAmountPaid', minMaxAmount);
 
-            var startYear = moment(dobSelect).year();
-            var startDate = moment('01/01/' + startYear,"DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate,Session.get("currentBranch"), function (err, result) {
-                if (result != undefined) {
-                    Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
-                } else {
-                    Session.set('lastVoucherId', "000001");
+            if (stateRepayment.get("isVoucherId")) {
+                var currentCurrency = loanAccDoc.currencyId;
+                var dobSelect = repaidDate;
+
+                var startDate = moment(dobSelect).startOf("year").toDate();
+                Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
+                    if (result != undefined) {
+                        stateRepayment.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
+                    } else {
+                        stateRepayment.set('lastVoucherId', "000001");
+                    }
+                    stateRepayment.set("isVoucherId", false);
+                });
+
+            }
+
+            if (repaidDate) {
+                $.blockUI();
+
+                if (loanAccDoc) {
+                    lookupLoanAcc.callPromise({
+                        _id: loanAccDoc._id
+                    }).then(function (result) {
+                        stateRepayment.set('loanAccDoc', result);
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
                 }
-                stateRepayment.set("isVoucherId",false);
-            });
 
-        }
-
-        if (repaidDate) {
-            $.blockUI();
-
-            if (loanAccDoc) {
-                lookupLoanAcc.callPromise({
-                    _id: loanAccDoc._id
+                // Call check repayment from method
+                checkWriteOff.callPromise({
+                    loanAccId: loanAccDoc._id,
+                    checkDate: repaidDate
                 }).then(function (result) {
-                    stateRepayment.set('loanAccDoc', result);
+                    // Set state
+                    stateRepayment.set('checkWriteOff', result);
+
+                    let maxAmountPaid = new BigNumber(0);
+                    if (result) {
+                        if (result.writeOff.total != undefined) {
+                            Session.set('maxAmountPaid', maxAmountPaid.plus(result.writeOff.total + 1));
+                        }
+                    }
+
+
+                    Meteor.setTimeout(() => {
+                        $.unblockUI();
+                    }, 200);
                 }).catch(function (err) {
                     console.log(err.message);
                 });
+
+            } else {
+                stateRepayment.set('checkWriteOff', null);
             }
-
-            // Call check repayment from method
-            checkWriteOff.callPromise({
-                loanAccId: loanAccDoc._id,
-                checkDate: repaidDate
-            }).then(function (result) {
-                // Set state
-                stateRepayment.set('checkWriteOff', result);
-
-                let maxAmountPaid = new BigNumber(0);
-                if (result) {
-                    if (result.writeOff.total != undefined) {
-                        Session.set('maxAmountPaid', maxAmountPaid.plus(result.writeOff.total + 1));
-                    }
-                }
-
-
-
-                Meteor.setTimeout(() => {
-                    $.unblockUI();
-                }, 200);
-            }).catch(function (err) {
-                console.log(err.message);
-            });
-
-        } else {
-            stateRepayment.set('checkWriteOff', null);
         }
     });
 
@@ -177,7 +179,12 @@ formTmpl.helpers({
         return totalDue.toNumber();
     },
     voucherId(){
-        return Session.get('lastVoucherId');
+        return stateRepayment.get('lastVoucherId');
+    },
+    loanAccId(){
+        if (stateRepayment.get('loanAccDoc')) {
+            return stateRepayment.get('loanAccDoc')._id;
+        }
     }
 });
 
@@ -207,6 +214,7 @@ let hooksObject = {
     before: {
         insert: function (doc) {
 
+            debugger;
             let writeOffDoc = stateRepayment.get('checkWriteOff');
             let loanAccDoc = stateRepayment.get('loanAccDoc');
 

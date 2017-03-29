@@ -1,0 +1,50 @@
+<!--Index-->
+<template name="Microfis_repaymentQuickForm">
+
+
+    {{#autoForm schema=schema id="Microfis_repaymentQuickForm"  target="normal" resetOnSuccess=false}}
+        <div class="box-header animated fadeIn">
+            <div class="row">
+                <div class="col-md-8">
+                    {{> afQuickField name="clientAccId" type="select2" options=clientAccOpt}}
+                </div>
+                <div class="col-md-4">
+                    {{> afQuickField name="paymentType" type="select2" options=paymentTypeOpt value=""}}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box-header">
+            {{> Microfis_repaymentDetailSummary data=loanAccDoc checkPayment=checkPayment}}
+        </div>
+
+        {{#if isGeneral}}
+            {{> Microfis_repaymentGeneralForm loanAccDoc=loanAccDoc}}
+        {{/if}}
+
+
+        {{#if isFee}}
+            {{> Microfis_repaymentFeeForm loanAccDoc=loanAccDoc}}
+        {{/if}}
+
+        {{#if isPrepay}}
+            {{> Microfis_repaymentPrepayForm loanAccDoc=loanAccDoc}}
+        {{/if}}
+
+        {{#if isReschedule}}
+            {{> Microfis_rescheduleForm loanAccDoc=loanAccDoc}}
+        {{/if}}
+
+        {{#if isWriteOff}}
+            {{> Microfis_repaymentWriteOffForm loanAccDoc=loanAccDoc}}
+        {{/if}}
+
+        {{#if isClose}}
+            {{> Microfis_repaymentClosingForm loanAccDoc=loanAccDoc}}
+        {{/if}}
+
+
+    {{/autoForm}}
+    <!-- /.box-body -->
+</template>

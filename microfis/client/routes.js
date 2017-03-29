@@ -290,6 +290,24 @@ MicrofisRoutes.route('/repayment/:clientId/:loanAccId/:savingAccId/', {
     }
 });
 
+
+// Repayment Quick Form
+import '../imports/pages/repaymentQuickForm';
+MicrofisRoutes.route('/repaymentQuickForm', {
+    name: 'microfis.repaymentQuickForm',
+    title: 'Loan',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentQuickForm');
+    },
+    breadcrumb: {
+
+        //queryParams: ['show', 'color'],
+        title: 'Quick Form',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
 /**********************
  * Saving
  *********************/

@@ -42,65 +42,74 @@ let formTmpl = Template.Microfis_repaymentFeeForm;
 
 //-------- Form ------------
 formTmpl.onCreated(function () {
-    let currentData = Template.currentData(),
-        loanAccDoc = stateRepayment.get("loanAccDoc");
+    let currentData = Template.currentData();
 
 
     // Set min/max amount to simple schema
     let minMaxAmount = 0;
-    switch (loanAccDoc.currencyId) {
-        case 'KHR':
-            minMaxAmount = 0;
-            break;
-        case 'USD':
-            minMaxAmount = 0;
-            break;
-        case 'THB':
-            minMaxAmount = 0;
-            break;
-    }
-    Session.set('minAmountPaid', minMaxAmount);
-    // Session.set('maxAmountPaid', minMaxAmount);
-    Session.set('maxPenaltyPaid', minMaxAmount);
+
 
     // Track autorun
     this.autorun(function () {
-        let repaidDate = stateRepayment.get('repaidDate');
-        //Auto Voucher
-        if (stateRepayment.get("isVoucherId")) {
-
-            var currentCurrency = loanAccDoc.currencyId;
-
-            var startYear = moment(repaidDate).year();
-            var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
-                if (result != undefined) {
-                    Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
-                } else {
-                    Session.set('lastVoucherId', "000001");
-                }
-                stateRepayment.set("isVoucherId", false);
-            });
-        }
 
 
-        if (repaidDate) {
-            $.blockUI();
+        let repaidDate = stateRepayment.get('repaidDate'),
+            loanAccDoc = stateRepayment.get("loanAccDoc");
 
-            if (loanAccDoc) {
-                lookupLoanAcc.callPromise({
-                    _id: loanAccDoc._id
-                }).then(function (result) {
-                    stateRepayment.set('loanAccDoc', result);
+        if (loanAccDoc) {
 
-                    Meteor.setTimeout(() => {
-                        $.unblockUI();
-                    }, 200);
-                }).catch(function (err) {
-                    console.log(err.message);
+            switch (loanAccDoc.currencyId) {
+                case 'KHR':
+                    minMaxAmount = 0;
+                    break;
+                case 'USD':
+                    minMaxAmount = 0;
+                    break;
+                case 'THB':
+                    minMaxAmount = 0;
+                    break;
+            }
+            Session.set('minAmountPaid', minMaxAmount);
+            // Session.set('maxAmountPaid', minMaxAmount);
+            Session.set('maxPenaltyPaid', minMaxAmount);
+
+
+            //Auto Voucher
+            if (stateRepayment.get("isVoucherId")) {
+
+                var currentCurrency = loanAccDoc.currencyId;
+
+                var startYear = moment(repaidDate).year();
+                var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
+                Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
+                    if (result != undefined) {
+                        Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
+                    } else {
+                        Session.set('lastVoucherId', "000001");
+                    }
+                    stateRepayment.set("isVoucherId", false);
                 });
             }
 
+
+            if (repaidDate) {
+                $.blockUI();
+
+                if (loanAccDoc) {
+                    lookupLoanAcc.callPromise({
+                        _id: loanAccDoc._id
+                    }).then(function (result) {
+                        stateRepayment.set('loanAccDoc', result);
+
+                        Meteor.setTimeout(() => {
+                            $.unblockUI();
+                        }, 200);
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
+                }
+
+            }
         }
     });
 
@@ -174,6 +183,11 @@ formTmpl.helpers({
         let loanDoc = stateRepayment.get('loanAccDoc');
         if (loanDoc) {
             return loanDoc.disbursementDate;
+        }
+    },
+    loanAccId(){
+        if (stateRepayment.get('loanAccDoc')) {
+            return stateRepayment.get('loanAccDoc')._id;
         }
     }
 });

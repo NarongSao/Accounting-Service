@@ -8,6 +8,10 @@
     <!--Data-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'Microfis'}}
         <li class="treeview active">
+
+            <a href="{{pathFor 'microfis.repaymentQuickForm'}}">
+                <i class="fa fa-paypal"></i> <span>Quick Payment</span>
+            </a>
             <a href="#">
                 <i class="fa fa-database"></i>
                 <span>DATA</span>
@@ -15,6 +19,7 @@
             </a>
 
             <ul class="treeview-menu" style="display: none">
+
                 <li class="{{isActiveRoute name='microfis.client'}}">
                     <a href="{{pathFor 'microfis.client'}}">
                         <i class="fa fa-circle-o"></i> <span>Client</span>

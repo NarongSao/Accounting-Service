@@ -44,99 +44,102 @@ let formTmpl = Template.Microfis_rescheduleForm;
 
 //-------- General Form ------------
 formTmpl.onCreated(function () {
-    let currentData = Template.currentData(),
-        loanAccDoc = stateRepayment.get("loanAccDoc");
+    let currentData = Template.currentData();
 
     // Set min/max amount to simple schema
     let minMaxAmount = 0.01;
-    switch (loanAccDoc.currencyId) {
-        case 'KHR':
-            minMaxAmount = 100;
-            break;
-        case 'USD':
-            minMaxAmount = 0.01;
-            break;
-        case 'THB':
-            minMaxAmount = 1;
-            break;
-    }
-    Session.set('minAmountPaid', minMaxAmount);
-    Session.set('maxAmountPaid', minMaxAmount);
-    Session.set('maxPenaltyPaid', minMaxAmount);
+
 
     // Track autorun
     this.autorun(function () {
-        let repaidDate = stateRepayment.get('repaidDate');
+        let repaidDate = stateRepayment.get('repaidDate'),
+            loanAccDoc = stateRepayment.get("loanAccDoc");
 
-        if (stateRepayment.get("isVoucherId")) {
-            var currentCurrency = loanAccDoc.currencyId;
-            var dobSelect = repaidDate;
+        if (loanAccDoc) {
+            switch (loanAccDoc.currencyId) {
+                case 'KHR':
+                    minMaxAmount = 100;
+                    break;
+                case 'USD':
+                    minMaxAmount = 0.01;
+                    break;
+                case 'THB':
+                    minMaxAmount = 1;
+                    break;
+            }
+            Session.set('minAmountPaid', minMaxAmount);
+            Session.set('maxAmountPaid', minMaxAmount);
+            Session.set('maxPenaltyPaid', minMaxAmount);
 
-            var startYear = moment(dobSelect).year();
-            var startDate = moment('01/01/' + startYear, "DD/MM/YYYY").toDate();
-            Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
-                if (result != undefined) {
-                    Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
-                } else {
-                    Session.set('lastVoucherId', "000001");
-                }
-                stateRepayment.set("isVoucherId", false);
-            });
-        }
+            if (stateRepayment.get("isVoucherId")) {
+                var currentCurrency = loanAccDoc.currencyId;
+                var dobSelect = repaidDate;
 
-        if (repaidDate) {
-            $.blockUI();
-
-
-            if (loanAccDoc) {
-                lookupLoanAcc.callPromise({
-                    _id: loanAccDoc._id
-                }).then(function (result) {
-                    stateRepayment.set('loanAccDoc', result);
-                }).catch(function (err) {
-                    console.log(err.message);
+                var startDate = moment(dobSelect).startOf("year").toDate();
+                Meteor.call('microfis_getLastVoucher', currentCurrency, startDate, Session.get("currentBranch"), function (err, result) {
+                    if (result != undefined) {
+                        stateRepayment.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
+                    } else {
+                        stateRepayment.set('lastVoucherId', "000001");
+                    }
+                    stateRepayment.set("isVoucherId", false);
                 });
             }
 
-            // Call check repayment from method
-            checkRepayment.callPromise({
-                loanAccId: loanAccDoc._id,
-                checkDate: repaidDate
-            }).then(function (result) {
-                // Set state
-                stateRepayment.set('checkRepayment', result);
+            if (repaidDate) {
+                $.blockUI();
+
+                if (loanAccDoc) {
+                    lookupLoanAcc.callPromise({
+                        _id: loanAccDoc._id
+                    }).then(function (result) {
+                        stateRepayment.set('loanAccDoc', result);
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
 
 
-                // Set max amount on simple schema
-                if (result && result.principalInstallment) {
-                    Session.set('maxAmountPaid', result.principalInstallment.principalReminder - Session.get('minAmountPaid'));
-                    Session.set('maxPenaltyPaid', result.principalInstallment.interestAddition);
-                }
-                // Set last repayment
-                if (result.lastRepayment) {
-                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'),loanAccDoc._id, function (err, endDoc) {
-                        if (endDoc) {
-                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
-                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
-                            } else {
-                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-                            }
-                        } else {
-                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                    // Call check repayment from method
+                    checkRepayment.callPromise({
+                        loanAccId: loanAccDoc._id,
+                        checkDate: repaidDate
+                    }).then(function (result) {
+                        // Set state
+                        stateRepayment.set('checkRepayment', result);
+
+
+                        // Set max amount on simple schema
+                        if (result && result.principalInstallment) {
+                            Session.set('maxAmountPaid', result.principalInstallment.principalReminder - Session.get('minAmountPaid'));
+                            Session.set('maxPenaltyPaid', result.principalInstallment.interestAddition);
                         }
-                    })
+                        // Set last repayment
+                        if (result.lastRepayment) {
+                            Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
+                                if (endDoc) {
+                                    if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                        stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                                    } else {
+                                        stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                    }
+                                } else {
+                                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                }
+                            })
+                        }
+
+                        Meteor.setTimeout(() => {
+                            $.unblockUI();
+                        }, 200);
+
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
                 }
 
-                Meteor.setTimeout(() => {
-                    $.unblockUI();
-                }, 200);
-
-            }).catch(function (err) {
-                console.log(err.message);
-            });
-
-        } else {
-            stateRepayment.set('checkRepayment', null);
+            } else {
+                stateRepayment.set('checkRepayment', null);
+            }
         }
     });
 
@@ -196,7 +199,12 @@ formTmpl.helpers({
         return {collapsed: true};
     },
     voucherId(){
-        return Session.get('lastVoucherId');
+        return stateRepayment.get('lastVoucherId');
+    },
+    loanAccId(){
+        if (stateRepayment.get('loanAccDoc')) {
+            return stateRepayment.get('loanAccDoc')._id;
+        }
     }
 });
 
@@ -204,10 +212,10 @@ formTmpl.events({
     'click [name="repaidDate"]'(){
         let $repaidDateObj = $('[name="repaidDate"]');
         if (stateRepayment.get('lastTransactionDate')) {
-            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).add(1,"days").startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).add(1, "days").startOf('day').toDate());
         } else {
             let loanDoc = stateRepayment.get("loanAccDoc");
-            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).add(1,"days").startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).add(1, "days").startOf('day').toDate());
         }
     }
 })

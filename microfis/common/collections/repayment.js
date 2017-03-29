@@ -143,4 +143,19 @@ Repayment.schema = new SimpleSchema({
     }
 });
 
+Repayment.QuickPay = new SimpleSchema({
+    clientAccId: {
+        type: String,
+        label: "Client Account Id"
+    },
+    paymentType: {
+        type: String,
+        label: "Payment Type",
+        defaultValue: "",
+        autoform: {
+            type: "select2",
+        }
+    }
+})
+
 Repayment.attachSchema(Repayment.schema);

@@ -39,8 +39,7 @@ let formTmpl = Template.Microfis_reStructure;
 
 // Form
 formTmpl.onCreated(function () {
-    let currentData = Template.currentData(),
-        loanAccDoc = stateRepayment.get("loanAccDoc");
+    let currentData = Template.currentData();
 
 
     stateRepayment.set('disbursmentDate', moment().toDate());
@@ -48,7 +47,8 @@ formTmpl.onCreated(function () {
 
     this.autorun(() => {
 
-        let disbursementDate = stateRepayment.get('disbursmentDate');
+        let disbursementDate = stateRepayment.get('disbursmentDate'),
+            loanAccDoc = stateRepayment.get("loanAccDoc")
 
 
         if (loanAccDoc.productId) {
@@ -66,67 +66,68 @@ formTmpl.onCreated(function () {
             }).catch(function (err) {
                 console.log(err.message);
             });
-        }
-
-        if (disbursementDate) {
-            $.blockUI();
-
-            if (loanAccDoc) {
-                lookupLoanAcc.callPromise({
-                    _id: loanAccDoc._id
-                }).then(function (result) {
-                    stateRepayment.set('loanAccDoc', result);
-                }).catch(function (err) {
-                    console.log(err.message);
-                });
-            }
 
 
-            let currentData = Template.currentData();
-            stateRepayment.set('curData', currentData);
+            if (disbursementDate) {
+                $.blockUI();
 
-            if (currentData) {
-                this.subscribe('microfis.loanAccById', loanAccDoc._id);
-            }
-
-
-            // Call check repayment from method
-            checkRepayment.callPromise({
-                loanAccId: loanAccDoc._id,
-                checkDate: disbursementDate
-            }).then(function (result) {
-                // Set state
-                stateRepayment.set('checkRepayment', result);
-                stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
-
-                stateRepayment.set("interestRate", loanAccDoc.interestRate);
-
-                // Set last repayment
-                if (result.lastRepayment) {
-                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
-                        if (endDoc) {
-                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
-                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
-                            } else {
-                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-                            }
-                        } else {
-                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-                        }
-                    })
+                if (loanAccDoc) {
+                    lookupLoanAcc.callPromise({
+                        _id: loanAccDoc._id
+                    }).then(function (result) {
+                        stateRepayment.set('loanAccDoc', result);
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
                 }
 
 
-                Meteor.setTimeout(() => {
-                    $.unblockUI();
-                }, 200);
+                let currentData = Template.currentData();
+                stateRepayment.set('curData', currentData);
 
-            }).catch(function (err) {
-                console.log(err.message);
-            });
+                if (currentData) {
+                    this.subscribe('microfis.loanAccById', loanAccDoc._id);
+                }
 
-        } else {
-            stateRepayment.set('checkRepayment', null);
+
+                // Call check repayment from method
+                checkRepayment.callPromise({
+                    loanAccId: loanAccDoc._id,
+                    checkDate: disbursementDate
+                }).then(function (result) {
+                    // Set state
+                    stateRepayment.set('checkRepayment', result);
+                    stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
+
+                    stateRepayment.set("interestRate", loanAccDoc.interestRate);
+
+                    // Set last repayment
+                    if (result.lastRepayment) {
+                        Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
+                            if (endDoc) {
+                                if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                    stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                                } else {
+                                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                }
+                            } else {
+                                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                            }
+                        })
+                    }
+
+
+                    Meteor.setTimeout(() => {
+                        $.unblockUI();
+                    }, 200);
+
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+
+            } else {
+                stateRepayment.set('checkRepayment', null);
+            }
         }
 
     });

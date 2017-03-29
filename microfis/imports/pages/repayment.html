@@ -77,7 +77,8 @@
                 <li class=""><a href="#tab_transaction" data-toggle="tab" aria-expanded="false">Transaction</a></li>
                 <li class=""><a href="#tab_writeOff" data-toggle="tab" aria-expanded="false">Write Off</a></li>
                 <li class=""><a href="#tab_restructure" data-toggle="tab" aria-expanded="false">Restructure</a></li>
-                <li class=""><a href="#tab_savingTransaction" data-toggle="tab" aria-expanded="false">Saving Transaction</a></li>
+                <li class=""><a href="#tab_savingTransaction" data-toggle="tab" aria-expanded="false">Saving
+                    Transaction</a></li>
                 <!--<li class=""><a href="#tab_summary" data-toggle="tab" aria-expanded="true">Summary</a></li>-->
             </ul>
             <div class="tab-content">
@@ -176,47 +177,50 @@
 <!--Index Summary-->
 <template name="Microfis_repaymentDetailSummary">
     <div class="row" style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
-        {{#with data}}
-            <div class="col-md-5">
-                <dl class="dl-horizontal">
-                    <dt>Loan Acc</dt>
-                    <dd>{{_id}} ({{accountType}})</dd>
-                    <dt>Submit Date</dt>
-                    <dd>{{moFormat submitDate "DD/MM/YYYY"}}</dd>
-                    <dt>Disburse Date</dt>
-                    <dd>{{moFormat disbursementDate "DD/MM/YYYY"}}</dd>
-                    <dt>Repaid Frequency</dt>
-                    <dd>{{repaidFrequency}} ({{paymentMethod}})</dd>
-                    <dt>Term</dt>
-                    <dd>{{term}}</dd>
-                    <dt>Loan Amount</dt>
-                    <dd>{{numFormat loanAmount "0,0.00"}} {{currencyId}}</dd>
-                </dl>
+
+                <div class="col-md-5">
+                    <dl class="dl-horizontal">
+                        <dt>Loan Acc</dt>
+                        <dd>{{data._id}} ({{data.accountType}})</dd>
+                        <dt>Submit Date</dt>
+                        <dd>{{moFormat data.submitDate "DD/MM/YYYY"}}</dd>
+                        <dt>Disburse Date</dt>
+                        <dd>{{moFormat data.disbursementDate "DD/MM/YYYY"}}</dd>
+
+                        <dt>Term</dt>
+                        <dd>{{data.term}}</dd>
+                        <dt>Loan Amount</dt>
+                        <dd>{{numFormat data.loanAmount "0,0.00"}} {{data.currencyId}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-5">
+                    <dl class="dl-horizontal">
+                        <dt>Repaid Frequency</dt>
+                        <dd>{{data.repaidFrequency}} ({{data.paymentMethod}})</dd>
+                        <dt>Principal Installment</dt>
+                        <dd>
+                            Frequency: {{data.principalInstallment.frequency}},
+                            Type: {{data.principalInstallment.calculateType}},
+                            Amount: {{numFormat data.principalInstallment.amount "0,0.00"}}
+                        </dd>
+                        <dt>Interest Method</dt>
+                        <dd>{{data.interestMethod}}</dd>
+                        <dt>Interest Rate</dt>
+                        <dd>{{numFormat data.interestRate "0,0.00"}}%</dd>
+                        <dt>Credit Officer</dt>
+                        <dd>{{data.creditOfficerDoc.khName}}</dd>
+                    </dl>
+                </div>
+
+
+            <div class="col-md-2">
+                <p class="pull-right ">
+                <h4 class="text-black">Principal Balance</h4>
+                <h2 class="text-blue text-center">{{data.currencyId}} {{numFormat  checkPayment.balanceUnPaid
+                                                                                   '0,0.00'}}</h2>
+                </p>
             </div>
-            <div class="col-md-5">
-                <dl class="dl-horizontal">
-                    <dt>Principal Installment</dt>
-                    <dd>
-                        Frequency: {{principalInstallment.frequency}},
-                        Type: {{principalInstallment.calculateType}},
-                        Amount: {{numFormat principalInstallment.amount "0,0.00"}}
-                    </dd>
-                    <dt>Interest Method</dt>
-                    <dd>{{interestMethod}}</dd>
-                    <dt>Interest Rate</dt>
-                    <dd>{{numFormat interestRate "0,0.00"}}%</dd>
-                    <dt>Credit Officer</dt>
-                    <dd>{{creditOfficerDoc.khName}}</dd>
-                </dl>
-            </div>
-        {{/with}}
-        <div class="col-md-2">
-            <p class="pull-right ">
-            <h4 class="text-black">Principal Balance</h4>
-            <h2 class="text-blue text-center">{{data.currencyId}} {{numFormat  checkPayment.balanceUnPaid
-                                                                               '0,0.00'}}</h2>
-            </p>
-        </div>
+
     </div>
 </template>
 

@@ -44,28 +44,14 @@ let formTmpl = Template.Microfis_repaymentClosingForm;
 
 //-------- General Form ------------
 formTmpl.onCreated(function () {
-    let currentData = Template.currentData(),
-        loanAccDoc = stateRepayment.get("loanAccDoc");
+    let currentData = Template.currentData();
 
     // Set min/max amount to simple schema
     let minMaxAmount;
-    switch (loanAccDoc.currencyId) {
-        case 'KHR':
-            minMaxAmount = 100;
-            break;
-        case 'USD':
-            minMaxAmount = 0.01;
-            break;
-        case 'THB':
-            minMaxAmount = 1;
-            break;
-    }
-    Session.set('minAmountPaid', minMaxAmount);
-    // Session.set('maxAmountPaid', minMaxAmount);
-    Session.set('maxPenaltyPaid', minMaxAmount);
 
     // Track autorun
     this.autorun(function () {
+        let loanAccDoc = stateRepayment.get("loanAccDoc");
 
 
         let repaidDate = stateRepayment.get('repaidDate');
@@ -92,6 +78,24 @@ formTmpl.onCreated(function () {
             let totalSavingBal = new BigNumber(0);
 
             if (loanAccDoc) {
+
+
+                switch (loanAccDoc.currencyId) {
+                    case 'KHR':
+                        minMaxAmount = 100;
+                        break;
+                    case 'USD':
+                        minMaxAmount = 0.01;
+                        break;
+                    case 'THB':
+                        minMaxAmount = 1;
+                        break;
+                }
+                Session.set('minAmountPaid', minMaxAmount);
+                // Session.set('maxAmountPaid', minMaxAmount);
+                Session.set('maxPenaltyPaid', minMaxAmount);
+
+
                 lookupLoanAcc.callPromise({
                     _id: loanAccDoc._id
                 }).then(function (result) {
@@ -106,62 +110,62 @@ formTmpl.onCreated(function () {
                         totalSavingBal = totalSavingBal.plus(data.details.principalBal).plus(data.details.interestBal);
                     }
                 });
-            }
 
 
-            // Call check repayment from method
-            checkRepayment.callPromise({
-                loanAccId: loanAccDoc._id,
-                checkDate: repaidDate
-            }).then(function (result) {
-                // Set state
-                stateRepayment.set('checkRepayment', result);
+                // Call check repayment from method
+                checkRepayment.callPromise({
+                    loanAccId: loanAccDoc._id,
+                    checkDate: repaidDate
+                }).then(function (result) {
+                    // Set state
+                    stateRepayment.set('checkRepayment', result);
 
-                // Set max amount on simple schema
-                let maxAmountPaid = new BigNumber(0);
-                let minAmountPaid = new BigNumber(0);
-
-
-                if (result && result.totalScheduleDue) {
-                    // maxAmountPaid = maxAmountPaid.plus(result.totalScheduleDue.totalPrincipalInterestDue);
-                    Session.set('maxPenaltyPaid', result.totalScheduleDue.penaltyDue);
+                    // Set max amount on simple schema
+                    let maxAmountPaid = new BigNumber(0);
+                    let minAmountPaid = new BigNumber(0);
 
 
-                }
-                // if (result && result.closing) {
-                //     maxAmountPaid = maxAmountPaid.plus(result.closing.totalDue);
-                // }
-                // if (maxAmountPaid.greaterThan(0)) {
-                //     Session.set('maxAmountPaid', maxAmountPaid.toNumber());
-                // }
+                    if (result && result.totalScheduleDue) {
+                        // maxAmountPaid = maxAmountPaid.plus(result.totalScheduleDue.totalPrincipalInterestDue);
+                        Session.set('maxPenaltyPaid', result.totalScheduleDue.penaltyDue);
 
-                if (result && result.closing) {
-                    minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal);
-                    Session.set('minAmountPaid', minAmountPaid.toNumber());
-                }
 
-                // Set last repayment
-                if (result.lastRepayment) {
-                    Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'),loanAccDoc._id, function (err, endDoc) {
-                        if (endDoc) {
-                            if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
-                                stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                    }
+                    // if (result && result.closing) {
+                    //     maxAmountPaid = maxAmountPaid.plus(result.closing.totalDue);
+                    // }
+                    // if (maxAmountPaid.greaterThan(0)) {
+                    //     Session.set('maxAmountPaid', maxAmountPaid.toNumber());
+                    // }
+
+                    if (result && result.closing) {
+                        minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal);
+                        Session.set('minAmountPaid', minAmountPaid.toNumber());
+                    }
+
+                    // Set last repayment
+                    if (result.lastRepayment) {
+                        Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
+                            if (endDoc) {
+                                if (moment(endDoc.closeDate).toDate().getTime() > moment(result.lastRepayment.repaidDate).toDate().getTime()) {
+                                    stateRepayment.set('lastTransactionDate', moment(endDoc.closeDate).startOf('day').add(1, "days").toDate());
+                                } else {
+                                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                                }
                             } else {
                                 stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
                             }
-                        } else {
-                            stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-                        }
-                    })
-                }
+                        })
+                    }
 
-                Meteor.setTimeout(() => {
-                    $.unblockUI();
-                }, 200);
+                    Meteor.setTimeout(() => {
+                        $.unblockUI();
+                    }, 200);
 
-            }).catch(function (err) {
-                console.log(err.message);
-            });
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
+            }
 
 
         } else {
@@ -239,6 +243,11 @@ formTmpl.helpers({
         if (data) {
             data.totalBal = data.details.interestBal + data.details.principalBal;
             return data;
+        }
+    },
+    loanAccId(){
+        if (stateRepayment.get('loanAccDoc')) {
+            return stateRepayment.get('loanAccDoc')._id;
         }
     }
 });
