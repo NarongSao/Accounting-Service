@@ -69,7 +69,7 @@ formTmpl.onCreated(function () {
         let transactionDate = state.get('transactionDate');
 
         if (transactionDate) {
-            $.blockUI();
+                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
             // Call check repayment from method
             checkSavingTransaction.callPromise({

@@ -87,7 +87,7 @@ indexTmpl.onCreated(function () {
     loanId.set(null);
 
 
-    // Default stat
+    // Default state
     stateRepayment.setDefault({
         loanAccDoc: null,
         scheduleDoc: null,
@@ -97,13 +97,23 @@ indexTmpl.onCreated(function () {
         disbursmentDate: null,
         isVoucherId: false
     });
+
     this.autorun(function () {
 
         let loanAccId = loanId.get();
         let payDate = stateRepayment.get('repaidDate');
         let minMaxAmount = 0.01;
+
+
         if (loanAccId && payDate) {
-            $.blockUI();
+            $.blockUI.defaults.overlayCSS= {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'};
+            $.blockUI({
+                overlayCSS: {
+                    backgroundColor: '#fff',
+                    opacity: 0.1,
+                    cursor: 'wait'
+                }
+            });
             let startDate = moment(payDate).startOf("year").toDate();
 
             // Get loan account doc
@@ -247,11 +257,6 @@ indexTmpl.helpers({
     isClose(){
         return formPayment.get("isClose");
 
-    },
-    defaultPaymentType(){
-        Meteor.setTimeout(function () {
-            return defaultPaymentType.get();
-        }, 500)
     }
 })
 
@@ -296,3 +301,12 @@ let clearFormPayment = function () {
 
 
 }
+
+// use a different message
+// $.blockUI({
+//     overlayCSS: {
+//         backgroundColor: '#fff',
+//         opacity: 0.1,
+//         cursor: 'wait'
+//     },
+// });

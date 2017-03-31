@@ -3,6 +3,10 @@
 
 
     {{#autoForm schema=schema id="Microfis_repaymentQuickForm"  target="normal" resetOnSuccess=false}}
+        <div class="box-header">
+            {{> Microfis_repaymentDetailSummary data=loanAccDoc checkPayment=checkPayment}}
+        </div>
+
         <div class="box-header animated fadeIn">
             <div class="row">
                 <div class="col-md-8">
@@ -15,9 +19,6 @@
 
         </div>
 
-        <div class="box-header">
-            {{> Microfis_repaymentDetailSummary data=loanAccDoc checkPayment=checkPayment}}
-        </div>
 
         {{#if isGeneral}}
             {{> Microfis_repaymentGeneralForm loanAccDoc=loanAccDoc}}

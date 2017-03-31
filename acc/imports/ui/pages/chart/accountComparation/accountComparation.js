@@ -195,7 +195,7 @@ if (Meteor.isClient) {
  indexTpl.helpers({
  createChartProfitLostComparation: function () {
  // Gather data:
- debugger;
+
 
  let selector = {};
  selector.year = moment().format("YYYY");

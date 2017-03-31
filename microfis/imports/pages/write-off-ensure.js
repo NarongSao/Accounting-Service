@@ -57,7 +57,7 @@ formTmpl.onCreated(function () {
         }
 
         if (loanAccDoc.productId) {
-            $.blockUI();
+                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
             lookupProduct.callPromise({
                 _id: loanAccDoc.productId
@@ -84,7 +84,7 @@ formTmpl.onCreated(function () {
             }
 
             if (disbursementDate) {
-                $.blockUI();
+                           $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
                 let currentData = Template.currentData();
                 stateRepayment.set('curData', currentData);

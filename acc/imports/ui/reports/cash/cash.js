@@ -58,7 +58,6 @@ reportTpl.onCreated(function () {
     createNewAlertify('acc_cashReport');
     this.autorun(() => {
 
-        debugger;
         // Check form data
         if (formDataState.get()) {
             rptInitState.set(true);
@@ -139,7 +138,6 @@ reportTpl.onDestroyed(function () {
 // hook
 let hooksObject = {
     onSubmit: function (insertDoc, updateDoc, currentDoc) {
-        debugger;
         this.event.preventDefault();
         formDataState.set(null);
 

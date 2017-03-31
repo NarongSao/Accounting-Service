@@ -90,7 +90,7 @@ MakeSchedule.declinig = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: loanAccDoc.disbursementDate,
+                dueDate: moment(loanAccDoc.disbursementDate, "DD/MM/YYYY").startOf("days").toDate(),
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
@@ -108,7 +108,7 @@ MakeSchedule.declinig = new ValidatedMethod({
                 dueDate = findDueDate({
                     installment: i,
                     disbursementDate: loanAccDoc.disbursementDate,
-                    previousDate: previousLine.dueDate,
+                    previousDate: moment(previousLine.dueDate, "DD/MM/YYYY").startOf('days').toDate(),
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
                     escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
@@ -121,7 +121,7 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = moment(loanAccDoc.firstRepaymentDate).toDate();
+                    dueDate = moment(loanAccDoc.firstRepaymentDate, "DD/MM/YYYY").startOf("days").toDate();
                 }
 
 
@@ -168,7 +168,6 @@ MakeSchedule.declinig = new ValidatedMethod({
         }
     }
 });
-
 
 
 MakeSchedule.annuity = new ValidatedMethod({
@@ -221,7 +220,7 @@ MakeSchedule.annuity = new ValidatedMethod({
             // Schedule for first line
             schedules.push({
                 installment: 0,
-                dueDate: loanAccDoc.disbursementDate,
+                dueDate: moment(loanAccDoc.disbursementDate, "DD/MM/YYYY").startOf("days").toDate(),
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
@@ -240,7 +239,7 @@ MakeSchedule.annuity = new ValidatedMethod({
                 dueDate = findDueDate({
                     installment: i,
                     disbursementDate: loanAccDoc.disbursementDate,
-                    previousDate: previousLine.dueDate,
+                    previousDate: moment(previousLine.dueDate, "DD/MM/YYYY").startOf("days").toDate(),
                     repaidFrequency: loanAccDoc.repaidFrequency,
                     addingTime: addingTime,
                     escapeDayMethod: loanAccDoc.escapeDayMethod, // Non, GR, AN
@@ -254,7 +253,7 @@ MakeSchedule.annuity = new ValidatedMethod({
 
                 // Check first repayment date
                 if (i == 1 && loanAccDoc.firstRepaymentDate) {
-                    dueDate = moment(loanAccDoc.firstRepaymentDate, "DD/MM/YYYY").toDate();
+                    dueDate = moment(loanAccDoc.firstRepaymentDate, "DD/MM/YYYY").startOf("days").toDate();
                 }
 
 

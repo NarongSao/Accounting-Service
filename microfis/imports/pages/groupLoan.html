@@ -1,0 +1,85 @@
+<!--Index-->
+<template name="Microfis_groupLoan">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        {{> tabular table=tabularTable selector=tabularSelector class="table table-striped table-bordered table-condensed table-hover-pointer"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Microfis_groupLoanAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Insert-->
+<template name="Microfis_groupLoanNew">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_groupLoanNew" type="insert"}}
+            <div class="container-fluid ">
+                <div class="row">
+
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="code"}}
+                    {{> afQuickField name="date"}}
+                    {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+
+                    <label>Loan Account</label>
+                    <div class="col-md-12">
+                        {{> microfis_groupLoanDetail groupLoanDetailCollection=groupLoanDetailCollection loan=this.loan}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            </div>
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Update-->
+<template name="Microfis_groupLoanEdit">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_groupLoanEdit" doc=this type="update"}}
+            <div class="container-fluid ">
+                <div class="row">
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="code"}}
+                    {{> afQuickField name="date"}}
+                    {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+                    <label>Loan Account</label>
+                    <div class="col-md-12">
+                        {{> microfis_groupLoanDetail groupLoanDetailCollection=groupLoanDetailCollection loan=this.loan}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            </div>
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Microfis_groupLoanShow">
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Id</dt>
+            <dd>{{_id}}</dd>
+            <dt>Name</dt>
+            <dd>{{name}}</dd>
+            <dt>Calculate Type</dt>
+            <dd>{{calculateType}}</dd>
+            <dt>Amount on microfis disburse (USD/%)</dt>
+            <dd>{{numFormat amount "0,0.00"}}</dd>
+        </dl>
+    </div>
+</template>

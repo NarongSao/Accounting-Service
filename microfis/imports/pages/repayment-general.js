@@ -44,7 +44,7 @@ let formTmpl = Template.Microfis_repaymentGeneralForm;
 formTmpl.onCreated(function () {
     let currentData = Template.currentData(),
         loanAccDoc = stateRepayment.get("loanAccDoc");
-
+    let isBlock = false;
 
     // Set min/max amount to simple schema
     let minMaxAmount = 0.01;
@@ -83,7 +83,14 @@ formTmpl.onCreated(function () {
             }
 
             if (repaidDate) {
-                $.blockUI();
+
+                if (isBlock == false) {
+                    $.blockUI({
+                        onBlock: function () {
+                            isBlock = true;
+                        }
+                    });
+                }
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({
@@ -205,7 +212,7 @@ formTmpl.helpers({
         return stateRepayment.get('lastVoucherId');
     },
     loanAccId(){
-        if(stateRepayment.get('loanAccDoc')){
+        if (stateRepayment.get('loanAccDoc')) {
             return stateRepayment.get('loanAccDoc')._id;
         }
     }
@@ -263,16 +270,16 @@ let hooksObject = {
                 alertify.warning("You already write off!!!");
                 return false;
             }
- checkRepayment.callPromise({
-                        loanAccId: curDoc.loanAccDoc._id,
-                        checkDate: stateRepayment.get('repaidDate')
-                    }).then(function (result) {
-                        // Set state
-                        stateRepayment.set('checkRepayment', result);
+            checkRepayment.callPromise({
+                loanAccId: curDoc.loanAccDoc._id,
+                checkDate: stateRepayment.get('repaidDate')
+            }).then(function (result) {
+                // Set state
+                stateRepayment.set('checkRepayment', result);
 
-                    }).catch(function (err) {
-                        console.log(err.message);
-                    });
+            }).catch(function (err) {
+                console.log(err.message);
+            });
             doc.type = 'General';
 
             // Check to payment

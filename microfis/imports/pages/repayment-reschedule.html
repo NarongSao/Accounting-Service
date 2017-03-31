@@ -113,23 +113,18 @@
                 {{#autoForm collection=collection id="Microfis_rescheduleForm" type="insert"}}
                     {{> afQuickField type="hidden" name="loanAccId" value=loanAccId readonly=true}}
 
+
+                    {{> afQuickField name="repaidDate"}}
+
+                    {{#with defaultValue}}
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField name="repaidDate"}}
+                                {{> afQuickField name="amountPaid" value=totalDue}}
                             </div>
                             <div class="col-md-6">
-                                {{> afQuickField name="amountType"}}
+                                {{> afQuickField name="penaltyPaid" value=totalPenalty}}
                             </div>
                         </div>
-                    {{#with defaultValue}}
-                            <div class="row">
-                                <div class="col-md-6">
-                                    {{> afQuickField name="amountPaid" value=totalDue}}
-                                </div>
-                                <div class="col-md-6">
-                                    {{> afQuickField name="penaltyPaid" value=totalPenalty}}
-                                </div>
-                            </div>
                     {{/with}}
 
                     {{> afQuickField name="voucherId"  value=voucherId}}

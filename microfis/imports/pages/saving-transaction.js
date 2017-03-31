@@ -61,7 +61,7 @@ indexTmpl.onCreated(function () {
         let savingAccId = FlowRouter.getParam('savingAccId');
 
         if (savingAccId) {
-            $.blockUI();
+                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
             // Get disbursement doc
             lookupSavingAcc.callPromise({

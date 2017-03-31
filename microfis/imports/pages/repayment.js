@@ -97,7 +97,7 @@ indexTmpl.onCreated(function () {
     let loanAccId = FlowRouter.getParam('loanAccId');
     this.autorun(function () {
         if (loanAccId) {
-            $.blockUI();
+                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
             // Get loan account doc
             lookupLoanAcc.callPromise({
                 _id: loanAccId
@@ -346,7 +346,7 @@ indexTmpl.events({
 
     'click .js-reStructure' (event, instance) {
 
-        // $.blockUI();
+        //            $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
         let data = {
             loanAccDoc: stateRepayment.get('loanAccDoc'),
             scheduleDoc: stateRepayment.get('scheduleDoc'),

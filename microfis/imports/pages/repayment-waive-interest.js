@@ -76,7 +76,7 @@ formTmpl.onCreated(function () {
         let repaidDate = state.get('repaidDate');
 
         if (repaidDate) {
-            $.blockUI();
+                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
             // Call check repayment from method
             checkRepayment.callPromise({

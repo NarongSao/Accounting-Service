@@ -128,7 +128,7 @@ showTmpl.onCreated(function () {
     this.autorun(()=> {
         let currentData = Template.currentData();
 
-        $.blockUI();
+                   $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
         lookupLocation.callPromise({
             locationId: currentData.locationId

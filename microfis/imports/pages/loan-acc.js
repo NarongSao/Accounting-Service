@@ -100,7 +100,7 @@ indexTmpl.events({
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
-        $.blockUI();
+                   $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
         let self = this;
         state.set("disbursmentDate", self.disbursementDate);
@@ -176,7 +176,7 @@ productFormTmpl.events({
         Session.set('productDoc', null);
 
         if (productId) {
-            $.blockUI();
+                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
 
             lookupProduct.callPromise({
                 _id: productId

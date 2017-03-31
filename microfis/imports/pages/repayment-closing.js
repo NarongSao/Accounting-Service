@@ -48,7 +48,7 @@ formTmpl.onCreated(function () {
 
     // Set min/max amount to simple schema
     let minMaxAmount;
-
+    let isBlock = false;
     // Track autorun
     this.autorun(function () {
         let loanAccDoc = stateRepayment.get("loanAccDoc");
@@ -73,7 +73,14 @@ formTmpl.onCreated(function () {
 
 
         if (repaidDate) {
-            $.blockUI();
+
+            if (isBlock == false) {
+                $.blockUI({
+                    onBlock: function () {
+                        isBlock = true;
+                    }
+                });
+            }
 
             let totalSavingBal = new BigNumber(0);
 
@@ -212,7 +219,7 @@ formTmpl.helpers({
             totalDue = totalDue.plus(checkRepayment.totalScheduleDue.totalPrincipalInterestDue);
         }
 
-        if (checkRepayment && checkRepayment.closing) {
+        if (checkRepayment && checkRepayment.closing && data) {
             totalDue = totalDue.plus(checkRepayment.closing.totalDue).minus(data.details.principalBal).minus(data.details.interestBal);
         }
 

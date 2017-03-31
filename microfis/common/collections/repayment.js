@@ -35,7 +35,7 @@ Repayment.schema = new SimpleSchema({
         label: 'Type',
         allowedValues: ['General', 'Prepay', 'Reschedule', 'Waive-interest', 'Close', 'Restructure', 'Write Off', "Fee"]
     },
-    amountType: {
+    /*amountType: {
         type: String,
         label: 'Payment By',
         autoform: {
@@ -48,7 +48,7 @@ Repayment.schema = new SimpleSchema({
                 ];
             }
         }
-    },
+    },*/
     amountPaid: {
         type: Number,
         label: 'Amount',

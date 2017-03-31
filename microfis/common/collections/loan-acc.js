@@ -254,6 +254,11 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: String,
         optional: true,
         defaultValue: ""
+    },
+    isAddToGroup: {
+        type: Boolean,
+        optional: true,
+        defaultValue: false
     }
 });
 

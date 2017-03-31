@@ -308,6 +308,41 @@ MicrofisRoutes.route('/repaymentQuickForm', {
     }
 });
 
+
+// Group Loan
+import '../imports/pages/groupLoan';
+MicrofisRoutes.route('/groupLoan', {
+    name: 'microfis.groupLoan',
+    title: 'Group Loan',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_groupLoan');
+    },
+    breadcrumb: {
+
+        //queryParams: ['show', 'color'],
+        title: 'Group Loan',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
+// Change CO
+// import '../imports/pages/changeCO';
+MicrofisRoutes.route('/changeCO', {
+    name: 'microfis.changeCO',
+    title: 'Change CO',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_changeCO');
+    },
+    breadcrumb: {
+
+        //queryParams: ['show', 'color'],
+        title: 'Change CO',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
 /**********************
  * Saving
  *********************/

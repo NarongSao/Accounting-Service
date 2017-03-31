@@ -55,13 +55,17 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             title: "Status", data: "status", render(val, type, doc){
             if (val == "Close") {
                 return `<span class="badge bg-orange-active"><i class="fa fa-heart-o"></i> ${val} </span>`;
+            } else if (val == "Write Off") {
+                return `<span class="badge bg-red-active"><i class="fa fa-heart-o"></i> ${val} </span>`;
+            } else if (val == "Restructure") {
+                return `<span class="badge badge-warning"><i class="fa fa-heart-o"></i> ${val} </span>`;
             }
             return `<span class="badge bg-teal-active"><i class="fa fa-heart"></i> ${val} </span>`;
         }
         }
 
     ],
-    extraFields: ['currencyId','parentId','paymentNumber','savingAccId'],
+    extraFields: ['currencyId', 'parentId', 'paymentNumber', 'savingAccId'],
     columnDefs: [{"width": "12px", targets: 0}, {"width": "20px", targets: 6}],
 });
 

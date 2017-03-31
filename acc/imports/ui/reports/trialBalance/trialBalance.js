@@ -68,7 +68,6 @@ let rptDataStateForAllCurrency = new ReactiveVar(null);
 reportTpl.onCreated(function () {
     createNewAlertify(['acc_trialBalanceReport']);
     this.autorun(() => {
-        debugger;
         // Check form data
         if (formDataState.get()) {
             rptInitState.set(true);
@@ -129,7 +128,6 @@ tmplPrintData.helpers({
 
 tmplPrintForAllData.helpers({
     rptInit(){
-        debugger;
         if (rptInitStateForAllCurrency.get() == true) {
             return rptInitStateForAllCurrency.get();
         } else {
@@ -137,7 +135,6 @@ tmplPrintForAllData.helpers({
         }
     },
     rptData: function () {
-        debugger;
         return rptDataStateForAllCurrency.get();
     }
 });
@@ -198,7 +195,6 @@ tmplPrintForAllData.events({
 
 reportTpl.events({
     'click .run ': function (e, t) {
-        debugger;
         let result = {};
         result.branchId = $('[name="branchId"]').val();
         result.date = $('[name="date"]').val();
@@ -252,7 +248,6 @@ reportTpl.onDestroyed(function () {
 // hook
 let hooksObject = {
     onSubmit: function (insertDoc, updateDoc, currentDoc) {
-        debugger;
         this.event.preventDefault();
         formDataState.set(null);
 

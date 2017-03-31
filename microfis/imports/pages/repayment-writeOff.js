@@ -51,7 +51,7 @@ formTmpl.onCreated(function () {
     // Set min/max amount to simple schema
     let minMaxAmount;
 
-
+    let isBlock = false;
     // Track autorun
     this.autorun(function () {
         let repaidDate = stateRepayment.get('repaidDate'),
@@ -89,7 +89,14 @@ formTmpl.onCreated(function () {
             }
 
             if (repaidDate) {
-                $.blockUI();
+
+                if (isBlock == false) {
+                    $.blockUI({
+                        onBlock: function () {
+                            isBlock = true;
+                        }
+                    });
+                }
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({
