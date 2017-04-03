@@ -234,9 +234,12 @@ let hooksObject = {
         }
     },
     onSuccess (formType, result) {
+        debugger;
         stateRepayment.set("feeAmount", 3);
         alertify.fee().close();
+
         displaySuccess();
+        Session.set("resetQuickPayment",true);
     },
     onError (formType, error) {
         displayError(error.message);

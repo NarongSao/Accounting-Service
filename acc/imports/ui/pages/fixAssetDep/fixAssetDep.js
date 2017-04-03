@@ -74,7 +74,7 @@ fixAssetDepTpl.events({
     },
     'click .fixedAssetSummaryDepreciation': function (e, t) {
 
-        alertify.fixAssetDep(fa("plus", "Exchange"), renderTemplate(exchangeForFixAssetTpl)).minimize();
+        alertify.fixAssetDep(fa("plus", "Exchange"), renderTemplate(exchangeForFixAssetTpl));
     }
 });
 

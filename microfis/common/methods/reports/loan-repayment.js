@@ -104,6 +104,15 @@ export const loanRepaymentReport = new ValidatedMethod({
 
             //Param
             let selector = {};
+
+
+
+            if (params.coType == "Only") {
+                selector.changeCOId = "";
+            } else if (params.coType == "Transfer") {
+                selector.changeCOId = {$ne: ""};
+            }
+
             if (params.branchId && params.branchId.includes("All") == false) {
                 selector.branchId = {$in: params.branchId};
                 let branchList = Branch.find({_id: {$in: params.branchId}}, {
@@ -385,7 +394,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                             {$unwind: '$repaymentDoc.detail'},
                             {$match: {"repaymentDoc.detail.repaymentId": repaymentObj._id}}
                         ])
-
 
                         let checkClassify = true;
                         if (params.classifyId && params.classifyId.includes("All") == false) {

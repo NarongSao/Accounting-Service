@@ -270,16 +270,7 @@ let hooksObject = {
                 alertify.warning("You already write off!!!");
                 return false;
             }
-            checkRepayment.callPromise({
-                loanAccId: curDoc.loanAccDoc._id,
-                checkDate: stateRepayment.get('repaidDate')
-            }).then(function (result) {
-                // Set state
-                stateRepayment.set('checkRepayment', result);
 
-            }).catch(function (err) {
-                console.log(err.message);
-            });
             doc.type = 'General';
 
             // Check to payment
@@ -318,6 +309,7 @@ let hooksObject = {
         }).catch(function (err) {
             console.log(err.message);
         });
+        Session.set("resetQuickPayment", true);
     },
     onError (formType, error) {
         displayError(error.message);

@@ -2,7 +2,7 @@
 <template name="Microfis_repaymentQuickForm">
 
 
-    {{#autoForm schema=schema id="Microfis_repaymentQuickForm"  target="normal" resetOnSuccess=false}}
+    {{#autoForm schema=schema id="Microfis_repaymentQuickForm"  target="normal"}}
         <div class="box-header">
             {{> Microfis_repaymentDetailSummary data=loanAccDoc checkPayment=checkPayment}}
         </div>
@@ -10,7 +10,7 @@
         <div class="box-header animated fadeIn">
             <div class="row">
                 <div class="col-md-8">
-                    {{> afQuickField name="clientAccId" type="select2" options=clientAccOpt}}
+                    {{> afQuickField name="clientAccId" type="select2" options=clientAccOpt value=""}}
                 </div>
                 <div class="col-md-4">
                     {{> afQuickField name="paymentType" type="select2" options=paymentTypeOpt value=""}}

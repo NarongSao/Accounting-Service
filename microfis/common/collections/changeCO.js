@@ -3,13 +3,15 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 // Lib
 import {SelectOpts} from '../../imports/libs/select-opts.js';
+import {SelectOptsReport} from '../../imports/libs/select-opts.js';
+
 
 export const ChangeCO = new Mongo.Collection("microfis_changeCO");
 
 ChangeCO.schema = new SimpleSchema({
     date: {
         type: Date,
-        label: 'Create date',
+        label: 'Transfer date',
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
@@ -22,14 +24,39 @@ ChangeCO.schema = new SimpleSchema({
         }
     },
     fromCO: {
-        type: String
+        type: String,
+        label: 'From CO',
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOptsReport.creditOfficer();
+            }
+        }
+    },
+    fromCODOc: {
+        type: Object,
+        optional: true
     },
     toCO: {
-        type: String
+        type: String,
+        label: 'To CO',
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOptsReport.creditOfficer();
+            }
+        }
     },
-
+    toCODOc: {
+        type: Object,
+        optional: true
+    },
     branchId: {
         type: String
+    },
+    description: {
+        type: String,
+        optional: true
     },
     location: {
         type: Array,
@@ -38,16 +65,24 @@ ChangeCO.schema = new SimpleSchema({
     'location.$': {
         type: Object
     },
-    'location.$.id': {
+    'location.$.locationId': {
         type: String,
         label: "Location"
+    },
+    'location.$.locationName': {
+        type: String,
+        optional: true
     }
 });
 
-ChangeCO.groupLoanDetail = new SimpleSchema({
+ChangeCO.changeCODetail = new SimpleSchema({
     locationId: {
         type: String,
         label: "Location"
+    },
+    locationName: {
+        type: String,
+        label: "Location Name"
     }
 });
 

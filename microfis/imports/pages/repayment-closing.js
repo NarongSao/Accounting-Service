@@ -365,7 +365,7 @@ let hooksObject = {
         }).catch(function (err) {
             console.log(err.message);
         });
-
+        Session.set("resetQuickPayment",true);
         displaySuccess();
     },
     onError (formType, error) {

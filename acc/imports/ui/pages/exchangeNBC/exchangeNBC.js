@@ -58,14 +58,12 @@ updateTpl.events({
 
 indexTpl.events({
     'click .insert': function (e, t) {
-        alertify.exchangeNBC(fa("plus", "Exchange"), renderTemplate(insertTpl))
-            .minimize();
+        alertify.exchangeNBC(fa("plus", "Exchange"), renderTemplate(insertTpl));
     },
     'click .update': function (e, t) {
         var data = ExchangeNBC.findOne(this._id);
         alertify.exchangeNBC(fa("pencil", "Exchange"), renderTemplate(
-            updateTpl, data))
-            .minimize();
+            updateTpl, data));
     },
     'click .remove': function (e, t) {
         var id = this._id;

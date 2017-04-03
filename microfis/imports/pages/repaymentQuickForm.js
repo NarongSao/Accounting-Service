@@ -61,7 +61,7 @@ let indexTmpl = Template.Microfis_repaymentQuickForm;
 
 let clientAccOpt = new ReactiveVar([]);
 let paymentTypeOpt = new ReactiveVar([]);
-let loanId = new ReactiveVar();
+loanId = new ReactiveVar();
 let defaultPaymentType = new ReactiveVar();
 let isChange = new ReactiveVar();
 
@@ -78,6 +78,12 @@ indexTmpl.onCreated(function () {
     stateRepayment.set('loanAccDoc', null);
 
     this.autorun(function () {
+        if (Session.get("resetQuickPayment") == true) {
+            $("[name='clientAccId']").trigger("change").val("");
+            $("[name='paymentType']").trigger("change").val("");
+            Session.set("resetQuickPayment", false);
+        }
+
         Meteor.call("microfis_clientAccOpt", Session.get("currentBranch"), function (err, result) {
             if (result) {
                 clientAccOpt.set(result);
@@ -106,7 +112,7 @@ indexTmpl.onCreated(function () {
 
 
         if (loanAccId && payDate) {
-            $.blockUI.defaults.overlayCSS= {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'};
+            $.blockUI.defaults.overlayCSS = {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'};
             $.blockUI({
                 overlayCSS: {
                     backgroundColor: '#fff',
@@ -256,7 +262,6 @@ indexTmpl.helpers({
     },
     isClose(){
         return formPayment.get("isClose");
-
     }
 })
 

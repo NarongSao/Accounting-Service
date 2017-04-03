@@ -327,7 +327,7 @@ MicrofisRoutes.route('/groupLoan', {
 });
 
 // Change CO
-// import '../imports/pages/changeCO';
+import '../imports/pages/changeCO';
 MicrofisRoutes.route('/changeCO', {
     name: 'microfis.changeCO',
     title: 'Change CO',

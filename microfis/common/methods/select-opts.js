@@ -80,7 +80,7 @@ SelectOptMethods.location = new ValidatedMethod({
             data.forEach(function (value) {
                 let label = `${value.code} : `;
                 if (_.compact(value.ancestorsDoc).length > 0) {
-                    _.forEach(value.ancestorsDoc, (o)=> {
+                    _.forEach(value.ancestorsDoc, (o) => {
                         label += o + ', ';
                     })
                 }
@@ -414,10 +414,12 @@ SelectOptMethods.loanAcc = new ValidatedMethod({
 //Location For Report
 
 Meteor.methods({
-    locationForReport(){
+    locationForReport(isNotSelectAll){
         if (!this.isSimulation) {
             var list = [];
-            list.push({label: "(Select All)", value: "All"});
+            if (isNotSelectAll == undefined) {
+                list.push({label: "(Select All)", value: "All"});
+            }
             let data = Location.aggregate([
                 {
                     $match: {type: "V"}
@@ -451,7 +453,7 @@ Meteor.methods({
             data.forEach(function (value) {
                 let label = `${value.code} : `;
                 if (_.compact(value.ancestorsDoc).length > 0) {
-                    _.forEach(value.ancestorsDoc, (o)=> {
+                    _.forEach(value.ancestorsDoc, (o) => {
                         label += o + ', ';
                     })
                 }

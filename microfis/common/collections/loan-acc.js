@@ -259,6 +259,16 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: Boolean,
         optional: true,
         defaultValue: false
+    },
+    changeCOId: {
+        type: String,
+        optional: true,
+        defaultValue: ""
+    },
+    transferNumber: {
+        type: Number,
+        optional: true,
+        defaultValue: 0
     }
 });
 

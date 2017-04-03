@@ -6,6 +6,7 @@ import {LoanAcc} from '../../../microfis/common/collections/loan-acc';
 Meteor.methods({
     microfis_clientAccOpt: function (branchId) {
         let arr = [];
+        arr.push({label: "(Select One)", value: ""});
         // let loanList = LoanAcc.find({branchId: branchId, status: {$ne: "Close"}}).fetch();
         let loanList = LoanAcc.aggregate([
             {$match: {branchId: branchId, status: {$nin: ["Close", "Restructure"]}}},
@@ -31,6 +32,7 @@ Meteor.methods({
     microfis_clientAccGroupOpt: function (branchId) {
         let arr = [];
         // let loanList = LoanAcc.find({branchId: branchId, status: {$ne: "Close"}}).fetch();
+        arr.push({label: "(Select One)", value: ""});
         let loanList = LoanAcc.aggregate([
             {
                 $match: {

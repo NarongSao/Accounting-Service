@@ -296,6 +296,8 @@ let hooksObject = {
     onSuccess (formType, result) {
         alertify.repayment().close();
         displaySuccess();
+        Session.set("resetQuickPayment",true);
+
     },
     onError (formType, error) {
         displayError(error.message);

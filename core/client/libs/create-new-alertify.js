@@ -47,6 +47,9 @@ export const createNewAlertify = function (names, options) {
                             if (options.size == 'lg') {
                                 this.elements.dialog.style.maxWidth = 'none';
                                 this.elements.dialog.style.width = '85%';
+                            }else if (options.size == 'md') {
+                                this.elements.dialog.style.maxWidth = 'none';
+                                this.elements.dialog.style.width = '40%';
                             }
                         },
                         onclose: function () {

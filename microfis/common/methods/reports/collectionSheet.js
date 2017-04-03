@@ -68,6 +68,8 @@ export const collectionSheetReport = new ValidatedMethod({
             header.paymentMethod = "All";
 
 
+
+
             /****** Content *****/
 
 
@@ -97,6 +99,15 @@ export const collectionSheetReport = new ValidatedMethod({
 
             //Param
             let selector = {};
+
+
+            if (params.coType == "Only") {
+                selector.changeCOId = "";
+            } else if (params.coType == "Transfer") {
+                selector.changeCOId = {$ne: ""};
+            }
+
+
             if (params.branchId && params.branchId.includes("All") == false) {
                 selector.branchId = {$in: params.branchId};
                 let branchList = Branch.find({_id: {$in: params.branchId}}, {

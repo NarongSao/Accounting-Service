@@ -88,7 +88,7 @@ indexTmpl.onCreated(function () {
         loanAccDoc: null,
         scheduleDoc: null,
         lastTransactionDate: null,
-        repaidDate: null,
+        repaidDate: moment().toDate(),
         checkRepayment: null,
         disbursmentDate: null,
         isVoucherId: false
@@ -97,7 +97,7 @@ indexTmpl.onCreated(function () {
     let loanAccId = FlowRouter.getParam('loanAccId');
     this.autorun(function () {
         if (loanAccId) {
-                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+            $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
             // Get loan account doc
             lookupLoanAcc.callPromise({
                 _id: loanAccId
@@ -374,9 +374,9 @@ indexTmpl.events({
                         loanAccId: loanAccDoc._id
                     }).then(function (doc) {
                         /*if (loanAccDoc.status !== "Active") {
-                            alertify.warning("Not in Active Status!!!!!!!!");
-                            return false;
-                        }*/
+                         alertify.warning("Not in Active Status!!!!!!!!");
+                         return false;
+                         }*/
 
                         if (doc.repaidDate.getTime() == self.repaidDate.getTime()) {
                             swal({

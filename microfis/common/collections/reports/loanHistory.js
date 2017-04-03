@@ -47,5 +47,22 @@ export const LoanHistorySchema = new SimpleSchema({
             }
         }
 
+    },
+    coType:{
+        type: String,
+        label: "CO Type",
+        defaultValue: "Only",
+        autoform: {
+            type: "select2",
+            options: function () {
+                let coType=[];
+                coType.push(
+                    {label: "Only",value: "Only"},
+                    {label: "Transfer",value: "Transfer"},
+                    {label: "All",value: "All"}
+                )
+                return coType;
+            }
+        }
     }
 });
