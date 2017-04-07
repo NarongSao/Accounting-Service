@@ -91,6 +91,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>
+                                    <th>Pro FeeOnPayment</th>
                                     
                                     <th>Col Date</th>
                                     <th>Status</th>
@@ -327,6 +328,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectFeeOnPayment)}</td>
                          
                                 <td> ${microfis_formatDate(loanAccDoc.feeDate)}</td>
                                 <td> Fee</td>
@@ -357,24 +359,24 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                     params.exchangeId
                 );
             content += `<tr>
-                            <td colspan="11" align="right">Subtotal-KHR</td>
+                            <td colspan="12" align="right">Subtotal-KHR</td>
     
                             <td>${microfis_formatNumber(totalFeeKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" align="right">Subtotal-USD</td>
+                            <td colspan="12" align="right">Subtotal-USD</td>
                       
                             <td>${microfis_formatNumber(totalFeeUSD)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="11" align="right">Subtotal-THB</td>
+                            <td colspan="12" align="right">Subtotal-THB</td>
                          
                             <td>${microfis_formatNumber(totalFeeTHB)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="11" align="right">Total-${baseCurrency}</td>
+                            <td colspan="12" align="right">Total-${baseCurrency}</td>
                       
                             <td>${microfis_formatNumber(totalFeeBase)}</td>
 

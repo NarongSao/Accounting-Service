@@ -105,7 +105,7 @@ indexTmpl.onCreated(function () {
                 stateRepayment.set('loanAccDoc', result);
                 stateRepayment.set('lastTransactionDate', result.disbursementDate);
                 stateRepayment.set("feeAmount", result.feeAmount);
-                stateRepayment.set("isChargFee", result.feeDoc.amount);
+                stateRepayment.set("isChargFee", result.totalFeeOnDisburment);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -121,10 +121,10 @@ indexTmpl.onCreated(function () {
                 checkDate: moment().toDate()
             }).then(function (result) {
                 // Set state
-                stateRepayment.set('checkRepayment', result);
-
-                stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
-
+                if (result) {
+                    stateRepayment.set('checkRepayment', result);
+                    stateRepayment.set('lastTransactionDate', result.lastRepayment.repaidDate);
+                }
                 Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
@@ -178,7 +178,6 @@ indexTmpl.helpers({
         };
     },
     tabularSavingTransaction() {
-        debugger;
         let selector = {savingAccId: FlowRouter.getParam('savingAccId')};
         return {
             tabularTable: SavingTransactionTabular,

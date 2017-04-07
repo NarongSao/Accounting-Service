@@ -85,11 +85,15 @@
                             <div class="col-md-12">
                                 {{> afQuickField name="interestMethod"}}
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 {{> afQuickField name="interestRate.min" label=true}}
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 {{> afQuickField name="interestRate.max" label=true}}
+                            </div>
+
+                            <div class="col-md-12">
+                                {{> afQuickField name="interestRate.defaultRate" label=true}}
                             </div>
                         </div>
                     </fieldset>
@@ -102,11 +106,16 @@
                                 {{> afQuickField name="feeId"}}
                             </div>
                             <div class="col-md-12">
-                                {{> afQuickField name="penaltyId"}}
+                                {{> afQuickField name="feeOnPaymentId"}}
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                {{> afQuickField name="penaltyId"}}
+
+                            </div>
+                            <div class="col-md-6">
                                 {{> afQuickField name="penaltyClosingId"}}
                             </div>
+
                         </div>
                     </fieldset>
                 </div>

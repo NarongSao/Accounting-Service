@@ -10,6 +10,7 @@ Meteor.startup(function () {
             {
                 "_id": "001",
                 "name": "Fee 1%",
+                "feeTypeOf": "P",
                 "calculateType": "P",
                 "amount": 1
             },
@@ -17,6 +18,7 @@ Meteor.startup(function () {
             {
                 "_id": "002",
                 "name": "Fee 4$",
+                "feeTypeOf": "P",
                 "calculateType": "A",
                 "amount": 5
             }

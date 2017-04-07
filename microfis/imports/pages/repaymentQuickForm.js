@@ -129,7 +129,7 @@ indexTmpl.onCreated(function () {
                 stateRepayment.set('loanAccDoc', result);
                 stateRepayment.set('lastTransactionDate', result.disbursementDate);
                 stateRepayment.set("feeAmount", result.feeAmount);
-                stateRepayment.set("isChargFee", result.feeDoc.amount);
+                stateRepayment.set("isChargFee", result.totalFeeOnDisburment);
 
                 if (isChange.get() == true) {
                     paymentTypeOpt.set([]);

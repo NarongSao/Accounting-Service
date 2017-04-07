@@ -97,6 +97,7 @@ export let checkRepayment = new ValidatedMethod({
 
                 let principalDue = o.principalDue,
                     interestDue = o.interestDue,
+                    feeOnPaymentDue = o.feeOnPaymentDue,
                     totalPrincipalInterestDue = o.totalDue;
 
 
@@ -119,6 +120,7 @@ export let checkRepayment = new ValidatedMethod({
                     if (maxRepaidOnDetail) {
                         principalDue = maxRepaidOnDetail.principalBal;
                         interestDue = maxRepaidOnDetail.interestBal;
+                        feeOnPaymentDue = maxRepaidOnDetail.feeOnPaymentBal;
                         totalPrincipalInterestDue = maxRepaidOnDetail.totalPrincipalInterestBal;
                     }
                 } // detail on repayment doc don't exist
@@ -162,6 +164,7 @@ export let checkRepayment = new ValidatedMethod({
                         numOfDayLate: numOfDayLate,
                         principal: principalDue,
                         interest: interestDue,
+                        feeOnPayment: feeOnPaymentDue,
                         totalPrincipalInterest: totalPrincipalInterestDue,
                         penalty: penaltyDue,
                         totalAmount: totalAmountDue
@@ -199,6 +202,7 @@ export let checkRepayment = new ValidatedMethod({
 
                 result.principalDue = round2(result.principalDue + val.currentDue.principal, _round.precision, _round.type);
                 result.interestDue = round2(result.interestDue + val.currentDue.interest, _round.precision, _round.type);
+                result.feeOnPaymentDue = round2(result.feeOnPaymentDue + val.currentDue.feeOnPayment, _round.precision, _round.type);
                 result.totalPrincipalInterestDue = round2(result.totalPrincipalInterestDue + val.currentDue.totalPrincipalInterest, _round.precision, _round.type);
                 result.penaltyDue = round2(result.penaltyDue + val.currentDue.penalty, _round.precision, _round.type);
                 result.totalAmountDue = round2(result.totalAmountDue + val.currentDue.totalAmount, _round.precision, _round.type);
@@ -216,6 +220,7 @@ export let checkRepayment = new ValidatedMethod({
                 numOfDayLate: 0,
                 principalDue: 0,
                 interestDue: 0,
+                feeOnPaymentDue: 0,
                 totalPrincipalInterestDue: 0,
                 penaltyDue: 0,
                 totalAmountDue: 0
@@ -239,6 +244,7 @@ export let checkRepayment = new ValidatedMethod({
 
                 result.principalDue = round2(result.principalDue + val.principalDue, _round.precision, _round.type);
                 result.interestDue = round2(result.interestDue + val.interestDue, _round.precision, _round.type);
+                result.feeOnPaymentDue = round2(result.feeOnPaymentDue + val.feeOnPaymentDue, _round.precision, _round.type);
                 result.totalPrincipalInterestDue = round2(result.principalDue + val.interestDue, _round.precision, _round.type);
                 result.totalAmountDue = round2(result.totalPrincipalInterestDue + result.penaltyDue, _round.precision, _round.type);
 
@@ -255,6 +261,7 @@ export let checkRepayment = new ValidatedMethod({
                 numOfDayLate: 0,
                 principalDue: 0,
                 interestDue: 0,
+                feeOnPaymentDue: 0,
                 totalPrincipalInterestDue: 0,
                 penaltyDue: 0,
                 totalAmountDue: 0
@@ -278,6 +285,7 @@ export let checkRepayment = new ValidatedMethod({
 
                 result.principalDue = round2(result.principalDue + val.currentDue.principal, _round.precision, _round.type);
                 result.interestDue = round2(result.interestDue + val.currentDue.interest, _round.precision, _round.type);
+                result.feeOnPaymentDue = round2(result.feeOnPaymentDue + val.currentDue.feeOnPayment, _round.precision, _round.type);
                 result.totalPrincipalInterestDue = round2(result.totalPrincipalInterestDue + val.currentDue.totalPrincipalInterest, _round.precision, _round.type);
                 result.penaltyDue = round2(result.penaltyDue + val.currentDue.penalty, _round.precision, _round.type);
                 result.totalAmountDue = round2(result.totalAmountDue + val.currentDue.totalAmount, _round.precision, _round.type);
@@ -295,6 +303,7 @@ export let checkRepayment = new ValidatedMethod({
                 numOfDayLate: 0,
                 principalDue: 0,
                 interestDue: 0,
+                feeOnPaymentDue: 0,
                 totalPrincipalInterestDue: 0,
                 penaltyDue: 0,
                 totalAmountDue: 0
@@ -305,6 +314,7 @@ export let checkRepayment = new ValidatedMethod({
             let closing = {
                 principalReminder: totalScheduleNext.principalDue,
                 interestReminder: totalScheduleNext.interestDue,
+                feeOnPaymentReminder: totalScheduleNext.feeOnPaymentDue,
                 numOfDayAddition: 0,
                 interestAddition: 0,
                 interestReminderPenalty: 0,
@@ -366,6 +376,7 @@ export let checkRepayment = new ValidatedMethod({
             let principalInstallment = {
                 principalReminder: totalScheduleNext.principalDue,
                 interestReminder: totalScheduleNext.interestDue,
+                feeOnPaymentReminder: totalScheduleNext.feeOnPaymentDue,
                 numOfDayAddition: 0,
                 interestAddition: 0,
                 totalDue: 0
@@ -391,19 +402,23 @@ export let checkRepayment = new ValidatedMethod({
 
             }
 
-            principalInstallment.totalDue = round2(principalInstallment.principalReminder + principalInstallment.interestAddition, _round.precision, _round.type);
+            principalInstallment.totalDue = round2(principalInstallment.principalReminder + principalInstallment.feeOnPaymentReminder + principalInstallment.interestAddition, _round.precision, _round.type);
 
 
             // ReSchedule
             let balanceUnPaid = 0;
             let interestUnPaid = 0;
+            let feeOnPaymentUnPaid = 0;
             let penaltyTotal = 0;
+
             scheduleDoc.forEach(function (obj) {
                 balanceUnPaid += obj.principalDue;
                 interestUnPaid += obj.interestDue;
+                feeOnPaymentUnPaid += obj.feeOnPaymentDue;
                 if (obj.repaymentDoc) {
                     balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
                     interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
+                    feeOnPaymentUnPaid -= obj.repaymentDoc.totalFeeOnPaymentPaid;
                     penaltyTotal += obj.repaymentDoc.totalPenaltyPaid;
                 }
             })
@@ -422,6 +437,7 @@ export let checkRepayment = new ValidatedMethod({
                     dueDate: null,
                     principalDue: 0,
                     interestDue: 0,
+                    feeOnPaymentDue: 0,
                     totalDue: 0
                 }
             }
@@ -439,6 +455,7 @@ export let checkRepayment = new ValidatedMethod({
                 lastRepayment: lastRepayment,
                 balanceUnPaid: math.round(balanceUnPaid, 2),
                 interestUnPaid: math.round(interestUnPaid, 2),
+                feeOnPaymentUnPaid: math.round(feeOnPaymentUnPaid, 2),
                 penaltyTotal: math.round(penaltyTotal, 2)
             };
         }

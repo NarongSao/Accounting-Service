@@ -86,15 +86,18 @@ export const loanArrearsReport = new ValidatedMethod({
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>
+                                    <th>Pro FeeOnPayment</th>
                                                                 <th>Arrears</th>        
                                     <th>Classify</th>
                                     <th>Staff</th>
                                     <th>Location</th>
                                                                 <th>Arrears Prin</th>                                            	
                                     	                        <th>Arrears Int</th>        
+                                    	                        <th>Arrears FeeOnPayment</th>        
                                     	                        <th>Total Arrears</th>
                                     <th>Loan Out Prin</th>
                                     <th>Loan Out Int</th>
+                                    <th>Loan Out FeeOnPayment</th>
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;
@@ -102,7 +105,6 @@ export const loanArrearsReport = new ValidatedMethod({
 
             //Param
             let selector = {};
-
 
 
             if (params.coType == "Only") {
@@ -319,29 +321,36 @@ export const loanArrearsReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
+            let totalDueFeeOnPaymentKHR = 0;
             let totalLoanOutPrinKHR = 0;
             let totalLoanOutIntKHR = 0;
+            let totalLoanOutFeeOnPaymentKHR = 0;
 
 
             let totalDuePrinUSD = 0;
             let totalDueIntUSD = 0;
+            let totalDueFeeOnPaymentUSD = 0;
             let totalLoanOutPrinUSD = 0;
             let totalLoanOutIntUSD = 0;
+            let totalLoanOutFeeOnPaymentUSD = 0;
 
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
+            let totalDueFeeOnPaymentTHB = 0;
             let totalLoanOutPrinTHB = 0;
             let totalLoanOutIntTHB = 0;
+            let totalLoanOutFeeOnPaymentTHB = 0;
 
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
+            let totalDueFeeOnPaymentBase = 0;
             let totalLoanOutPrinBase = 0;
             let totalLoanOutIntBase = 0;
+            let totalLoanOutFeeOnPaymentBase = 0;
 
 
             loanDoc.forEach(function (loanAccDoc) {
@@ -393,18 +402,24 @@ export const loanArrearsReport = new ValidatedMethod({
                         if (loanAccDoc.currencyId == "KHR") {
                             totalDuePrinKHR += result.totalScheduleDue.principalDue;
                             totalDueIntKHR += result.totalScheduleDue.interestDue;
+                            totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
                             totalLoanOutPrinKHR += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
                             totalLoanOutIntKHR += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
+                            totalLoanOutFeeOnPaymentKHR += result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue;
                         } else if (loanAccDoc.currencyId == "USD") {
                             totalDuePrinUSD += result.totalScheduleDue.principalDue;
                             totalDueIntUSD += result.totalScheduleDue.interestDue;
+                            totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
                             totalLoanOutPrinUSD += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
                             totalLoanOutIntUSD += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
+                            totalLoanOutFeeOnPaymentUSD += result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue;
                         } else if (loanAccDoc.currencyId == "THB") {
                             totalDuePrinTHB += result.totalScheduleDue.principalDue;
                             totalDueIntTHB += result.totalScheduleDue.interestDue;
+                            totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
                             totalLoanOutPrinTHB += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
                             totalLoanOutIntTHB += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
+                            totalLoanOutFeeOnPaymentTHB += result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue;
                         }
 
 
@@ -418,15 +433,18 @@ export const loanArrearsReport = new ValidatedMethod({
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectFeeOnPayment)}</td>
                                 <td> ${result.totalScheduleDue.numOfDayLate}</td>
                                 <td> ${proStatus.name}</td>
                                 <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
                                 <td> ${loanAccDoc.locationDoc.name}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue)}</td>
                             </tr>`;
 
                         i++;
@@ -468,6 +486,23 @@ export const loanArrearsReport = new ValidatedMethod({
                     totalDueIntTHB,
                     params.exchangeId);
 
+            totalDueFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalDueFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalDueFeeOnPaymentUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalDueFeeOnPaymentTHB,
+                    params.exchangeId);
+
             totalLoanOutPrinBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
@@ -504,39 +539,66 @@ export const loanArrearsReport = new ValidatedMethod({
                     totalLoanOutIntTHB,
                     params.exchangeId
                 );
+
+            totalLoanOutFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalLoanOutFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalLoanOutFeeOnPaymentUSD,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalLoanOutFeeOnPaymentTHB,
+                    params.exchangeId
+                );
             content += `<tr>
-                            <td colspan="13" align="right">Subtotal-KHR</td>
+                            <td colspan="14" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-USD</td>
+                            <td colspan="14" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentUSD)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-THB</td>
+                            <td colspan="14" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentTHB)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Total-${baseCurrency}</td>
+                            <td colspan="14" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentBase)}</td>
 
                         </tr>
                         

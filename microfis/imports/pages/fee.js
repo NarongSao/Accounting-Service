@@ -51,6 +51,7 @@ indexTmpl.helpers({
                 },
                 {key: 'name', label: 'Name'},
                 {key: 'calculateType', label: 'Calculate Type'},
+                {key: 'feeTypeOf', label: 'Fee Type'},
                 {
                     key: 'amount',
                     label: 'Amount',

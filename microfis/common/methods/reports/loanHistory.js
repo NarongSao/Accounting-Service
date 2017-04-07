@@ -583,6 +583,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                     <th>Day Num</th>
                                     <th>Principal</th>
                                     <th>Interest</th>
+                                    <th>FeeOnPayment</th>
                                     <th>Fee</th>
                                     <th>Total</th>
                                     <th>Loan Outstanding</th>
@@ -615,6 +616,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <td> ${obj.numOfDay}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(obj.principalDue)}</td>
                                 <td class="numberAlign"d> ${microfis_formatNumber(obj.interestDue)}</td>
+                                <td class="numberAlign"d> ${microfis_formatNumber(obj.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(obj.totalDue + loanAccDoc.feeAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(obj.balance)}</td>    
@@ -646,6 +648,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                     <th>Col Principal</th>
                                     <th>Col Interest</th>
                                     <th>Col Fee</th>
+                                    <th>Col FeeOnPayment</th>
                                     <th>Col Penalty</th>
                                     <th>Total Collection</th>
                                 </tr>
@@ -660,6 +663,7 @@ export const loanHistoryReport = new ValidatedMethod({
                 let totalPrincipal = 0;
                 let totalInterest = 0;
                 let totalFee = 0;
+                let totalFeeOnPayment = 0;
                 let totalPenalty = 0;
                 let total = 0;
 
@@ -667,6 +671,7 @@ export const loanHistoryReport = new ValidatedMethod({
                     let principal = 0;
                     let interest = 0;
                     let fee = 0;
+                    let feeOnPayment = 0;
 
                     let paymentDoc = paymentDetail.find(function (val) {
                         return val.repaymentId = obj._id;
@@ -680,6 +685,7 @@ export const loanHistoryReport = new ValidatedMethod({
                     } else {
                         principal = paymentDoc.principalPaid;
                         interest = paymentDoc.interestPaid;
+                        feeOnPayment = paymentDoc.feeOnPaymentPaid;
 
 
                         paymentStatusDoc = paymentStatusList.find(function (val) {
@@ -689,12 +695,12 @@ export const loanHistoryReport = new ValidatedMethod({
                     }
 
 
-
                     totalPrincipal += principal;
                     totalInterest += interest;
                     totalFee += fee;
+                    totalFeeOnPayment += feeOnPayment;
                     totalPenalty += obj.penaltyPaid;
-                    total += principal + interest + fee + obj.penaltyPaid;
+                    total += principal + interest + feeOnPayment + fee + obj.penaltyPaid;
 
                     content += `<tr>
                                 <td>${i}</td>
@@ -705,8 +711,9 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(principal)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(interest)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(fee)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(feeOnPayment)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(obj.penaltyPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(principal + interest + fee + obj.penaltyPaid)}</td>    
+                                <td class="numberAlign"> ${microfis_formatNumber(principal + interest + feeOnPayment + fee + obj.penaltyPaid)}</td>    
                             </tr>`;
 
                     i++;
@@ -718,6 +725,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <th class="numberAlign"> ${microfis_formatNumber(totalPrincipal)}</th>
                                 <th class="numberAlign"> ${microfis_formatNumber(totalInterest)}</th>
                                 <th class="numberAlign"> ${microfis_formatNumber(totalFee)}</th>
+                                <th class="numberAlign"> ${microfis_formatNumber(totalFeeOnPayment)}</th>
                                 <th class="numberAlign"> ${microfis_formatNumber(totalPenalty)}</th>
                                 <th class="numberAlign"> ${microfis_formatNumber(total)}</th>    
                         </tr>

@@ -94,6 +94,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
                                     <th>Loan Amount</th>
                                     <th>Fee</th>
                                     <th>Pro Int</th>
+                                    <th>Pro FeeOnPayment</th>
                                     <th>Total Due</th>
                                 </tr>
                             </thead>
@@ -199,7 +200,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
             }
 
-            if (params.cycle >0) {
+            if (params.cycle > 0) {
                 selector.cycle = params.cycle;
                 header.cycle = params.cycle;
 
@@ -314,21 +315,25 @@ export const loanDisbursmentReport = new ValidatedMethod({
             let totalLoanAmountKHR = 0;
             let totalFeeKHR = 0;
             let totalProIntKHR = 0;
+            let totalProFeeOnPaymentKHR = 0;
 
 
             let totalLoanAmountUSD = 0;
             let totalFeeUSD = 0;
             let totalProIntUSD = 0;
+            let totalProFeeOnPaymentUSD = 0;
 
 
             let totalLoanAmountTHB = 0;
             let totalFeeTHB = 0;
             let totalProIntTHB = 0;
+            let totalProFeeOnPaymentTHB = 0;
 
 
             let totalLoanAmountBase = 0;
             let totalFeeBase = 0;
             let totalProIntBase = 0;
+            let totalProFeeOnPaymentBase = 0;
 
 
             let checkDate = tDate;
@@ -340,15 +345,18 @@ export const loanDisbursmentReport = new ValidatedMethod({
                     totalLoanAmountKHR += loanAccDoc.loanAmount;
                     totalFeeKHR += loanAccDoc.feeAmount;
                     totalProIntKHR += loanAccDoc.projectInterest;
+                    totalProFeeOnPaymentKHR += loanAccDoc.projectFeeOnPayment;
 
                 } else if (loanAccDoc.currencyId == "USD") {
                     totalLoanAmountUSD += loanAccDoc.loanAmount;
                     totalFeeUSD += loanAccDoc.feeAmount;
                     totalProIntUSD += loanAccDoc.projectInterest;
+                    totalProFeeOnPaymentUSD += loanAccDoc.projectFeeOnPayment;
                 } else if (loanAccDoc.currencyId == "THB") {
                     totalLoanAmountTHB += loanAccDoc.loanAmount;
                     totalFeeTHB += loanAccDoc.feeAmount;
                     totalProIntTHB += loanAccDoc.projectInterest;
+                    totalProFeeOnPaymentTHB += loanAccDoc.projectFeeOnPayment;
                 }
 
 
@@ -371,7 +379,8 @@ export const loanDisbursmentReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount + loanAccDoc.feeAmount + loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectFeeOnPayment)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount + loanAccDoc.feeAmount + loanAccDoc.projectInterest + loanAccDoc.projectFeeOnPayment)}</td>
                               </tr>`;
 
                 i++;
@@ -428,6 +437,23 @@ export const loanDisbursmentReport = new ValidatedMethod({
                     totalProIntTHB,
                     params.exchangeId);
 
+            totalProFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalProFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalProFeeOnPaymentUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalProFeeOnPaymentTHB,
+                    params.exchangeId);
+
 
             content += `
 
@@ -436,7 +462,8 @@ export const loanDisbursmentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalLoanAmountKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalProIntKHR + totalFeeKHR + totalLoanAmountKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProFeeOnPaymentKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntKHR + totalProFeeOnPaymentKHR + totalFeeKHR + totalLoanAmountKHR)}</td>
 
                         </tr>
                         <tr>
@@ -444,7 +471,8 @@ export const loanDisbursmentReport = new ValidatedMethod({
                       <td class="numberAlign">${microfis_formatNumber(totalLoanAmountUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalProIntUSD + totalFeeUSD + totalLoanAmountUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntUSD + totalProFeeOnPaymentUSD + totalFeeUSD + totalLoanAmountUSD)}</td>
                         
 
                         </tr>
@@ -453,7 +481,8 @@ export const loanDisbursmentReport = new ValidatedMethod({
                          <td class="numberAlign">${microfis_formatNumber(totalLoanAmountTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalProIntTHB + totalFeeTHB + totalLoanAmountTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProFeeOnPaymentTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntTHB + totalProFeeOnPaymentTHB + totalFeeTHB + totalLoanAmountTHB)}</td>
 
                         </tr>
                         <tr>
@@ -461,7 +490,8 @@ export const loanDisbursmentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalLoanAmountBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalProIntBase + totalFeeBase + totalLoanAmountBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalProIntBase + totalProFeeOnPaymentBase + totalFeeBase + totalLoanAmountBase)}</td>
                   
                         </tr>
                         

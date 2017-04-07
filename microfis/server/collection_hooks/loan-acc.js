@@ -92,11 +92,12 @@ LoanAcc.after.remove(function (userId, doc) {
 function _makeSchedule(doc) {
     let schedule = MakeSchedule.declinig.call({loanAccId: doc._id});
 
-    let maturityDate, tenor = 0, projectInterest = 0;
+    let maturityDate, tenor = 0, projectInterest = 0, projectFeeOnPayment= 0;
 
     _.forEach(schedule, (value, key) => {
         tenor += value.numOfDay;
         projectInterest += value.interestDue;
+        projectFeeOnPayment += value.feeOnPaymentDue;
 
         if (key == schedule.length - 1) {
             maturityDate = moment(value.dueDate).startOf("day").toDate();
@@ -119,7 +120,8 @@ function _makeSchedule(doc) {
         $set: {
             maturityDate: maturityDate,
             tenor: tenor,
-            projectInterest: projectInterest
+            projectInterest: projectInterest,
+            projectFeeOnPayment: projectFeeOnPayment
         }
     });
 }

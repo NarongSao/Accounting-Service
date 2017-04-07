@@ -304,6 +304,12 @@ LoanAcc.accountSchema = new SimpleSchema({
         decimal: true,
         optional: true
     },
+    projectFeeOnPayment: {
+        type: Number,
+        label: 'Fee On Payment Interest',
+        decimal: true,
+        optional: true
+    },
     loanAmount: {
         type: Number,
         label: 'Loan amount',
@@ -1283,6 +1289,18 @@ LoanAcc.writeOff = new SimpleSchema({
                 return inputmaskOptions.decimal({digits: 2});
             }
         }
+    }, 'writeOff.feeOnPayment': {
+        type: Number,
+        label: 'Fee On Payment',
+        decimal: true,
+
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
     },
     'writeOff.description': {
         type: String,
@@ -1347,6 +1365,18 @@ LoanAcc.writeOff = new SimpleSchema({
             }
         }
     },
+    'paymentWriteOff.$.feeOnPayment': {
+        type: Number,
+        label: 'Fee On Payment',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    },
     'paymentWriteOff.$.unPaidPrincipal': {
         type: Number,
         label: 'UnPaid Principal',
@@ -1362,6 +1392,18 @@ LoanAcc.writeOff = new SimpleSchema({
     'paymentWriteOff.$.unPaidInterest': {
         type: Number,
         label: 'UnPaid Interest',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    },
+    'paymentWriteOff.$.unPaidFeeOnPayment': {
+        type: Number,
+        label: 'UnPaid FeeOnPayment',
         decimal: true,
         autoform: {
             type: 'inputmask',

@@ -67,23 +67,27 @@ export let checkWriteOff = new ValidatedMethod({
             if (loanAccDoc.writeOff != undefined) {
                 paid.amount = 0;
                 paid.interest = 0;
+                paid.feeOnPayment = 0;
                 paid.total = 0;
 
                 loanAccDoc.paymentWriteOff.forEach(function (obj) {
                     if (obj.rePaidDate <= checkDate) {
                         paid.amount += round2(obj.amount, _round.precision, _round.type);
                         paid.interest += round2(obj.interest, _round.precision, _round.type);
-                        paid.total += round2(obj.interest, _round.precision, _round.type) + round2(obj.amount, _round.precision, _round.type);
+                        paid.feeOnPayment += round2(obj.feeOnPayment, _round.precision, _round.type);
+                        paid.total += round2(obj.interest, _round.precision, _round.type) + round2(obj.amount, _round.precision, _round.type)+ round2(obj.feeOnPayment, _round.precision, _round.type);
 
                         outStanding.amount = round2(obj.unPaidPrincipal, _round.precision, _round.type);
                         outStanding.interest = round2(obj.unPaidInterest, _round.precision, _round.type);
-                        outStanding.total = round2(obj.unPaidPrincipal, _round.precision, _round.type) + round2(obj.unPaidInterest, _round.precision, _round.type);
+                        outStanding.feeOnPayment = round2(obj.unPaidFeeOnPayment, _round.precision, _round.type);
+                        outStanding.total = round2(obj.unPaidPrincipal, _round.precision, _round.type) + round2(obj.unPaidInterest, _round.precision, _round.type)+ round2(obj.unPaidFeeOnPayment, _round.precision, _round.type);
                     }
                 })
 
                 writeOff.amount = round2(loanAccDoc.writeOff.amount, _round.precision, _round.type);
                 writeOff.interest = round2(loanAccDoc.writeOff.interest, _round.precision, _round.type);
-                writeOff.total = round2(loanAccDoc.writeOff.amount, _round.precision, _round.type) + round2(loanAccDoc.writeOff.interest, _round.precision, _round.type);
+                writeOff.feeOnPayment = round2(loanAccDoc.writeOff.feeOnPayment, _round.precision, _round.type);
+                writeOff.total = round2(loanAccDoc.writeOff.amount, _round.precision, _round.type) + round2(loanAccDoc.writeOff.interest, _round.precision, _round.type)+ round2(loanAccDoc.writeOff.feeOnPayment, _round.precision, _round.type);
             }
 
 

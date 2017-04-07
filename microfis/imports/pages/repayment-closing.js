@@ -319,7 +319,6 @@ let hooksObject = {
             }
 
             let totalPaidClosing = doc.savingBalance + doc.amountPaid;
-
             // Check to payment
             let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;
             if (checkBeforePayment) {
@@ -330,7 +329,8 @@ let hooksObject = {
                     scheduleDue: checkRepayment.scheduleDue,
                     scheduleNext: checkRepayment.scheduleNext,
                     closing: checkRepayment.closing,
-                    principalUnpaid: checkRepayment.balanceUnPaid
+                    principalUnpaid: checkRepayment.balanceUnPaid,
+                    feeOnPaymentUnPaid: checkRepayment.feeOnPaymentUnPaid
                 });
 
 
@@ -365,7 +365,7 @@ let hooksObject = {
         }).catch(function (err) {
             console.log(err.message);
         });
-        Session.set("resetQuickPayment",true);
+        Session.set("resetQuickPayment", true);
         displaySuccess();
     },
     onError (formType, error) {

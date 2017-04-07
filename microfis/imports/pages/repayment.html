@@ -138,13 +138,15 @@
             <th rowspan="2">Day</th>
             <th rowspan="2">Prin Due</th>
             <th rowspan="2">Int Due</th>
+            <th rowspan="2">Fee Due</th>
             <th rowspan="2">Total Due</th>
             <th rowspan="2">Balance</th>
-            <th colspan="3" class="text-center text-blue">Repaid Doc</th>
+            <th colspan="4" class="text-center text-blue">Repaid Doc</th>
         </tr>
         <tr class="text-blue">
             <th>Total Paid</th>
             <th>Loss Interest</th>
+            <th>Loss Fee</th>
             <th>Outstanding</th>
         </tr>
         </thead>
@@ -163,10 +165,12 @@
                 <td>{{item.numOfDay}}</td>
                 <td>{{numFormat item.principalDue "0,0.00"}}</td>
                 <td>{{numFormat item.interestDue "0,0.00"}}</td>
+                <td>{{numFormat item.feeOnPaymentDue "0,0.00"}}</td>
                 <td>{{numFormat item.totalDue "0,0.00"}}</td>
                 <td>{{numFormat item.balance "0,0.00"}}</td>
                 <td class="text-bold">{{numFormat (principalInterestPaid item.repaymentDoc) "0,0.00"}}</td>
                 <td class="text-bold">{{numFormat item.repaymentDoc.totalInterestWaived "0,0.00"}}</td>
+                <td class="text-bold">{{numFormat item.repaymentDoc.totalFeeOnPaymentWaived "0,0.00"}}</td>
                 <td class="text-bold">{{numFormat (outstanding item) "0,0.00"}}</td>
             </tr>
         {{/each}}

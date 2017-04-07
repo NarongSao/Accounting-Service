@@ -15,6 +15,10 @@ RepaymentSchedule.repaidDocSchema = new SimpleSchema({
         type: Number,
         decimal: true
     },
+    sumFeeOnPayment: {
+        type: Number,
+        decimal: true
+    },
     status: {
         type: String // inactive, partial, close
     },
@@ -32,6 +36,10 @@ RepaymentSchedule.repaidDocSchema = new SimpleSchema({
         type: Number,
         decimal: true
     },
+    'detail.$.feeOnPayment': {
+        type: Number,
+        decimal: true
+    },
     // 'detail.$.penalty': {
     //     type: Number,
     //     decimal: true
@@ -41,6 +49,10 @@ RepaymentSchedule.repaidDocSchema = new SimpleSchema({
         decimal: true
     },
     'detail.$.balanceInterest': {
+        type: Number,
+        decimal: true
+    }
+    ,'detail.$.balanceFeeOnPayment': {
         type: Number,
         decimal: true
     },
@@ -80,6 +92,10 @@ RepaymentSchedule.schema = new SimpleSchema({
         decimal: true
     },
     interestDue: {
+        type: Number,
+        decimal: true
+    },
+    feeOnPaymentDue: {
         type: Number,
         decimal: true
     },

@@ -28,7 +28,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "clientDoc"
                     }
                 },
-                { $unwind: { path: "$clientDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
                 {
                     $lookup: {
                         from: "microfis_fund",
@@ -37,7 +37,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "fundDoc"
                     }
                 },
-                { $unwind: { path: "$fundDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
                 {
                     $lookup: {
                         from: "microfis_creditOfficer",
@@ -46,7 +46,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "creditOfficerDoc"
                     }
                 },
-                { $unwind: { path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
                 {
                     $lookup: {
                         from: "microfis_location",
@@ -55,7 +55,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "locationDoc"
                     }
                 },
-                { $unwind: { path: "$locationDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
 
                 {
                     $lookup: {
@@ -65,17 +65,17 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "productDoc"
                     }
                 },
-                { $unwind: { path: "$productDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
 
-                {
-                    $lookup: {
-                        from: "microfis_fee",
-                        localField: "productDoc.feeId",
-                        foreignField: "_id",
-                        as: "feeDoc"
-                    }
-                },
-                { $unwind: { path: "$feeDoc", preserveNullAndEmptyArrays: true } },
+                /*{
+                 $lookup: {
+                 from: "microfis_fee",
+                 localField: "productDoc.feeId",
+                 foreignField: "_id",
+                 as: "feeDoc"
+                 }
+                 },
+                 { $unwind: { path: "$feeDoc", preserveNullAndEmptyArrays: true } },*/
 
                 {
                     $lookup: {
@@ -85,7 +85,7 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "penaltyDoc"
                     }
                 },
-                { $unwind: { path: "$penaltyDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
 
                 {
                     $lookup: {
@@ -95,9 +95,14 @@ export const lookupLoanAcc = new ValidatedMethod({
                         as: "penaltyClosingDoc"
                     }
                 },
-                { $unwind: { path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true } }
+                {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
             ])[0];
 
+            let totalFeeOnDisburement = 0;
+            Meteor.call('microfis_feeCalculate', data, function (err, result) {
+                totalFeeOnDisburement = result;
+            });
+            data.totalFeeOnDisburment = totalFeeOnDisburement;
             return data;
         }
     }

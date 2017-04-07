@@ -58,6 +58,7 @@ Repayment.after.insert(function (userId, doc) {
                                 $inc: {
                                     'repaymentDoc.totalPrincipalPaid': o.principalPaid,
                                     'repaymentDoc.totalInterestPaid': o.interestPaid,
+                                    'repaymentDoc.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
                                     'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
                                     'repaymentDoc.totalInterestWaived': o.interestWaived,
                                 },
@@ -485,6 +486,7 @@ Repayment.after.remove(function (userId, doc) {
                                 $inc: {
                                     'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
                                     'repaymentDoc.totalInterestPaid': -o.interestPaid,
+                                    'repaymentDoc.totalFeeOnPaymentPaid': -o.feeOnPaymentPaid,
                                     'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
                                     'repaymentDoc.totalInterestWaived': -o.interestWaived,
                                 },

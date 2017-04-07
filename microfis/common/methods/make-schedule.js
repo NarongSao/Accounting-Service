@@ -94,6 +94,7 @@ MakeSchedule.declinig = new ValidatedMethod({
                 numOfDay: 0,
                 principalDue: 0,
                 interestDue: 0,
+                feeOnPaymentDue: 0,
                 totalDue: 0,
                 balance: loanAccDoc.loanAmount,
                 allowClosing: false
@@ -101,7 +102,7 @@ MakeSchedule.declinig = new ValidatedMethod({
 
             // Schedule loop
             for (let i = 1; i <= loanAccDoc.term; i++) {
-                let previousLine, dueDate, numOfDay, principalDue = 0, interestDue, totalDue;
+                let previousLine, dueDate, numOfDay, principalDue = 0, interestDue, feeOnPaymentDue, totalDue;
 
                 previousLine = schedules[i - 1];
 
@@ -137,6 +138,9 @@ MakeSchedule.declinig = new ValidatedMethod({
                     principalDue = previousLine.balance;
                 }
 
+
+                //Calculate Interest
+
                 interestDue = Calculate.interest.call({
                     amount: previousLine.balance,
                     numOfDay: numOfDay,
@@ -144,8 +148,22 @@ MakeSchedule.declinig = new ValidatedMethod({
                     method: loanAccDoc.paymentMethod,
                     currencyId: loanAccDoc.currencyId
                 });
-                totalDue = roundCurrency(principalDue + interestDue, loanAccDoc.currencyId);
-                balane = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
+
+
+                //Calculate Fee On Payment
+
+                feeOnPaymentDue = Calculate.feeOnPayment.call({
+                    disbursementAmount: loanAccDoc.loanAmount,
+                    amount: principalDue + interestDue,
+                    principal: principalDue,
+                    interest: interestDue,
+                    currencyId: loanAccDoc.currencyId,
+                    productDoc: loanAccDoc.productDoc
+                })
+
+
+                totalDue = roundCurrency(principalDue + interestDue + feeOnPaymentDue, loanAccDoc.currencyId);
+                balance = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
 
                 // Check installment can close without penalty
                 let allowClosing = false;
@@ -158,8 +176,9 @@ MakeSchedule.declinig = new ValidatedMethod({
                     numOfDay: numOfDay,
                     principalDue: principalDue,
                     interestDue: interestDue,
+                    feeOnPaymentDue: feeOnPaymentDue,
                     totalDue: totalDue,
-                    balance: balane,
+                    balance: balance,
                     allowClosing: allowClosing
                 });
             }
@@ -277,7 +296,7 @@ MakeSchedule.annuity = new ValidatedMethod({
                     currencyId: loanAccDoc.currencyId
                 });
                 totalDue = roundCurrency(principalDue + interestDue, loanAccDoc.currencyId);
-                balane = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
+                balance = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
 
                 // Check installment can close without penalty
                 let allowClosing = false;
@@ -291,7 +310,7 @@ MakeSchedule.annuity = new ValidatedMethod({
                     principalDue: principalDue,
                     interestDue: interestDue,
                     totalDue: totalDue,
-                    balance: balane,
+                    balance: balance,
                     allowClosing: allowClosing
                 });
             }

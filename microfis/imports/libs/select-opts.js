@@ -13,6 +13,7 @@ import {Location} from '../../../microfis/common/collections/location.js';
 import {Fund} from '../../../microfis/common/collections/fund.js';
 import {ProductStatus} from '../../../microfis/common/collections/productStatus.js';
 import {Client} from '../../../microfis/common/collections/client';
+import {Fee} from '../../../microfis/common/collections/fee';
 
 import {ExchangeNBC} from '../../../acc/imports/api/collections/exchangeNBC';
 import {LookupValue} from '../../common/collections/lookup-value.js';
@@ -247,6 +248,17 @@ export const SelectOpts = {
 
         return list;
     },
+    feeOpt: function () {
+        let list = [];
+        if (Meteor.isClient) {
+            Meteor.subscribe('microfis.fee');
+            Fee.find().forEach(function (obj) {
+                list.push({label: obj.name, value: obj._id});
+            });
+
+            return list;
+        }
+    }
 };
 
 

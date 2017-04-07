@@ -12,7 +12,8 @@ Fee.schema = new SimpleSchema({
         label: 'Name',
         unique: true,
         max: 250
-    },
+    }
+    ,
     calculateType: {
         type: String,
         label: 'Calculate type',
@@ -21,6 +22,24 @@ Fee.schema = new SimpleSchema({
             defaultValue: 'A',
             options: function () {
                 return SelectOpts.calculateType(false);
+            }
+        }
+    },
+    feeTypeOf: {
+        type: String,
+        label: 'Fee Type Of',
+        autoform: {
+            type: "select2",
+            defaultValue: 'Disbursement',
+            options: function () {
+                let feeTypeOf = [];
+                feeTypeOf.push(
+                    {label: "Disbursement", value: "Disbursement"},
+                    {label: "Amount Paid", value: "Amount Paid"},
+                    {label: "Interest Paid", value: "Interest Paid"},
+                    {label: "Principal Paid", value: "Principal Paid"}
+                )
+                return feeTypeOf;
             }
         }
     },
@@ -35,7 +54,7 @@ Fee.schema = new SimpleSchema({
                 } else if (calculateType == 'P') {
                     labelType = '(%)';
                 }
-                return 'Amount on microfis disburse ' + labelType;
+                return 'Amount ' + labelType;
             }
         },
         decimal: true,

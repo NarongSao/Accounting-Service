@@ -164,14 +164,17 @@ formTmpl.helpers({
         if (writeOffDoc && writeOffDoc.outStanding == undefined) {
             writeOffDoc.outStanding.amount = 0;
             writeOffDoc.outStanding.interest = 0;
+            writeOffDoc.outStanding.feeOnPayment = 0;
             writeOffDoc.outStanding.total = 0;
 
             writeOffDoc.paid.amount = 0;
             writeOffDoc.paid.interest = 0;
+            writeOffDoc.paid.feeOnPayment = 0;
             writeOffDoc.paid.total = 0;
 
             writeOffDoc.writeOff.amount = 0;
             writeOffDoc.writeOff.interest = 0;
+            writeOffDoc.writeOff.feeOnPayment = 0;
             writeOffDoc.writeOff.total = 0;
 
         }
@@ -221,7 +224,6 @@ let hooksObject = {
     before: {
         insert: function (doc) {
 
-            debugger;
             let writeOffDoc = stateRepayment.get('checkWriteOff');
             let loanAccDoc = stateRepayment.get('loanAccDoc');
 

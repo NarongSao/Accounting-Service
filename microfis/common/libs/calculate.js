@@ -78,3 +78,52 @@ Calculate.interest = new ValidatedMethod({
         return interest;
     }
 });
+
+Calculate.feeOnPayment = new ValidatedMethod({
+    name: 'microfis.Calculate.feeOnPayment',
+    mixins: [CallPromiseMixin],
+    validate: new SimpleSchema({
+        disbursementAmount: {
+            type: Number,
+            decimal: true
+        },
+        amount: {
+            type: Number,
+            decimal: true
+        },
+        principal: {
+            type: Number,
+            decimal: true
+        },
+        interest: {
+            type: Number,
+            decimal: true
+        },
+
+        currencyId: {
+            type: String,
+            optional: true
+        },
+        productDoc: {
+            type: Object,
+            optional: true,
+            blackbox: true
+        }
+    }).validator(),
+    run(opts) {
+        let feeOnPayment;
+
+        Meteor.call("microfis_feeOnPaymentCalculate", opts.disbursementAmount, opts.amount, opts.principal, opts.interest, opts.currencyId, opts.productDoc, function (err, result) {
+            if (result) {
+                feeOnPayment = result;
+            }
+        })
+
+        // Check currency
+        if (opts.currencyId) {
+            feeOnPayment = roundCurrency(feeOnPayment, opts.currencyId);
+        }
+
+        return feeOnPayment;
+    }
+});

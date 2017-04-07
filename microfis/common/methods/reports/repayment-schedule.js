@@ -57,6 +57,7 @@ export const repaymentScheduleReport = new ValidatedMethod({
                             sumNumOfDay: {$sum: "$numOfDay"},
                             sumPrincipalDue: {$sum: "$principalDue"},
                             sumInterestDue: {$sum: "$interestDue"},
+                            sumFeeOnPaymentDue: {$sum: "$feeOnPaymentDue"},
                             sumTotalDue: {$sum: "$totalDue"},
                             data: {$push: "$$ROOT"}
                         }

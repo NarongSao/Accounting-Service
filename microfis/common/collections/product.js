@@ -276,6 +276,20 @@ Product.interestSchema = new SimpleSchema({
             label: false
         }
     },
+    'interestRate.defaultRate': {
+        type: Number,
+        label: 'Default interest rate (%)',
+        decimal: true,
+        min: 0,
+        autoform: {
+            type: 'inputmask',
+            afFieldInput: {
+                // placeholder: 'Min',
+                inputmaskOptions: inputmaskOptions.currency({prefix: ''})
+            },
+            label: false
+        }
+    },
     'interestRate.max': {
         type: Number,
         label: 'Max of interest rate (%)',
@@ -303,14 +317,24 @@ Product.interestSchema = new SimpleSchema({
 // Charge
 Product.chargeSchema = new SimpleSchema({
     feeId: {
-        type: String,
-        label: 'Fee',
+        type: [String],
+        label: 'Fee On Disbursement',
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.fee'
+            type: 'select2',
+            multiple: true,
+            options: function () {
+                return SelectOpts.feeOpt();
+            }
+        }
+    },
+    feeOnPaymentId: {
+        type: [String],
+        label: "Fee On Payment",
+        autoform: {
+            type: 'select2',
+            multiple: true,
+            options: function () {
+                return SelectOpts.feeOpt();
             }
         }
     },

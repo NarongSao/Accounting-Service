@@ -150,18 +150,8 @@ formTmpl.helpers({
             totalPenalty = 0;
 
         let loanDoc = stateRepayment.get('loanAccDoc');
-        if (loanDoc.feeDoc.calculateType == "P") {
-            totalDue = (loanDoc.feeDoc.amount / 100) * loanDoc.loanAmount;
-        } else {
-            if (loanDoc.currencyId == "KHR") {
-                totalDue = loanDoc.feeDoc.amount * loanDoc.productDoc.exchange.KHR;
-
-            } else if (loanDoc.currencyId == "THB") {
-                totalDue = loanDoc.feeDoc.amount * loanDoc.productDoc.exchange.THB;
-
-            } else {
-                totalDue = loanDoc.feeDoc.amount;
-            }
+        if (loanDoc) {
+            totalDue = loanDoc.totalFeeOnDisburment;
         }
 
         return {totalDue, totalPenalty};
@@ -234,12 +224,12 @@ let hooksObject = {
         }
     },
     onSuccess (formType, result) {
-        debugger;
+
         stateRepayment.set("feeAmount", 3);
         alertify.fee().close();
 
         displaySuccess();
-        Session.set("resetQuickPayment",true);
+        Session.set("resetQuickPayment", true);
     },
     onError (formType, error) {
         displayError(error.message);

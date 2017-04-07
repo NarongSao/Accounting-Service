@@ -59,12 +59,14 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
     let totalSchedulePaid = {
         principalDue: new BigNumber(0),
         interestDue: new BigNumber(0),
+        feeOnPaymentDue: new BigNumber(0),
         totalPrincipalInterestDue: new BigNumber(0),
         penaltyDue: new BigNumber(0),
         totalAmountDue: new BigNumber(0),
 
         principalPaid: new BigNumber(0),
         interestPaid: new BigNumber(0),
+        feeOnPaymentPaid: new BigNumber(0),
         totalPrincipalInterestPaid: new BigNumber(0),
         penaltyPaid: new BigNumber(0),
         totalAmountPaid: new BigNumber(0),
@@ -73,6 +75,7 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
 
         principalBal: new BigNumber(0),
         interestBal: new BigNumber(0),
+        feeOnPaymentBal: new BigNumber(0),
         totalPrincipalInterestBal: new BigNumber(0),
         penaltyBal: new BigNumber(0),
         totalAmountBal: new BigNumber(0)
@@ -88,24 +91,37 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
 
             // Check amount paid
             let principalPaid = new BigNumber(0),
-                interestPaid = new BigNumber(0);
+                interestPaid = new BigNumber(0),
+                feeOnPaymentPaid = new BigNumber(0);
 
-            if (tmpAmountPaid.lessThanOrEqualTo(currentDue.interest)) {
-                interestPaid = tmpAmountPaid;
+
+            if (tmpAmountPaid.lessThanOrEqualTo(currentDue.feeOnPayment)) {
+                feeOnPaymentPaid = tmpAmountPaid;
                 tmpAmountPaid = new BigNumber(0);
-            } else {
-                interestPaid = new BigNumber(currentDue.interest);
-                tmpAmountPaid = tmpAmountPaid.minus(interestPaid);
 
-                // Check principal
-                if (tmpAmountPaid.lessThanOrEqualTo(currentDue.principal)) {
-                    principalPaid = tmpAmountPaid;
+            } else {
+                feeOnPaymentPaid = new BigNumber(currentDue.feeOnPayment);
+                tmpAmountPaid = tmpAmountPaid.minus(feeOnPaymentPaid);
+
+
+                if (tmpAmountPaid.lessThanOrEqualTo(currentDue.interest)) {
+                    interestPaid = tmpAmountPaid;
                     tmpAmountPaid = new BigNumber(0);
                 } else {
-                    principalPaid = new BigNumber(currentDue.principal);
-                    tmpAmountPaid = tmpAmountPaid.minus(principalPaid);
+                    interestPaid = new BigNumber(currentDue.interest);
+                    tmpAmountPaid = tmpAmountPaid.minus(interestPaid);
+
+                    // Check principal
+                    if (tmpAmountPaid.lessThanOrEqualTo(currentDue.principal)) {
+                        principalPaid = tmpAmountPaid;
+                        tmpAmountPaid = new BigNumber(0);
+                    } else {
+                        principalPaid = new BigNumber(currentDue.principal);
+                        tmpAmountPaid = tmpAmountPaid.minus(principalPaid);
+                    }
                 }
             }
+
 
             // Check penalty paid
             let penaltyPaid = new BigNumber(0);
@@ -121,11 +137,12 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
             }
 
             // Push data
-            let totalPrincipalInterestPaid = principalPaid.plus(interestPaid),
+            let totalPrincipalInterestPaid = principalPaid.plus(interestPaid.plus(feeOnPaymentPaid)),
                 totalAmountPaid = totalPrincipalInterestPaid.plus(penaltyPaid),
                 principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
                 interestBal = new BigNumber(currentDue.interest).minus(interestPaid),
-                totalPrincipalInterestBal = principalBal.plus(interestBal),
+                feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid),
+                totalPrincipalInterestBal = principalBal.plus(interestBal.plus(feeOnPaymentBal)),
                 penaltyBal = new BigNumber(currentDue.penalty).minus(penaltyPaid),
                 totalAmountBal = totalPrincipalInterestBal.plus(penaltyBal);
 
@@ -138,20 +155,24 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
             totalSchedulePaid = {
                 principalDue: totalSchedulePaid.principalDue.plus(currentDue.principal),
                 interestDue: totalSchedulePaid.interestDue.plus(currentDue.interest),
+                feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.plus(currentDue.feeOnPayment),
                 totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.plus(currentDue.totalPrincipalInterest),
                 penaltyDue: totalSchedulePaid.penaltyDue.plus(currentDue.penalty),
                 totalAmountDue: totalSchedulePaid.totalAmountDue.plus(currentDue.totalAmount),
 
                 principalPaid: totalSchedulePaid.principalPaid.plus(principalPaid),
                 interestPaid: totalSchedulePaid.interestPaid.plus(interestPaid),
+                feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.plus(feeOnPaymentPaid),
                 totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.plus(totalPrincipalInterestPaid),
                 penaltyPaid: totalSchedulePaid.penaltyPaid.plus(penaltyPaid),
                 totalAmountPaid: totalSchedulePaid.totalAmountPaid.plus(totalAmountPaid),
 
                 interestWaived: new BigNumber(0),
+                feeOnPaymentWaived: new BigNumber(0),
 
                 principalBal: totalSchedulePaid.principalBal.plus(principalBal),
                 interestBal: totalSchedulePaid.interestBal.plus(interestBal),
+                feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.plus(feeOnPaymentBal),
                 totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.plus(totalPrincipalInterestBal),
                 penaltyBal: totalSchedulePaid.penaltyBal.plus(penaltyBal),
                 totalAmountBal: totalSchedulePaid.totalAmountBal.plus(totalAmountBal)
@@ -166,20 +187,24 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
 
                 principalDue: currentDue.principal,
                 interestDue: currentDue.interest,
+                feeOnPaymentDue: currentDue.feeOnPayment,
                 totalPrincipalInterestDue: currentDue.totalPrincipalInterest,
                 penaltyDue: currentDue.penalty,
                 totalAmountDue: currentDue.totalAmount,
 
                 principalPaid: principalPaid.toNumber(),
                 interestPaid: interestPaid.toNumber(),
+                feeOnPaymentPaid: feeOnPaymentPaid.toNumber(),
                 totalPrincipalInterestPaid: totalPrincipalInterestPaid.toNumber(),
                 penaltyPaid: penaltyPaid.toNumber(),
                 totalAmountPaid: totalAmountPaid.toNumber(),
 
                 interestWaived: 0,
+                feeOnPaymentWaived: 0,
 
                 principalBal: principalBal.toNumber(),
                 interestBal: interestBal.toNumber(),
+                feeOnPaymentBal: feeOnPaymentBal.toNumber(),
                 totalPrincipalInterestBal: totalPrincipalInterestBal.toNumber(),
                 penaltyBal: penaltyBal.toNumber(),
                 totalAmountBal: totalAmountBal.toNumber(),
@@ -200,20 +225,24 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
     totalSchedulePaid = {
         principalDue: totalSchedulePaid.principalDue.toNumber(),
         interestDue: totalSchedulePaid.interestDue.toNumber(),
+        feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.toNumber(),
         totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.toNumber(),
         penaltyDue: totalSchedulePaid.penaltyDue.toNumber(),
         totalAmountDue: totalSchedulePaid.totalAmountDue.toNumber(),
 
         principalPaid: totalSchedulePaid.principalPaid.toNumber(),
         interestPaid: totalSchedulePaid.interestPaid.toNumber(),
+        feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.toNumber(),
         totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.toNumber(),
         penaltyPaid: totalSchedulePaid.penaltyPaid.toNumber(),
         totalAmountPaid: totalSchedulePaid.totalAmountPaid.toNumber(),
 
         interestWaived: totalSchedulePaid.interestWaived.toNumber(),
+        feeOnPaymentWaived: totalSchedulePaid.feeOnPaymentWaived.toNumber(),
 
         principalBal: totalSchedulePaid.principalBal.toNumber(),
         interestBal: totalSchedulePaid.interestBal.toNumber(),
+        feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.toNumber(),
         totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.toNumber(),
         penaltyBal: totalSchedulePaid.penaltyBal.toNumber(),
         totalAmountBal: totalSchedulePaid.totalAmountBal.toNumber()
@@ -268,20 +297,24 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
     let totalSchedulePaid = {
         principalDue: new BigNumber(0),
         interestDue: new BigNumber(0),
+        feeOnPaymentDue: new BigNumber(0),
         totalPrincipalInterestDue: new BigNumber(0),
         penaltyDue: 0,
         totalAmountDue: new BigNumber(0),
 
         principalPaid: new BigNumber(0),
         interestPaid: new BigNumber(0),
+        feeOnPaymentPaid: new BigNumber(0),
         totalPrincipalInterestPaid: new BigNumber(0),
         penaltyPaid: 0,
         totalAmountPaid: new BigNumber(0),
 
         interestWaived: new BigNumber(0),
+        feeOnPaymentWaived: new BigNumber(0),
 
         principalBal: new BigNumber(0),
         interestBal: new BigNumber(0),
+        feeOnPaymentBal: new BigNumber(0),
         totalPrincipalInterestBal: new BigNumber(0),
         penaltyBal: 0,
         totalAmountBal: new BigNumber(0)
@@ -293,30 +326,43 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
 
             // Check amount paid
             let principalPaid = new BigNumber(0),
-                interestPaid = new BigNumber(0);
+                interestPaid = new BigNumber(0),
+                feeOnPaymentPaid = new BigNumber(0);
 
-            if (tmpAmountPaid.lessThanOrEqualTo(currentDue.interest)) {
-                interestPaid = tmpAmountPaid;
+
+            if (tmpAmountPaid.lessThanOrEqualTo(currentDue.feeOnPayment)) {
+                feeOnPaymentPaid = tmpAmountPaid;
                 tmpAmountPaid = new BigNumber(0);
             } else {
-                interestPaid = new BigNumber(currentDue.interest);
-                tmpAmountPaid = tmpAmountPaid.minus(interestPaid);
+                feeOnPaymentPaid = new BigNumber(currentDue.feeOnPayment);
+                tmpAmountPaid = tmpAmountPaid.minus(feeOnPaymentPaid);
 
-                // Check principal
-                if (tmpAmountPaid.lessThanOrEqualTo(currentDue.principal)) {
-                    principalPaid = tmpAmountPaid;
+                if (tmpAmountPaid.lessThanOrEqualTo(currentDue.interest)) {
+                    interestPaid = tmpAmountPaid;
                     tmpAmountPaid = new BigNumber(0);
                 } else {
-                    principalPaid = new BigNumber(currentDue.principal);
-                    tmpAmountPaid = tmpAmountPaid.minus(principalPaid);
+                    interestPaid = new BigNumber(currentDue.interest);
+                    tmpAmountPaid = tmpAmountPaid.minus(interestPaid);
+
+                    // Check principal
+                    if (tmpAmountPaid.lessThanOrEqualTo(currentDue.principal)) {
+                        principalPaid = tmpAmountPaid;
+                        tmpAmountPaid = new BigNumber(0);
+                    } else {
+                        principalPaid = new BigNumber(currentDue.principal);
+                        tmpAmountPaid = tmpAmountPaid.minus(principalPaid);
+                    }
                 }
+
             }
+
 
             // Push data
             let totalPrincipalInterestPaid = principalPaid.plus(interestPaid),
                 totalAmountPaid = totalPrincipalInterestPaid,
                 principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
                 interestBal = new BigNumber(currentDue.interest).minus(interestPaid),
+                feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid),
                 totalPrincipalInterestBal = principalBal.plus(interestBal),
                 penaltyBal = 0,
                 totalAmountBal = totalPrincipalInterestBal;
@@ -331,20 +377,24 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
             totalSchedulePaid = {
                 principalDue: totalSchedulePaid.principalDue.plus(currentDue.principal),
                 interestDue: totalSchedulePaid.interestDue.plus(currentDue.interest),
+                feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.plus(currentDue.feeOnPayment),
                 totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.plus(currentDue.totalPrincipalInterest),
                 penaltyDue: 0,
                 totalAmountDue: totalSchedulePaid.totalAmountDue.plus(currentDue.totalAmount),
 
                 principalPaid: totalSchedulePaid.principalPaid.plus(principalPaid),
                 interestPaid: totalSchedulePaid.interestPaid.plus(interestPaid),
+                feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.plus(feeOnPaymentPaid),
                 totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.plus(totalPrincipalInterestPaid),
                 penaltyPaid: 0,
                 totalAmountPaid: totalSchedulePaid.totalAmountPaid.plus(totalAmountPaid),
 
                 interestWaived: new BigNumber(0),
+                feeOnPaymentWaived: new BigNumber(0),
 
                 principalBal: totalSchedulePaid.principalBal.plus(principalBal),
                 interestBal: totalSchedulePaid.interestBal.plus(interestBal),
+                feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.plus(feeOnPaymentBal),
                 totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.plus(totalPrincipalInterestBal),
                 penaltyBal: 0,
                 totalAmountBal: totalSchedulePaid.totalAmountBal.plus(totalAmountBal)
@@ -359,20 +409,24 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
 
                 principalDue: currentDue.principal,
                 interestDue: currentDue.interest,
+                feeOnPaymentDue: currentDue.feeOnPayment,
                 totalPrincipalInterestDue: currentDue.totalPrincipalInterest,
                 penaltyDue: currentDue.penalty,
                 totalAmountDue: currentDue.totalAmount,
 
                 principalPaid: principalPaid.toNumber(),
                 interestPaid: interestPaid.toNumber(),
+                feeOnPaymentPaid: feeOnPaymentPaid.toNumber(),
                 totalPrincipalInterestPaid: totalPrincipalInterestPaid.toNumber(),
                 penaltyPaid: 0,
                 totalAmountPaid: totalAmountPaid.toNumber(),
 
                 interestWaived: 0,
+                feeOnPaymentWaived: 0,
 
                 principalBal: principalBal.toNumber(),
                 interestBal: interestBal.toNumber(),
+                feeOnPaymentBal: feeOnPaymentBal.toNumber(),
                 totalPrincipalInterestBal: totalPrincipalInterestBal.toNumber(),
                 penaltyBal: 0,
                 totalAmountBal: totalAmountBal.toNumber(),
@@ -394,20 +448,24 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
     totalSchedulePaid = {
         principalDue: totalSchedulePaid.principalDue.toNumber(),
         interestDue: totalSchedulePaid.interestDue.toNumber(),
+        feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.toNumber(),
         totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.toNumber(),
         penaltyDue: 0,
         totalAmountDue: totalSchedulePaid.totalAmountDue.toNumber(),
 
         principalPaid: totalSchedulePaid.principalPaid.toNumber(),
         interestPaid: totalSchedulePaid.interestPaid.toNumber(),
+        feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.toNumber(),
         totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.toNumber(),
         penaltyPaid: 0,
         totalAmountPaid: totalSchedulePaid.totalAmountPaid.toNumber(),
 
         interestWaived: totalSchedulePaid.interestWaived.toNumber(),
+        feeOnPaymentWaived: totalSchedulePaid.feeOnPaymentWaived.toNumber(),
 
         principalBal: totalSchedulePaid.principalBal.toNumber(),
         interestBal: totalSchedulePaid.interestBal.toNumber(),
+        feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.toNumber(),
         totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.toNumber(),
         penaltyBal: 0,
         totalAmountBal: totalSchedulePaid.totalAmountBal.toNumber()
@@ -460,20 +518,24 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
     let totalSchedulePaid = {
         principalDue: new BigNumber(0),
         interestDue: new BigNumber(0),
+        feeOnPaymentDue: new BigNumber(0),
         totalPrincipalInterestDue: new BigNumber(0),
         penaltyDue: new BigNumber(0),
         totalAmountDue: new BigNumber(0),
 
         principalPaid: new BigNumber(0),
         interestPaid: new BigNumber(0),
+        feeOnPaymentPaid: new BigNumber(0),
         totalPrincipalInterestPaid: new BigNumber(0),
         penaltyPaid: new BigNumber(0),
         totalAmountPaid: new BigNumber(0),
 
         interestWaived: new BigNumber(0),
+        feeOnPaymentWaived: new BigNumber(0),
 
         principalBal: new BigNumber(0),
         interestBal: new BigNumber(0),
+        feeOnPaymentBal: new BigNumber(0),
         totalPrincipalInterestBal: new BigNumber(0),
         penaltyBal: new BigNumber(0),
         totalAmountBal: new BigNumber(0)
@@ -489,15 +551,19 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
             // Check amount paid
             let principalPaid = new BigNumber(0),
                 interestPaid = new BigNumber(0),
+                feeOnPaymentPaid = new BigNumber(0),
+                feeOnPaymentWaived = new BigNumber(0),
                 interestWaived = new BigNumber(0);
 
             if (tmpAmountPaid.lessThanOrEqualTo(currentDue.interest)) {
                 // interestPaid = tmpAmountPaid;
                 interestWaived = new BigNumber(currentDue.interest).minus(tmpAmountPaid);
+                feeOnPaymentWaived = new BigNumber(currentDue.feeOnPayment).minus(tmpAmountPaid);
                 tmpAmountPaid = new BigNumber(0);
             } else {
                 // interestPaid = new BigNumber(currentDue.interest);
                 interestWaived = new BigNumber(currentDue.interest);
+                feeOnPaymentWaived = new BigNumber(currentDue.feeOnPayment);
                 tmpAmountPaid = tmpAmountPaid.minus(interestWaived);
 
                 // Check principal
@@ -528,6 +594,7 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
                 totalAmountPaid = totalPrincipalInterestPaid.plus(penaltyPaid),
                 principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
                 interestBal = new BigNumber(currentDue.interest).minus(interestPaid).minus(interestWaived),
+                feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid).minus(feeOnPaymentWaived),
                 totalPrincipalInterestBal = principalBal.plus(interestBal),
                 penaltyBal = new BigNumber(currentDue.penalty).minus(penaltyPaid),
                 totalAmountBal = totalPrincipalInterestBal.plus(penaltyBal);
@@ -739,7 +806,7 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
     };
 };
 
-MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, scheduleNext, closing,principalUnpaid, opts}) {
+MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, scheduleNext, closing, principalUnpaid, feeOnPaymentUnPaid, opts}) {
     new SimpleSchema({
         repaidDate: {
             type: Date
@@ -783,6 +850,12 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
             blackbox: true,
             optional: true
         },
+        feeOnPaymentUnPaid: {
+            type: Number,
+            decimal: true,
+            blackbox: true,
+            optional: true
+        },
         opts: {
             type: Object,
             optional: true,
@@ -795,6 +868,8 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         scheduleDue,
         scheduleNext,
         closing,
+        principalUnpaid,
+        feeOnPaymentUnPaid,
         opts
     });
 
@@ -804,29 +879,36 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     let totalSchedulePaid = {
         principalDue: new BigNumber(0),
         interestDue: new BigNumber(0),
+        feeOnPaymentDue: new BigNumber(0),
         totalPrincipalInterestDue: new BigNumber(0),
         penaltyDue: new BigNumber(0),
         totalAmountDue: new BigNumber(0),
 
         principalPaid: new BigNumber(0),
         interestPaid: new BigNumber(0),
+        feeOnPaymentPaid: new BigNumber(0),
         totalPrincipalInterestPaid: new BigNumber(0),
         penaltyPaid: new BigNumber(0),
         totalAmountPaid: new BigNumber(0),
 
         interestWaived: new BigNumber(0),
+        feeOnPaymentWaived: new BigNumber(0),
 
         principalBal: new BigNumber(0),
         interestBal: new BigNumber(0),
+        feeOnPaymentBal: new BigNumber(0),
         totalPrincipalInterestBal: new BigNumber(0),
         penaltyBal: new BigNumber(0),
         totalAmountBal: new BigNumber(0)
     };
 
 
+    console.log(feeOnPaymentUnPaid);
+    
     let tmpAmountPaid = {
         principal: new BigNumber(principalUnpaid),
-        interest: new BigNumber(amountPaid).minus(principalUnpaid)
+        feeOnPayment: new BigNumber(feeOnPaymentUnPaid),
+        interest: new BigNumber(amountPaid).minus(principalUnpaid).plus(feeOnPaymentUnPaid)
     };
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);
 
@@ -834,10 +916,26 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     for (let o of scheduleDue) {
         let currentDue = o.currentDue;
 
-        // Check interest paid
+
         let principalPaid = new BigNumber(0),
             interestPaid = new BigNumber(0),
+            feeOnPaymentPaid = new BigNumber(0),
+            feeOnPaymentWaived = new BigNumber(0),
             interestWaived = new BigNumber(0);
+
+
+        //Check Fee On Payment Paid
+        if (tmpAmountPaid.feeOnPayment.lessThanOrEqualTo(currentDue.feeOnPayment)) {
+            feeOnPaymentPaid = tmpAmountPaid.feeOnPayment;
+            feeOnPaymentWaived = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid);
+            tmpAmountPaid.feeOnPayment = new BigNumber(0);
+        } else {
+            feeOnPaymentPaid = new BigNumber(currentDue.feeOnPayment);
+            tmpAmountPaid.feeOnPayment = tmpAmountPaid.feeOnPayment.minus(feeOnPaymentPaid);
+        }
+
+
+        // Check interest paid
 
         if (tmpAmountPaid.interest.lessThanOrEqualTo(currentDue.interest)) {
             interestPaid = tmpAmountPaid.interest;
@@ -847,6 +945,8 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
             interestPaid = new BigNumber(currentDue.interest);
             tmpAmountPaid.interest = tmpAmountPaid.interest.minus(interestPaid);
         }
+
+
         // Check principal paid
         if (tmpAmountPaid.principal.lessThanOrEqualTo(currentDue.principal)) {
             principalPaid = tmpAmountPaid.principal;
@@ -871,11 +971,12 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         }
 
         // Data push to schedule paid
-        let totalPrincipalInterestPaid = principalPaid.plus(interestPaid),
+        let totalPrincipalInterestPaid = principalPaid.plus(interestPaid.plus(feeOnPaymentPaid)),
             totalAmountPaid = totalPrincipalInterestPaid.plus(penaltyPaid),
             principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
             interestBal = new BigNumber(currentDue.interest).minus(interestPaid).minus(interestWaived),
-            totalPrincipalInterestBal = principalBal.plus(interestBal),
+            feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid).minus(feeOnPaymentWaived),
+            totalPrincipalInterestBal = principalBal.plus(interestBal.plus(feeOnPaymentBal)),
             penaltyBal = new BigNumber(currentDue.penalty).minus(penaltyPaid),
             totalAmountBal = totalPrincipalInterestBal.plus(penaltyBal);
 
@@ -883,20 +984,24 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         totalSchedulePaid = {
             principalDue: totalSchedulePaid.principalDue.plus(currentDue.principal),
             interestDue: totalSchedulePaid.interestDue.plus(currentDue.interest),
+            feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.plus(currentDue.feeOnPayment),
             totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.plus(currentDue.totalPrincipalInterest),
             penaltyDue: totalSchedulePaid.penaltyDue.plus(currentDue.penalty),
             totalAmountDue: totalSchedulePaid.totalAmountDue.plus(currentDue.totalAmount),
 
             principalPaid: totalSchedulePaid.principalPaid.plus(principalPaid),
             interestPaid: totalSchedulePaid.interestPaid.plus(interestPaid),
+            feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.plus(feeOnPaymentPaid),
             totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.plus(totalPrincipalInterestPaid),
             penaltyPaid: totalSchedulePaid.penaltyPaid.plus(penaltyPaid),
             totalAmountPaid: totalSchedulePaid.totalAmountPaid.plus(totalAmountPaid),
 
             interestWaived: totalSchedulePaid.interestWaived.plus(interestWaived),
+            feeOnPaymentWaived: totalSchedulePaid.feeOnPaymentWaived.plus(feeOnPaymentWaived),
 
             principalBal: totalSchedulePaid.principalBal.plus(principalBal),
             interestBal: totalSchedulePaid.interestBal.plus(interestBal),
+            feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.plus(feeOnPaymentBal),
             totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.plus(totalPrincipalInterestBal),
             penaltyBal: totalSchedulePaid.penaltyBal.plus(penaltyBal),
             totalAmountBal: totalSchedulePaid.totalAmountBal.plus(totalAmountBal)
@@ -911,20 +1016,24 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
             principalDue: currentDue.principal,
             interestDue: currentDue.interest,
+            feeOnPaymentDue: currentDue.feeOnPayment,
             totalPrincipalInterestDue: currentDue.totalPrincipalInterest,
             penaltyDue: currentDue.penalty,
             totalAmountDue: currentDue.totalAmount,
 
             principalPaid: principalPaid.toNumber(),
             interestPaid: interestPaid.toNumber(),
+            feeOnPaymentPaid: feeOnPaymentPaid.toNumber(),
             totalPrincipalInterestPaid: totalPrincipalInterestPaid.toNumber(),
             penaltyPaid: penaltyPaid.toNumber(),
             totalAmountPaid: totalAmountPaid.toNumber(),
 
             interestWaived: interestWaived.toNumber(),
+            feeOnPaymentWaived: feeOnPaymentWaived.toNumber(),
 
             principalBal: principalBal.toNumber(),
             interestBal: interestBal.toNumber(),
+            feeOnPaymentBal: feeOnPaymentBal.toNumber(),
             totalPrincipalInterestBal: totalPrincipalInterestBal.toNumber(),
             penaltyBal: penaltyBal.toNumber(),
             totalAmountBal: totalAmountBal.toNumber(),
@@ -946,6 +1055,8 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
         let principalPaid = new BigNumber(0),
             interestPaid = new BigNumber(0),
+            feeOnPaymentPaid = new BigNumber(0),
+            feeOnPaymentWaived = new BigNumber(0),
             interestWaived = new BigNumber(0);
 
         // Check interest paid
@@ -958,6 +1069,7 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
          tmpAmountPaid.interest = tmpAmountPaid.interest.minus(interestPaid);
          }*/
         interestWaived = new BigNumber(currentDue.interest);
+        feeOnPaymentWaived = new BigNumber(currentDue.feeOnPayment);
 
 
         // Check principal paid
@@ -972,11 +1084,12 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
 
         // Push data
-        let totalPrincipalInterestPaid = principalPaid.plus(interestPaid),
+        let totalPrincipalInterestPaid = principalPaid.plus(interestPaid.plus(feeOnPaymentPaid)),
             totalAmountPaid = totalPrincipalInterestPaid,
             principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
             interestBal = new BigNumber(currentDue.interest).minus(interestPaid).minus(interestWaived),
-            totalPrincipalInterestBal = principalBal.plus(interestBal),
+            feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid).minus(feeOnPaymentWaived),
+            totalPrincipalInterestBal = principalBal.plus(interestBal.plus(feeOnPaymentBal)),
             penaltyBal = 0,
             totalAmountBal = totalPrincipalInterestBal;
 
@@ -984,20 +1097,24 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         totalSchedulePaid = {
             principalDue: totalSchedulePaid.principalDue.plus(currentDue.principal),
             interestDue: totalSchedulePaid.interestDue.plus(currentDue.interest),
+            feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.plus(currentDue.feeOnPayment),
             totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.plus(currentDue.totalPrincipalInterest),
             penaltyDue: totalSchedulePaid.penaltyDue.plus(currentDue.penalty),
             totalAmountDue: totalSchedulePaid.totalAmountDue.plus(currentDue.totalAmount),
 
             principalPaid: totalSchedulePaid.principalPaid.plus(principalPaid),
             interestPaid: totalSchedulePaid.interestPaid.plus(interestPaid),
+            feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.plus(feeOnPaymentPaid),
             totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.plus(totalPrincipalInterestPaid),
             penaltyPaid: totalSchedulePaid.penaltyPaid.plus(0),
             totalAmountPaid: totalSchedulePaid.totalAmountPaid.plus(totalAmountPaid),
 
             interestWaived: totalSchedulePaid.interestWaived.plus(interestWaived),
+            feeOnPaymentWaived: totalSchedulePaid.feeOnPaymentWaived.plus(feeOnPaymentWaived),
 
             principalBal: totalSchedulePaid.principalBal.plus(principalBal),
             interestBal: totalSchedulePaid.interestBal.plus(interestBal),
+            feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.plus(feeOnPaymentBal),
             totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.plus(totalPrincipalInterestBal),
             penaltyBal: totalSchedulePaid.penaltyBal.plus(0),
             totalAmountBal: totalSchedulePaid.totalAmountBal.plus(totalAmountBal)
@@ -1012,20 +1129,24 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
             principalDue: currentDue.principal,
             interestDue: currentDue.interest,
+            feeOnPaymentDue: currentDue.feeOnPayment,
             totalPrincipalInterestDue: currentDue.totalPrincipalInterest,
             penaltyDue: currentDue.penalty,
             totalAmountDue: currentDue.totalAmount,
 
             principalPaid: principalPaid.toNumber(),
             interestPaid: interestPaid.toNumber(),
+            feeOnPaymentPaid: feeOnPaymentPaid.toNumber(),
             totalPrincipalInterestPaid: totalPrincipalInterestPaid.toNumber(),
             penaltyPaid: 0,
             totalAmountPaid: totalAmountPaid.toNumber(),
 
             interestWaived: interestWaived.toNumber(),
+            feeOnPaymentWaived: feeOnPaymentWaived.toNumber(),
 
             principalBal: principalBal.toNumber(),
             interestBal: interestBal.toNumber(),
+            feeOnPaymentBal: feeOnPaymentBal.toNumber(),
             totalPrincipalInterestBal: totalPrincipalInterestBal.toNumber(),
             penaltyBal: 0,
             totalAmountBal: totalAmountBal.toNumber(),
@@ -1045,20 +1166,24 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     totalSchedulePaid = {
         principalDue: totalSchedulePaid.principalDue.toNumber(),
         interestDue: totalSchedulePaid.interestDue.toNumber(),
+        feeOnPaymentDue: totalSchedulePaid.feeOnPaymentDue.toNumber(),
         totalPrincipalInterestDue: totalSchedulePaid.totalPrincipalInterestDue.toNumber(),
         penaltyDue: totalSchedulePaid.penaltyDue.toNumber(),
         totalAmountDue: totalSchedulePaid.totalAmountDue.toNumber(),
 
         principalPaid: totalSchedulePaid.principalPaid.toNumber(),
         interestPaid: totalSchedulePaid.interestPaid.toNumber(),
+        feeOnPaymentPaid: totalSchedulePaid.feeOnPaymentPaid.toNumber(),
         totalPrincipalInterestPaid: totalSchedulePaid.totalPrincipalInterestPaid.toNumber(),
         penaltyPaid: totalSchedulePaid.penaltyPaid.toNumber(),
         totalAmountPaid: totalSchedulePaid.totalAmountPaid.toNumber(),
 
         interestWaived: totalSchedulePaid.interestWaived.toNumber(),
+        feeOnPaymentWaived: totalSchedulePaid.feeOnPaymentWaived.toNumber(),
 
         principalBal: totalSchedulePaid.principalBal.toNumber(),
         interestBal: totalSchedulePaid.interestBal.toNumber(),
+        feeOnPaymentBal: totalSchedulePaid.feeOnPaymentBal.toNumber(),
         totalPrincipalInterestBal: totalSchedulePaid.totalPrincipalInterestBal.toNumber(),
         penaltyBal: totalSchedulePaid.penaltyBal.toNumber(),
         totalAmountBal: totalSchedulePaid.totalAmountBal.toNumber()
@@ -1102,6 +1227,19 @@ MakeRepayment.writeOff = function ({repaidDate, amountPaid, loanAccDoc, opts}) {
     let paymentWriteOff = loanAccDoc.paymentWriteOff;
 
     objPayment.rePaidDate = repaidDate;
+
+    if (opts.outStanding.feeOnPayment > 0) {
+        if (opts.outStanding.feeOnPayment >= amountPaid) {
+            objPayment.unPaidFeeOnPayment = opts.outStanding.feeOnPayment - amountPaid;
+            objPayment.feeOnPayment = amountPaid;
+            amountPaid = 0;
+        } else {
+            objPayment.unPaidFeeOnPayment = 0;
+            objPayment.feeOnPayment = opts.outStanding.feeOnPayment;
+            amountPaid = amountPaid - opts.outStanding.feeOnPayment;
+        }
+
+    }
 
     if (opts.outStanding.interest > 0) {
         if (opts.outStanding.interest >= amountPaid) {

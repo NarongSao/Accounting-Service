@@ -68,8 +68,6 @@ export const collectionSheetReport = new ValidatedMethod({
             header.paymentMethod = "All";
 
 
-
-
             /****** Content *****/
 
 
@@ -90,6 +88,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                     <th>Due Date</th>                                   
                                     <th>Sum Due Prin</th>
                                     <th>Sum Due Int</th>
+                                    <th>Sum Due Fee</th>
                                     <th>Total Sum Due</th>
                                     <th>Tel</th>
                                 </tr>
@@ -313,18 +312,22 @@ export const collectionSheetReport = new ValidatedMethod({
 
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
+            let totalDueFeeOnPaymentKHR = 0;
 
 
             let totalDuePrinUSD = 0;
             let totalDueIntUSD = 0;
+            let totalDueFeeOnPaymentUSD = 0;
 
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
+            let totalDueFeeOnPaymentTHB = 0;
 
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
+            let totalDueFeeOnPaymentBase = 0;
 
 
             loanDoc.forEach(function (loanAccDoc) {
@@ -382,13 +385,16 @@ export const collectionSheetReport = new ValidatedMethod({
                     if (loanAccDoc.currencyId == "KHR") {
                         totalDuePrinKHR += result.totalScheduleDue.principalDue;
                         totalDueIntKHR += result.totalScheduleDue.interestDue;
+                        totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
 
                     } else if (loanAccDoc.currencyId == "USD") {
                         totalDuePrinUSD += result.totalScheduleDue.principalDue;
                         totalDueIntUSD += result.totalScheduleDue.interestDue;
+                        totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
                     } else if (loanAccDoc.currencyId == "THB") {
                         totalDuePrinTHB += result.totalScheduleDue.principalDue;
                         totalDueIntTHB += result.totalScheduleDue.interestDue;
+                        totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
                     }
 
 
@@ -408,6 +414,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone}</td>
@@ -450,12 +457,30 @@ export const collectionSheetReport = new ValidatedMethod({
                     totalDueIntTHB,
                     params.exchangeId);
 
+            totalDueFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalDueFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalDueFeeOnPaymentUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalDueFeeOnPaymentTHB,
+                    params.exchangeId);
+
 
             content += `<tr>
                             <td colspan="9" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
                             <td></td>
 
                         </tr>
@@ -463,7 +488,8 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td colspan="9" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
                             <td></td>
 
                         </tr>
@@ -471,7 +497,8 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td colspan="9" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
                             <td></td>
 
                         </tr>
@@ -479,7 +506,8 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td colspan="9" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
                             <td></td>
 
                         </tr>

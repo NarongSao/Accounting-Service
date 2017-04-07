@@ -128,7 +128,7 @@ export const LoanRepaymentFeeSchema = new SimpleSchema({
     coType:{
         type: String,
         label: "CO Type",
-        defaultValue: "Only",
+        defaultValue: "All",
         autoform: {
             type: "select2",
             options: function () {

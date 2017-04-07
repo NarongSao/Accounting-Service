@@ -92,12 +92,14 @@ export const productActivityReport = new ValidatedMethod({
                                     <th>Fee</th>
                                     <th>Coll Prin</th>
                                     <th>Coll Int</th>
+                                    <th>Coll FeeOnPayment</th>
                                     <th>Coll Pen</th>
                                     <th>Total Coll</th>
                                     <th>Loan Out</th>	
                                     <th>All Client</th>
                                     <th>Arrears Print</th>
                                     <th>Arrears Int</th>
+                                    <th>Arrears FeeOnPayment</th>
                                     <th>PAR</th>
                                     <th>PAR (NBC)</th>
                                 </tr>
@@ -107,7 +109,6 @@ export const productActivityReport = new ValidatedMethod({
 
             //Param
             let selector = {};
-
 
 
             if (params.coType == "Only") {
@@ -319,12 +320,14 @@ export const productActivityReport = new ValidatedMethod({
             let totalFee = 0;
             let totalCollPrin = 0;
             let totalCollInt = 0;
+            let totalCollFeeOnPayment = 0;
             let totalCollPen = 0;
             let totalColl = 0;
             let totalLoanOut = 0;
             let totalAllClient = 0;
             let totalArrearsPrin = 0;
             let totalArrearsInt = 0;
+            let totalArrearsFeeOnPayment = 0;
 
 
             let coefficientPrincipalPaid = exchangeCoefficient({
@@ -337,6 +340,12 @@ export const productActivityReport = new ValidatedMethod({
                 fieldToCalculate: '$detailDoc.schedulePaid.interestPaid',
                 baseCurrency
             });
+
+            let coefficientFeeOnPaymentPaid = exchangeCoefficient({
+                exchange,
+                fieldToCalculate: '$detailDoc.schedulePaid.feeOnPaymentPaid',
+                baseCurrency
+            });
             let coefficientPenaltyPaid = exchangeCoefficient({
                 exchange,
                 fieldToCalculate: '$detailDoc.schedulePaid.penaltyPaid',
@@ -347,7 +356,6 @@ export const productActivityReport = new ValidatedMethod({
                 fieldToCalculate: '$detailDoc.schedulePaid.totalAmountPaid',
                 baseCurrency
             });
-
 
             loan.forEach(function (obj) {
 
@@ -368,6 +376,13 @@ export const productActivityReport = new ValidatedMethod({
                                     if: {$eq: ['$currencyId', 'USD']},
                                     then: coefficientInterestPaid.USD,
                                     else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientInterestPaid.KHR, coefficientInterestPaid.THB]}
+                                }
+                            },
+                            collFeeOnPayment: {
+                                $cond: {
+                                    if: {$eq: ['$currencyId', 'USD']},
+                                    then: coefficientFeeOnPaymentPaid.USD,
+                                    else: {$cond: [{$eq: ['$currencyId', 'KHR']}, coefficientFeeOnPaymentPaid.KHR, coefficientFeeOnPaymentPaid.THB]}
                                 }
                             },
                             collPenalty: {
@@ -392,16 +407,19 @@ export const productActivityReport = new ValidatedMethod({
                         $group: {
                             _id: {},
                             collPrin: {
-                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collPrin', 0]}
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$repaidDate', fDate]}]}, '$collPrin', 0]}
                             },
                             collInt: {
-                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collInt', 0]}
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$repaidDate', fDate]}]}, '$collInt', 0]}
+                            },
+                            collFeeOnPayment: {
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$repaidDate', fDate]}]}, '$collFeeOnPayment', 0]}
                             },
                             collPenalty: {
-                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collPenalty', 0]}
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$repaidDate', fDate]}]}, '$collPenalty', 0]}
                             },
                             collTotal: {
-                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$detailDoc.schedulePaid.repaidDate', fDate]}]}, '$collTotal', 0]}
+                                $sum: {$cond: [{$and: [{$lte: ['$repaidDate', tDate]}, {$gte: ['$repaidDate', fDate]}]}, '$collTotal', 0]}
                             }
 
                         }
@@ -458,16 +476,16 @@ export const productActivityReport = new ValidatedMethod({
                     },
                     {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
 
-                    {
-                        $lookup: {
-                            from: "microfis_fee",
-                            localField: "productDoc.feeId",
-                            foreignField: "_id",
-                            as: "feeDoc"
-                        }
-                    },
-                    {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
-
+                    /*{
+                     $lookup: {
+                     from: "microfis_fee",
+                     localField: "productDoc.feeId",
+                     foreignField: "_id",
+                     as: "feeDoc"
+                     }
+                     },
+                     {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
+                     */
                     {
                         $lookup: {
                             from: "microfis_penalty",
@@ -496,6 +514,7 @@ export const productActivityReport = new ValidatedMethod({
                 let subTotalLoanOut = 0;
                 let subTotalArrearsPrin = 0;
                 let subTotalArrearsInt = 0;
+                let subTotalArrearsFeeOnPayment = 0;
 
                 let subTotalArrearsPrinNBC = 0;
 
@@ -514,6 +533,7 @@ export const productActivityReport = new ValidatedMethod({
                     subTotalLoanOut += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                     subTotalArrearsPrin += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
                     subTotalArrearsInt += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.interestDue, params.exchangeId);
+                    subTotalArrearsFeeOnPayment += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.feeOnPaymentDue, params.exchangeId);
 
                     if (result.totalScheduleDue.numOfDayLate > 30) {
                         subTotalArrearsPrinNBC += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
@@ -536,12 +556,14 @@ export const productActivityReport = new ValidatedMethod({
                                 <td class="numberAlign">${microfis_formatNumber(obj.totalFee)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collPrin)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collInt)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collFeeOnPayment)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collPenalty)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(dataCollection[0].collTotal)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(subTotalLoanOut)}</td>
                                 <td>${numberOfClient}</td>
                                 <td class="numberAlign">${microfis_formatNumber(subTotalArrearsPrin)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(subTotalArrearsInt)}</td>
+                                <td class="numberAlign">${microfis_formatNumber(subTotalArrearsFeeOnPayment)}</td>
                                 <td class="numberAlign">${microfis_formatNumber(par * 100)}%</td>
                                 <td class="numberAlign">${microfis_formatNumber(parNBC * 100)}%</td>
                             </tr>`;
@@ -555,6 +577,7 @@ export const productActivityReport = new ValidatedMethod({
 
                 totalCollPrin += dataCollection[0].collPrin;
                 totalCollInt += dataCollection[0].collInt;
+                totalCollFeeOnPayment += dataCollection[0].collFeeOnPayment;
                 totalCollPen += dataCollection[0].collPenalty;
                 totalColl += dataCollection[0].collTotal;
 
@@ -562,6 +585,7 @@ export const productActivityReport = new ValidatedMethod({
                 totalAllClient += numberOfClient;
                 totalArrearsPrin += subTotalArrearsPrin;
                 totalArrearsInt += subTotalArrearsInt;
+                totalArrearsFeeOnPayment += subTotalArrearsFeeOnPayment;
 
 
             })
@@ -575,12 +599,14 @@ export const productActivityReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalFee)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalCollPrin)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalCollInt)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalCollFeeOnPayment)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalCollPen)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColl)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOut)}</td>
                             <td>${totalAllClient}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalArrearsPrin)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalArrearsInt)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalArrearsFeeOnPayment)}</td>
                             <td></td>
                             <td></td>
                         </tr>

@@ -104,6 +104,7 @@ formTmpl.onCreated(function () {
                     stateRepayment.set('checkRepayment', result);
                     stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
                     stateRepayment.set('interestUnPaid', result.interestUnPaid);
+                    stateRepayment.set('feeOnPaymentUnPaid', result.feeOnPaymentUnPaid);
                     // Set last repayment
                     if (result.lastRepayment) {
                         Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
@@ -167,6 +168,9 @@ formTmpl.helpers({
     },
     interestUnPaid() {
         return stateRepayment.get('interestUnPaid');
+    },
+    feeOnPaymentUnPaid() {
+        return stateRepayment.get('feeOnPaymentUnPaid');
     }
 
 });
@@ -227,6 +231,7 @@ let hooksObject = {
         updateWriteOff['writeOff.writeOffDate'] = doc.writeOff.writeOffDate;
         updateWriteOff['writeOff.amount'] = doc.writeOff.amount;
         updateWriteOff['writeOff.interest'] = doc.writeOff.interest;
+        updateWriteOff['writeOff.feeOnPayment'] = doc.writeOff.feeOnPayment;
         updateWriteOff['writeOff.description'] = doc.writeOff.description;
 
         let paymentWriteOff = [];
@@ -234,8 +239,10 @@ let hooksObject = {
             rePaidDate: doc.writeOff.writeOffDate,
             amount: 0,
             interest: 0,
+            feeOnPayment: 0,
             unPaidPrincipal: doc.writeOff.amount,
-            unPaidInterest: doc.writeOff.interest
+            unPaidInterest: doc.writeOff.interest,
+            unPaidFeeOnPayment: doc.writeOff.feeOnPayment
 
         })
 

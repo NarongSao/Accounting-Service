@@ -91,10 +91,12 @@ export const loanRepaymentReport = new ValidatedMethod({
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>
+                                    <th>Pro FeeOnPayment</th>
                                         <th>Col Date</th>
                                         <th>Status</th>	
                                     <th>Col Prin</th>
                                     <th>Col Int</th>
+                                    <th>Col FeeOnPayment</th>
                                     <th>Total Col</th>
                                     <th>Col Pen</th>
                               </tr>
@@ -104,7 +106,6 @@ export const loanRepaymentReport = new ValidatedMethod({
 
             //Param
             let selector = {};
-
 
 
             if (params.coType == "Only") {
@@ -320,25 +321,28 @@ export const loanRepaymentReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-
             let totalColPrinKHR = 0;
             let totalColIntKHR = 0;
+            let totalColFeeOnPaymentKHR = 0;
             let totalColPrinIntKHR = 0;
             let totalColPenKHR = 0;
 
             let totalColPrinUSD = 0;
             let totalColIntUSD = 0;
+            let totalColFeeOnPaymentUSD = 0;
             let totalColPrinIntUSD = 0;
             let totalColPenUSD = 0;
 
             let totalColPrinTHB = 0;
             let totalColIntTHB = 0;
+            let totalColFeeOnPaymentTHB = 0;
             let totalColPrinIntTHB = 0;
             let totalColPenTHB = 0;
 
 
             let totalColPrinBase = 0;
             let totalColIntBase = 0;
+            let totalColFeeOnPaymentBase = 0;
             let totalColPrinIntBase = 0;
             let totalColPenBase = 0;
 
@@ -355,7 +359,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                 selectorRepayment.type = {$ne: "Fee"};
 
                 let productStatusList;
-                
+
                 if (loanAccDoc.paymentMethod == "D") {
                     if (loanAccDoc.term <= 365) {
                         productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
@@ -380,7 +384,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                 }
 
 
-
                 let repaymentDoc = Repayment.find(selectorRepayment).fetch();
 
                 if (repaymentDoc != undefined && repaymentDoc.length > 0) {
@@ -395,37 +398,92 @@ export const loanRepaymentReport = new ValidatedMethod({
                             {$match: {"repaymentDoc.detail.repaymentId": repaymentObj._id}}
                         ])
 
-                        let checkClassify = true;
-                        if (params.classifyId && params.classifyId.includes("All") == false) {
-                            checkClassify = false;
-                        }
 
-                        let finProductStatus = function (obj) {
-                            return repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate >= obj.from && repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate <= obj.to;
-                        }
-                        let proStatus = productStatusList.find(finProductStatus);
-                        //check product status (Classify)
-                        if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
+                        if (repaymentScheduleDoc.length > 0) {
+
+                            let checkClassify = true;
+                            if (params.classifyId && params.classifyId.includes("All") == false) {
+                                checkClassify = false;
+                            }
+
+                            let finProductStatus = function (obj) {
+                                return repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate >= obj.from && repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate <= obj.to;
+                            }
+                            let proStatus = productStatusList.find(finProductStatus);
+                            //check product status (Classify)
+                            if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
 
 
+                                if (loanAccDoc.currencyId == "KHR") {
+
+                                    totalColPrinKHR += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid;
+                                    totalColIntKHR += repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
+                                    totalColFeeOnPaymentKHR += repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid;
+                                    totalColPrinIntKHR += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid + repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid;
+                                    totalColPenKHR += repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid;
+
+
+                                } else if (loanAccDoc.currencyId == "USD") {
+                                    totalColPrinUSD += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid;
+                                    totalColIntUSD += repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
+                                    totalColFeeOnPaymentUSD += repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid;
+                                    totalColPrinIntUSD += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid + repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid;
+                                    totalColPenUSD += repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid;
+                                } else if (loanAccDoc.currencyId == "THB") {
+                                    totalColPrinTHB = repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid;
+                                    totalColIntTHB = repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
+                                    totalColFeeOnPaymentTHB = repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid;
+                                    totalColPrinIntTHB = repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid + repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid;
+                                    totalColPenTHB = repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid;
+                                }
+
+
+                                content += `<tr>
+                                <td>${i}</td>
+                                <td>${repaymentObj.voucherId}</td>
+                                <td>${loanAccDoc._id}</td>
+                                <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.currencyId}</td>
+                                <td> ${loanAccDoc.accountType}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectFeeOnPayment)}</td>
+                              
+                                <td> ${microfis_formatDate(repaymentObj.repaidDate)}</td>
+                                <td> ${repaymentObj.type}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid + repaymentScheduleDoc[0].repaymentDoc.detail.feeOnPaymentPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid)}</td>
+                            </tr>`;
+
+                                i++;
+                            }
+                        } else {
                             if (loanAccDoc.currencyId == "KHR") {
 
-                                totalColPrinKHR += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid;
-                                totalColIntKHR += repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
-                                totalColPrinIntKHR += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
-                                totalColPenKHR += repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid;
+                                totalColPrinKHR += 0;
+                                totalColIntKHR += 0;
+                                totalColFeeOnPaymentKHR += 0;
+                                totalColPrinIntKHR += repaymentObj.amountPaid;
+                                totalColPenKHR += 0;
 
 
                             } else if (loanAccDoc.currencyId == "USD") {
-                                totalColPrinUSD += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid;
-                                totalColIntUSD += repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
-                                totalColPrinIntUSD += repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
-                                totalColPenUSD += repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid;
+                                totalColPrinUSD += 0;
+                                totalColIntUSD += 0;
+                                totalColFeeOnPaymentUSD += 0;
+                                totalColPrinIntUSD += repaymentObj.amountPaid;
+                                totalColPenUSD += 0;
                             } else if (loanAccDoc.currencyId == "THB") {
-                                totalColPrinTHB = repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid;
-                                totalColIntTHB = repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
-                                totalColPrinIntTHB = repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid;
-                                totalColPenTHB = repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid;
+                                totalColPrinTHB = 0;
+                                totalColIntTHB = 0;
+                                totalColFeeOnPaymentTHB = 0;
+                                totalColPrinIntTHB = repaymentObj.amountPaid;
+                                totalColPenTHB = 0;
                             }
 
 
@@ -440,13 +498,15 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectFeeOnPayment)}</td>
                               
                                 <td> ${microfis_formatDate(repaymentObj.repaidDate)}</td>
                                 <td> ${repaymentObj.type}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.principalPaid + repaymentScheduleDoc[0].repaymentDoc.detail.interestPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaymentScheduleDoc[0].repaymentDoc.detail.penaltyPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(0)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(0)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(0)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaymentObj.amountPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(0)}</td>
                             </tr>`;
 
                             i++;
@@ -490,6 +550,23 @@ export const loanRepaymentReport = new ValidatedMethod({
                     totalColIntTHB,
                     params.exchangeId);
 
+            totalColFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalColFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalColFeeOnPaymentUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalColFeeOnPaymentTHB,
+                    params.exchangeId);
+
             totalColPrinIntBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
@@ -527,32 +604,36 @@ export const loanRepaymentReport = new ValidatedMethod({
                     params.exchangeId
                 );
             content += `<tr>
-                            <td colspan="12" align="right">Subtotal-KHR</td>
+                            <td colspan="13" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-USD</td>
+                            <td colspan="13" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenUSD)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-THB</td>
+                            <td colspan="13" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenTHB)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Total-${baseCurrency}</td>
+                            <td colspan="13" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenBase)}</td>
 
