@@ -41,15 +41,15 @@ Meteor.methods({
 
         results.forEach(function (obj) {
             if (obj.result != 0) {
-                let valRiel=0;
-                let valDollar=0;
-                let valBaht=0;
-                if(obj._id.currency=="KHR"){
-                    valRiel=obj.result;
-                }else if(obj._id.currency=="USD"){
-                    valDollar=obj.result;
-                }else if(obj._id.currency=="THB"){
-                    valBaht=obj.result;
+                let valRiel = 0;
+                let valDollar = 0;
+                let valBaht = 0;
+                if (obj._id.currency == "KHR") {
+                    valRiel = obj.result;
+                } else if (obj._id.currency == "USD") {
+                    valDollar = obj.result;
+                } else if (obj._id.currency == "THB") {
+                    valBaht = obj.result;
                 }
 
 
@@ -87,20 +87,21 @@ Meteor.methods({
 
         if (lastDate != null) {
             var resultLast = CloseChartAccount.find(
-                selectorGetLastBalance);
+                selectorGetLastBalance).fetch();
+
             if (resultLast != null) {
                 resultLast.forEach(function (lastBal) {
                     if (lastBal.value != 0) {
 
-                        let valRiel=0;
-                        let valDollar=0;
-                        let valBaht=0;
-                        if(lastBal.currencyId=="KHR"){
-                            valRiel=lastBal.result;
-                        }else if(lastBal.currencyId=="USD"){
-                            valDollar=lastBal.result;
-                        }else if(lastBal.currencyId=="THB"){
-                            valBaht=lastBal.result;
+                        let valRiel = 0;
+                        let valDollar = 0;
+                        let valBaht = 0;
+                        if (lastBal.currencyId == "KHR") {
+                            valRiel = lastBal.value;
+                        } else if (lastBal.currencyId == "USD") {
+                            valDollar = lastBal.value;
+                        } else if (lastBal.currencyId == "THB") {
+                            valBaht = lastBal.value;
                         }
 
                         var re = Meteor.call('exchange', lastBal.currencyId,

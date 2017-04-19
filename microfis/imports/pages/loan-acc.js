@@ -100,7 +100,7 @@ indexTmpl.events({
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
-                   $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+        $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
         let self = this;
         state.set("disbursmentDate", self.disbursementDate);
@@ -129,7 +129,6 @@ indexTmpl.events({
                 }, 300)
             });
         }
-
     },
 
     'click .js-destroy' (event, instance) {
@@ -141,6 +140,7 @@ indexTmpl.events({
                 {_id: this._id},
                 {title: 'Loan Account', itemTitle: this._id}
             );
+            stateClient.set('cycle', stateClient.get('cycle') - 1);
         }
     },
     'click .js-display' (event, instance) {
@@ -176,7 +176,7 @@ productFormTmpl.events({
         Session.set('productDoc', null);
 
         if (productId) {
-                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+            $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
             lookupProduct.callPromise({
                 _id: productId

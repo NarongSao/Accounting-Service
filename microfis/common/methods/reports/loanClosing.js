@@ -48,8 +48,8 @@ export const loanClosingReport = new ValidatedMethod({
             /****** Content *****/
             let date = params.date;
 
-            let fDate = moment(date[0],"DD/MM/YYYY").startOf("days").toDate();
-            let tDate = moment(date[1],"DD/MM/YYYY").endOf("days").toDate();
+            let fDate = moment(date[0], "DD/MM/YYYY").startOf("days").toDate();
+            let tDate = moment(date[1], "DD/MM/YYYY").endOf("days").toDate();
 
             let exchangeData = Exchange.findOne({_id: params.exchangeId});
 
@@ -60,14 +60,13 @@ export const loanClosingReport = new ValidatedMethod({
             header.currencyId = "All";
             header.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
 
-            header.date = moment(fDate).format("DD/MM/YYYY")+" - "+ moment(tDate).format("DD/MM/YYYY");
+            header.date = moment(fDate).format("DD/MM/YYYY") + " - " + moment(tDate).format("DD/MM/YYYY");
             header.productId = "All";
             header.locationId = "All";
 
             header.fundId = "All";
             header.classifyId = "All";
             header.paymentMethod = "All";
-
 
 
             let baseCurrency = Setting.findOne().baseCurrency;
@@ -89,8 +88,10 @@ export const loanClosingReport = new ValidatedMethod({
                                     <th>Project Interest</th>                                   
                                     <th>Fin Date</th>                                   
                                     <th>Sum Loss Interest</th>                                   
+                                    <th>Sum Loss FeeOnPayment</th>                                   
                                     <th>Sum Col Prin Last</th>                                   
                                     <th>Sum Col Int Last</th>                                   
+                                    <th>Sum Col FeeOnPayment Last</th>                                   
                                     <th>Total Sum Col Last</th>
                                     <th>Sum Col Pen Last</th>
                                    
@@ -101,7 +102,6 @@ export const loanClosingReport = new ValidatedMethod({
 
             //Param
             let selector = {};
-
 
 
             if (params.coType == "Only") {
@@ -277,16 +277,6 @@ export const loanClosingReport = new ValidatedMethod({
 
                 {
                     $lookup: {
-                        from: "microfis_fee",
-                        localField: "productDoc.feeId",
-                        foreignField: "_id",
-                        as: "feeDoc"
-                    }
-                },
-                {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
-
-                {
-                    $lookup: {
                         from: "microfis_penalty",
                         localField: "productDoc.penaltyId",
                         foreignField: "_id",
@@ -315,25 +305,33 @@ export const loanClosingReport = new ValidatedMethod({
 
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
+            let totalDueFeeOnPaymentKHR = 0;
             let totalSumLossIntKHR = 0;
+            let totalSumLossFeeOnPaymentKHR = 0;
             let totalPenaltyKHR = 0;
 
 
             let totalDuePrinUSD = 0;
             let totalDueIntUSD = 0;
+            let totalDueFeeOnPaymentUSD = 0;
             let totalSumLossIntUSD = 0;
+            let totalSumLossFeeOnPaymentUSD = 0;
             let totalPenaltyUSD = 0;
 
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
+            let totalDueFeeOnPaymentTHB = 0;
             let totalSumLossIntTHB = 0;
+            let totalSumLossFeeOnPaymentTHB = 0;
             let totalPenaltyTHB = 0;
 
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
+            let totalDueFeeOnPaymentBase = 0;
             let totalSumLossIntBase = 0;
+            let totalSumLossFeeOnPaymentBase = 0;
             let totalPenaltyBase = 0;
 
 
@@ -346,7 +344,7 @@ export const loanClosingReport = new ValidatedMethod({
                 });
 
                 let productStatusList;
-                
+
                 if (loanAccDoc.paymentMethod == "D") {
                     if (loanAccDoc.term <= 365) {
                         productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
@@ -387,22 +385,29 @@ export const loanClosingReport = new ValidatedMethod({
                     return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
                 }
                 let proStatus = productStatusList.find(finProductStatus);
+
                 if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
                     if (loanAccDoc.currencyId == "KHR") {
                         totalDuePrinKHR += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
                         totalDueIntKHR += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
+                        totalDueFeeOnPaymentKHR += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
                         totalSumLossIntKHR += result.interestUnPaid;
+                        totalSumLossFeeOnPaymentKHR += result.feeOnPaymentUnPaid;
                         totalPenaltyKHR += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
 
                     } else if (loanAccDoc.currencyId == "USD") {
                         totalDuePrinUSD += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
                         totalDueIntUSD += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
+                        totalDueFeeOnPaymentUSD += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
                         totalSumLossIntUSD += result.interestUnPaid;
+                        totalSumLossFeeOnPaymentUSD += result.feeOnPaymentUnPaid;
                         totalPenaltyUSD += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
                     } else if (loanAccDoc.currencyId == "THB") {
                         totalDuePrinTHB += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
                         totalDueIntTHB += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
+                        totalDueFeeOnPaymentTHB += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
                         totalSumLossIntTHB += result.interestUnPaid;
+                        totalSumLossFeeOnPaymentTHB += result.feeOnPaymentUnPaid;
                         totalPenaltyTHB += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
                     }
 
@@ -422,10 +427,12 @@ export const loanClosingReport = new ValidatedMethod({
                                 
                                 <td> ${microfis_formatDate(result.lastRepayment.repaidDate)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.interestUnPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.feeOnPaymentUnPaid)}</td>
 
                                
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.totalPrincipalInterestPaid)}</td>
                                 
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid)}</td>
@@ -468,6 +475,25 @@ export const loanClosingReport = new ValidatedMethod({
                     baseCurrency,
                     totalDueIntTHB,
                     params.exchangeId);
+
+            totalDueFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalDueFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalDueFeeOnPaymentUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalDueFeeOnPaymentTHB,
+                    params.exchangeId);
+
+
             totalSumLossIntBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
@@ -483,6 +509,23 @@ export const loanClosingReport = new ValidatedMethod({
                     "THB",
                     baseCurrency,
                     totalSumLossIntTHB,
+                    params.exchangeId);
+
+            totalSumLossFeeOnPaymentBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalSumLossFeeOnPaymentKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalSumLossFeeOnPaymentUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalSumLossFeeOnPaymentTHB,
                     params.exchangeId);
 
             totalPenaltyBase = Meteor.call('microfis_exchange',
@@ -506,36 +549,44 @@ export const loanClosingReport = new ValidatedMethod({
             content += `<tr>
                             <td colspan="11" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyKHR)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="11" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyUSD)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="11" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyTHB)}</td>
 
                         </tr>
                         <tr>
                             <td colspan="11" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyBase)}</td>
 
                         </tr>

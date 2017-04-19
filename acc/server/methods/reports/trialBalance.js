@@ -64,7 +64,10 @@ Meteor.methods({
 
             //Parameter for Balance Last End Of Process
             if (lastDate != null) {
-                selectorGetLastBalance.closeDate = {$gte: moment(lastDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(lastDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
+                selectorGetLastBalance.closeDate = {
+                    $gte: moment(lastDate.closeDate, "DD/MM/YYYY").startOf('days').toDate(),
+                    $lte: moment(lastDate.closeDate, "DD/MM/YYYY").endOf('days').toDate()
+                };
             }
             if (self.currencyId != "All") {
                 selectorGetLastBalance.currencyId = self.currencyId;
@@ -199,7 +202,10 @@ Meteor.methods({
 
             //Parameter for Balance Last End Of Process
             if (lastDate != null) {
-                selectorGetLastBalance.closeDate = {$gte: moment(lastDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(lastDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
+                selectorGetLastBalance.closeDate = {
+                    $gte: moment(lastDate.closeDate, "DD/MM/YYYY").startOf('days').toDate(),
+                    $lte: moment(lastDate.closeDate, "DD/MM/YYYY").endOf('days').toDate()
+                };
             }
             if (self.currencyId != "All") {
                 selectorGetLastBalance.currencyId = self.currencyId;
@@ -322,7 +328,7 @@ Meteor.methods({
                 data.grandTotalDrUSD = data.grandTotalCrUSD;
             }
 
-            if (math.abs(data.grandTotalDrKHR - data.grandTotalCrKHR) <500) {
+            if (math.abs(data.grandTotalDrKHR - data.grandTotalCrKHR) < 500) {
                 data.grandTotalDrKHR = data.grandTotalCrKHR;
             }
 

@@ -39,15 +39,17 @@ Meteor.startup(function () {
                 "interestMethod": "Declining",
                 "interestRate": {
                     "min": 2,
+                    "defaultRate": 2.5,
                     "max": 3
                 },
-                "feeId": "001",
+                "feeId": ["001"],
+                "feeOnPaymentId": ["001"],
                 "penaltyId": "001",
                 "penaltyClosingId": "001"
             }
         ];
 
-        _.forEach(data, (val)=> {
+        _.forEach(data, (val) => {
             Product.insert(val);
         });
     }

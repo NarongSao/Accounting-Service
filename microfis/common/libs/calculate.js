@@ -111,7 +111,7 @@ Calculate.feeOnPayment = new ValidatedMethod({
         }
     }).validator(),
     run(opts) {
-        let feeOnPayment;
+        let feeOnPayment = 0;
 
         Meteor.call("microfis_feeOnPaymentCalculate", opts.disbursementAmount, opts.amount, opts.principal, opts.interest, opts.currencyId, opts.productDoc, function (err, result) {
             if (result) {

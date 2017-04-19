@@ -10,7 +10,7 @@ Meteor.startup(function () {
             {
                 "_id": "001",
                 "name": "Fee 1%",
-                "feeTypeOf": "P",
+                "feeTypeOf": "Disbursement",
                 "calculateType": "P",
                 "amount": 1
             },
@@ -18,7 +18,7 @@ Meteor.startup(function () {
             {
                 "_id": "002",
                 "name": "Fee 4$",
-                "feeTypeOf": "P",
+                "feeTypeOf": "Disbursement",
                 "calculateType": "A",
                 "amount": 5
             }
@@ -29,3 +29,12 @@ Meteor.startup(function () {
         });
     }
 });
+
+
+/* Fee Type Of
+ Disbursement,
+ Amount Paid,
+ Principal Paid,
+ Interest Paid
+
+* */

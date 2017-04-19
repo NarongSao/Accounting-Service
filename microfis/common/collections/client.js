@@ -68,7 +68,7 @@ Client.generalSchema = new SimpleSchema({
     dob: {
         type: Date,
         label: 'Date of birth',
-        defaultValue: moment().toDate(),
+        defaultValue: moment().add(-18, "years").toDate(),
         autoform: {
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
