@@ -387,6 +387,13 @@ LoanAcc.accountSchema = new SimpleSchema({
             }
         }
     }
+    ,
+    waivedForClosing: {
+        type: Number,
+        decimal: true,
+        defaultValue: 0,
+        optional: true
+    }
 });
 
 // Repayment

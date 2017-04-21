@@ -38,6 +38,8 @@ indexTmpl.onCreated(function () {
     createNewAlertify('fee');
 });
 
+let stateFee = new ReactiveObj();
+
 indexTmpl.helpers({
     tableSettings(){
         let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
@@ -82,9 +84,16 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
+        stateFee.set('isFeeTypeOf', false);
         alertify.fee(fa('plus', 'Fee'), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
+        stateFee.set('isFeeTypeOf', false);
+        if (this.calculateType == "P") {
+            stateFee.set('isFeeTypeOf', true);
+        } else {
+            stateFee.set('isFeeTypeOf', false);
+        }
         alertify.fee(fa('pencil', 'Fee'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -103,15 +112,42 @@ indexTmpl.events({
 newTmpl.helpers({
     collection(){
         return Fee;
+    },
+    isFeeTypeOf(){
+        return stateFee.get("isFeeTypeOf");
     }
 });
+
+newTmpl.events({
+    'change [name="calculateType"]'(e, t){
+        if (e.currentTarget.value == "P") {
+            stateFee.set('isFeeTypeOf', true);
+        } else {
+            stateFee.set('isFeeTypeOf', false);
+        }
+    }
+})
 
 // Edit
 editTmpl.helpers({
     collection(){
         return Fee;
+    },
+    isFeeTypeOf(){
+        return stateFee.get("isFeeTypeOf");
     }
 });
+
+editTmpl.events({
+    'change [name="calculateType"]'(e, t){
+        if (e.currentTarget.value == "P") {
+            stateFee.set('isFeeTypeOf', true);
+        } else {
+            stateFee.set('isFeeTypeOf', false);
+        }
+    }
+})
+
 
 // Show
 showTmpl.helpers({});

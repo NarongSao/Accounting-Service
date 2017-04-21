@@ -36,6 +36,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('penaltyClosing');
 });
+let statePenaltyClosing=new ReactiveObj();
 
 indexTmpl.helpers({
     tableSettings(){
@@ -48,8 +49,12 @@ indexTmpl.helpers({
                 sortDirection: 'desc'
             },
             {key: 'name', label: 'Name'},
-            {key: 'installmentTermLessThan', label: 'Installment Term Less Than (%)'},
-            {key: 'interestRemainderCharge', label: 'Interest Remainder Charge (%)'},
+            {key: 'name', label: 'Name'},
+            {key: 'installmentTermLessThan', label: 'Installment Term Less Than'},
+            {key: 'installmentType', label: 'Installment Type'},
+            {key: 'penaltyRemainderTypeOf', label: 'Penalty Remainder Type'},
+            {key: 'interestRemainderCharge', label: 'Interest Remainder Charge'},
+            {key: 'calculateType', label: 'Calculate Type'},
             {
                 key: '_id',
                 label(){
@@ -69,9 +74,16 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
+        statePenaltyClosing.set('isPenaltyRemainderTypeOf', false);
         alertify.penaltyClosing(fa('plus', 'PenaltyClosing'), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
+        statePenaltyClosing.set('isPenaltyRemainderTypeOf', false);
+        if (this.calculateType == "P") {
+            statePenaltyClosing.set('isPenaltyRemainderTypeOf', true);
+        } else {
+            statePenaltyClosing.set('isPenaltyRemainderTypeOf', false);
+        }
         alertify.penaltyClosing(fa('pencil', 'PenaltyClosing'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -90,15 +102,42 @@ indexTmpl.events({
 newTmpl.helpers({
     collection(){
         return PenaltyClosing;
+    },
+    isPenaltyRemainderTypeOf(){
+        return statePenaltyClosing.get("isPenaltyRemainderTypeOf");
     }
 });
+
+newTmpl.events({
+    'change [name="calculateType"]'(e, t){
+        if (e.currentTarget.value == "P") {
+            statePenaltyClosing.set('isPenaltyRemainderTypeOf', true);
+        } else {
+            statePenaltyClosing.set('isPenaltyRemainderTypeOf', false);
+        }
+    }
+})
 
 // Edit
 editTmpl.helpers({
     collection(){
         return PenaltyClosing;
+    },
+    isPenaltyRemainderTypeOf(){
+        return statePenaltyClosing.get("isPenaltyRemainderTypeOf");
     }
 });
+
+editTmpl.events({
+    'change [name="calculateType"]'(e, t){
+        if (e.currentTarget.value == "P") {
+            statePenaltyClosing.set('isPenaltyRemainderTypeOf', true);
+        } else {
+            statePenaltyClosing.set('isPenaltyRemainderTypeOf', false);
+        }
+    }
+})
+
 
 // Show
 showTmpl.helpers({});

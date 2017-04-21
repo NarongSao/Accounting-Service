@@ -9,18 +9,37 @@ export const Penalty = new Mongo.Collection("microfis_penalty");
 Penalty.schema = new SimpleSchema({
     name: {
         type: String,
-        label:'Name',
+        label: 'Name',
         unique: true,
         max: 250
     },
     calculateType: {
         type: String,
-        label:'Calculate type',
+        label: 'Calculate type',
         autoform: {
             type: "select-radio-inline",
             defaultValue: 'A',
             options: function () {
                 return SelectOpts.calculateType(false);
+            }
+        }
+    },
+    penaltyTypeOf: {
+        type: String,
+        label: 'Penalty Type Of',
+        optional: true,
+        autoform: {
+            type: "select2",
+            defaultValue: 'Disbursement',
+            options: function () {
+                let penaltyTypeOf = [];
+                penaltyTypeOf.push(
+                    {label: "Disbursement", value: "Disbursement"},
+                    {label: "Amount Due", value: "Amount Due"},
+                    {label: "Interest Due", value: "Interest Due"},
+                    {label: "Principal Due", value: "Principal Due"}
+                )
+                return penaltyTypeOf;
             }
         }
     },

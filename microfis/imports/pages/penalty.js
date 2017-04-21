@@ -36,6 +36,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('penalty');
 });
+let statePenalty = new ReactiveObj();
 
 indexTmpl.helpers({
     tableSettings(){
@@ -49,6 +50,8 @@ indexTmpl.helpers({
             },
             {key: 'name', label: 'Name'},
             {key: 'calculateType', label: 'Calculate Type'},
+            {key: 'penaltyTypeOf', label: 'Penalty Type'},
+
             {
                 key: 'amount',
                 label: 'Amount',
@@ -79,9 +82,16 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
+        statePenalty.set('isPenaltyTypeOf', false);
         alertify.penalty(fa('plus', 'Penalty'), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
+        statePenalty.set('isPenaltyTypeOf', false);
+        if (this.calculateType == "P") {
+            statePenalty.set('isPenaltyTypeOf', true);
+        } else {
+            statePenalty.set('isPenaltyTypeOf', false);
+        }
         alertify.penalty(fa('pencil', 'Penalty'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -100,15 +110,38 @@ indexTmpl.events({
 newTmpl.helpers({
     collection(){
         return Penalty;
+    },
+    isPenaltyTypeOf(){
+        return statePenalty.get("isPenaltyTypeOf");
     }
 });
 
+newTmpl.events({
+    'change [name="calculateType"]'(e, t){
+        if (e.currentTarget.value == "P") {
+            statePenalty.set('isPenaltyTypeOf', true);
+        } else {
+            statePenalty.set('isPenaltyTypeOf', false);
+        }
+    }
+})
+
 // Edit
 editTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         this.subscribe('microfis.penalty', {_id: this.data._id});
     });
 });
+
+editTmpl.events({
+    'change [name="calculateType"]'(e, t){
+        if (e.currentTarget.value == "P") {
+            statePenalty.set('isPenaltyTypeOf', true);
+        } else {
+            statePenalty.set('isPenaltyTypeOf', false);
+        }
+    }
+})
 
 editTmpl.helpers({
     collection(){
@@ -117,12 +150,15 @@ editTmpl.helpers({
     data () {
         let data = Penalty.findOne(this._id);
         return data;
+    },
+    isPenaltyTypeOf(){
+        return statePenalty.get("isPenaltyTypeOf");
     }
 });
 
 // Show
 showTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         this.subscribe('microfis.penalty', {_id: this.data._id});
     });
 });

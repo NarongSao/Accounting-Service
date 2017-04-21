@@ -98,6 +98,12 @@ Repayment.schema = new SimpleSchema({
             }
         }
     },
+    waivedForClosing: {
+        type: Number,
+        decimal: true,
+        defaultValue:0,
+        optional: true
+    },
     totalPaid: {
         type: Number,
         decimal: true,

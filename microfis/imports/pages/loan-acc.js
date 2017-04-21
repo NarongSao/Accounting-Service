@@ -183,6 +183,8 @@ productFormTmpl.events({
             }).then(function (result) {
                 Session.set('productDoc', result);
 
+                state.set("defaultRate",result.interestRate.defaultRate);
+
                 Meteor.setTimeout(function () {
                     $.unblockUI();
                 }, 100);
@@ -323,6 +325,9 @@ formTmpl.helpers({
         if (state.get("currencyId")) {
             return state.get("currencyId");
         }
+    },
+    defaultRate(){
+        return state.get("defaultRate");
     }
 
 

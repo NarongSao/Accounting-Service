@@ -31,7 +31,9 @@
                 <div class="col-md-12">
                     {{> afQuickField name="name"}}
                     {{> afQuickField name="calculateType" select2="true"}}
-                    {{> afQuickField name="feeTypeOf"}}
+                    {{#if isFeeTypeOf}}
+                        {{> afQuickField name="feeTypeOf"}}
+                    {{/if}}
                     {{> afQuickField name="amount"}}
                 </div>
             </div>
@@ -49,7 +51,9 @@
                 <div class="col-md-12">
                     {{> afQuickField name="name"}}
                     {{> afQuickField name="calculateType" select2="true"}}
-                    {{> afQuickField name="feeTypeOf"}}
+                    {{#if isFeeTypeOf}}
+                        {{> afQuickField name="feeTypeOf"}}
+                    {{/if}}
                     {{> afQuickField name="amount"}}
                 </div>
             </div>

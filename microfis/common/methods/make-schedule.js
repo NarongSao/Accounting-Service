@@ -158,7 +158,8 @@ MakeSchedule.declinig = new ValidatedMethod({
                     principal: principalDue,
                     interest: interestDue,
                     currencyId: loanAccDoc.currencyId,
-                    productDoc: loanAccDoc.productDoc
+                    productDoc: loanAccDoc.productDoc,
+                    loanOutstanding: roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId)
                 })
 
 
@@ -167,7 +168,8 @@ MakeSchedule.declinig = new ValidatedMethod({
 
                 // Check installment can close without penalty
                 let allowClosing = false;
-                if (i >= loanAccDoc.installmentAllowClosing) {
+
+                if (i >= loanAccDoc.installmentAllowClosing || i == loanAccDoc.term) {
                     allowClosing = true;
                 }
                 schedules.push({

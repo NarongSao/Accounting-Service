@@ -329,6 +329,7 @@ Repayment.after.insert(function (userId, doc) {
                 LoanAcc.direct.update({_id: doc.loanAccId}, {
                     $set: {
                         closeDate: doc.repaidDate,
+                        waivedForClosing: doc.waivedForClosing,
                         status: "Close"
                     }
                 }, function (err) {
@@ -336,9 +337,20 @@ Repayment.after.insert(function (userId, doc) {
                         console.log(err);
                     }
                 });
+
+
+                //Repayment
+                Repayment.direct.update(doc._id, {
+                    $inc: {
+                        amountPaid: -doc.waivedForClosing,
+                        totalPaid: -doc.waivedForClosing
+                    }
+                }, function (err) {
+                    if (err) {
+                        console.log(err.message);
+                    }
+                })
             }
-
-
         });
     } else {
         // Insert Data to Saving
@@ -536,7 +548,14 @@ Repayment.after.remove(function (userId, doc) {
             // Update loan acc for close type
             if (doc.type == 'Close') {
                 // Set close status on loan acc
-                LoanAcc.direct.update({_id: doc.loanAccId}, {$unset: {closeDate: ''}});
+                LoanAcc.direct.update({_id: doc.loanAccId},
+                    {$set: {waivedForClosing: doc.waivedForClosing}},
+                    {
+                        $unset: {
+                            closeDate: ''
+                        }
+                    }
+                );
 
                 if (loanAcc.writeOffDate != undefined) {
                     LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Write Off'}});

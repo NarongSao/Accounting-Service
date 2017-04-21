@@ -33,8 +33,9 @@ Meteor.startup(function () {
 
 /* Fee Type Of
  Disbursement,
- Amount Paid,
- Principal Paid,
- Interest Paid
+ Loan Outstanding,
+ Amount Due,
+ Principal Due,
+ Interest Due
 
 * */

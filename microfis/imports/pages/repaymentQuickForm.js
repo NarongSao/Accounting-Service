@@ -218,6 +218,7 @@ indexTmpl.onCreated(function () {
             }).catch(function (err) {
                 console.log(err.message);
             });
+            $.unblockUI();
         }
     });
 

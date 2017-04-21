@@ -201,6 +201,10 @@ formTmpl.helpers({
     }
 });
 
+formTmpl.onRendered(function () {
+    $('[name="dob"]').data("DateTimePicker").maxDate(moment().add(-18, "years").toDate());
+})
+
 
 formTmpl.events({
     'change [name="idType"]'(e, t){

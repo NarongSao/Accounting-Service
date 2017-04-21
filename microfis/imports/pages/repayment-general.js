@@ -273,6 +273,7 @@ let hooksObject = {
 
             doc.type = 'General';
 
+            debugger;
             // Check to payment
             let checkBeforePayment = checkRepayment && checkRepayment.scheduleDue.length > 0 && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;
             if (checkBeforePayment) {

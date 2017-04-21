@@ -10,7 +10,10 @@ Meteor.startup(function () {
             {
                 "_id": "001",
                 "name": "Penalty Closing 20%",
+                "installmentType": "P",
                 "installmentTermLessThan": 50,
+                "calculateType": "P",
+                "penaltyRemainderTypeOf": "Loan Outstanding",
                 "interestRemainderCharge": 20
             }
         ];

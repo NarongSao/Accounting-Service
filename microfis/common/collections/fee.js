@@ -28,6 +28,7 @@ Fee.schema = new SimpleSchema({
     feeTypeOf: {
         type: String,
         label: 'Fee Type Of',
+        optional: true,
         autoform: {
             type: "select2",
             defaultValue: 'Disbursement',
@@ -35,9 +36,10 @@ Fee.schema = new SimpleSchema({
                 let feeTypeOf = [];
                 feeTypeOf.push(
                     {label: "Disbursement", value: "Disbursement"},
-                    {label: "Amount Paid", value: "Amount Paid"},
-                    {label: "Interest Paid", value: "Interest Paid"},
-                    {label: "Principal Paid", value: "Principal Paid"}
+                    {label: "Loan Outstanding", value: "Loan Outstanding"},
+                    {label: "Amount Due", value: "Amount Due"},
+                    {label: "Interest Due", value: "Interest Due"},
+                    {label: "Principal Due", value: "Principal Due"}
                 )
                 return feeTypeOf;
             }

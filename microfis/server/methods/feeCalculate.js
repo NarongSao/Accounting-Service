@@ -27,7 +27,7 @@ Meteor.methods({
 
         return amount;
     },
-    microfis_feeOnPaymentCalculate: function (disbursement, amount, principal, interest, currencyId, productDoc) {
+    microfis_feeOnPaymentCalculate: function (disbursement, amount, principal, interest, currencyId, productDoc, loanOutstanding) {
 
         let fee = 0;
         let data = Fee.find({_id: {$in: productDoc.feeOnPaymentId}}).fetch();
@@ -36,14 +36,15 @@ Meteor.methods({
             data.forEach(function (obj) {
                 if (obj.feeTypeOf == "Disbursement") {
                     fee += feeOnPayment(obj.calculateType, disbursement, obj.amount, currencyId, productDoc);
-
-                } else if (obj.feeTypeOf == "Amount Paid") {
+                } else if (obj.feeTypeOf == "Loan Outstanding") {
+                    fee += feeOnPayment(obj.calculateType, loanOutstanding, obj.amount, currencyId, productDoc);
+                } else if (obj.feeTypeOf == "Amount Due") {
                     fee += feeOnPayment(obj.calculateType, amount, obj.amount, currencyId, productDoc);
                 }
-                else if (obj.feeTypeOf == "Principal Paid") {
+                else if (obj.feeTypeOf == "Principal Due") {
                     fee += feeOnPayment(obj.calculateType, principal, obj.amount, currencyId, productDoc);
                 }
-                else if (obj.feeTypeOf == "Interest Paid") {
+                else if (obj.feeTypeOf == "Interest Due") {
                     fee += feeOnPayment(obj.calculateType, interest, obj.amount, currencyId, productDoc);
                 }
             })

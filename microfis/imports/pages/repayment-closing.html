@@ -158,11 +158,7 @@
             <div class="col-md-5">
                 {{#autoForm collection=collection id="Microfis_repaymentClosingForm" type="insert"}}
                     {{> afQuickField type="hidden" name="loanAccId" value=loanAccId}}
-
-
                     {{> afQuickField name="repaidDate"}}
-
-
                     {{#with defaultValue}}
                         <div class="row">
                             <div class="col-md-6">
@@ -175,7 +171,15 @@
                     {{/with}}
                     {{> afQuickField name="savingBalance" type="hidden" value=savingBal.totalBal}}
 
-                    {{> afQuickField name="voucherId" value=voucherId}}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="waivedForClosing"}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="voucherId" value=voucherId}}
+
+                    </div>
+                </div>
                     {{> afQuickField name="note"}}
                     {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
                     {{> afQuickField name="currencyId" type="hidden" value=loanAccDoc.currencyId}}

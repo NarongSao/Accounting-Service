@@ -25,7 +25,11 @@ LoanAcc.before.insert(function (userId, doc) {
     let productDoc = lookupProduct.call({_id: doc.productId}),
         penaltyClosingDoc = productDoc.penaltyClosingDoc;
 
-    doc.installmentAllowClosing = math.ceil((penaltyClosingDoc.installmentTermLessThan * doc.term) / 100);
+    if (penaltyClosingDoc.installmentType == "P") {
+        doc.installmentAllowClosing = math.ceil((penaltyClosingDoc.installmentTermLessThan * doc.term) / 100);
+    } else {
+        doc.installmentAllowClosing = penaltyClosingDoc.installmentTermLessThan;
+    }
 
 });
 
@@ -50,8 +54,11 @@ LoanAcc.before.update(function (userId, doc, fieldNames, modifier, options) {
     let productDoc = lookupProduct.call({_id: modifier.$set.productId}),
         penaltyClosingDoc = productDoc.penaltyClosingDoc;
 
-    modifier.$set.installmentAllowClosing = math.ceil((penaltyClosingDoc.installmentTermLessThan * modifier.$set.term) / 100);
-
+    if (penaltyClosingDoc.installmentType == "P") {
+        modifier.$set.installmentAllowClosing = math.ceil((penaltyClosingDoc.installmentTermLessThan * modifier.$set.term) / 100);
+    } else {
+        modifier.$set.installmentAllowClosing = penaltyClosingDoc.installmentTermLessThan;
+    }
 });
 
 // After update
@@ -92,7 +99,7 @@ LoanAcc.after.remove(function (userId, doc) {
 function _makeSchedule(doc) {
     let schedule = MakeSchedule.declinig.call({loanAccId: doc._id});
 
-    let maturityDate, tenor = 0, projectInterest = 0, projectFeeOnPayment= 0;
+    let maturityDate, tenor = 0, projectInterest = 0, projectFeeOnPayment = 0;
 
     _.forEach(schedule, (value, key) => {
         tenor += value.numOfDay;

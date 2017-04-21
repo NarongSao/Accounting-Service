@@ -11,6 +11,7 @@ Meteor.startup(function () {
                 "_id": "001",
                 "name": "Penalty 1%",
                 "calculateType": "P",
+                "penaltyTypeOf": "Disbursement",
                 "amount": 1,
                 "graceDay": 3
             },
@@ -19,6 +20,7 @@ Meteor.startup(function () {
                 "_id": "002",
                 "name": "Penalty 1$",
                 "calculateType": "A",
+                "penaltyTypeOf": "Disbursement",
                 "amount": 1,
                 "graceDay": 3
             }

@@ -123,6 +123,10 @@ formTmpl.onCreated(function () {
 });
 
 formTmpl.onRendered(function () {
+    let loanDoc = stateRepayment.get('loanAccDoc');
+    if (loanDoc) {
+        $('[name="repaidDate"]').data("DateTimePicker").date(loanDoc.disbursementDate);
+    }
 
 
     let $repaidDateObj = $('[name="repaidDate"]');
@@ -137,6 +141,8 @@ formTmpl.onRendered(function () {
             stateRepayment.set('repaidDate', moment(e.date).toDate());
             stateRepayment.set("isVoucherId", true);
         });
+
+
     }
 
 });
@@ -176,12 +182,7 @@ formTmpl.helpers({
     voucherId(){
         return Session.get('lastVoucherId');
     },
-    feeDate(){
-        let loanDoc = stateRepayment.get('loanAccDoc');
-        if (loanDoc) {
-            return loanDoc.disbursementDate;
-        }
-    },
+
     loanAccId(){
         if (stateRepayment.get('loanAccDoc')) {
             return stateRepayment.get('loanAccDoc')._id;

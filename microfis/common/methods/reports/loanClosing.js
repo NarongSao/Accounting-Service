@@ -89,6 +89,7 @@ export const loanClosingReport = new ValidatedMethod({
                                     <th>Fin Date</th>                                   
                                     <th>Sum Loss Interest</th>                                   
                                     <th>Sum Loss FeeOnPayment</th>                                   
+                                    <th>Waived</th>                                   
                                     <th>Sum Col Prin Last</th>                                   
                                     <th>Sum Col Int Last</th>                                   
                                     <th>Sum Col FeeOnPayment Last</th>                                   
@@ -309,6 +310,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossIntKHR = 0;
             let totalSumLossFeeOnPaymentKHR = 0;
             let totalPenaltyKHR = 0;
+            let totalWaivedForClosingKHR = 0;
 
 
             let totalDuePrinUSD = 0;
@@ -317,7 +319,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossIntUSD = 0;
             let totalSumLossFeeOnPaymentUSD = 0;
             let totalPenaltyUSD = 0;
-
+            let totalWaivedForClosingUSD = 0;
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
@@ -325,7 +327,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossIntTHB = 0;
             let totalSumLossFeeOnPaymentTHB = 0;
             let totalPenaltyTHB = 0;
-
+            let totalWaivedForClosingTHB = 0;
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
@@ -333,7 +335,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossIntBase = 0;
             let totalSumLossFeeOnPaymentBase = 0;
             let totalPenaltyBase = 0;
-
+            let totalWaivedForClosingBase = 0;
 
             loanDoc.forEach(function (loanAccDoc) {
 
@@ -394,6 +396,7 @@ export const loanClosingReport = new ValidatedMethod({
                         totalSumLossIntKHR += result.interestUnPaid;
                         totalSumLossFeeOnPaymentKHR += result.feeOnPaymentUnPaid;
                         totalPenaltyKHR += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
+                        totalWaivedForClosingKHR  += loanAccDoc.waivedForClosing;
 
                     } else if (loanAccDoc.currencyId == "USD") {
                         totalDuePrinUSD += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
@@ -402,6 +405,8 @@ export const loanClosingReport = new ValidatedMethod({
                         totalSumLossIntUSD += result.interestUnPaid;
                         totalSumLossFeeOnPaymentUSD += result.feeOnPaymentUnPaid;
                         totalPenaltyUSD += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
+                        totalWaivedForClosingUSD  += loanAccDoc.waivedForClosing;
+
                     } else if (loanAccDoc.currencyId == "THB") {
                         totalDuePrinTHB += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
                         totalDueIntTHB += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
@@ -409,6 +414,8 @@ export const loanClosingReport = new ValidatedMethod({
                         totalSumLossIntTHB += result.interestUnPaid;
                         totalSumLossFeeOnPaymentTHB += result.feeOnPaymentUnPaid;
                         totalPenaltyTHB += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
+                        totalWaivedForClosingTHB  += loanAccDoc.waivedForClosing;
+
                     }
 
 
@@ -428,6 +435,7 @@ export const loanClosingReport = new ValidatedMethod({
                                 <td> ${microfis_formatDate(result.lastRepayment.repaidDate)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.interestUnPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.feeOnPaymentUnPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.waivedForClosing)}</td>
 
                                
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid)}</td>
@@ -545,11 +553,29 @@ export const loanClosingReport = new ValidatedMethod({
                     totalPenaltyTHB,
                     params.exchangeId);
 
+            totalWaivedForClosingBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalWaivedForClosingKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalWaivedForClosingUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalWaivedForClosingTHB,
+                    params.exchangeId);
+
 
             content += `<tr>
                             <td colspan="11" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
@@ -561,6 +587,7 @@ export const loanClosingReport = new ValidatedMethod({
                             <td colspan="11" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
@@ -572,6 +599,7 @@ export const loanClosingReport = new ValidatedMethod({
                             <td colspan="11" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
@@ -583,6 +611,7 @@ export const loanClosingReport = new ValidatedMethod({
                             <td colspan="11" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>

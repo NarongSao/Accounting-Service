@@ -84,7 +84,6 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
     let tmpAmountPaid = new BigNumber(amountPaid);
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);
 
-
     for (let o of scheduleDue) {
         if (tmpAmountPaid > 0) {
             let currentDue = o.currentDue;
@@ -903,7 +902,6 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     };
 
 
-    console.log(feeOnPaymentUnPaid);
     
     let tmpAmountPaid = {
         principal: new BigNumber(principalUnpaid),

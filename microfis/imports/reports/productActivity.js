@@ -49,7 +49,6 @@ indexTmpl.onCreated(function () {
 
             productActivityReport.callPromise({params: params})
                 .then((result) => {
-                    console.log(result);
                     rptDataState.set(result);
                 }).catch((err) => {
                     console.log(err.message);

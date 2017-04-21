@@ -406,7 +406,7 @@ AccRoutes.route('/trialBalanceReportGen', {
         if (queryParams.currencyId == "All") {
             Layout.report('acc_trialBalanceForAllReportGen');
         } else {
-            Layout.main('acc_trialBalanceReport');
+            Layout.report('acc_trialBalanceReportGen');
         }
     }
 });

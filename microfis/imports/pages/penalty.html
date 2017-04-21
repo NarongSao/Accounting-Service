@@ -31,6 +31,9 @@
                 <div class="col-md-12">
                     {{> afQuickField name="name"}}
                     {{> afQuickField name="calculateType" select2="true"}}
+                    {{#if isPenaltyTypeOf}}
+                        {{> afQuickField name="penaltyTypeOf"}}
+                    {{/if}}
                     {{> afQuickField name="amount"}}
                     {{> afQuickField name="graceDay"}}
                 </div>
@@ -50,6 +53,9 @@
                     <div class="col-md-12">
                         {{> afQuickField name="name"}}
                         {{> afQuickField name="calculateType" select2="true"}}
+                        {{#if isPenaltyTypeOf}}
+                            {{> afQuickField name="penaltyTypeOf"}}
+                        {{/if}}
                         {{> afQuickField name="amount"}}
                         {{> afQuickField name="graceDay"}}
                     </div>
