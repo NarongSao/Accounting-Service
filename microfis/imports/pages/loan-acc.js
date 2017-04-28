@@ -100,6 +100,8 @@ indexTmpl.events({
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
     },
     'click .js-update' (event, instance) {
+
+
         $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
         let self = this;
@@ -132,6 +134,8 @@ indexTmpl.events({
     },
 
     'click .js-destroy' (event, instance) {
+
+
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
             alertify.error("Can't remove this account!!!");
         } else {

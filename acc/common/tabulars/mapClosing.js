@@ -25,6 +25,9 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
     columns: [
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.acc_mapClosingAction},
         {
+            data: "_id",
+            title: "Id"
+        }, {
             data: "chartAccountCompare",
             title: "Compare Account"
         }, {

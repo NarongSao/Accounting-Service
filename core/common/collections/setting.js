@@ -96,6 +96,11 @@ Setting.schema = new SimpleSchema({
                 ];
             }
         }
+    },
+    integrate: {
+        type: Boolean,
+        label: __('core.setting.integrateLbl'),
+        defaultValue: false
     }
 });
 

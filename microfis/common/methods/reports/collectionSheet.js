@@ -79,7 +79,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <tr> 
                                     <th>No</th>
                                     <th>LA Code</th>
-                                    <th>Clent Name</th>
+                                    <th>Client Name</th>
                                     <th>Vill</th>
                                     <th>CRC</th>
                                     <th>Type</th>

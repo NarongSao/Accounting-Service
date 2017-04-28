@@ -25,6 +25,7 @@ import {EndOfProcessTabular} from '../../common/tabulars/endOfProcess.js';
 
 // Collection
 import {EndOfProcess} from '../../common/collections/endOfProcess.js';
+import {Setting} from '../../../core/common/collections/setting';
 
 // Page
 import './endOfProcess.html';
@@ -84,30 +85,66 @@ indexTmpl.events({
         alertify.endOfProcess(fa("plus", "End Of Process"), renderTemplate(newTmpl));
     },
     'click .remove': function (e, t) {
+        debugger;
         var id = this._id;
         let self = this;
 
+
         Meteor.call("microfis_getLastEndOfProcess", self.branchId, function (err, result) {
+
             if (result) {
                 stateEndOfProcess.set("closeDate", result.closeDate);
             }
-            if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
-                alertify.error("Not the Last End OF Process!!!");
+            //Integrate to Account=============================================================================================================================
+            let settingDoc = Setting.findOne();
+            if (settingDoc.integrate == true) {
+                let selector = {};
+                selector.branchId = self.branchId;
+                Meteor.call('getDateEndOfProcess', selector, function (err, lastDateFromAccount) {
+
+                    if (lastDateFromAccount == undefined || lastDateFromAccount.closeDate.getTime() < moment(self.closeDate).toDate().getTime()) {
+
+                        if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
+                            alertify.error("Not the Last End OF Process!!!");
+                        } else {
+                            alertify.confirm("Are you sure to delete ?")
+                                .set({
+                                    onok: function (closeEvent) {
+                                        Meteor.call('microfis_removeEndOfProcess', id, function (err, result) {
+                                            if (!err) {
+                                                alertify.success('Success');
+                                            }
+                                        });
+                                    },
+                                    title: fa("remove", "End of Process")
+                                });
+                        }
+                    } else {
+                        alertify.error("You already End OF Process in Accounting System!!!");
+                    }
+                })
+                //=============================================================================================================================
             } else {
-                alertify.confirm("Are you sure to delete ?")
-                    .set({
-                        onok: function (closeEvent) {
-                            Meteor.call('microfis_removeEndOfProcess', id, function (err, result) {
-                                if (!err) {
-                                    alertify.success('Success');
-                                }
-                            });
-                        },
-                        title: fa("remove", "End of Process")
-                    });
+                if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
+                    alertify.error("Not the Last End OF Process!!!");
+                } else {
+                    alertify.confirm("Are you sure to delete ?")
+                        .set({
+                            onok: function (closeEvent) {
+                                Meteor.call('microfis_removeEndOfProcess', id, function (err, result) {
+                                    if (!err) {
+                                        alertify.success('Success');
+                                    }
+                                });
+                            },
+                            title: fa("remove", "End of Process")
+                        });
+                }
             }
 
+
         });
+
 
     }
 });

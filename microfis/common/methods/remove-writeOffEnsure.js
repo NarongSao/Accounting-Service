@@ -7,33 +7,47 @@ import {updateLoanAccStatus} from '../../common/methods/update-LoanAccStatus.js'
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {Setting} from '../../../core/common/collections/setting';
 
 export const removeWriteOffEnsure = new ValidatedMethod({
-    name: 'microfis.removeWriteOffEnsure',
-    mixins: [CallPromiseMixin],
-    validate: new SimpleSchema({
-        loanAccId: {type: String},
-        opts: {type: Object, optional: true, blackbox: true}
-    }).validator(),
-    run({loanAccId, opts}) {
-        if (!this.isSimulation) {
-            Meteor._sleepForMs(100);
+        name: 'microfis.removeWriteOffEnsure',
+        mixins: [CallPromiseMixin],
+        validate: new SimpleSchema({
+            loanAccId: {type: String},
+            opts: {type: Object, optional: true, blackbox: true}
+        }).validator(),
+        run({loanAccId, opts}) {
+            if (!this.isSimulation) {
+                Meteor._sleepForMs(100);
 
-            let isUpdate= LoanAcc.direct.update({_id: loanAccId}, {
-                $unset: opts
-            });
+                let settingDoc = Setting.findOne();
+                if (settingDoc.integrate == true) {
 
-            if(isUpdate){
-               return updateLoanAccStatus.callPromise({
-                   loanAccId: loanAccId
-                }).then(function (result) {
+                    Meteor.call("api_journalRemove", loanAccId, "Write Off Ensure", function (err, result) {
+                        if (err) {
+                            console.log(err.message);
+                        }
+                    })
 
-                }).catch(function (err) {
-                    console.log(err.message);
+                }
+
+
+                let isUpdate = LoanAcc.direct.update({_id: loanAccId}, {
+                    $unset: opts
                 });
+
+                if (isUpdate) {
+                    return updateLoanAccStatus.callPromise({
+                        loanAccId: loanAccId
+                    }).then(function (result) {
+
+                    }).catch(function (err) {
+                        console.log(err.message);
+                    });
+                }
+
+
             }
-
-
         }
-    }
-});
+    })
+;

@@ -82,7 +82,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
                                     <th>No</th>
                                     <th>Voucher Code</th>
                                     <th>LA Code</th>
-                                    <th>KH Clent Name</th>
+                                    <th>KH Client Name</th>
                                     <th>KH Staff Name</th>
                                     <th>CRC</th>
                                     <th>Acc Type</th>

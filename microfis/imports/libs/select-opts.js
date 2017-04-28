@@ -50,8 +50,15 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
+
         list.push({value: 'IL', label: 'Individual Loan'});
         list.push({value: 'GL', label: 'Group Loan'});
+        list.push({value: 'EL', label: 'Enterprise Loan'});
+        list.push({value: 'OL', label: 'Other Loan'});
+        list.push({value: 'RPSL', label: 'Related Party Shareholders Loan'});
+        list.push({value: 'RPML', label: 'Related Party Manager Loan'});
+        list.push({value: 'RPEL', label: 'Related Party Employees Loan'});
+        list.push({value: 'RPAL', label: 'Related Party External Auditors Loan'});
 
         return list;
     },

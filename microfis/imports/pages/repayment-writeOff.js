@@ -254,7 +254,8 @@ let hooksObject = {
             if (makeRepaymentWriteOff.length > 0) {
                 makeWriteOffEnsure.callPromise({
                     loanAccId: loanAccDoc._id,
-                    opts: repaymentWriteOffObj
+                    opts: repaymentWriteOffObj,
+                    isEnsure: false
                 }).then(function (result) {
                     if (result) {
                         lookupLoanAcc.callPromise({
@@ -290,7 +291,7 @@ let hooksObject = {
         }).catch(function (err) {
             console.log(err.message);
         });
-        Session.set("resetQuickPayment",true);
+        Session.set("resetQuickPayment", true);
         displaySuccess();
     },
     onError (formType, error) {

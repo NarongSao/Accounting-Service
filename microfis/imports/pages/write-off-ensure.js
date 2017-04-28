@@ -57,7 +57,7 @@ formTmpl.onCreated(function () {
         }
 
         if (loanAccDoc.productId) {
-                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+            $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
             lookupProduct.callPromise({
                 _id: loanAccDoc.productId
@@ -84,7 +84,7 @@ formTmpl.onCreated(function () {
             }
 
             if (disbursementDate) {
-                           $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+                $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
                 let currentData = Template.currentData();
                 stateRepayment.set('curData', currentData);
@@ -251,12 +251,12 @@ let hooksObject = {
 
         makeWriteOffEnsure.callPromise({
             loanAccId: curDoc.loanAccDoc._id,
-            opts: updateWriteOff
+            opts: updateWriteOff,
+            isEnsure: true
         }).then(function (result) {
             if (result) {
                 alertify.success("Success ");
                 alertify.writeOff().close();
-
 
                 if (result) {
                     lookupLoanAcc.callPromise({
@@ -266,7 +266,7 @@ let hooksObject = {
                     }).catch(function (err) {
                         console.log(err.message);
                     });
-                    
+
                 }
             }
         }).catch(function (err) {

@@ -79,7 +79,7 @@ export const loanOutstandingReport = new ValidatedMethod({
                                 <tr> 
                                     <th>No</th>
                                     <th>LA Code</th>
-                                    <th>Clent Name</th>
+                                    <th>Client Name</th>
                                     <th>CRC</th>
                                     <th>Type</th>
                                     <th>Dis Date</th>

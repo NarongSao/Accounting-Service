@@ -97,10 +97,10 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.guarantor(fa('plus', 'Credit Officer'), renderTemplate(formTmpl));
+        alertify.guarantor(fa('plus', 'Guarantor'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.guarantor(fa('pencil', 'Credit Officer'), renderTemplate(formTmpl, this));
+        alertify.guarantor(fa('pencil', 'Guarantor'), renderTemplate(formTmpl, this));
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
@@ -110,7 +110,7 @@ indexTmpl.events({
         );
     },
     'click .js-display' (event, instance) {
-        alertify.guarantorShow(fa('eye', 'Credit Officer'), renderTemplate(showTmpl, this));
+        alertify.guarantorShow(fa('eye', 'Guarantor'), renderTemplate(showTmpl, this));
     }
 });
 

@@ -393,6 +393,12 @@ LoanAcc.accountSchema = new SimpleSchema({
         decimal: true,
         defaultValue: 0,
         optional: true
+    },
+    voucherId: {
+        type: String,
+        optional: true,
+        label: "Voucher",
+        defaultValue: ""
     }
 });
 

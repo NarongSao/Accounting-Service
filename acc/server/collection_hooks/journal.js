@@ -9,11 +9,16 @@ import {ConfigDep} from '../../imports/api/collections/configDep';
 import {ChartAccount} from '../../imports/api/collections/chartAccount';
 import {DepExpList} from '../../imports/api/collections/depExpList';
 import {FixAssetDep} from '../../imports/api/collections/fixAssetDep';
+import {Setting} from '../../../core/common/collections/setting';
 
 
 Journal.before.insert(function (userId, doc) {
     var depType = ConfigDep.findOne();
     var transaction = [];
+
+    let settingDoc = Setting.findOne();
+
+
     _.each(doc.transaction, function (obj) {
         if (!_.isNull(obj)) {
             var accountId = obj.account.split('|');
@@ -28,6 +33,7 @@ Journal.before.insert(function (userId, doc) {
             });
             obj.accountDoc = account;
             transaction.push(obj);
+
         }
     });
     doc.transaction = transaction;
@@ -225,10 +231,15 @@ Journal.before.insert(function (userId, doc) {
 
 
 });
+
+
 Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
     var depType = ConfigDep.findOne();
     modifier.$set = modifier.$set || {};
     var transaction = [];
+
+    let settingDoc = Setting.findOne();
+
     _.each(modifier.$set.transaction, function (obj) {
         if (!_.isNull(obj)) {
             var accountId = obj.account.split('|');
@@ -244,6 +255,8 @@ Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
             });
             obj.accountDoc = account;
             transaction.push(obj);
+
+
         }
     });
 
@@ -441,4 +454,5 @@ Journal.before.update(function (userId, doc, fieldNames, modifier, options) {
         modifier.$set.transactionAsset = [];
     }
 });
+
 

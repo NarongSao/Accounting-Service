@@ -458,50 +458,57 @@ indexTmpl.events({
 
     },
     'click .js-removeWriteOff'(event, instance) {
+        let self = this;
+        Meteor.call('microfis_getLastEndOfProcess', self.branchId, function (err, endOfProcess) {
+            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.writeOff.writeOffDate.getTime()) {
 
-        let loanAccDoc = stateRepayment.get('loanAccDoc');
-        if (loanAccDoc.paymentWriteOff && loanAccDoc.paymentWriteOff.length > 1) {
-            alertify.error("Can't remove wirte off, you already make repayment!!!!");
-        } else {
+                let loanAccDoc = stateRepayment.get('loanAccDoc');
+                if (loanAccDoc.paymentWriteOff && loanAccDoc.paymentWriteOff.length > 1) {
+                    alertify.error("Can't remove wirte off, you already make repayment!!!!");
+                } else {
 
-            let opts = {};
+                    let opts = {};
 
-            opts.writeOff = "";
-            opts.writeOffDate = "";
-            opts.paymentWriteOff = "";
+                    opts.writeOff = "";
+                    opts.writeOffDate = "";
+                    opts.paymentWriteOff = "";
 
-            if (loanAccDoc.paymentWriteOff && loanAccDoc.paymentWriteOff.length == 1) {
-                alertify.confirm(
-                    fa("remove", "Write Off"),
-                    "Are you sure to delete write off?",
-                    function () {
-                        removeWriteOffEnsure.callPromise({
-                            loanAccId: loanAccDoc._id,
-                            opts: opts
-                        }).then(function (result) {
-                            alertify.success("Remove Success.");
+                    if (loanAccDoc.paymentWriteOff && loanAccDoc.paymentWriteOff.length == 1) {
+                        alertify.confirm(
+                            fa("remove", "Write Off"),
+                            "Are you sure to delete write off?",
+                            function () {
+                                removeWriteOffEnsure.callPromise({
+                                    loanAccId: loanAccDoc._id,
+                                    opts: opts
+                                }).then(function (result) {
+                                    alertify.success("Remove Success.");
 
-                            lookupLoanAcc.callPromise({
-                                _id: loanAccDoc._id
-                            }).then(function (result) {
-                                stateRepayment.set('loanAccDoc', result);
-                            }).catch(function (err) {
-                                console.log(err.message);
-                            });
+                                    lookupLoanAcc.callPromise({
+                                        _id: loanAccDoc._id
+                                    }).then(function (result) {
+                                        stateRepayment.set('loanAccDoc', result);
+                                    }).catch(function (err) {
+                                        console.log(err.message);
+                                    });
 
 
-                        }).catch(function (err) {
-                            alertify.error(err.message);
-                            console.log(err.message);
-                        });
-                    },
-                    null
-                );
+                                }).catch(function (err) {
+                                    alertify.error(err.message);
+                                    console.log(err.message);
+                                });
+                            },
+                            null
+                        );
+                    } else {
+                        alertify.error("You already payment!!!!!");
+                    }
+
+                }
             } else {
-                alertify.error("You already payment!!!!!");
+                alertify.error("Already End Of Process!!!");
             }
-
-        }
+        })
 
     },
     'click .js-display'(event, instance) {
@@ -533,13 +540,13 @@ scheduleDetailTmpl.helpers({
     },
     principalInterestPaid(repaymentDoc) {
         if (repaymentDoc) {
-            return repaymentDoc.totalPrincipalPaid + repaymentDoc.totalInterestPaid;
+            return repaymentDoc.totalPrincipalPaid + repaymentDoc.totalInterestPaid + repaymentDoc.totalFeeOnPaymentPaid;
         }
         return 0;
     },
     outstanding(item) {
         if (item.repaymentDoc) {
-            let totalPaidAndInterestWaived = (item.repaymentDoc.totalPrincipalPaid + item.repaymentDoc.totalInterestPaid + item.repaymentDoc.totalInterestWaived)
+            let totalPaidAndInterestWaived = (item.repaymentDoc.totalPrincipalPaid + item.repaymentDoc.totalInterestPaid + item.repaymentDoc.totalInterestWaived + item.repaymentDoc.totalFeeOnPaymentPaid )
             return item.totalDue - totalPaidAndInterestWaived;
         } else {
             return item.totalDue;

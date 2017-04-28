@@ -143,7 +143,7 @@ export let checkRepayment = new ValidatedMethod({
                             let penaltyAmountTypeOfTotal = 0;
                             if (penaltyDoc.penaltyTypeOf == "Disbursement") {
                                 penaltyAmountTypeOfTotal = loanAccDoc.loanAmount;
-                            }  else if (penaltyDoc.penaltyTypeOf == "Amount Due") {
+                            } else if (penaltyDoc.penaltyTypeOf == "Amount Due") {
                                 penaltyAmountTypeOfTotal = totalPrincipalInterestDue;
                             } else if (penaltyDoc.penaltyTypeOf == "Interest Due") {
                                 penaltyAmountTypeOfTotal = interestDue;
@@ -333,6 +333,7 @@ export let checkRepayment = new ValidatedMethod({
                 interestAddition: 0,
                 interestReminderPenalty: 0,
                 interestWaived: 0,
+                feeOnPaymentWaived: 0,
                 totalDue: 0
             };
 
@@ -375,10 +376,10 @@ export let checkRepayment = new ValidatedMethod({
             let penaltyClosingAmountTypeOfTotal = 0;
             if (penaltyClosingDoc.penaltyRemainderTypeOf == "Disbursement") {
                 penaltyClosingAmountTypeOfTotal = loanAccDoc.loanAmount;
-            }  else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Loan Outstanding") {
-                penaltyClosingAmountTypeOfTotal = totalScheduleDue.principalDue+closing.principalReminder;
-            }  else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Amount Remainder") {
-                penaltyClosingAmountTypeOfTotal = closing.interestReminder+closing.principalReminder;
+            } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Loan Outstanding") {
+                penaltyClosingAmountTypeOfTotal = totalScheduleDue.principalDue + closing.principalReminder;
+            } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Amount Remainder") {
+                penaltyClosingAmountTypeOfTotal = closing.interestReminder + closing.principalReminder;
             } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Interest Remainder") {
                 penaltyClosingAmountTypeOfTotal = closing.interestReminder;
             } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Principal Remainder") {
@@ -389,28 +390,26 @@ export let checkRepayment = new ValidatedMethod({
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
                 if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing && isPenalty) {
-
-
-                    if(penaltyClosingDoc.calculateType=="P"){
+                    if (penaltyClosingDoc.calculateType == "P") {
                         closing.interestReminderPenalty = round2(penaltyClosingAmountTypeOfTotal * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
-                    }else {
-                        closing.interestReminderPenalty =  penaltyClosingDoc.interestRemainderCharge;
+                    } else {
+                        closing.interestReminderPenalty = penaltyClosingDoc.interestRemainderCharge;
                     }
                 }
             } else {
                 let checkInstallmentTermPrevious = totalSchedulePrevious.installment.to && totalSchedulePrevious.installment.to < loanAccDoc.installmentAllowClosing;
                 if ((!totalSchedulePrevious.installment.to || checkInstallmentTermPrevious) && isPenalty) {
-                    if(penaltyClosingDoc.calculateType=="P") {
+                    if (penaltyClosingDoc.calculateType == "P") {
                         closing.interestReminderPenalty = round2(penaltyClosingAmountTypeOfTotal * penaltyClosingDoc.interestRemainderCharge / 100, _round.precision, _round.type);
-                    }else {
-                        closing.interestReminderPenalty =  penaltyClosingDoc.interestRemainderCharge;
+                    } else {
+                        closing.interestReminderPenalty = penaltyClosingDoc.interestRemainderCharge;
                     }
                 }
             }
 
 
-
             closing.interestWaived = round2(closing.interestReminder - closing.interestReminderPenalty, _round.precision, _round.type);
+            closing.feeOnPaymentWaived = round2(closing.feeOnPaymentReminder, _round.precision, _round.type);
             closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty, _round.precision, _round.type);
 
 
