@@ -55,12 +55,14 @@ import './repayment-writeOff.js';
 import './repayment-fee.js';
 
 import './write-off-ensure.js';
+import './saving-transaction.html';
 
 // Declare template
 let indexTmpl = Template.Microfis_repayment,
     scheduleDetailTmpl = Template.Microfis_repaymentDetailSchedule,
     actionTmpl = Template.Microfis_repaymentAction,
     showTmpl = Template.Microfis_repaymentShow,
+    showSavingTmpl = Template.Microfis_savingTransactionShow,
 
     generalFormTmpl = Template.Microfis_repaymentGeneralForm,
     feeFormTmpl = Template.Microfis_repaymentFeeForm,
@@ -512,7 +514,22 @@ indexTmpl.events({
 
     },
     'click .js-display'(event, instance) {
+
         alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showTmpl, this));
+    },
+    'click .js-display-savingTransaction'(event, instance) {
+        alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showSavingTmpl, this));
+    },
+    'click .js-destroy-savingTransaction' (event, instance) {
+        if (this.paymentId == "0") {
+            destroyAction(
+                SavingTransaction,
+                {_id: this._id},
+                {title: 'SavingTransaction', itemTitle: this._id}
+            );
+        } else {
+            alertify.error("Can't remove !!!!");
+        }
     }
 });
 

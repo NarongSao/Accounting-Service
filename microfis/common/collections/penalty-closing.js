@@ -15,7 +15,7 @@ PenaltyClosing.schema = new SimpleSchema({
     },
     installmentType: {
         type: String,
-        label: 'Calculate type',
+        label: 'Installment Type',
         autoform: {
             type: "select-radio-inline",
             defaultValue: 'A',
@@ -48,7 +48,7 @@ PenaltyClosing.schema = new SimpleSchema({
     },
     calculateType: {
         type: String,
-        label:'Calculate type',
+        label: 'Calculate type',
         autoform: {
             type: "select-radio-inline",
             defaultValue: 'A',

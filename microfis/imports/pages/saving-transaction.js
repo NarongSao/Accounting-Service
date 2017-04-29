@@ -61,7 +61,7 @@ indexTmpl.onCreated(function () {
         let savingAccId = FlowRouter.getParam('savingAccId');
 
         if (savingAccId) {
-                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+            $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
             // Get disbursement doc
             lookupSavingAcc.callPromise({
@@ -70,7 +70,7 @@ indexTmpl.onCreated(function () {
                 state.set('savingAccDoc', result);
                 Session.set('savingAccDoc', result);
 
-                Meteor.setTimeout(()=> {
+                Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 200);
             }).catch(function (err) {
@@ -126,7 +126,7 @@ indexTmpl.events({
         let data = {savingAccDoc: state.get('savingAccDoc'),};
         alertify.savingTransaction(fa('plus', 'Saving Withdrawal'), renderTemplate(withdrawalFormTmpl, data));
     },
-    'click .js-destroy' (event, instance) {
+    'click .js-destroy-savingTransaction' (event, instance) {
         if (this.paymentId == "0") {
             destroyAction(
                 SavingTransaction,
@@ -138,7 +138,8 @@ indexTmpl.events({
         }
 
     },
-    'click .js-display' (event, instance) {
+    'click .js-display-savingTransaction' (event, instance) {
+        debugger;
         alertify.savingTransactionShow(fa('eye', 'SavingTransaction'), renderTemplate(showTmpl, this));
     }
 });

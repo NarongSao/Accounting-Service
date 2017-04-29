@@ -303,18 +303,24 @@
 <template name="Microfis_repaymentShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#with data}}
-                <dl class="dl-horizontal">
-                    <dt>ID</dt>
-                    <dd>{{_id}}</dd>
-                    <dt>Loan Acc Client ID</dt>
-                    <dd>{{loanAccId}}</dd>
-                    <dt>Repaid Date</dt>
-                    <dd>{{moFormat repaidDate "DD/MM/YYYY HH:mm:ss"}}</dd>
-                    <dt>Amount</dt>
-                    <dd>{{numFormat amount "0,0.00"}}</dd>
-                </dl>
-            {{/with}}
+
+            <dl class="dl-horizontal">
+                <dt>ID</dt>
+                <dd>{{_id}}</dd>
+                <dt>Loan Acc Client ID</dt>
+                <dd>{{loanAccId}}</dd>
+                <dt>Type</dt>
+                <dd>{{type}}</dd>
+                <dt>Repaid Date</dt>
+                <dd>{{moFormat repaidDate "DD/MM/YYYY HH:mm:ss"}}</dd>
+                <dt>Amount</dt>
+                <dd>{{numFormat amountPaid "0,0.00"}}</dd>
+                <dt>Penalty</dt>
+                <dd>{{numFormat penaltyPaid "0,0.00"}}</dd>
+                <dt>Total</dt>
+                <dd>{{numFormat totalPaid "0,0.00"}}</dd>
+            </dl>
+
         {{else}}
             {{> loading}}
         {{/if}}

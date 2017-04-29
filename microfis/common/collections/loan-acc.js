@@ -876,7 +876,6 @@ LoanAcc.otherSchema = new SimpleSchema({
     purpose: {
         type: String,
         label: 'Purpose',
-        optional: true,
         autoform: {
             type: 'select',
             afFieldInput: {

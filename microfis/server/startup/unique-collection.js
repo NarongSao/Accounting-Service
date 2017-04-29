@@ -3,6 +3,7 @@ import {SavingTransaction} from '../../common/collections/saving-transaction';
 import {Client} from '../../common/collections/client.js';
 import {EndOfProcess} from '../../common/collections/endOfProcess.js';
 import {Repayment} from '../../common/collections/repayment.js';
+import BigNumber from 'bignumber.js';
 
 
 Meteor.startup(function () {
@@ -21,5 +22,6 @@ Meteor.startup(function () {
     EndOfProcess._ensureIndex({month: 1, branchId: 1, year: 1, day: 1}, {unique: 1});
     Repayment._ensureIndex({voucherId: 1, currencyId: 1, branchId: 1}, {unique: 1});
 
+    BigNumber.config({ ERRORS: false });
 
 });

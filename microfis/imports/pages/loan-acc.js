@@ -187,7 +187,7 @@ productFormTmpl.events({
             }).then(function (result) {
                 Session.set('productDoc', result);
 
-                state.set("defaultRate",result.interestRate.defaultRate);
+                state.set("defaultRate", result.interestRate.defaultRate);
 
                 Meteor.setTimeout(function () {
                     $.unblockUI();
@@ -424,6 +424,7 @@ showTmpl.onCreated(function () {
 showTmpl.helpers({
     data: function () {
         let data = Template.instance().dataLookup.get();
+        console.log(data);
         // data.attachFileUrl = null;
         // if (data.photo) {
         //     let file = Files.findOne(data.attachFile);
