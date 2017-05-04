@@ -29,7 +29,7 @@ Meteor.methods({
         })
         return arr;
     },
-    microfis_clientAccGroupOpt: function (branchId) {
+    microfis_clientAccGroupOpt: function (branchId, locationId) {
         let arr = [];
         // let loanList = LoanAcc.find({branchId: branchId, status: {$ne: "Close"}}).fetch();
         arr.push({label: "(Select One)", value: ""});
@@ -38,6 +38,7 @@ Meteor.methods({
                 $match: {
                     branchId: branchId,
                     accountType: "GL",
+                    locationId: locationId,
                     isAddToGroup: false,
                     status: {$nin: ["Close", "Restructure"]}
                 }

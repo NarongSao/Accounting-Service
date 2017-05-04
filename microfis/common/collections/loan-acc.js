@@ -726,18 +726,6 @@ LoanAcc.interestSchema = new SimpleSchema({
         type: Number,
         label: 'Interest rate (%)',
         decimal: true,
-        min: function () {
-            let interestRate = state.get('interestRate');
-            if (interestRate) {
-                return interestRate.min;
-            }
-        },
-        max: function () {
-            let interestRate = state.get('interestRate');
-            if (interestRate) {
-                return interestRate.max;
-            }
-        },
         autoform: {
             type: "inputmask",
             afFieldInput: {
@@ -769,7 +757,7 @@ LoanAcc.locationSchema = new SimpleSchema({
                     }
                 }
             }
-        },
+        }
     },
     geography: {
         type: String,

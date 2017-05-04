@@ -35,6 +35,7 @@ let indexTmpl = Template.Microfis_groupLoan,
 
 
 var groupLoanDetailCollection = new Mongo.Collection(null);
+let code = new ReactiveVar("");
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -70,6 +71,20 @@ indexTmpl.events({
 });
 
 // New
+
+newTmpl.onRendered(function () {
+    this.autorun(function () {
+        Meteor.call("microfis_getCodeGroup", Session.get("currentBranch"), function (err, result) {
+            if (result) {
+                code.set(parseInt((result.code).substr(8, 13)) + 1);
+            } else {
+                code.set("000001");
+            }
+
+        })
+    })
+})
+
 newTmpl.helpers({
     collection(){
         return GroupLoan;
@@ -77,8 +92,25 @@ newTmpl.helpers({
 
     groupLoanDetailCollection(){
         return groupLoanDetailCollection;
+    },
+    code(){
+        return code.get();
     }
 });
+
+newTmpl.events({
+    'change [name="groupId"]'(e, t){
+        debugger;
+        let group = $(e.currentTarget).val();
+        Meteor.call("microfis_getGroupById", group, function (err, result) {
+            if (result) {
+                locationChange.set(result.locationId);
+            } else {
+                locationChange.set("");
+            }
+        })
+    }
+})
 
 // Edit
 editTmpl.helpers({
@@ -90,6 +122,13 @@ editTmpl.helpers({
     }
 });
 
+
+editTmpl.events({
+    'change [name="groupId"]'(e, t){
+        locationId.set($(e.currentTarget).val());
+    }
+})
+
 // Show
 showTmpl.helpers({});
 
@@ -98,6 +137,7 @@ AutoForm.hooks({
     Microfis_groupLoanNew: {
         before: {
             insert: function (doc) {
+                debugger;
 
                 let loanData = groupLoanDetailCollection.find().fetch();
 
@@ -106,6 +146,7 @@ AutoForm.hooks({
                     loan.push({id: obj.id})
                 });
                 doc.loan = loan;
+                doc.groupName = $('[name="groupId"] option:selected').text();
 
                 return doc;
             }
@@ -126,8 +167,10 @@ AutoForm.hooks({
 
                 var loan = [];
                 loanData.forEach(function (obj) {
-                    loan.push({account: obj.id})
+                    loan.push({id: obj.id})
                 });
+
+                doc.$set.groupName = $('[name="groupId"] option:selected').text();
                 doc.$set.loan = loan;
                 doc.$unset = {};
                 return doc;

@@ -7,11 +7,19 @@ import {SelectOpts} from '../../imports/libs/select-opts.js';
 export const GroupLoan = new Mongo.Collection("microfis_groupLoan");
 
 GroupLoan.schema = new SimpleSchema({
-    name: {
+    groupId: {
         type: String,
-        label: 'Name',
-        // unique: true,
-        max: 250
+        label: 'Group',
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOpts.groupOpt(Session.get("currentBranch"));
+            }
+        }
+    },
+    groupName: {
+        type: String,
+        optional: true
     },
     date: {
         type: Date,
@@ -57,6 +65,7 @@ GroupLoan.schema = new SimpleSchema({
 GroupLoan.groupLoanDetail = new SimpleSchema({
     loanAccount: {
         type: String,
+        optional: true,
         label: "Loan Account"
     }
 });

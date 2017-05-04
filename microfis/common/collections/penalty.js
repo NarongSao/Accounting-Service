@@ -59,13 +59,12 @@ Penalty.schema = new SimpleSchema({
         min: 0,
         autoform: {
             type: "inputmask",
-            defaultValue: 'A',
             afFieldInput: {
                 inputmaskOptions: function () {
                     if (Meteor.isClient) {
                         let calculateType = AutoForm.getFieldValue('calculateType');
                         if (calculateType == 'P') {
-                            return inputmaskOptions.integer();
+                            return inputmaskOptions.decimal();
                         }
                         return inputmaskOptions.currency();
                     }

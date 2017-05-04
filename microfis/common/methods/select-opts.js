@@ -71,8 +71,8 @@ SelectOptMethods.location = new ValidatedMethod({
                         type: {$first: "$type"},
                         parent: {$first: "$parent"},
                         code: {$first: "$code"},
-                        name: {$first: "$name"},
-                        ancestorsDoc: {$push: "$ancestorsDoc.name"}
+                        name: {$first: "$khName"},
+                        ancestorsDoc: {$push: "$ancestorsDoc.khName"}
                     }
                 }
             ]);
@@ -307,6 +307,7 @@ SelectOptMethods.product = new ValidatedMethod({
 });
 
 // Credit Officer
+
 SelectOptMethods.creditOfficer = new ValidatedMethod({
     name: 'microfis.selectOpts.creditOfficer',
     validate: null,
@@ -444,8 +445,8 @@ Meteor.methods({
                         type: {$first: "$type"},
                         parent: {$first: "$parent"},
                         code: {$first: "$code"},
-                        name: {$first: "$name"},
-                        ancestorsDoc: {$push: "$ancestorsDoc.name"}
+                        name: {$first: "$khName"},
+                        ancestorsDoc: {$push: "$ancestorsDoc.khName"}
                     }
                 }
             ]);
@@ -460,6 +461,56 @@ Meteor.methods({
                 label += value.name;
 
                 list.push({label: label, value: value._id});
+            });
+            return list;
+        }
+    },
+    locationForAppend(isNotSelectAll){
+        if (!this.isSimulation) {
+            var list = [];
+            if (isNotSelectAll == undefined) {
+                list.push({label: "(Select All)", value: "All"});
+            }
+            let data = Location.aggregate([
+                {
+                    $match: {type: "V"}
+                },
+                {
+                    $unwind: {path: "$ancestors", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $lookup: {
+                        from: "microfis_location",
+                        localField: "ancestors",
+                        foreignField: "_id",
+                        as: "ancestorsDoc"
+                    }
+                },
+                {
+                    $unwind: {path: "$ancestorsDoc", preserveNullAndEmptyArrays: true}
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        type: {$first: "$type"},
+                        parent: {$first: "$parent"},
+                        code: {$first: "$code"},
+                        name: {$first: "$khName"},
+                        ancestorsDoc: {$push: "$ancestorsDoc.khName"}
+                    }
+                }
+            ]);
+
+            data.forEach(function (value) {
+                let label = `${value.code} : `;
+                if (_.compact(value.ancestorsDoc).length > 0) {
+                    _.forEach(value.ancestorsDoc, (o) => {
+                        label += o + ', ';
+                    })
+                }
+                label += value.name;
+
+                list.push({id: value._id, text: label});
             });
             return list;
         }

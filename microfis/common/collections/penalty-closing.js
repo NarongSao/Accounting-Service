@@ -59,6 +59,7 @@ PenaltyClosing.schema = new SimpleSchema({
     },
     interestRemainderCharge: {
         type: Number,
+        decimal: true,
         label: function () {
             if (Meteor.isClient) {
                 let labelType = 'Penalty remainder charge ($)';
@@ -75,6 +76,20 @@ PenaltyClosing.schema = new SimpleSchema({
                 let calculateType = AutoForm.getFieldValue('calculateType');
                 if (calculateType == 'P') {
                     return 100;
+                }
+            }
+        },
+        autoform: {
+            type: "inputmask",
+            afFieldInput: {
+                inputmaskOptions: function () {
+                    if (Meteor.isClient) {
+                        let calculateType = AutoForm.getFieldValue('calculateType');
+                        if (calculateType == 'P') {
+                            return inputmaskOptions.decimal();
+                        }
+                        return inputmaskOptions.currency();
+                    }
                 }
             }
         }

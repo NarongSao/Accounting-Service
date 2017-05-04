@@ -29,7 +29,7 @@ ChangeCO.schema = new SimpleSchema({
         autoform: {
             type: "select2",
             options: function () {
-                return SelectOptsReport.creditOfficer();
+                return SelectOptsReport.creditOfficer(Session.get("currentBranch"));
             }
         }
     },
@@ -43,7 +43,7 @@ ChangeCO.schema = new SimpleSchema({
         autoform: {
             type: "select2",
             options: function () {
-                return SelectOptsReport.creditOfficer();
+                return SelectOptsReport.creditOfficer(Session.get("currentBranch"));
             }
         }
     },

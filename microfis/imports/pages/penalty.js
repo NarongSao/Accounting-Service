@@ -59,7 +59,7 @@ indexTmpl.helpers({
                     if (object.calculateType == 'A') {
                         return numeral(value).format('0,0.00');
                     }
-                    return numeral(value / 100).format('0%');
+                    return numeral(value / 100).format('0.00%');
                 }
             },
             {key: 'graceDay', label: 'Grace Day'},

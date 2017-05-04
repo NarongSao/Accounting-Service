@@ -364,6 +364,17 @@ formTmpl.events({
             $disbursementDate.data("DateTimePicker").minDate(moment($submitDate, "DD/MM/YYYY").startOf('day').toDate());
         }
     }
+    ,
+    'keyup [name="interestRate"]': _.debounce(function (e) {
+        let product = Session.get('productDoc');
+        let val = $(e.currentTarget);
+        if (val.val() < product.interestRate.min || val.val() > product.interestRate.max) {
+            alertify.warning('Value not in Rank');
+            val.val('');
+            return;
+        }
+    }, 200)
+
 });
 
 formTmpl.onDestroyed(function () {

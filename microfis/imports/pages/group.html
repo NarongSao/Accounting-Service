@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="Microfis_groupLoan">
+<template name="Microfis_group">
     <div class="box-header with-border">
         <h3 class="box-title">
             {{> addNewButton}}
@@ -14,7 +14,7 @@
 </template>
 
 <!--Action-->
-<template name="Microfis_groupLoanAction">
+<template name="Microfis_groupAction">
     {{#columnAction align="right"}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
@@ -23,21 +23,16 @@
 </template>
 
 <!--Insert-->
-<template name="Microfis_groupLoanNew">
+<template name="Microfis_groupNew">
     <div class="box-body">
-        {{#autoForm collection=collection id="Microfis_groupLoanNew" type="insert"}}
+        {{#autoForm collection=collection id="Microfis_groupNew" type="insert"}}
             <div class="container-fluid ">
                 <div class="row">
 
-                    {{> afQuickField name="groupId"}}
-                    {{> afQuickField name="code" value=code}}
-                    {{> afQuickField name="date"}}
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="locationId"}}
                     {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
 
-                    <label>Loan Account</label>
-                    <div class="col-md-12">
-                        {{> microfis_groupLoanDetail groupLoanDetailCollection=groupLoanDetailCollection loan=this.loan}}
-                    </div>
                 </div>
 
                 {{> formFooterWithButton}}
@@ -47,19 +42,15 @@
 </template>
 
 <!--Update-->
-<template name="Microfis_groupLoanEdit">
+<template name="Microfis_groupEdit">
     <div class="box-body">
-        {{#autoForm collection=collection id="Microfis_groupLoanEdit" doc=this type="update"}}
+        {{#autoForm collection=collection id="Microfis_groupEdit" doc=this type="update"}}
             <div class="container-fluid ">
                 <div class="row">
-                    {{> afQuickField name="groupId"}}
-                    {{> afQuickField name="code"}}
-                    {{> afQuickField name="date"}}
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="locationId"}}
                     {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
-                    <label>Loan Account</label>
-                    <div class="col-md-12">
-                        {{> microfis_groupLoanDetail groupLoanDetailCollection=groupLoanDetailCollection loan=this.loan}}
-                    </div>
+
                 </div>
 
                 {{> formFooterWithButton}}
@@ -69,17 +60,14 @@
 </template>
 
 <!--Show-->
-<template name="Microfis_groupLoanShow">
+<template name="Microfis_groupShow">
     <div class="box-body">
         <dl class="dl-horizontal">
             <dt>Id</dt>
             <dd>{{_id}}</dd>
             <dt>Name</dt>
             <dd>{{name}}</dd>
-            <dt>Calculate Type</dt>
-            <dd>{{calculateType}}</dd>
-            <dt>Amount on microfis disburse (USD/%)</dt>
-            <dd>{{numFormat amount "0,0.00"}}</dd>
+
         </dl>
     </div>
 </template>

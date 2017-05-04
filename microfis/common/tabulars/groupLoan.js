@@ -23,7 +23,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
     columns: [
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_groupLoanAction},
         {data: '_id', title: 'ID'},
-        {data: 'name', title: 'Group Name'},
+        {data: 'groupName', title: 'Group Name'},
         {data: 'code', title: 'Code'},
         {
             data: 'date', title: 'Date',
@@ -47,7 +47,8 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return str;
             }
         }
-    ]
+    ],
+    extraFields: ["groupId"]
 });
 
 export const

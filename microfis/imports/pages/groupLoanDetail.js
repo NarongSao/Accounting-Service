@@ -36,6 +36,7 @@ var groupLoanDetailTPL = Template.microfis_groupLoanDetail;
 
 var groupLoanDetailCollection;
 let clientAccOpt = new ReactiveVar([]);
+locationChange = new ReactiveVar("");
 
 //Created
 groupLoanDetailTPL.onCreated(function () {
@@ -44,22 +45,24 @@ groupLoanDetailTPL.onCreated(function () {
     groupLoanDetailCollection.remove({});
 
     if (data.loan) {
+        locationChange.set(data.locationId);
         data.loan.forEach(function (obj) {
             groupLoanDetailCollection.insert(obj);
         })
     }
 
+
+
+})
+
+groupLoanDetailTPL.onRendered(function () {
     this.autorun(function () {
-        Meteor.call("microfis_clientAccGroupOpt", Session.get("currentBranch"), function (err, result) {
+        Meteor.call("microfis_clientAccGroupOpt", Session.get("currentBranch"), locationChange.get(), function (err, result) {
             if (result) {
                 clientAccOpt.set(result);
             }
         })
     })
-})
-
-groupLoanDetailTPL.onRendered(function () {
-
 })
 
 /**

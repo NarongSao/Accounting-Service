@@ -14,6 +14,7 @@ import {Fund} from '../../../microfis/common/collections/fund.js';
 import {ProductStatus} from '../../../microfis/common/collections/productStatus.js';
 import {Client} from '../../../microfis/common/collections/client';
 import {Fee} from '../../../microfis/common/collections/fee';
+import {Group} from '../../../microfis/common/collections/group';
 
 import {ExchangeNBC} from '../../../acc/imports/api/collections/exchangeNBC';
 import {LookupValue} from '../../common/collections/lookup-value.js';
@@ -265,6 +266,18 @@ export const SelectOpts = {
 
             return list;
         }
+    },
+    groupOpt(branchId){
+        if (Meteor.isClient) {
+            Meteor.subscribe('microfis.group');
+            let list = [];
+            list.push({value: "", label: "(Select One)"});
+            let data = Group.find({branchId: branchId}).fetch();
+            data.forEach(function (value) {
+                list.push({value: value._id, label: value.name});
+            });
+            return list;
+        }
     }
 };
 
@@ -280,26 +293,31 @@ export const SelectOptsReport = {
 
         return list;
     },
-    creditOfficer: function () {
+    creditOfficer: function (branchId) {
         Meteor.subscribe('microfis.creditOfficer');
 
         var list = [];
+        let selector = {};
+        if (branchId != undefined) {
+            selector.branchId = branchId;
+        }
+        console.log(selector);
         list.push({label: "(Select All)", value: "All"});
-        CreditOfficer.find()
+        CreditOfficer.find(selector)
             .forEach(function (obj) {
                 list.push({label: obj.khName, value: obj._id});
             });
 
         return list;
     },
-    client: function () {
+    client: function (branchId) {
         Meteor.subscribe('microfis.client');
 
         var list = [];
         list.push({label: "(Select One)", value: ""});
-        Client.find()
+        Client.find({branchId: branchId})
             .forEach(function (obj) {
-                list.push({label: obj.khSurname + " " + obj.khGivenName, value: obj._id});
+                list.push({label: obj.khSurname + " " + obj.khNickname, value: obj._id});
             });
 
         return list;
@@ -380,6 +398,7 @@ export const SelectOptsReport = {
     location: function () {
 
         Meteor.subscribe('microfis.location');
+
 
     },
     fund: function () {

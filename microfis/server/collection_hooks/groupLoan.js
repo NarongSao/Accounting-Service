@@ -8,6 +8,10 @@ import {LoanAcc} from '../../common/collections/loan-acc';
 
 GroupLoan.before.insert(function (userId, doc) {
     let prefix = moment(doc.date).format("YYYY");
+
+    var year = moment(doc.date).format("YYYY");
+    doc.code = doc.branchId + "-" + year + s.pad(doc.code, 6, "0");
+
     doc._id = idGenerator2.genWithPrefix(GroupLoan, {
         prefix: prefix,
         length: 6

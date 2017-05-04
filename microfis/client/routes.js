@@ -325,6 +325,22 @@ MicrofisRoutes.route('/groupLoan', {
         parent: 'microfis.home'
     }
 });
+// Group
+import '../imports/pages/group';
+MicrofisRoutes.route('/group', {
+    name: 'microfis.group',
+    title: 'Group',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_group');
+    },
+    breadcrumb: {
+
+        //queryParams: ['show', 'color'],
+        title: 'Group',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
 
 // Change CO
 import '../imports/pages/changeCO';

@@ -69,7 +69,7 @@ Fee.schema = new SimpleSchema({
                     if (Meteor.isClient) {
                         let calculateType = AutoForm.getFieldValue('calculateType');
                         if (calculateType == 'P') {
-                            return inputmaskOptions.integer();
+                            return inputmaskOptions.decimal();
                         }
                         return inputmaskOptions.currency();
                     }
