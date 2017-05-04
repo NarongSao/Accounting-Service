@@ -64,6 +64,8 @@ indexTmpl.helpers({
                         return numeral(value / 100).format('0.00%');
                     }
                 },
+                {key: 'numberOfProduct', label: 'Number'},
+
                 {
                     key: '_id',
                     label(){
@@ -97,11 +99,15 @@ indexTmpl.events({
         alertify.fee(fa('pencil', 'Fee'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Fee,
-            {_id: this._id},
-            {title: 'Fee', itemTitle: this._id}
-        );
+        if (this.numberOfProduct <= 0) {
+            destroyAction(
+                Fee,
+                {_id: this._id},
+                {title: 'Fee', itemTitle: this._id}
+            );
+        } else {
+            alertify.warning("Already have relation with product");
+        }
     },
     'click .js-display' (event, instance) {
         alertify.fee(fa('eye', 'Fee'), renderTemplate(showTmpl, this));

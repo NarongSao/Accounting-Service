@@ -63,6 +63,8 @@ indexTmpl.helpers({
                 }
             },
             {key: 'graceDay', label: 'Grace Day'},
+            {key: 'numberOfProduct', label: 'Number'},
+
             {
                 key: '_id',
                 label(){
@@ -95,11 +97,15 @@ indexTmpl.events({
         alertify.penalty(fa('pencil', 'Penalty'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Penalty,
-            {_id: this._id},
-            {title: 'Penalty', itemTitle: this._id}
-        );
+        if (this.numberOfProduct <= 0) {
+            destroyAction(
+                Penalty,
+                {_id: this._id},
+                {title: 'Penalty', itemTitle: this._id}
+            );
+        } else {
+            alertify.warning("Already have relation with product");
+        }
     },
     'click .js-display' (event, instance) {
         alertify.penalty(fa('eye', 'Penalty'), renderTemplate(showTmpl, this));

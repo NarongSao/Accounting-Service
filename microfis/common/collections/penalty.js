@@ -76,6 +76,11 @@ Penalty.schema = new SimpleSchema({
         type: Number,
         label: 'Grace (days)',
         min: 0
+    },
+    numberOfProduct: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 });
 

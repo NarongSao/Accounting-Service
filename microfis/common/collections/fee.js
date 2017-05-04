@@ -76,6 +76,11 @@ Fee.schema = new SimpleSchema({
                 }
             }
         }
+    },
+    numberOfProduct: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 });
 

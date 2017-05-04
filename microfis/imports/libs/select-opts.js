@@ -310,12 +310,12 @@ export const SelectOptsReport = {
 
         return list;
     },
-    client: function (branchId) {
+    client: function () {
         Meteor.subscribe('microfis.client');
 
         var list = [];
         list.push({label: "(Select One)", value: ""});
-        Client.find({branchId: branchId})
+        Client.find()
             .forEach(function (obj) {
                 list.push({label: obj.khSurname + " " + obj.khNickname, value: obj._id});
             });

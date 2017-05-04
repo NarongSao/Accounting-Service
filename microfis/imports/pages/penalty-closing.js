@@ -36,7 +36,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('penaltyClosing');
 });
-let statePenaltyClosing=new ReactiveObj();
+let statePenaltyClosing = new ReactiveObj();
 
 indexTmpl.helpers({
     tableSettings(){
@@ -49,12 +49,13 @@ indexTmpl.helpers({
                 sortDirection: 'desc'
             },
             {key: 'name', label: 'Name'},
-            {key: 'name', label: 'Name'},
             {key: 'installmentTermLessThan', label: 'Installment Term Less Than'},
             {key: 'installmentType', label: 'Installment Type'},
             {key: 'penaltyRemainderTypeOf', label: 'Penalty Remainder Type'},
             {key: 'interestRemainderCharge', label: 'Interest Remainder Charge'},
             {key: 'calculateType', label: 'Calculate Type'},
+            {key: 'numberOfProduct', label: 'Number'},
+
             {
                 key: '_id',
                 label(){
@@ -87,11 +88,16 @@ indexTmpl.events({
         alertify.penaltyClosing(fa('pencil', 'PenaltyClosing'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            PenaltyClosing,
-            {_id: this._id},
-            {title: 'PenaltyClosing', itemTitle: this._id}
-        );
+
+        if (this.numberOfProduct <= 0) {
+            destroyAction(
+                PenaltyClosing,
+                {_id: this._id},
+                {title: 'PenaltyClosing', itemTitle: this._id}
+            );
+        } else {
+            alertify.warning("Already have relation with product");
+        }
     },
     'click .js-display' (event, instance) {
         alertify.penaltyClosing(fa('eye', 'PenaltyClosing'), renderTemplate(showTmpl, this));

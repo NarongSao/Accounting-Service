@@ -113,6 +113,11 @@ PenaltyClosing.schema = new SimpleSchema({
                 return interestRemainderTypeOf;
             }
         }
+    },
+    numberOfProduct: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 });
 

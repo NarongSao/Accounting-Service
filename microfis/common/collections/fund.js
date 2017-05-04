@@ -57,6 +57,11 @@ Fund.schema = new SimpleSchema({
         regEx: SimpleSchema.RegEx.Domain,
         max: 50,
         optional: true
+    },
+    numberOfProduct: {
+        type: Number,
+        defaultValue: 0,
+        optional: true
     }
 });
 
