@@ -248,27 +248,32 @@ Repayment.after.insert(function (userId, doc) {
                                 cr: 0,
                                 drcr: doc.totalPaid
 
-                            }, {
+                            });
+                            transaction.push({
                                 account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.principalPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.principalPaid
-                            }, {
+                            });
+                            transaction.push( {
                                 account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.interestPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.interestPaid
-                            }, {
+                            });
+                            transaction.push({
                                 account: acc_penalty.accountDoc.code + " | " + acc_penalty.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.penaltyPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.penaltyPaid
-                            }, {
+                            });
+                            transaction.push( {
                                 account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid
-                            }, {
+                            });
+                            transaction.push( {
                                 account: acc_unEarnIncome.accountDoc.code + " | " + acc_unEarnIncome.accountDoc.name,
                                 dr: 0,
                                 cr: doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid,
@@ -291,7 +296,7 @@ Repayment.after.insert(function (userId, doc) {
                             dataForAccount.memo = "Loan Repayment Closing " + clientDoc.khSurname + " " + clientDoc.khNickname;
                             dataForAccount.refId = doc._id;
                             dataForAccount.refFrom = "Repayment Closing";
-                            dataForAccount.total = doc.totalPaid - doc.waivedForClosing;
+                            dataForAccount.total = doc.totalPaid;
 
                             let transaction = [];
 
@@ -306,9 +311,9 @@ Repayment.after.insert(function (userId, doc) {
 
                             transaction.push({
                                 account: acc_cash.accountDoc.code + " | " + acc_cash.accountDoc.name,
-                                dr: doc.totalPaid - doc.waivedForClosing,
+                                dr: doc.totalPaid,
                                 cr: 0,
-                                drcr: doc.totalPaid - doc.waivedForClosing
+                                drcr: doc.totalPaid
 
                             }, {
                                 account: acc_interestWaivedIncome.accountDoc.code + " | " + acc_interestWaivedIncome.accountDoc.name,
@@ -339,8 +344,8 @@ Repayment.after.insert(function (userId, doc) {
                             }, {
                                 account: acc_unEarnIncome.accountDoc.code + " | " + acc_unEarnIncome.accountDoc.name,
                                 dr: 0,
-                                cr: doc.totalPaid - doc.waivedForClosing - doc.detailDoc.totalSchedulePaid.totalAmountPaid,
-                                drcr: -doc.totalPaid - doc.waivedForClosing - doc.detailDoc.totalSchedulePaid.totalAmountPaid
+                                cr: doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid,
+                                drcr: -doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid
                             });
 
                             dataForAccount.transaction = transaction;
@@ -652,17 +657,6 @@ Repayment.after.insert(function (userId, doc) {
                     });
 
 
-                    //Repayment
-                    Repayment.direct.update(doc._id, {
-                        $inc: {
-                            amountPaid: -doc.waivedForClosing,
-                            totalPaid: -doc.waivedForClosing
-                        }
-                    }, function (err) {
-                        if (err) {
-                            console.log(err.message);
-                        }
-                    })
                 }
             })
             ;

@@ -42,6 +42,7 @@ import './repayment-closing.html';
 let formTmpl = Template.Microfis_repaymentClosingForm;
 
 
+let waivedClosing = new ReactiveVar(0);
 //-------- General Form ------------
 formTmpl.onCreated(function () {
     let currentData = Template.currentData();
@@ -52,7 +53,6 @@ formTmpl.onCreated(function () {
     // Track autorun
     this.autorun(function () {
         let loanAccDoc = stateRepayment.get("loanAccDoc");
-
 
         let repaidDate = stateRepayment.get('repaidDate');
         if (stateRepayment.get("isVoucherId")) {
@@ -74,13 +74,13 @@ formTmpl.onCreated(function () {
 
         if (repaidDate) {
 
-            if (isBlock == false) {
-                $.blockUI({
-                    onBlock: function () {
-                        isBlock = true;
-                    }
-                });
-            }
+            /*if (isBlock == false) {
+             $.blockUI({
+             onBlock: function () {
+             isBlock = true;
+             }
+             });
+             }*/
 
             let totalSavingBal = new BigNumber(0);
 
@@ -146,7 +146,7 @@ formTmpl.onCreated(function () {
                     // }
 
                     if (result && result.closing) {
-                        minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal);
+                        minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal).minus(result.closing.interestAddition);
                         Session.set('minAmountPaid', minAmountPaid.toNumber());
                     }
 
@@ -208,6 +208,7 @@ formTmpl.helpers({
         return stateRepayment.get('checkRepayment');
     },
     defaultValue(){
+        debugger;
         let totalDue = new BigNumber(0),
             totalPenalty = new BigNumber(0),
             checkRepayment = stateRepayment.get('checkRepayment');
@@ -222,6 +223,8 @@ formTmpl.helpers({
         if (checkRepayment && checkRepayment.closing && data) {
             totalDue = totalDue.plus(checkRepayment.closing.totalDue).minus(data.details.principalBal).minus(data.details.interestBal);
         }
+
+        totalDue = totalDue.minus(waivedClosing.get());
 
         return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};
     },
@@ -276,6 +279,10 @@ formTmpl.events({
             }
         }
         return !(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57));
+    },
+    'keyup [name="waivedForClosing"]'(e, t){
+        debugger;
+        waivedClosing.set(parseFloat($(e.currentTarget).val()));
     }
 })
 
@@ -284,6 +291,7 @@ formTmpl.onDestroyed(function () {
     Session.set('maxAmountPaid', null);
     Session.set('maxPenaltyPaid', null);
 
+    waivedClosing.set(0);
     AutoForm.resetForm("Microfis_repaymentClosingForm");
 
 });

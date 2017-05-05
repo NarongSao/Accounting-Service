@@ -276,6 +276,14 @@ formTmpl.onRendered(function () {
         })
     }
 
+    this.autorun(function () {
+        Meteor.call('locationForAppend', true, (err, result) => {
+            if (result) {
+                $('[name="locationId"]').select2({data: result});
+            }
+        });
+    })
+
 
 });
 

@@ -17,7 +17,6 @@ Group.schema = new SimpleSchema({
         type: String,
         label: 'Location Id',
         optional: true
-
     }
     ,
     locationName: {

@@ -746,7 +746,7 @@ LoanAcc.locationSchema = new SimpleSchema({
     locationId: {
         type: String,
         label: 'Location',
-        autoform: {
+        /*autoform: {
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
@@ -757,7 +757,7 @@ LoanAcc.locationSchema = new SimpleSchema({
                     }
                 }
             }
-        }
+        }*/
     },
     geography: {
         type: String,

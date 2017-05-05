@@ -94,13 +94,13 @@ formTmpl.onCreated(function () {
 
             if (repaidDate) {
 
-                if (isBlock == false) {
+                /*if (isBlock == false) {
                     $.blockUI({
                         onBlock: function () {
                             isBlock = true;
                         }
                     });
-                }
+                }*/
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({

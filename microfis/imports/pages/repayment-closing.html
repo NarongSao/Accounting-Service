@@ -162,7 +162,7 @@
                     {{#with defaultValue}}
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField name="amountPaid" value=totalDue}}
+                                {{> afQuickField name="amountPaid" value=totalDue readonly=true}}
                             </div>
                             <div class="col-md-6">
                                 {{> afQuickField name="penaltyPaid" value=totalPenalty}}
@@ -171,15 +171,15 @@
                     {{/with}}
                     {{> afQuickField name="savingBalance" type="hidden" value=savingBal.totalBal}}
 
-                <div class="row">
-                    <div class="col-md-6">
-                        {{> afQuickField name="waivedForClosing"}}
-                    </div>
-                    <div class="col-md-6">
-                        {{> afQuickField name="voucherId" value=voucherId}}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="waivedForClosing"}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="voucherId" value=voucherId}}
 
+                        </div>
                     </div>
-                </div>
                     {{> afQuickField name="note"}}
                     {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
                     {{> afQuickField name="currencyId" type="hidden" value=loanAccDoc.currencyId}}

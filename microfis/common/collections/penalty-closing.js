@@ -107,8 +107,7 @@ PenaltyClosing.schema = new SimpleSchema({
                     {label: "Disbursement", value: "Disbursement"},
                     {label: "Loan Outstanding", value: "Loan Outstanding"},
                     {label: "Amount Remainder", value: "Amount Remainder"},
-                    {label: "Interest Remainder", value: "Interest Remainder"},
-                    {label: "Principal Remainder", value: "Principal Remainder"}
+                    {label: "Interest Remainder", value: "Interest Remainder"}
                 )
                 return interestRemainderTypeOf;
             }

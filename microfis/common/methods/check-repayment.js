@@ -377,15 +377,12 @@ export let checkRepayment = new ValidatedMethod({
             if (penaltyClosingDoc.penaltyRemainderTypeOf == "Disbursement") {
                 penaltyClosingAmountTypeOfTotal = loanAccDoc.loanAmount;
             } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Loan Outstanding") {
-                penaltyClosingAmountTypeOfTotal = totalScheduleDue.principalDue + closing.principalReminder;
+                penaltyClosingAmountTypeOfTotal =  closing.principalReminder;
             } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Amount Remainder") {
                 penaltyClosingAmountTypeOfTotal = closing.interestReminder + closing.principalReminder;
             } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Interest Remainder") {
                 penaltyClosingAmountTypeOfTotal = closing.interestReminder;
-            } else if (penaltyClosingDoc.penaltyRemainderTypeOf == "Principal Remainder") {
-                penaltyClosingAmountTypeOfTotal = closing.principalReminder;
             }
-
 
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
