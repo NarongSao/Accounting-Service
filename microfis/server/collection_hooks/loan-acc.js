@@ -204,7 +204,15 @@ LoanAcc.after.remove(function (userId, doc) {
 
 // Create repayment schedule
 function _makeSchedule(doc) {
-    let schedule = MakeSchedule.declinig.call({loanAccId: doc._id});
+    
+    let schedule;
+    if (doc.interestMethod == "Declining") {
+        schedule = MakeSchedule.declinig.call({loanAccId: doc._id});
+    } else if (doc.interestMethod == "Annuity") {
+        schedule = MakeSchedule.annuity.call({loanAccId: doc._id});
+    } else if (doc.interestMethod == "Flat") {
+        schedule = MakeSchedule.flat.call({loanAccId: doc._id});
+    }
 
     let maturityDate, tenor = 0, projectInterest = 0, projectFeeOnPayment = 0;
 
