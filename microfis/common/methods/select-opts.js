@@ -252,7 +252,7 @@ SelectOptMethods.client = new ValidatedMethod({
                     $or: [
                         {_id: {$regex: searchText, $options: 'i'}},
                         {khSurname: {$regex: searchText, $options: 'i'}},
-                        {khNickname: {$regex: searchText, $options: 'i'}}
+                        {khGivenName: {$regex: searchText, $options: 'i'}}
                     ]
                 };
             } else if (values.length) {
@@ -261,7 +261,7 @@ SelectOptMethods.client = new ValidatedMethod({
 
             let data = Client.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.khSurname + ', ' + value.khNickname;
+                let label = value._id + ' : ' + value.khSurname + ', ' + value.khGivenName;
                 list.push({label: label, value: value._id});
             });
 

@@ -317,7 +317,7 @@ export const SelectOptsReport = {
         list.push({label: "(Select One)", value: ""});
         Client.find()
             .forEach(function (obj) {
-                list.push({label: obj.khSurname + " " + obj.khNickname, value: obj._id});
+                list.push({label: obj.khSurname + " " + obj.khGivenName, value: obj._id});
             });
 
         return list;
