@@ -20,7 +20,7 @@ Meteor.startup(function () {
 
     Client._ensureIndex({idType: 1, idNumber: 1, uniqueByCondition: 1, branchId: 1}, {unique: 1});
     EndOfProcess._ensureIndex({month: 1, branchId: 1, year: 1, day: 1}, {unique: 1});
-    Repayment._ensureIndex({voucherId: 1, currencyId: 1, branchId: 1}, {unique: 1});
+    // Repayment._ensureIndex({voucherId: 1, currencyId: 1, branchId: 1}, {unique: 1});
 
     BigNumber.config({ ERRORS: false });
 

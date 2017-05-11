@@ -1,0 +1,5036 @@
+{
+  "ProvincialList2": [
+    {
+      "Type": "P",
+      "Code": "1",
+      "KhName": "បន្ទាយមានជ័យ",
+      "EnName": "Banteay Meanchey"
+    },
+    {
+      "Type": "D",
+      "Code": "102",
+      "KhName": "មង្គលបូរី",
+      "EnName": "Mongkol Borei",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10201",
+      "KhName": "បន្ទាយនាង",
+      "EnName": "Banteay Neang",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020101",
+      "KhName": "អូរធំ",
+      "EnName": "Ou Thum",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020102",
+      "KhName": "ភ្នំ",
+      "EnName": "Phnum",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020103",
+      "KhName": "បន្ទាយនាង",
+      "EnName": "Banteay Neang",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020104",
+      "KhName": "គោកព្នៅ",
+      "EnName": "Kouk Pnov",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020105",
+      "KhName": "ត្រាង",
+      "EnName": "Trang",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020106",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020107",
+      "KhName": "គោកទន្លាប់",
+      "EnName": "Kouk Tonloab",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020108",
+      "KhName": "ត្របែក",
+      "EnName": "Trabaek",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020109",
+      "KhName": "ឃីឡិក",
+      "EnName": "Khilek",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020110",
+      "KhName": "សំរោងពេន",
+      "EnName": "Samraong Pen",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020111",
+      "KhName": "ដងរុនលិច",
+      "EnName": "Dang Run Lech",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020112",
+      "KhName": "ដងរុនកើត",
+      "EnName": "Dang Run Kaeut",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020113",
+      "KhName": "អូរស្ងួត",
+      "EnName": "Ou Snguot",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020114",
+      "KhName": "ព្រៃចង្ហាលិច",
+      "EnName": "Prey Changha Lech",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020115",
+      "KhName": "ព្រៃចង្ហាកើត",
+      "EnName": "Prey Changha Kaeut",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020116",
+      "KhName": "អូរអណ្ដូងលិច",
+      "EnName": "Ou Andoung Lech",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020117",
+      "KhName": "អូរអណ្ដូងកណ្ដាល",
+      "EnName": "Ou Andoung Kandal",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020118",
+      "KhName": "អូរអណ្ដូងកើត",
+      "EnName": "Ou Andoung Kaeut",
+      "Parent": "10201"
+    },
+    {
+      "Type": "V",
+      "Code": "1020119",
+      "KhName": "គោកក្ដួច",
+      "EnName": "Kouk Kduoch",
+      "Parent": "10201"
+    },
+    {
+      "Type": "C",
+      "Code": "10202",
+      "KhName": "បត់ត្រង់",
+      "EnName": "Bat Trang",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020201",
+      "KhName": "ខ្ទុម្ពរាយលិច",
+      "EnName": "Khtum Reay Lech",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020202",
+      "KhName": "ខ្ទុម្ពរាយកើត",
+      "EnName": "Khtum Reay Kaeut",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020203",
+      "KhName": "អន្លង់ថ្ងាន់កើត",
+      "EnName": "Anlong Thngan Kaeut",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020204",
+      "KhName": "អន្លង់ថ្ងាន់លិច",
+      "EnName": "Anlong Thngan Lech",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020205",
+      "KhName": "បង់បត់លិច",
+      "EnName": "Bang Bat Lech",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020206",
+      "KhName": "បង់បត់កើត",
+      "EnName": "Bang Bat Kaeut",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020207",
+      "KhName": "បត់ត្រង់",
+      "EnName": "Bat Trang",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020208",
+      "KhName": "បត់ត្រង់ធំលិច",
+      "EnName": "Bat Trang Thum Lech",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020209",
+      "KhName": "បត់ត្រង់ធំកើត",
+      "EnName": "Bat Trang Thum Kaeut",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020210",
+      "KhName": "បត់ត្រង់តូច",
+      "EnName": "Bat Trang Touch",
+      "Parent": "10202"
+    },
+    {
+      "Type": "V",
+      "Code": "1020211",
+      "KhName": "ព្រែកជីក",
+      "EnName": "Preaek Chik",
+      "Parent": "10202"
+    },
+    {
+      "Type": "C",
+      "Code": "10203",
+      "KhName": "ចំណោម",
+      "EnName": "Chamnaom",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020301",
+      "KhName": "ប្រឡាយចារ៍",
+      "EnName": "Pralay Char",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020302",
+      "KhName": "រង្វានលិច",
+      "EnName": "Rongvean Lech",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020303",
+      "KhName": "រង្វានកើត",
+      "EnName": "Rongvean Kaeut",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020304",
+      "KhName": "ចំណោមលិច",
+      "EnName": "Chamnaom Lech",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020305",
+      "KhName": "ចំណោមកើត",
+      "EnName": "Chamnaom Kaeut",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020306",
+      "KhName": "រោងគោដើម",
+      "EnName": "Roung Kou Daeum",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020307",
+      "KhName": "រោងគោកណ្ដាល",
+      "EnName": "Roung Kou Kandal",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020308",
+      "KhName": "រោងគោចុង",
+      "EnName": "Roung Kou Chong",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020309",
+      "KhName": "ពាមរោងគោ",
+      "EnName": "Peam Roung Kou",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020310",
+      "KhName": "តាសល់",
+      "EnName": "Ta Sal",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020311",
+      "KhName": "ជួរខ្ចាស់",
+      "EnName": "Chuor Khchas",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020312",
+      "KhName": "បឹងត្រស់",
+      "EnName": "Boeng Tras",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020313",
+      "KhName": "ដងត្រាង",
+      "EnName": "Dang Trang",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020314",
+      "KhName": "ស្រែព្រៃ",
+      "EnName": "Srae Prey",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020315",
+      "KhName": "បុស្បទន្លាប់",
+      "EnName": "Bos Tonloab",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020316",
+      "KhName": "តាប៊ុន",
+      "EnName": "Ta  Bun",
+      "Parent": "10203"
+    },
+    {
+      "Type": "V",
+      "Code": "1020317",
+      "KhName": "គោកពន្លៃ",
+      "EnName": "Kouk Ponley",
+      "Parent": "10203"
+    },
+    {
+      "Type": "C",
+      "Code": "10204",
+      "KhName": "គោកបល្ល័ង្គ",
+      "EnName": "Kouk Ballangk",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020401",
+      "KhName": "គោកបល្ល័ង្ក",
+      "EnName": "Kouk Ballangk",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020402",
+      "KhName": "តាអន",
+      "EnName": "Ta An",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020403",
+      "KhName": "ប្រឡាយជ្រៃ",
+      "EnName": "Pralay Chrey",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020404",
+      "KhName": "ជើងចាប",
+      "EnName": "Cheung Chab",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020405",
+      "KhName": "ផាត់សណ្ដោង",
+      "EnName": "Phat Sandaong",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020406",
+      "KhName": "ចារថ្មី",
+      "EnName": "Char Thmei",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020407",
+      "KhName": "ផ្អាវថ្មី",
+      "EnName": "Ph'av Thmei",
+      "Parent": "10204"
+    },
+    {
+      "Type": "V",
+      "Code": "1020408",
+      "KhName": "តាសល់",
+      "EnName": "Ta Sal",
+      "Parent": "10204"
+    },
+    {
+      "Type": "C",
+      "Code": "10205",
+      "KhName": "គយម៉ែង",
+      "EnName": "Koy Maeng",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020501",
+      "KhName": "គយម៉ែង",
+      "EnName": "Koy Maeng",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020502",
+      "KhName": "ស្ដីលើ",
+      "EnName": "Sdei Leu",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020503",
+      "KhName": "ផ្លូវសៀម",
+      "EnName": "Phlov Siem",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020504",
+      "KhName": "តានង",
+      "EnName": "Ta Nong",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020505",
+      "KhName": "អង្ករខ្មៅ",
+      "EnName": "Angkar Khmau",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020506",
+      "KhName": "កសាងថ្មី",
+      "EnName": "Kasang Thmei",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020507",
+      "KhName": "ស្ទឹងចាស់",
+      "EnName": "Stueng Chas",
+      "Parent": "10205"
+    },
+    {
+      "Type": "V",
+      "Code": "1020508",
+      "KhName": "ស្ដីក្រោម",
+      "EnName": "Sdei Kraom",
+      "Parent": "10205"
+    },
+    {
+      "Type": "C",
+      "Code": "10206",
+      "KhName": "អូរប្រាសាទ",
+      "EnName": "Ou Prasat",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020601",
+      "KhName": "ភ្នំធំត្បូង",
+      "EnName": "Phnum Thum Tboung",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020602",
+      "KhName": "ភ្នំប្រាសាទ",
+      "EnName": "Phnum Prasat",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020603",
+      "KhName": "ភ្នំធំជើង",
+      "EnName": "Phnum Thum Cheung",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020604",
+      "KhName": "ចំការលោក",
+      "EnName": "Chamkar Louk",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020605",
+      "KhName": "ភ្នំធំថ្មី",
+      "EnName": "Phnum Thum Thmei",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020606",
+      "KhName": "អន្លង់ស្ដី",
+      "EnName": "Anlong Sdei",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020607",
+      "KhName": "គោកធ្លង់កើត",
+      "EnName": "Kouk Thlong Kaeut",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020608",
+      "KhName": "គោកធ្លង់កណ្ដាល",
+      "EnName": "Kouk Thlong Kandal",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020609",
+      "KhName": "អូរស្ងួត",
+      "EnName": "Ou Snguot",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020610",
+      "KhName": "អូរប្រាសាទ",
+      "EnName": "Ou Prasat",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020611",
+      "KhName": "គោកអំពិល",
+      "EnName": "Kouk Ampil",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020612",
+      "KhName": "រ៉ាចំការចេក",
+      "EnName": "Ra Chamkar Chek",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020613",
+      "KhName": "ពោធិ៍រៀង",
+      "EnName": "Pou Rieng",
+      "Parent": "10206"
+    },
+    {
+      "Type": "V",
+      "Code": "1020614",
+      "KhName": "រូងក្របៅ",
+      "EnName": "Rung Krabau",
+      "Parent": "10206"
+    },
+    {
+      "Type": "C",
+      "Code": "10207",
+      "KhName": "ភ្នំតូច",
+      "EnName": "Phnum Touch",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020701",
+      "KhName": "ភ្នំតូចត្បូង",
+      "EnName": "Phnum Touch Tboung",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020702",
+      "KhName": "ភ្នំតូចជើង",
+      "EnName": "Phnum Touch Cheung",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020703",
+      "KhName": "ថ្នល់បត់",
+      "EnName": "Thnal Bat",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020704",
+      "KhName": "អូរញរ",
+      "EnName": "Ou Nhor",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020705",
+      "KhName": "បឹងត្រស់",
+      "EnName": "Boeng Tras",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020706",
+      "KhName": "មនោរម្យ",
+      "EnName": "Monourom",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020707",
+      "KhName": "ប៉ោយតាសេក",
+      "EnName": "Paoy Ta Sek",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020708",
+      "KhName": "ព្រៃទទឹង",
+      "EnName": "Prey Totueng",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020709",
+      "KhName": "បឹងរាំង",
+      "EnName": "Boeng Reang",
+      "Parent": "10207"
+    },
+    {
+      "Type": "V",
+      "Code": "1020710",
+      "KhName": "វត្ដថ្មី",
+      "EnName": "Voat Thmei",
+      "Parent": "10207"
+    },
+    {
+      "Type": "C",
+      "Code": "10208",
+      "KhName": "រហាត់ទឹក",
+      "EnName": "Rohat Tuek",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020801",
+      "KhName": "ពោធិ៍ពីរដើម",
+      "EnName": "Pou Pir Daeum",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020802",
+      "KhName": "រហាត់ទឹក",
+      "EnName": "Rohat Tuek",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020803",
+      "KhName": "ថ្នល់បត់",
+      "EnName": "Thnal Bat",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020804",
+      "KhName": "ក្រមល់",
+      "EnName": "Kramol",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020805",
+      "KhName": "ខ្ទុំជ្រុំ",
+      "EnName": "Khtum Chrum",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020806",
+      "KhName": "ចកលិច",
+      "EnName": "Chak Lech",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020807",
+      "KhName": "ដូនមូល",
+      "EnName": "Doun Mul",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020808",
+      "KhName": "ព្រែកសំរោង",
+      "EnName": "Preaek Samraong",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020809",
+      "KhName": "អូរដង្កោ",
+      "EnName": "Ou Dangkao",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020810",
+      "KhName": "ចំការចេក",
+      "EnName": "Chamkar Chek",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020811",
+      "KhName": "អូរជួប",
+      "EnName": "Ou Chuob",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020812",
+      "KhName": "កស្វាយ",
+      "EnName": "Ka Svay",
+      "Parent": "10208"
+    },
+    {
+      "Type": "V",
+      "Code": "1020813",
+      "KhName": "ចកកើត",
+      "EnName": "Chak Kaeut",
+      "Parent": "10208"
+    },
+    {
+      "Type": "C",
+      "Code": "10209",
+      "KhName": "ឫស្សីក្រោក",
+      "EnName": "Ruessei Kraok",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1020901",
+      "KhName": "អញ្ចាញ",
+      "EnName": "Anhchanh",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020902",
+      "KhName": "នាងកេត",
+      "EnName": "Neang Ket",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020903",
+      "KhName": "ព្រែករពៅ",
+      "EnName": "Praek Ropov",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020904",
+      "KhName": "សាលាដែង",
+      "EnName": "Sala Daeng",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020905",
+      "KhName": "សំរោង",
+      "EnName": "Samraong",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020906",
+      "KhName": "អន្លង់មានទ្រព្យ",
+      "EnName": "Anlong Mean Troap",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020907",
+      "KhName": "ចំការតាដោក",
+      "EnName": "Chamkar Ta Daok",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020908",
+      "KhName": "ប្រទ្បាយហ្លួងក្រោម",
+      "EnName": "Pralay Luong Kraom",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020909",
+      "KhName": "ហ្លួង",
+      "EnName": "Luong",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020910",
+      "KhName": "អូរតាគល់",
+      "EnName": "Ou Ta Kol",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020911",
+      "KhName": "ប្រទ្បាយហ្លួងលើ",
+      "EnName": "Pralay Luong Leu",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020912",
+      "KhName": "គោកស្វាយ",
+      "EnName": "Kouk Svay",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020913",
+      "KhName": "អូរតាម៉ា",
+      "EnName": "Ou Ta Ma",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020914",
+      "KhName": "កោះកែវ",
+      "EnName": "Kaoh Kaev",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020915",
+      "KhName": "ផាស៊ីស្រា",
+      "EnName": "Phasi Sra",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020916",
+      "KhName": "ឫស្សីក្រោក",
+      "EnName": "Ruessei Kraok",
+      "Parent": "10209"
+    },
+    {
+      "Type": "V",
+      "Code": "1020917",
+      "KhName": "ជំទាវ",
+      "EnName": "Chumteav",
+      "Parent": "10209"
+    },
+    {
+      "Type": "C",
+      "Code": "10210",
+      "KhName": "សំបួរ",
+      "EnName": "Sambuor",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1021001",
+      "KhName": "ឆ្នើមមាស",
+      "EnName": "Chhnaeum Meas",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021002",
+      "KhName": "ស្រណាល",
+      "EnName": "Sranal",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021003",
+      "KhName": "ឡ",
+      "EnName": "La",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021004",
+      "KhName": "តាមែងពក",
+      "EnName": "Ta Meaeng Pok",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021005",
+      "KhName": "សំបួរ",
+      "EnName": "Sambuor",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021006",
+      "KhName": "ដូនឡឹក",
+      "EnName": "Doun Loek",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021007",
+      "KhName": "ក្បាលក្របី",
+      "EnName": "Kbal Krabei",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021008",
+      "KhName": "ស្រះឈូក",
+      "EnName": "Srah Chhuk",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021009",
+      "KhName": "ស្រែព្រៃ",
+      "EnName": "Srae Prey",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021010",
+      "KhName": "ចែកអង្ករ",
+      "EnName": "Chaek Angkar",
+      "Parent": "10210"
+    },
+    {
+      "Type": "V",
+      "Code": "1021011",
+      "KhName": "ថ្មដប់",
+      "EnName": "Thma Dab",
+      "Parent": "10210"
+    },
+    {
+      "Type": "C",
+      "Code": "10211",
+      "KhName": "សឿ",
+      "EnName": "Soea",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1021101",
+      "KhName": "តាម៉ៅ",
+      "EnName": "Ta Mau",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021102",
+      "KhName": "អន្សមចេក",
+      "EnName": "Ansam Chek",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021103",
+      "KhName": "ត្នោត",
+      "EnName": "Tnaot",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021104",
+      "KhName": "បួរ",
+      "EnName": "Buor",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021105",
+      "KhName": "បុស្សឡោក",
+      "EnName": "Bos Laok",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021106",
+      "KhName": "សឿ",
+      "EnName": "Soea",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021107",
+      "KhName": "បឹងតូច",
+      "EnName": "Boeng Touch",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021108",
+      "KhName": "ផ្លូវដំរីលើ",
+      "EnName": "Phlov Damrei Leu",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021109",
+      "KhName": "ផ្លូវដំរីក្រោម",
+      "EnName": "Phlov Damrei Kraom",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021110",
+      "KhName": "អូរសឿ",
+      "EnName": "Ou Soea",
+      "Parent": "10211"
+    },
+    {
+      "Type": "V",
+      "Code": "1021111",
+      "KhName": "គោកសំរោង",
+      "EnName": "Kouk Samraong",
+      "Parent": "10211"
+    },
+    {
+      "Type": "C",
+      "Code": "10212",
+      "KhName": "ស្រះរាំង",
+      "EnName": "Srah Reang",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1021201",
+      "KhName": "តាអ៊ិន១",
+      "EnName": "Ta In Muoy",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021202",
+      "KhName": "តាអ៊ិន២",
+      "EnName": "Ta In Pir",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021203",
+      "KhName": "ក្រូច",
+      "EnName": "Krouch",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021204",
+      "KhName": "ចំការចេក",
+      "EnName": "Chamkar Chek",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021205",
+      "KhName": "ស្រះរាំង",
+      "EnName": "Srah Reang",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021206",
+      "KhName": "តាចាន់",
+      "EnName": "Ta Chan",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021207",
+      "KhName": "គោកD",
+      "EnName": "Kouk Srok",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021208",
+      "KhName": "គោកច្រាប",
+      "EnName": "Kouk Chrab",
+      "Parent": "10212"
+    },
+    {
+      "Type": "V",
+      "Code": "1021209",
+      "KhName": "គោកក្រសាំង",
+      "EnName": "Kouk Krasang",
+      "Parent": "10212"
+    },
+    {
+      "Type": "C",
+      "Code": "10213",
+      "KhName": "តាឡំ",
+      "EnName": "Ta Lam",
+      "Parent": "102"
+    },
+    {
+      "Type": "V",
+      "Code": "1021301",
+      "KhName": "ព្រះស្រែ",
+      "EnName": "Preah Srae",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021302",
+      "KhName": "តាឡំកណ្ដាល",
+      "EnName": "Ta Lam Kandal",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021303",
+      "KhName": "តាឡំចុង",
+      "EnName": "Ta Lam Chong",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021304",
+      "KhName": "បឹងឃ្លាំងលិច",
+      "EnName": "Boeng Khleang Lech",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021305",
+      "KhName": "ចុងគោក",
+      "EnName": "Chong Kouk",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021306",
+      "KhName": "បឹងឃ្លាំងកើត",
+      "EnName": "Boeng Khleang Kaeut",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021307",
+      "KhName": "ខ្លាខាំឆ្កែ",
+      "EnName": "Khla Kham Chhkae",
+      "Parent": "10213"
+    },
+    {
+      "Type": "V",
+      "Code": "1021308",
+      "KhName": "បឹងវែង",
+      "EnName": "Boeng Veaeng",
+      "Parent": "10213"
+    },
+    {
+      "Type": "D",
+      "Code": "103",
+      "KhName": "ភ្នំD",
+      "EnName": "Phnum Srok",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10301",
+      "KhName": "ណាំតៅ",
+      "EnName": "Nam Tau",
+      "Parent": "103"
+    },
+    {
+      "Type": "V",
+      "Code": "1030101",
+      "KhName": "រង្វាន",
+      "EnName": "Rongvean",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030102",
+      "KhName": "ថ្មីខាងត្បូង",
+      "EnName": "Thmei Khang Tboung",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030103",
+      "KhName": "ថ្មីខាងជើង",
+      "EnName": "Thmei Khang Cheung",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030104",
+      "KhName": "គោកយាង",
+      "EnName": "Kouk Yeang",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030105",
+      "KhName": "គោកចាស់",
+      "EnName": "Kouk Chas",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030106",
+      "KhName": "ច្រាប",
+      "EnName": "Chrab",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030107",
+      "KhName": "កន្ទួត",
+      "EnName": "Kantuot",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030108",
+      "KhName": "ណាំតៅ",
+      "EnName": "Nam Tau",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030109",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030110",
+      "KhName": "សំរោង",
+      "EnName": "Samraong",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030111",
+      "KhName": "ក្នាំង",
+      "EnName": "Khnang",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030112",
+      "KhName": "ធ្នង់ខាងត្បូង",
+      "EnName": "Thnong Khang Tboung",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030113",
+      "KhName": "ធ្នង់ខាងជើង",
+      "EnName": "Thnong Khang Cheung",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030114",
+      "KhName": "ស្លែង",
+      "EnName": "Slaeng",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030115",
+      "KhName": "តាគង់",
+      "EnName": "Takong",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030116",
+      "KhName": "យាងឧត្ដម",
+      "EnName": "Yeang Otdam",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030117",
+      "KhName": "អំពិលកោង",
+      "EnName": "Ampil Kaong",
+      "Parent": "10301"
+    },
+    {
+      "Type": "V",
+      "Code": "1030118",
+      "KhName": "កុងសៀម",
+      "EnName": "Kong Siem",
+      "Parent": "10301"
+    },
+    {
+      "Type": "C",
+      "Code": "10302",
+      "KhName": "ប៉ោយចារ",
+      "EnName": "Poy Char",
+      "Parent": "103"
+    },
+    {
+      "Type": "V",
+      "Code": "1030201",
+      "KhName": "ប៉ោយស្នួល",
+      "EnName": "Paoy Snuol",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030202",
+      "KhName": "ប៉ោយចារ",
+      "EnName": "Paoy Char",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030203",
+      "KhName": "ត្រពាំងថ្មត្បូង",
+      "EnName": "Trapeang Thma Tboung",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030204",
+      "KhName": "ត្រពាំងថ្មជើង",
+      "EnName": "Trapeang Thma Cheung",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030205",
+      "KhName": "ត្រពាំងថ្មកណ្ដាល",
+      "EnName": "Trapeang Thma Kandal",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030206",
+      "KhName": "ប៉ោយតាអុង",
+      "EnName": "Paoy Ta Ong",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030207",
+      "KhName": "សំបួរ",
+      "EnName": "Sambuor",
+      "Parent": "10302"
+    },
+    {
+      "Type": "V",
+      "Code": "1030208",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10302"
+    },
+    {
+      "Type": "C",
+      "Code": "10303",
+      "KhName": "ពន្លៃ",
+      "EnName": "Ponley",
+      "Parent": "103"
+    },
+    {
+      "Type": "V",
+      "Code": "1030301",
+      "KhName": "តាវង",
+      "EnName": "Ta Vong",
+      "Parent": "10303"
+    },
+    {
+      "Type": "V",
+      "Code": "1030302",
+      "KhName": "ពន្លៃ",
+      "EnName": "Ponley",
+      "Parent": "10303"
+    },
+    {
+      "Type": "V",
+      "Code": "1030303",
+      "KhName": "ស្វាយស",
+      "EnName": "Svay Sa",
+      "Parent": "10303"
+    },
+    {
+      "Type": "V",
+      "Code": "1030304",
+      "KhName": "ស្វាយខ្មៅ",
+      "EnName": "Svay Khmau",
+      "Parent": "10303"
+    },
+    {
+      "Type": "V",
+      "Code": "1030305",
+      "KhName": "គោគតាសុខ",
+      "EnName": "Kouk Ta Sokh",
+      "Parent": "10303"
+    },
+    {
+      "Type": "V",
+      "Code": "1030306",
+      "KhName": "ពោធិ៍រាំបុណ្យ",
+      "EnName": "Pou Roam Bon",
+      "Parent": "10303"
+    },
+    {
+      "Type": "C",
+      "Code": "10304",
+      "KhName": "ស្ពានស្រែង",
+      "EnName": "Spean Sraeng",
+      "Parent": "103"
+    },
+    {
+      "Type": "V",
+      "Code": "1030401",
+      "KhName": "រោគ",
+      "EnName": "Rouk",
+      "Parent": "10304"
+    },
+    {
+      "Type": "V",
+      "Code": "1030402",
+      "KhName": "មុខឈ្នាង",
+      "EnName": "Mukh Chhneang",
+      "Parent": "10304"
+    },
+    {
+      "Type": "V",
+      "Code": "1030403",
+      "KhName": "ស្ពាន",
+      "EnName": "Spean",
+      "Parent": "10304"
+    },
+    {
+      "Type": "V",
+      "Code": "1030404",
+      "KhName": "គោកចារ",
+      "EnName": "Kouk Char",
+      "Parent": "10304"
+    },
+    {
+      "Type": "V",
+      "Code": "1030405",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10304"
+    },
+    {
+      "Type": "V",
+      "Code": "1030406",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10304"
+    },
+    {
+      "Type": "C",
+      "Code": "10305",
+      "KhName": "ស្រះជីក",
+      "EnName": "Srah Chik",
+      "Parent": "103"
+    },
+    {
+      "Type": "V",
+      "Code": "1030501",
+      "KhName": "មាត់ស្រះ",
+      "EnName": "Moat Srah",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030502",
+      "KhName": "ស្រះឈូកខាងលិច",
+      "EnName": "Srah Chhuk Khang Lech",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030503",
+      "KhName": "ស្រះជីក",
+      "EnName": "Srah Chik",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030504",
+      "KhName": "គោកក្រោល",
+      "EnName": "Kouk Kral",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030505",
+      "KhName": "គោករំចេក",
+      "EnName": "Kouk Rumchek",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030506",
+      "KhName": "គោកតារាជ្យ",
+      "EnName": "Kouk Ta Reach",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030507",
+      "KhName": "កណ្ដាលខាងលិច",
+      "EnName": "Kandal Khang Lech",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030508",
+      "KhName": "កណ្ដាលខាងកើត",
+      "EnName": "Kandal Khang Kaeut",
+      "Parent": "10305"
+    },
+    {
+      "Type": "V",
+      "Code": "1030509",
+      "KhName": "ស្រះឈូកខាងកើត",
+      "EnName": "Srah Chhuk Khang Kaeut",
+      "Parent": "10305"
+    },
+    {
+      "Type": "C",
+      "Code": "10306",
+      "KhName": "ភ្នំដី",
+      "EnName": "Phnum Dei",
+      "Parent": "103"
+    },
+    {
+      "Type": "V",
+      "Code": "1030601",
+      "KhName": "ភ្នំដី",
+      "EnName": "Phnum Dei",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030602",
+      "KhName": "ពន្លៃ",
+      "EnName": "Ponley",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030603",
+      "KhName": "គោកសេះ",
+      "EnName": "Kouk Seh",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030604",
+      "KhName": "ថ្នល់ដាច់",
+      "EnName": "Thnal Dach",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030605",
+      "KhName": "បុស្បូវ",
+      "EnName": "Bos Sbov",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030606",
+      "KhName": "ត្រពាំងប្រីយ៍",
+      "EnName": "Trapeang Prei",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030607",
+      "KhName": "កំពីងពួយ",
+      "EnName": "Kamping Puoy",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030608",
+      "KhName": "ស្ពានក្មេង",
+      "EnName": "Spean Khmeng",
+      "Parent": "10306"
+    },
+    {
+      "Type": "V",
+      "Code": "1030609",
+      "KhName": "ត្រាង",
+      "EnName": "Trang",
+      "Parent": "10306"
+    },
+    {
+      "Type": "D",
+      "Code": "104",
+      "KhName": "ព្រះនេត្រព្រះ",
+      "EnName": "Preah Netr Preah",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10401",
+      "KhName": "ឈ្នួរមានជ័យ",
+      "EnName": "Chnuor Mean Chey",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040101",
+      "KhName": "សំរោងតូច",
+      "EnName": "Samraong Touch",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040102",
+      "KhName": "គោកពង្រ",
+      "EnName": "Kouk Pongro",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040103",
+      "KhName": "ថ្មគោល",
+      "EnName": "Thma Koul",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040104",
+      "KhName": "ប្រពុត",
+      "EnName": "Proput",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040105",
+      "KhName": "បន្ទាត់បោះ",
+      "EnName": "Bantoat Baoh",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040106",
+      "KhName": "គោកទ្រាស",
+      "EnName": "Kouk Treas",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040107",
+      "KhName": "ឈ្នួរ",
+      "EnName": "Chhnuor",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040108",
+      "KhName": "សំរោងធំ",
+      "EnName": "Samraong Thum",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040109",
+      "KhName": "ឫស្សីខាង",
+      "EnName": "Ruessei Khang",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040110",
+      "KhName": "ឫស្សីកណ្ដាល",
+      "EnName": "Ruessei Kandal",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040111",
+      "KhName": "រពាត់",
+      "EnName": "Ropeatt",
+      "Parent": "10401"
+    },
+    {
+      "Type": "V",
+      "Code": "1040112",
+      "KhName": "គោកត្រាច",
+      "EnName": "Kouk Trach",
+      "Parent": "10401"
+    },
+    {
+      "Type": "C",
+      "Code": "10402",
+      "KhName": "ជប់វារី",
+      "EnName": "Chob Vari",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040201",
+      "KhName": "ជប់",
+      "EnName": "Chob",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040202",
+      "KhName": "រោលជ្រូក",
+      "EnName": "Roul Chruk",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040203",
+      "KhName": "ប្រាសាទ",
+      "EnName": "Prasat",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040204",
+      "KhName": "ក្រសាំងថ្មី",
+      "EnName": "Krasang Thmei",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040205",
+      "KhName": "ប្រដាក",
+      "EnName": "Pradak",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040206",
+      "KhName": "ជ្រាប់ថ្មី",
+      "EnName": "Chroab Thmei",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040207",
+      "KhName": "ជ្រាប់ចាស់",
+      "EnName": "Chroab Chas",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040208",
+      "KhName": "កក់",
+      "EnName": "Kak",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040209",
+      "KhName": "គោកលុន",
+      "EnName": "Kouk Lun",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040210",
+      "KhName": "ភ្នំជញ្ជាំង",
+      "EnName": "Phnum Chonhcheang",
+      "Parent": "10402"
+    },
+    {
+      "Type": "V",
+      "Code": "1040211",
+      "KhName": "ចក្រី",
+      "EnName": "Chakkrei",
+      "Parent": "10402"
+    },
+    {
+      "Type": "C",
+      "Code": "10403",
+      "KhName": "ភ្នំលៀប",
+      "EnName": "Phnum Lieb",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040301",
+      "KhName": "ភ្នំលៀបកើត",
+      "EnName": "Phnum Lieb Kaeut",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040302",
+      "KhName": "ភ្នំលៀបលិច",
+      "EnName": "Phnum Lieb Lech",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040303",
+      "KhName": "ទ្រយោង",
+      "EnName": "Troyoung",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040304",
+      "KhName": "ទ្រលោកជើង",
+      "EnName": "Tro Louk Cheung",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040305",
+      "KhName": "ទ្រលោកលិច",
+      "EnName": "Tro Louk Lech",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040306",
+      "KhName": "ទ្រលោកត្បូង",
+      "EnName": "Tro Louk Tboung",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040307",
+      "KhName": "ឡោទេ",
+      "EnName": "Laote",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040308",
+      "KhName": "រំដួល",
+      "EnName": "Rumduol",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040309",
+      "KhName": "ព្រីងជួរ",
+      "EnName": "Pring Chuor",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040310",
+      "KhName": "កន្ដ្រប់",
+      "EnName": "Kantrab",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040311",
+      "KhName": "ត្នោត",
+      "EnName": "Tnaot",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040312",
+      "KhName": "អន្លង់សា",
+      "EnName": "Anlong Sa",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040313",
+      "KhName": "កណ្ដោល",
+      "EnName": "Kandaol",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040314",
+      "KhName": "កំបោរ",
+      "EnName": "Kambaor",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040315",
+      "KhName": "កាបៅ",
+      "EnName": "Kabau",
+      "Parent": "10403"
+    },
+    {
+      "Type": "V",
+      "Code": "1040316",
+      "KhName": "កំពង់ក្រសាំង",
+      "EnName": "Kampong Krasang",
+      "Parent": "10403"
+    },
+    {
+      "Type": "C",
+      "Code": "10404",
+      "KhName": "ប្រាសាទ",
+      "EnName": "Prasat",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040401",
+      "KhName": "ចារ",
+      "EnName": "Char",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040402",
+      "KhName": "បត់ត្រង់",
+      "EnName": "Bat Trang",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040403",
+      "KhName": "សំពៅលូន",
+      "EnName": "Sampov Lun",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040404",
+      "KhName": "ផ្លូវលាវ",
+      "EnName": "Phlov Leav",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040405",
+      "KhName": "តាអំ",
+      "EnName": "Ta Am",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040406",
+      "KhName": "អំពិល",
+      "EnName": "Ampil",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040407",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040408",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040409",
+      "KhName": "ឱម៉ាល់",
+      "EnName": "Aomal",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040410",
+      "KhName": "ទម្លាប់",
+      "EnName": "Tumloab",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040411",
+      "KhName": "កៀនបន្ទាយ",
+      "EnName": "Kien Banteay",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040412",
+      "KhName": "ប្រាសាទ",
+      "EnName": "Prasat",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040413",
+      "KhName": "អន្លង់សា",
+      "EnName": "Anlong Sa",
+      "Parent": "10404"
+    },
+    {
+      "Type": "V",
+      "Code": "1040414",
+      "KhName": "កំព្រាម",
+      "EnName": "Kampream",
+      "Parent": "10404"
+    },
+    {
+      "Type": "C",
+      "Code": "10405",
+      "KhName": "ព្រះនេត្រព្រះ",
+      "EnName": "Preak Netr Preah",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040501",
+      "KhName": "ប៉ោយក្ដឿង",
+      "EnName": "Paoy Kdoeang",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040502",
+      "KhName": "ជើងវត្ដ",
+      "EnName": "Cheung Voat",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040503",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040504",
+      "KhName": "ប៉ុស្ដិចាស់",
+      "EnName": "Post Chas",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040505",
+      "KhName": "ប៉ោយសំរោង",
+      "EnName": "Paoy Samraong",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040506",
+      "KhName": "ប៉ោយព្រីង",
+      "EnName": "Paoy Pring",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040507",
+      "KhName": "ប៉ោយតាប៉ែន",
+      "EnName": "Paoy Ta Paen",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040508",
+      "KhName": "ស្រេះកើត",
+      "EnName": "Sreh Kaeut",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040509",
+      "KhName": "ស្រេះលិច",
+      "EnName": "Sreh Lech",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040510",
+      "KhName": "គោកD",
+      "EnName": "Kouk Srok",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040511",
+      "KhName": "ស្រមោច",
+      "EnName": "Sramaoch",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040512",
+      "KhName": "ពាមស្រេះ",
+      "EnName": "Peam Sreh",
+      "Parent": "10405"
+    },
+    {
+      "Type": "V",
+      "Code": "1040513",
+      "KhName": "ដូនច្រែង",
+      "EnName": "Doun Chraeng",
+      "Parent": "10405"
+    },
+    {
+      "Type": "C",
+      "Code": "10406",
+      "KhName": "រហាល",
+      "EnName": "Rohal",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040601",
+      "KhName": "រហាល",
+      "EnName": "Rohal",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040602",
+      "KhName": "សាលាឆេះ",
+      "EnName": "Sala Chheh",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040603",
+      "KhName": "ចក",
+      "EnName": "Chak",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040604",
+      "KhName": "ទេពកោសា",
+      "EnName": "Tep Kaosa",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040605",
+      "KhName": "ស្នាយ",
+      "EnName": "Snay",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040606",
+      "KhName": "អន្លង់ថ្ម",
+      "EnName": "Anlong Thma",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040607",
+      "KhName": "ពពេល",
+      "EnName": "Popel",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040608",
+      "KhName": "ប៉ោយស្វាយ",
+      "EnName": "Paoy Svay",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040609",
+      "KhName": "ឫស្សី",
+      "EnName": "Ruessei",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040610",
+      "KhName": "ព្រៃមាន់",
+      "EnName": "Prey Moan",
+      "Parent": "10406"
+    },
+    {
+      "Type": "V",
+      "Code": "1040611",
+      "KhName": "ស្ទឹងកំបុត",
+      "EnName": "Stueng Kambot",
+      "Parent": "10406"
+    },
+    {
+      "Type": "C",
+      "Code": "10407",
+      "KhName": "ទានកាំ",
+      "EnName": "Tean Kam",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040701",
+      "KhName": "បន្ទាត់បោះ",
+      "EnName": "Bantoat Baoh",
+      "Parent": "10407"
+    },
+    {
+      "Type": "V",
+      "Code": "1040702",
+      "KhName": "ទានកាំលិច",
+      "EnName": "Tean Kam Lech",
+      "Parent": "10407"
+    },
+    {
+      "Type": "V",
+      "Code": "1040703",
+      "KhName": "ទានកាំជើង",
+      "EnName": "Tean Kam Cheung",
+      "Parent": "10407"
+    },
+    {
+      "Type": "V",
+      "Code": "1040704",
+      "KhName": "ទានកាំត្បូង",
+      "EnName": "Tean Kam Tboung",
+      "Parent": "10407"
+    },
+    {
+      "Type": "V",
+      "Code": "1040705",
+      "KhName": "អូរ",
+      "EnName": "Ou",
+      "Parent": "10407"
+    },
+    {
+      "Type": "V",
+      "Code": "1040706",
+      "KhName": "តាអ៊ុន",
+      "EnName": "Ta Un",
+      "Parent": "10407"
+    },
+    {
+      "Type": "C",
+      "Code": "10408",
+      "KhName": "ទឹកជោរ",
+      "EnName": "Tuek Chour",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040801",
+      "KhName": "ស្មាច់",
+      "EnName": "Smach",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040802",
+      "KhName": "ប៉ោយចារ",
+      "EnName": "Paoy Char",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040803",
+      "KhName": "តាខែក",
+      "EnName": "Ta Khaek",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040804",
+      "KhName": "គោកកី",
+      "EnName": "Kouk kei",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040805",
+      "KhName": "ទន្លាប់",
+      "EnName": "Tonloab",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040806",
+      "KhName": "គោកទៀម",
+      "EnName": "Kouk Tiem",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040807",
+      "KhName": "ចារលើ",
+      "EnName": "Char Leu",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040808",
+      "KhName": "កន្ទួត",
+      "EnName": "Kantuot",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040809",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040810",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040811",
+      "KhName": "ទឹកជោរ",
+      "EnName": "Tuek Chour",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040812",
+      "KhName": "តាសៀវ",
+      "EnName": "Ta Siev",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040813",
+      "KhName": "កំពង់ថ្កូវ",
+      "EnName": "Kampong Thkov",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040814",
+      "KhName": "តាប៉ុន",
+      "EnName": "Ta Pon",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040815",
+      "KhName": "ស្នាយល្អ",
+      "EnName": "Snay L'a",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040816",
+      "KhName": "តាដែក",
+      "EnName": "Ta Daek",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040817",
+      "KhName": "សំរោង",
+      "EnName": "Samraong",
+      "Parent": "10408"
+    },
+    {
+      "Type": "V",
+      "Code": "1040818",
+      "KhName": "អន្លង់វិល",
+      "EnName": "Anlong Vil",
+      "Parent": "10408"
+    },
+    {
+      "Type": "C",
+      "Code": "10409",
+      "KhName": "បុស្បូវ",
+      "EnName": "Bos Sbov",
+      "Parent": "104"
+    },
+    {
+      "Type": "V",
+      "Code": "1040901",
+      "KhName": "ត្របែក",
+      "EnName": "Trabaek",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040902",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040903",
+      "KhName": "គោកធំ",
+      "EnName": "Kouk Thum",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040904",
+      "KhName": "បុស្បូវ",
+      "EnName": "Bos Sbov",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040905",
+      "KhName": "សូត្រមន្ដ",
+      "EnName": "Soutr Mont",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040906",
+      "KhName": "ស្រះខ្ទំ",
+      "EnName": "Srah Khtum",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040907",
+      "KhName": "តាបៅ",
+      "EnName": "Tabau",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040908",
+      "KhName": "ក្បាលខ្ទីង",
+      "EnName": "Kbal Khting",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040909",
+      "KhName": "ស្មាច់",
+      "EnName": "Smach",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040910",
+      "KhName": "បឹងវែង",
+      "EnName": "Boeng Veaeng",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040911",
+      "KhName": "បន្ទាត់បោះ",
+      "EnName": "Bantoat Baoh",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040912",
+      "KhName": "ព្រីងកោង",
+      "EnName": "Pring Kaong",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040913",
+      "KhName": "ខ្ចាស់",
+      "EnName": "Khchas",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040914",
+      "KhName": "ខ្ញែរ",
+      "EnName": "Khnhaer",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040915",
+      "KhName": "ឃូស្វាយ",
+      "EnName": "Khu Svay",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040916",
+      "KhName": "ខ្វាវ",
+      "EnName": "Khvav",
+      "Parent": "10409"
+    },
+    {
+      "Type": "V",
+      "Code": "1040917",
+      "KhName": "ត្បែង",
+      "EnName": "Tbaeng",
+      "Parent": "10409"
+    },
+    {
+      "Type": "D",
+      "Code": "105",
+      "KhName": "អូរជ្រៅ",
+      "EnName": "Ou Chrov",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10501",
+      "KhName": "ចង្ហា",
+      "EnName": "Changha",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050101",
+      "KhName": "បឹងសិលា",
+      "EnName": "Boeng Seila",
+      "Parent": "10501"
+    },
+    {
+      "Type": "V",
+      "Code": "1050102",
+      "KhName": "តាជ្រឹង",
+      "EnName": "Ta Chrueng",
+      "Parent": "10501"
+    },
+    {
+      "Type": "V",
+      "Code": "1050103",
+      "KhName": "តាផោក",
+      "EnName": "Ta Phaok",
+      "Parent": "10501"
+    },
+    {
+      "Type": "V",
+      "Code": "1050104",
+      "KhName": "ប៉ោយវត្ដ",
+      "EnName": "Paoy Voat",
+      "Parent": "10501"
+    },
+    {
+      "Type": "V",
+      "Code": "1050105",
+      "KhName": "ឈូក",
+      "EnName": "Chhuk",
+      "Parent": "10501"
+    },
+    {
+      "Type": "V",
+      "Code": "1050106",
+      "KhName": "ជ្រៃ",
+      "EnName": "Chrey",
+      "Parent": "10501"
+    },
+    {
+      "Type": "C",
+      "Code": "10502",
+      "KhName": "កូប",
+      "EnName": "Koub",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050201",
+      "KhName": "យាងថ្មី",
+      "EnName": "Yeang thmei",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050202",
+      "KhName": "ម៉ក់ហឺន",
+      "EnName": "Mak Heun",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050203",
+      "KhName": "វាំងមួង",
+      "EnName": "Veang Muong",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050204",
+      "KhName": "កូបកើត",
+      "EnName": "Koub Kaeut",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050205",
+      "KhName": "ខៃដន",
+      "EnName": "Khai Dan",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050206",
+      "KhName": "ណាកាឆាយ",
+      "EnName": "Naka Chhay",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050207",
+      "KhName": "កូបលិច",
+      "EnName": "Koub Lech",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050208",
+      "KhName": "កូបជើង",
+      "EnName": "Koub Cheung",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050209",
+      "KhName": "អូរជ្រៅ",
+      "EnName": "Ou Chrov",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050210",
+      "KhName": "សូរិយាថ្មី",
+      "EnName": "Souriya Thmei",
+      "Parent": "10502"
+    },
+    {
+      "Type": "V",
+      "Code": "1050211",
+      "KhName": "កូនត្រី",
+      "EnName": "Koun Trei",
+      "Parent": "10502"
+    },
+    {
+      "Type": "C",
+      "Code": "10503",
+      "KhName": "គុត្ដសត",
+      "EnName": "Kuttasat",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050301",
+      "KhName": "កូបតូច",
+      "EnName": "Koub Touch",
+      "Parent": "10503"
+    },
+    {
+      "Type": "V",
+      "Code": "1050302",
+      "KhName": "កោះចារ",
+      "EnName": "Kaoh Char",
+      "Parent": "10503"
+    },
+    {
+      "Type": "V",
+      "Code": "1050303",
+      "KhName": "គុត្ដសត",
+      "EnName": "Kuttaksat",
+      "Parent": "10503"
+    },
+    {
+      "Type": "V",
+      "Code": "1050304",
+      "KhName": "យាយអត",
+      "EnName": "Yeay At",
+      "Parent": "10503"
+    },
+    {
+      "Type": "C",
+      "Code": "10505",
+      "KhName": "សំរោង",
+      "EnName": "Samraong",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050501",
+      "KhName": "បន្លិច",
+      "EnName": "Banlech",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050502",
+      "KhName": "អ្នកតាឈរ",
+      "EnName": "Neak Ta Chhor",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050503",
+      "KhName": "សំរោង",
+      "EnName": "Samraong",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050504",
+      "KhName": "កំពង់រាប",
+      "EnName": "Kampong Reab",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050505",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050506",
+      "KhName": "ធ្មេញត្រី",
+      "EnName": "Thmenh Trei",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050507",
+      "KhName": "បត់ត្រង់",
+      "EnName": "Bat Trang",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050508",
+      "KhName": "អញ្ចាញ",
+      "EnName": "Anhchanh",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050509",
+      "KhName": "វត្ដ",
+      "EnName": "Voat",
+      "Parent": "10505"
+    },
+    {
+      "Type": "V",
+      "Code": "1050510",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10505"
+    },
+    {
+      "Type": "C",
+      "Code": "10506",
+      "KhName": "សូភី",
+      "EnName": "Souphi",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050601",
+      "KhName": "សូភីជើង",
+      "EnName": "Souphi Cheung",
+      "Parent": "10506"
+    },
+    {
+      "Type": "V",
+      "Code": "1050602",
+      "KhName": "សូភីកណ្ដាល",
+      "EnName": "Souphi Kandal",
+      "Parent": "10506"
+    },
+    {
+      "Type": "V",
+      "Code": "1050603",
+      "KhName": "សូភីត្បូង",
+      "EnName": "Souphi Tboung",
+      "Parent": "10506"
+    },
+    {
+      "Type": "V",
+      "Code": "1050604",
+      "KhName": "គោកចក",
+      "EnName": "Kouk Chak",
+      "Parent": "10506"
+    },
+    {
+      "Type": "V",
+      "Code": "1050605",
+      "KhName": "គោកព្រិច",
+      "EnName": "Kouk Prich",
+      "Parent": "10506"
+    },
+    {
+      "Type": "C",
+      "Code": "10507",
+      "KhName": "សឹង្ហ",
+      "EnName": "Soengh",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050701",
+      "KhName": "សឹង្ហលិច",
+      "EnName": "Soengh Lech",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050702",
+      "KhName": "រកា",
+      "EnName": "Roka",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050703",
+      "KhName": "អន្លង់ស្វាយ",
+      "EnName": "Anlong Svay",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050704",
+      "KhName": "សឹង្ហត្បូង",
+      "EnName": "Soengh Tboung",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050705",
+      "KhName": "ផ្គាំ",
+      "EnName": "Phkoam",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050706",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050707",
+      "KhName": "ត្នោត",
+      "EnName": "Tnaot",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050708",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10507"
+    },
+    {
+      "Type": "V",
+      "Code": "1050709",
+      "KhName": "រុន",
+      "EnName": "Run",
+      "Parent": "10507"
+    },
+    {
+      "Type": "C",
+      "Code": "10509",
+      "KhName": "អូរបីជាន់",
+      "EnName": "Ou Beichoan",
+      "Parent": "105"
+    },
+    {
+      "Type": "V",
+      "Code": "1050901",
+      "KhName": "បន្ទាយថ្មី",
+      "EnName": "Banteay Thmei",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050902",
+      "KhName": "ជោគជ័យ",
+      "EnName": "Chouk Chey",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050903",
+      "KhName": "អូរបីជាន់",
+      "EnName": "Ou Beichoan",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050904",
+      "KhName": "ប្រាសាទ",
+      "EnName": "Prasat",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050905",
+      "KhName": "ព្រៃចាន់",
+      "EnName": "Prey Chan",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050906",
+      "KhName": "ព្រាវចាស់",
+      "EnName": "Preav Chas",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050907",
+      "KhName": "សិលាខ្មែរ",
+      "EnName": "Seila Khmer",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050908",
+      "KhName": "ស្នួលទ្រេត",
+      "EnName": "Snuol Tret",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050909",
+      "KhName": "ថ្នល់បត់",
+      "EnName": "Thnal Bat",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050910",
+      "KhName": "ទំនប់ដាច់",
+      "EnName": "Tomnob Dach",
+      "Parent": "10509"
+    },
+    {
+      "Type": "V",
+      "Code": "1050911",
+      "KhName": "យាងដង្គំ",
+      "EnName": "Yeang Dangkum",
+      "Parent": "10509"
+    },
+    {
+      "Type": "ក្រុង",
+      "Code": "106",
+      "KhName": "សិរីសោភ័ណ",
+      "EnName": "Serei Saophoan",
+      "Parent": "1"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10602",
+      "KhName": "កំពង់ស្វាយ",
+      "EnName": "Kampong Svay",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060201",
+      "KhName": "កំពង់ស្វាយ",
+      "EnName": "Kampong Svay",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060202",
+      "KhName": "កងវ៉ា",
+      "EnName": "Kangva",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060203",
+      "KhName": "V ២",
+      "EnName": "Phum Pir",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060204",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060205",
+      "KhName": "សូភី",
+      "EnName": "Souphi",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060206",
+      "KhName": "តារាងបាល់",
+      "EnName": "Tarang Bal",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060207",
+      "KhName": "កន្ទួត",
+      "EnName": "Kantuot",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060208",
+      "KhName": "ខ្លាកូនចាស់",
+      "EnName": "Kla Koun Chas",
+      "Parent": "10602"
+    },
+    {
+      "Type": "V",
+      "Code": "1060209",
+      "KhName": "ខ្លាកូនថ្មី",
+      "EnName": "Kla Koun Thmey",
+      "Parent": "10602"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10603",
+      "KhName": "កោះពងសត្វ",
+      "EnName": "Kaoh Pong Satv",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060301",
+      "KhName": "កោះពងសត្វ",
+      "EnName": "Kaoh Pong Satv",
+      "Parent": "10603"
+    },
+    {
+      "Type": "V",
+      "Code": "1060302",
+      "KhName": "តាសុខ",
+      "EnName": "Ta Sok",
+      "Parent": "10603"
+    },
+    {
+      "Type": "V",
+      "Code": "1060303",
+      "KhName": "ព្រះអង្គ",
+      "EnName": "Preah Angk",
+      "Parent": "10603"
+    },
+    {
+      "Type": "V",
+      "Code": "1060304",
+      "KhName": "ស្នាយដង្គត់",
+      "EnName": "Snay Dangkot",
+      "Parent": "10603"
+    },
+    {
+      "Type": "V",
+      "Code": "1060305",
+      "KhName": "អង្គាបុស្ប",
+      "EnName": "Angkear Bos",
+      "Parent": "10603"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10604",
+      "KhName": "ម្កាក់",
+      "EnName": "Mkak",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060401",
+      "KhName": "ម្កាក់",
+      "EnName": "Mkak",
+      "Parent": "10604"
+    },
+    {
+      "Type": "V",
+      "Code": "1060402",
+      "KhName": "ក្បាលស្ពាន",
+      "EnName": "Kbal Spean",
+      "Parent": "10604"
+    },
+    {
+      "Type": "V",
+      "Code": "1060403",
+      "KhName": "តាម៉ា",
+      "EnName": "Ta Ma",
+      "Parent": "10604"
+    },
+    {
+      "Type": "V",
+      "Code": "1060404",
+      "KhName": "គោកលៀប",
+      "EnName": "Kouk Lieb",
+      "Parent": "10604"
+    },
+    {
+      "Type": "V",
+      "Code": "1060405",
+      "KhName": "ឈូក",
+      "EnName": "Chhuk",
+      "Parent": "10604"
+    },
+    {
+      "Type": "V",
+      "Code": "1060406",
+      "KhName": "ដូនឡី",
+      "EnName": "Doun Lei",
+      "Parent": "10604"
+    },
+    {
+      "Type": "V",
+      "Code": "1060407",
+      "KhName": "បែកចាន",
+      "EnName": "Baek Chan",
+      "Parent": "10604"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10605",
+      "KhName": "អូរអំបិល",
+      "EnName": "Ou Ambel",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060501",
+      "KhName": "សែសិន",
+      "EnName": "Saesen",
+      "Parent": "10605"
+    },
+    {
+      "Type": "V",
+      "Code": "1060502",
+      "KhName": "គោរដ្ឋាន",
+      "EnName": "Kourothan",
+      "Parent": "10605"
+    },
+    {
+      "Type": "V",
+      "Code": "1060503",
+      "KhName": "រោងម៉ាស៊ីន",
+      "EnName": "Roung Masin",
+      "Parent": "10605"
+    },
+    {
+      "Type": "V",
+      "Code": "1060504",
+      "KhName": "ព្រហូត",
+      "EnName": "Prohut",
+      "Parent": "10605"
+    },
+    {
+      "Type": "V",
+      "Code": "1060505",
+      "KhName": "អូរអំបិល",
+      "EnName": "Ou Ambel",
+      "Parent": "10605"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10606",
+      "KhName": "ភ្នៀត",
+      "EnName": "Phniet",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060601",
+      "KhName": "កន្ទួត",
+      "EnName": "Kantuot",
+      "Parent": "10606"
+    },
+    {
+      "Type": "V",
+      "Code": "1060602",
+      "KhName": "កំព្រីង",
+      "EnName": "Kampring",
+      "Parent": "10606"
+    },
+    {
+      "Type": "V",
+      "Code": "1060603",
+      "KhName": "ភ្នៀត",
+      "EnName": "Phniet",
+      "Parent": "10606"
+    },
+    {
+      "Type": "V",
+      "Code": "1060604",
+      "KhName": "អ្នកតា",
+      "EnName": "Neak Ta",
+      "Parent": "10606"
+    },
+    {
+      "Type": "V",
+      "Code": "1060605",
+      "KhName": "Vថ្មី",
+      "EnName": "Phum Thmei",
+      "Parent": "10606"
+    },
+    {
+      "Type": "V",
+      "Code": "1060606",
+      "KhName": "បង្រុះ",
+      "EnName": "Bangruh",
+      "Parent": "10606"
+    },
+    {
+      "Type": "V",
+      "Code": "1060607",
+      "KhName": "សាលាក្រៅ",
+      "EnName": "Sala Krau",
+      "Parent": "10606"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10607",
+      "KhName": "ព្រះពន្លា",
+      "EnName": "Preah Ponlea",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060701",
+      "KhName": "ចក",
+      "EnName": "Chak",
+      "Parent": "10607"
+    },
+    {
+      "Type": "V",
+      "Code": "1060702",
+      "KhName": "V ១",
+      "EnName": "Phum Muoy",
+      "Parent": "10607"
+    },
+    {
+      "Type": "V",
+      "Code": "1060703",
+      "KhName": "V ៣",
+      "EnName": "Phum Bei",
+      "Parent": "10607"
+    },
+    {
+      "Type": "V",
+      "Code": "1060704",
+      "KhName": "V ៤",
+      "EnName": "Phum Buon",
+      "Parent": "10607"
+    },
+    {
+      "Type": "V",
+      "Code": "1060705",
+      "KhName": "ព្រៃឫស្សី",
+      "EnName": "Prey Ruessei",
+      "Parent": "10607"
+    },
+    {
+      "Type": "V",
+      "Code": "1060706",
+      "KhName": "ព្រះពន្លា",
+      "EnName": "Preah Ponlea",
+      "Parent": "10607"
+    },
+    {
+      "Type": "V",
+      "Code": "1060707",
+      "KhName": "ក្បាលស្ពាន",
+      "EnName": "Kbal Spean",
+      "Parent": "10607"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "10608",
+      "KhName": "ទឹកថ្លា",
+      "EnName": "Tuek Thla",
+      "Parent": "106"
+    },
+    {
+      "Type": "V",
+      "Code": "1060801",
+      "KhName": "គាប",
+      "EnName": "Keab",
+      "Parent": "10608"
+    },
+    {
+      "Type": "V",
+      "Code": "1060802",
+      "KhName": "ទំនប់ជ្រៃ",
+      "EnName": "Tumnob Chrey",
+      "Parent": "10608"
+    },
+    {
+      "Type": "V",
+      "Code": "1060803",
+      "KhName": "ទឹកថ្លា",
+      "EnName": "Tuek Thla",
+      "Parent": "10608"
+    },
+    {
+      "Type": "V",
+      "Code": "1060805",
+      "KhName": "ភ្នំបាក់",
+      "EnName": "Phnum Bak",
+      "Parent": "10608"
+    },
+    {
+      "Type": "V",
+      "Code": "1060806",
+      "KhName": "ដីឡូតិ៍",
+      "EnName": "Dei Lou",
+      "Parent": "10608"
+    },
+    {
+      "Type": "V",
+      "Code": "1060807",
+      "KhName": "បាណយ",
+      "EnName": "Banoy",
+      "Parent": "10608"
+    },
+    {
+      "Type": "D",
+      "Code": "107",
+      "KhName": "ថ្មពួក",
+      "EnName": "Thma Puok",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10701",
+      "KhName": "បន្ទាយឆ្មារ",
+      "EnName": "Banteay Chhmar",
+      "Parent": "107"
+    },
+    {
+      "Type": "V",
+      "Code": "1070101",
+      "KhName": "គោកសំរោង",
+      "EnName": "Kouk Samraong",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070102",
+      "KhName": "ក្បាលទន្សោង",
+      "EnName": "Kbal Tonsaong",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070103",
+      "KhName": "បន្ទាយឆ្មារជើង",
+      "EnName": "Banteay Chhmar Cheung",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070105",
+      "KhName": "ក្បាលក្របី",
+      "EnName": "Kbal Krabei",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070106",
+      "KhName": "បន្ទាយឆ្មារត្បូង",
+      "EnName": "Banteay Chhmar Tboung",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070107",
+      "KhName": "បន្ទាយឆ្មារលិច",
+      "EnName": "Banteay Chhmar Lech",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070108",
+      "KhName": "ថ្មដែកកេះ",
+      "EnName": "Thma Daekkeh",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070109",
+      "KhName": "ធ្លក",
+      "EnName": "Thlok",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070110",
+      "KhName": "គោកសំរោងកើត",
+      "EnName": "Kouk Samraong Kaeut",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070111",
+      "KhName": "ស្រះជ្រៃ",
+      "EnName": "Srah Chrey",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070112",
+      "KhName": "ដងរ៉ែក",
+      "EnName": "Dang Reaek",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070113",
+      "KhName": "ប្រាសាទត្បែង",
+      "EnName": "Prasat Tbaeng",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070114",
+      "KhName": "ព្រៃសង្ហា",
+      "EnName": "Prey Sangha",
+      "Parent": "10701"
+    },
+    {
+      "Type": "V",
+      "Code": "1070115",
+      "KhName": "ត្រពាំងធ្លក",
+      "EnName": "Trapeang Thlok",
+      "Parent": "10701"
+    },
+    {
+      "Type": "C",
+      "Code": "10702",
+      "KhName": "គោករមៀត",
+      "EnName": "Kouk Romiet",
+      "Parent": "107"
+    },
+    {
+      "Type": "V",
+      "Code": "1070201",
+      "KhName": "គោកព្រេច",
+      "EnName": "Kouk Prech",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070202",
+      "KhName": "ស្រែល្អ",
+      "EnName": "Srae L'a",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070203",
+      "KhName": "គោករមៀត",
+      "EnName": "Kouk Romiet",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070204",
+      "KhName": "ស្ដៅ",
+      "EnName": "Sdau",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070205",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070206",
+      "KhName": "តាឡី",
+      "EnName": "Ta Lei",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070207",
+      "KhName": "សេរីកា",
+      "EnName": "Sereika",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070208",
+      "KhName": "តាសុង",
+      "EnName": "Ta Song",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070209",
+      "KhName": "ត្រពាំងសំរោង",
+      "EnName": "Trapeang Samraong",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070210",
+      "KhName": "ថ្នល់បំបែក",
+      "EnName": "Phlov Bambaek",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070211",
+      "KhName": "ថ្មឆ័ត្រ",
+      "EnName": "Thma Chhatr",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070212",
+      "KhName": "វល្លិប្រេង",
+      "EnName": "Voa Preng",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070213",
+      "KhName": "ប្រាំមីនា",
+      "EnName": "Pram Minea",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070214",
+      "KhName": "សាមគ្គី",
+      "EnName": "Sameakki",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070215",
+      "KhName": "បន្ទាយមានឬទ្ធិ",
+      "EnName": "Banteay Mean Rit",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070217",
+      "KhName": "ស្ពាន",
+      "EnName": "Spean",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070218",
+      "KhName": "កណ្ដោល",
+      "EnName": "Kandaol",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070219",
+      "KhName": "ក្ដិបថ្ម",
+      "EnName": "Kdeb Thma",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070220",
+      "KhName": "បឹងតាស្រី",
+      "EnName": "Boeng Ta Srei",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070221",
+      "KhName": "បឹងសុក្រម",
+      "EnName": "Boeng Sokram",
+      "Parent": "10702"
+    },
+    {
+      "Type": "V",
+      "Code": "1070222",
+      "KhName": "តាម៉ាំង",
+      "EnName": "Ta Mang",
+      "Parent": "10702"
+    },
+    {
+      "Type": "C",
+      "Code": "10703",
+      "KhName": "Vថ្មី",
+      "EnName": "Phum Thmei",
+      "Parent": "107"
+    },
+    {
+      "Type": "V",
+      "Code": "1070301",
+      "KhName": "កាប់ចោរ",
+      "EnName": "Kab Chaor",
+      "Parent": "10703"
+    },
+    {
+      "Type": "V",
+      "Code": "1070302",
+      "KhName": "គោកស្វាយ",
+      "EnName": "Kouk Svay",
+      "Parent": "10703"
+    },
+    {
+      "Type": "V",
+      "Code": "1070303",
+      "KhName": "រលំជ្រៃ",
+      "EnName": "Rolum Chrey",
+      "Parent": "10703"
+    },
+    {
+      "Type": "V",
+      "Code": "1070304",
+      "KhName": "ថ្មីខាងលិច",
+      "EnName": "Thmei Khang Lech",
+      "Parent": "10703"
+    },
+    {
+      "Type": "V",
+      "Code": "1070305",
+      "KhName": "ថ្មីកណ្ដាល",
+      "EnName": "Thmei Kandal",
+      "Parent": "10703"
+    },
+    {
+      "Type": "V",
+      "Code": "1070306",
+      "KhName": "ថ្មីខាងត្បូង",
+      "EnName": "Thmei Khang Tboung",
+      "Parent": "10703"
+    },
+    {
+      "Type": "V",
+      "Code": "1070307",
+      "KhName": "ទទា",
+      "EnName": "Totea",
+      "Parent": "10703"
+    },
+    {
+      "Type": "C",
+      "Code": "10704",
+      "KhName": "ថ្មពួក",
+      "EnName": "Thma Puok",
+      "Parent": "107"
+    },
+    {
+      "Type": "V",
+      "Code": "1070401",
+      "KhName": "ថ្មពួក",
+      "EnName": "Thma Puok",
+      "Parent": "10704"
+    },
+    {
+      "Type": "V",
+      "Code": "1070402",
+      "KhName": "អ្នកតា",
+      "EnName": "Neak Ta",
+      "Parent": "10704"
+    },
+    {
+      "Type": "V",
+      "Code": "1070403",
+      "KhName": "វត្ដចាស់",
+      "EnName": "Voat Chas",
+      "Parent": "10704"
+    },
+    {
+      "Type": "V",
+      "Code": "1070404",
+      "KhName": "កសិណ",
+      "EnName": "Kasen",
+      "Parent": "10704"
+    },
+    {
+      "Type": "V",
+      "Code": "1070405",
+      "KhName": "ស្វាយ",
+      "EnName": "Svay",
+      "Parent": "10704"
+    },
+    {
+      "Type": "V",
+      "Code": "1070406",
+      "KhName": "ថ្នល់ដាច់",
+      "EnName": "Thnal Dach",
+      "Parent": "10704"
+    },
+    {
+      "Type": "V",
+      "Code": "1070407",
+      "KhName": "អន្លង់ត្រាច",
+      "EnName": "Anlong Trach",
+      "Parent": "10704"
+    },
+    {
+      "Type": "C",
+      "Code": "10705",
+      "KhName": "គោកកឋិន",
+      "EnName": "Kouk Kakthen",
+      "Parent": "107"
+    },
+    {
+      "Type": "V",
+      "Code": "1070501",
+      "KhName": "ដឺ",
+      "EnName": "Deu",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070502",
+      "KhName": "ស្ដៅ",
+      "EnName": "Sdau",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070503",
+      "KhName": "ទ្រាស",
+      "EnName": "Treas",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070504",
+      "KhName": "គោកកឋិន",
+      "EnName": "Kouk Kakthen",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070505",
+      "KhName": "តាសៀវ",
+      "EnName": "Ta Siev",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070506",
+      "KhName": "ជន្លាសដៃ",
+      "EnName": "Chonloas Dai",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070507",
+      "KhName": "តាត្រៃ",
+      "EnName": "Ta Trai",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070508",
+      "KhName": "ព្រះឈរ",
+      "EnName": "Preah Chhor",
+      "Parent": "10705"
+    },
+    {
+      "Type": "V",
+      "Code": "1070509",
+      "KhName": "គោកខ្ពស់",
+      "EnName": "Kouk Kpos",
+      "Parent": "10705"
+    },
+    {
+      "Type": "C",
+      "Code": "10706",
+      "KhName": "គំរូ",
+      "EnName": "Kumru",
+      "Parent": "107"
+    },
+    {
+      "Type": "V",
+      "Code": "1070601",
+      "KhName": "អណ្ដូងខ្លុង",
+      "EnName": "Andoung Khlong",
+      "Parent": "10706"
+    },
+    {
+      "Type": "V",
+      "Code": "1070602",
+      "KhName": "គំរូ",
+      "EnName": "Kumru",
+      "Parent": "10706"
+    },
+    {
+      "Type": "V",
+      "Code": "1070603",
+      "KhName": "តាយឹង",
+      "EnName": "Ta Yueng",
+      "Parent": "10706"
+    },
+    {
+      "Type": "V",
+      "Code": "1070605",
+      "KhName": "ឯកភាព",
+      "EnName": "Aekakpheap",
+      "Parent": "10706"
+    },
+    {
+      "Type": "V",
+      "Code": "1070606",
+      "KhName": "ផ្សារថ្មី",
+      "EnName": "Phsar Thmei",
+      "Parent": "10706"
+    },
+    {
+      "Type": "V",
+      "Code": "1070607",
+      "KhName": "ស្វាយជ្រុំ",
+      "EnName": "Svay Chrum",
+      "Parent": "10706"
+    },
+    {
+      "Type": "V",
+      "Code": "1070608",
+      "KhName": "ព្រៃវែង",
+      "EnName": "Prey Veaeng",
+      "Parent": "10706"
+    },
+    {
+      "Type": "D",
+      "Code": "108",
+      "KhName": "ស្វាយចេក",
+      "EnName": "Svay Chek",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10801",
+      "KhName": "ផ្គាំ",
+      "EnName": "Phkoam",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080101",
+      "KhName": "ផ្គាំ",
+      "EnName": "Phkoam",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080102",
+      "KhName": "យាងវៀន",
+      "EnName": "Yeang Vien",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080103",
+      "KhName": "យាង",
+      "EnName": "Yeang",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080104",
+      "KhName": "អំពិល",
+      "EnName": "Ampil",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080105",
+      "KhName": "អូរ",
+      "EnName": "Ou",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080106",
+      "KhName": "ប្រាសាទវៀន",
+      "EnName": "Prasat Vien",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080107",
+      "KhName": "តាដួល",
+      "EnName": "Ta Duol",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080108",
+      "KhName": "ស្វាយស",
+      "EnName": "Svay Sa",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080109",
+      "KhName": "ម៉ៅ",
+      "EnName": "Mau",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080110",
+      "KhName": "ថ្មគោល",
+      "EnName": "Thma Koul",
+      "Parent": "10801"
+    },
+    {
+      "Type": "V",
+      "Code": "1080111",
+      "KhName": "តាគល់",
+      "EnName": "Ta Koal",
+      "Parent": "10801"
+    },
+    {
+      "Type": "C",
+      "Code": "10802",
+      "KhName": "សារង្គ",
+      "EnName": "Sarongk",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080201",
+      "KhName": "ភាសត្បូង",
+      "EnName": "Pheas Tboung",
+      "Parent": "10802"
+    },
+    {
+      "Type": "V",
+      "Code": "1080202",
+      "KhName": "ភាសជើង",
+      "EnName": "Pheas Cheung",
+      "Parent": "10802"
+    },
+    {
+      "Type": "V",
+      "Code": "1080203",
+      "KhName": "ជ្រុង",
+      "EnName": "Chrung",
+      "Parent": "10802"
+    },
+    {
+      "Type": "V",
+      "Code": "1080204",
+      "KhName": "ផ្លាស់កង់",
+      "EnName": "Phlas Kang",
+      "Parent": "10802"
+    },
+    {
+      "Type": "V",
+      "Code": "1080205",
+      "KhName": "គោកភ្លូ",
+      "EnName": "Kouk Phlu",
+      "Parent": "10802"
+    },
+    {
+      "Type": "V",
+      "Code": "1080206",
+      "KhName": "កន្ទ្រង់",
+      "EnName": "Kantrong",
+      "Parent": "10802"
+    },
+    {
+      "Type": "C",
+      "Code": "10803",
+      "KhName": "ស្លក្រាម",
+      "EnName": "Sla Kram",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080301",
+      "KhName": "ស្លក្រាម",
+      "EnName": "Sla Kram",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080302",
+      "KhName": "កកោះ",
+      "EnName": "Kakaoh",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080303",
+      "KhName": "កំណប់",
+      "EnName": "Kamnab",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080304",
+      "KhName": "ទ័ពសៀម",
+      "EnName": "Toap Siem",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080305",
+      "KhName": "ខ្លែងពណ៌ជើង",
+      "EnName": "Khlaeng Poar Cheung",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080306",
+      "KhName": "ប្រាសាទ",
+      "EnName": "Prasat",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080307",
+      "KhName": "គោកអំពិល",
+      "EnName": "Kouk Ampil",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080308",
+      "KhName": "ខ្លែងពណ៌ត្បូង",
+      "EnName": "Khlaeng Poar Tboung",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080309",
+      "KhName": "បឹងស្នោ",
+      "EnName": "Boeng Snao",
+      "Parent": "10803"
+    },
+    {
+      "Type": "V",
+      "Code": "1080310",
+      "KhName": "ចក់ ពួក",
+      "EnName": "Chak Puork",
+      "Parent": "10803"
+    },
+    {
+      "Type": "C",
+      "Code": "10804",
+      "KhName": "ស្វាយចេក",
+      "EnName": "Svay Chek",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080401",
+      "KhName": "គោកខ្វាវ",
+      "EnName": "Kouk Khvav",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080402",
+      "KhName": "ពន្សាយជើង",
+      "EnName": "Ponsay Cheung",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080403",
+      "KhName": "ក្លឹង",
+      "EnName": "Kloeng",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080404",
+      "KhName": "បែកចានចាស់",
+      "EnName": "Baek Chan Chas",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080405",
+      "KhName": "ពន្សាយត្បូង",
+      "EnName": "Ponsay Tboung",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080406",
+      "KhName": "រកាថ្មី",
+      "EnName": "Roka Thmei",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080407",
+      "KhName": "តាអុងលិច",
+      "EnName": "Ta Ong Lech",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080408",
+      "KhName": "ស្លែង",
+      "EnName": "Slaeng",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080409",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080410",
+      "KhName": "ខ្វាវលិច",
+      "EnName": "Khvav Lech",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080411",
+      "KhName": "សំរោង",
+      "EnName": "Samraong",
+      "Parent": "10804"
+    },
+    {
+      "Type": "V",
+      "Code": "1080412",
+      "KhName": "ចំការគ",
+      "EnName": "Chamkar Ko",
+      "Parent": "10804"
+    },
+    {
+      "Type": "C",
+      "Code": "10805",
+      "KhName": "តាបែន",
+      "EnName": "Ta Baen",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080501",
+      "KhName": "គោកតាឯក",
+      "EnName": "Kouk Ta Aek",
+      "Parent": "10805"
+    },
+    {
+      "Type": "V",
+      "Code": "1080502",
+      "KhName": "អូរវែងជើង",
+      "EnName": "Ou Veaeng Cheung",
+      "Parent": "10805"
+    },
+    {
+      "Type": "V",
+      "Code": "1080503",
+      "KhName": "តាបែន",
+      "EnName": "Ta Baen",
+      "Parent": "10805"
+    },
+    {
+      "Type": "V",
+      "Code": "1080504",
+      "KhName": "គោករកា",
+      "EnName": "Kouk Roka",
+      "Parent": "10805"
+    },
+    {
+      "Type": "V",
+      "Code": "1080505",
+      "KhName": "អូរវែងត្បូង",
+      "EnName": "Ou Veaeng Tboung",
+      "Parent": "10805"
+    },
+    {
+      "Type": "C",
+      "Code": "10806",
+      "KhName": "តាផូ",
+      "EnName": "Ta Phou",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080601",
+      "KhName": "តាផូ",
+      "EnName": "Ta Phou",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080602",
+      "KhName": "ពង្រ",
+      "EnName": "Pongro",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080603",
+      "KhName": "តាស្រី",
+      "EnName": "Ta Srei",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080604",
+      "KhName": "ព្រេចកី",
+      "EnName": "Prech Kei",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080605",
+      "KhName": "គោកកី",
+      "EnName": "Kouk Kei",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080606",
+      "KhName": "ឃ្មាស់",
+      "EnName": "Khmoas",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080607",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080608",
+      "KhName": "បារាយណ៍",
+      "EnName": "Baray",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080609",
+      "KhName": "ផ្ចឹក",
+      "EnName": "Phchoek",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080610",
+      "KhName": "ព្រេចត្បូង",
+      "EnName": "Prech Tboung",
+      "Parent": "10806"
+    },
+    {
+      "Type": "V",
+      "Code": "1080611",
+      "KhName": "បន្ទាត់បោះ",
+      "EnName": "Bantoat Baoh",
+      "Parent": "10806"
+    },
+    {
+      "Type": "C",
+      "Code": "10807",
+      "KhName": "ទ្រាស",
+      "EnName": "Treas",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080701",
+      "KhName": "ពន្លៃថ្មី",
+      "EnName": "Ponley Thmei",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080702",
+      "KhName": "ចែង",
+      "EnName": "Chaeng",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080703",
+      "KhName": "ដូនណូយ",
+      "EnName": "Doun Nouy",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080704",
+      "KhName": "ប្រីយ៍",
+      "EnName": "Prei",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080705",
+      "KhName": "ពន្លៃចាស់",
+      "EnName": "Ponley Chas",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080706",
+      "KhName": "ទ្រាស",
+      "EnName": "Treas",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080707",
+      "KhName": "អំពិលព្រង់",
+      "EnName": "Ampil Prong",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080708",
+      "KhName": "អូរកកោះ",
+      "EnName": "Ou Kakaoh",
+      "Parent": "10807"
+    },
+    {
+      "Type": "V",
+      "Code": "1080709",
+      "KhName": "តាវឹក",
+      "EnName": "Ta Voek",
+      "Parent": "10807"
+    },
+    {
+      "Type": "C",
+      "Code": "10808",
+      "KhName": "រលួស",
+      "EnName": "Roluos",
+      "Parent": "108"
+    },
+    {
+      "Type": "V",
+      "Code": "1080801",
+      "KhName": "បែកចានថ្មី",
+      "EnName": "Baek Chan Thmei",
+      "Parent": "10808"
+    },
+    {
+      "Type": "V",
+      "Code": "1080802",
+      "KhName": "ខ្វាវកើត",
+      "EnName": "Khvav Kaeut",
+      "Parent": "10808"
+    },
+    {
+      "Type": "V",
+      "Code": "1080803",
+      "KhName": "ស្ទឹង",
+      "EnName": "Stueng",
+      "Parent": "10808"
+    },
+    {
+      "Type": "V",
+      "Code": "1080804",
+      "KhName": "តាអុងកើត",
+      "EnName": "Ta Ong Kaeut",
+      "Parent": "10808"
+    },
+    {
+      "Type": "V",
+      "Code": "1080805",
+      "KhName": "ស្លែង",
+      "EnName": "Slaeng",
+      "Parent": "10808"
+    },
+    {
+      "Type": "V",
+      "Code": "1080806",
+      "KhName": "រលួស",
+      "EnName": "Roluos",
+      "Parent": "10808"
+    },
+    {
+      "Type": "V",
+      "Code": "1080807",
+      "KhName": "តាស្មន់",
+      "EnName": "Ta Sman",
+      "Parent": "10808"
+    },
+    {
+      "Type": "D",
+      "Code": "109",
+      "KhName": "ម៉ាឡៃ",
+      "EnName": "Malai",
+      "Parent": "1"
+    },
+    {
+      "Type": "C",
+      "Code": "10901",
+      "KhName": "បឹងបេង",
+      "EnName": "Boeng Beng",
+      "Parent": "109"
+    },
+    {
+      "Type": "V",
+      "Code": "1090101",
+      "KhName": "សង្កែ",
+      "EnName": "Sangkae",
+      "Parent": "10901"
+    },
+    {
+      "Type": "V",
+      "Code": "1090102",
+      "KhName": "ភ្នំរូង",
+      "EnName": "Pnum Roung",
+      "Parent": "10901"
+    },
+    {
+      "Type": "V",
+      "Code": "1090103",
+      "KhName": "ជ្រៃ",
+      "EnName": "Chrey",
+      "Parent": "10901"
+    },
+    {
+      "Type": "V",
+      "Code": "1090104",
+      "KhName": "ល្វា",
+      "EnName": "Lvea",
+      "Parent": "10901"
+    },
+    {
+      "Type": "V",
+      "Code": "1090105",
+      "KhName": "ចំបក់",
+      "EnName": "Chambak",
+      "Parent": "10901"
+    },
+    {
+      "Type": "C",
+      "Code": "10902",
+      "KhName": "ម៉ាឡៃ",
+      "EnName": "Malai",
+      "Parent": "109"
+    },
+    {
+      "Type": "V",
+      "Code": "1090201",
+      "KhName": "ដូង",
+      "EnName": "Doung",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090202",
+      "KhName": "វាលហាត់",
+      "EnName": "Veal Hat",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090203",
+      "KhName": "កណ្ដាល",
+      "EnName": "Kandal",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090204",
+      "KhName": "ក្បាលស្ពាន",
+      "EnName": "Kbal Spean",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090205",
+      "KhName": "ត្រសេកជ្រុំ",
+      "EnName": "Trasek Chrum",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090206",
+      "KhName": "ដំបូកវិល",
+      "EnName": "Dambouk Vil",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090207",
+      "KhName": "វត្ដចាស់",
+      "EnName": "Voat Chas",
+      "Parent": "10902"
+    },
+    {
+      "Type": "V",
+      "Code": "1090208",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10902"
+    },
+    {
+      "Type": "C",
+      "Code": "10903",
+      "KhName": "អូរសំព័រ",
+      "EnName": "Ou Sampoar",
+      "Parent": "109"
+    },
+    {
+      "Type": "V",
+      "Code": "1090301",
+      "KhName": "អូរសំព័រ",
+      "EnName": "Ou Sampoar",
+      "Parent": "10903"
+    },
+    {
+      "Type": "V",
+      "Code": "1090302",
+      "KhName": "អូរស្អំ",
+      "EnName": "Ou S'am",
+      "Parent": "10903"
+    },
+    {
+      "Type": "V",
+      "Code": "1090303",
+      "KhName": "ក្បាលទំនប់",
+      "EnName": "Kbal Tumnob",
+      "Parent": "10903"
+    },
+    {
+      "Type": "V",
+      "Code": "1090304",
+      "KhName": "បន្ទាយទី២",
+      "EnName": "Banteay Ti Pir",
+      "Parent": "10903"
+    },
+    {
+      "Type": "C",
+      "Code": "10904",
+      "KhName": "អូរស្រឡៅ",
+      "EnName": "Ou Sralau",
+      "Parent": "109"
+    },
+    {
+      "Type": "V",
+      "Code": "1090401",
+      "KhName": "អូរស្រឡៅ",
+      "EnName": "Ou Sralau",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090402",
+      "KhName": "ភ្នំកៅបី",
+      "EnName": "Phnum Kaubei",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090403",
+      "KhName": "កណ្ដោល",
+      "EnName": "Kandaol",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090404",
+      "KhName": "ឈើទាល",
+      "EnName": "Chheu Teal",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090405",
+      "KhName": "បឹងរាំង",
+      "EnName": "Bueng Reang",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090406",
+      "KhName": "ស្វាយព្រៃ",
+      "EnName": "Svay Prey",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090407",
+      "KhName": "ចាន់គីរី",
+      "EnName": "Chan Kiri",
+      "Parent": "10904"
+    },
+    {
+      "Type": "V",
+      "Code": "1090408",
+      "KhName": "ថ្មី",
+      "EnName": "Thmei",
+      "Parent": "10904"
+    },
+    {
+      "Type": "C",
+      "Code": "10905",
+      "KhName": "ទួលពង្រ",
+      "EnName": "Tuol Pongro",
+      "Parent": "109"
+    },
+    {
+      "Type": "V",
+      "Code": "1090501",
+      "KhName": "ទួលពង្រ",
+      "EnName": "Tuol Pongro",
+      "Parent": "10905"
+    },
+    {
+      "Type": "V",
+      "Code": "1090502",
+      "KhName": "កោះស្នួល",
+      "EnName": "Kaoh Snuol",
+      "Parent": "10905"
+    },
+    {
+      "Type": "V",
+      "Code": "1090503",
+      "KhName": "ខ្លាងាប់",
+      "EnName": "Khla Ngoab",
+      "Parent": "10905"
+    },
+    {
+      "Type": "V",
+      "Code": "1090504",
+      "KhName": "បន្ទាយទី១",
+      "EnName": "Banteay Ti Muoy",
+      "Parent": "10905"
+    },
+    {
+      "Type": "V",
+      "Code": "1090505",
+      "KhName": "សន្ដិភាព",
+      "EnName": "Santepheap",
+      "Parent": "10905"
+    },
+    {
+      "Type": "V",
+      "Code": "1090506",
+      "KhName": "អូរអំពិល",
+      "EnName": "Ou Ampil",
+      "Parent": "10905"
+    },
+    {
+      "Type": "V",
+      "Code": "1090507",
+      "KhName": "រស្មីមានជ័យ",
+      "EnName": "Reaksmei Meanchey",
+      "Parent": "10905"
+    },
+    {
+      "Type": "C",
+      "Code": "10906",
+      "KhName": "តាគង់",
+      "EnName": "Ta Kong",
+      "Parent": "109"
+    },
+    {
+      "Type": "V",
+      "Code": "1090601",
+      "KhName": "ចែងម៉ែង",
+      "EnName": "Chaeng Maeng",
+      "Parent": "10906"
+    },
+    {
+      "Type": "V",
+      "Code": "1090602",
+      "KhName": "បល្ល័ង្គ",
+      "EnName": "Ballangk",
+      "Parent": "10906"
+    },
+    {
+      "Type": "V",
+      "Code": "1090603",
+      "KhName": "ប៉ោយអង្គរ",
+      "EnName": "Paoy Angkor",
+      "Parent": "10906"
+    },
+    {
+      "Type": "V",
+      "Code": "1090604",
+      "KhName": "ស្រះភ្លោះ",
+      "EnName": "Srah Phluoh",
+      "Parent": "10906"
+    },
+    {
+      "Type": "V",
+      "Code": "1090605",
+      "KhName": "ខ្ជាយ",
+      "EnName": "Kcheay",
+      "Parent": "10906"
+    },
+    {
+      "Type": "V",
+      "Code": "1090606",
+      "KhName": "តាគង់",
+      "EnName": "Ta Kong",
+      "Parent": "10906"
+    },
+    {
+      "Type": "ក្រុង",
+      "Code": "110",
+      "KhName": "ប៉ោយប៉ែត",
+      "EnName": "Paoy Paet",
+      "Parent": "1"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "11001",
+      "KhName": "និមិត្ដ",
+      "EnName": "Nimitt",
+      "Parent": "110"
+    },
+    {
+      "Type": "V",
+      "Code": "1100101",
+      "KhName": "និមិត្ដ ១",
+      "EnName": "Nimitt Muoy",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100102",
+      "KhName": "និមិត្ដ ២",
+      "EnName": "Nimitt Pir",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100103",
+      "KhName": "និមិត្ដ ៣",
+      "EnName": "Nimitt Bei",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100104",
+      "KhName": "និមិត្ដ ៤",
+      "EnName": "Nimitt Buon",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100105",
+      "KhName": "អូរជ្រៅ",
+      "EnName": "Ou Chrov",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100106",
+      "KhName": "ដុងអារញ្ញ",
+      "EnName": "Dong Aranh",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100107",
+      "KhName": "សូរិយា",
+      "EnName": "Souriya",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100108",
+      "KhName": "និមិត្ដថ្មី",
+      "EnName": "Nimitt Thmei",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100110",
+      "KhName": "ថ្មសិន",
+      "EnName": "Thma Sen",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100111",
+      "KhName": "អន្លង់ស្វាយ",
+      "EnName": "Anlong Svay",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100112",
+      "KhName": "កូនដំរី",
+      "EnName": "Koun Damrei",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100113",
+      "KhName": "កូបធំ",
+      "EnName": "Koub Thum",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100114",
+      "KhName": "រស្មីសាមគ្គី",
+      "EnName": "Reaksmei Sameakki",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100115",
+      "KhName": "រស្មីសេរីភាព",
+      "EnName": "Reaksmei Serei Pheap",
+      "Parent": "11001"
+    },
+    {
+      "Type": "V",
+      "Code": "1100116",
+      "KhName": "សុខសាន្ដ្ដ",
+      "EnName": "Sokhsan",
+      "Parent": "11001"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "11002",
+      "KhName": "ប៉ោយប៉ែត",
+      "EnName": "Paoy Paet",
+      "Parent": "110"
+    },
+    {
+      "Type": "V",
+      "Code": "1100201",
+      "KhName": "ក្បាលស្ពាន១",
+      "EnName": "Kbal Spean​ 1",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100202",
+      "KhName": "បាលិលេយ្យ១",
+      "EnName": "Baliley 1",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100209",
+      "KhName": "ទួលប្រាសាទ",
+      "EnName": "Tuol Prasat",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100212",
+      "KhName": "ក្បាលស្ពាន២",
+      "EnName": "Kbal Spean 2",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100213",
+      "KhName": "ក្បាលកោះ",
+      "EnName": "Kbal Koh",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100214",
+      "KhName": "សាមគ្គីមានជ័យ",
+      "EnName": "Samaki Mean Chey",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100215",
+      "KhName": "ប៉ោយប៉ែត",
+      "EnName": "Poay Pet",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100216",
+      "KhName": "ព្រៃព្រិច",
+      "EnName": "Prey Prech",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100218",
+      "KhName": "បាលិលេយ្យ២",
+      "EnName": "Baliley 2",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100219",
+      "KhName": "មិត្តភាព",
+      "EnName": "Mittapheap",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100220",
+      "KhName": "ចាន់គីរី",
+      "EnName": "Chan Kiri",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100221",
+      "KhName": "អូរជ្រៅ",
+      "EnName": "Ou Chrov",
+      "Parent": "11002"
+    },
+    {
+      "Type": "V",
+      "Code": "1100223",
+      "KhName": "ទំនប់ក៥",
+      "EnName": "Tumnob Kor 5",
+      "Parent": "11002"
+    },
+    {
+      "Type": "សង្កាត់",
+      "Code": "11003",
+      "KhName": "ផ្សារកណ្តាល",
+      "EnName": "Phsar Kandal",
+      "Parent": "110"
+    },
+    {
+      "Type": "V",
+      "Code": "1100301",
+      "KhName": "ផ្សារកណ្តាល",
+      "EnName": "Phsar Kandal",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100302",
+      "KhName": "គីឡូលេខបួន",
+      "EnName": "Kilou Lekh Buon",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100303",
+      "KhName": "ប្រជាធម្មលិច",
+      "EnName": "Prachear Thoam Lech",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100304",
+      "KhName": "ប្រជាធម្មកើត",
+      "EnName": "Prachea Thorm Kaeut",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100305",
+      "KhName": "ទួលពង្រ",
+      "EnName": "Tuol Pongro",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100306",
+      "KhName": "អូរឬស្សី",
+      "EnName": "Ou Ruessei",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100307",
+      "KhName": "ព្រៃគុប",
+      "EnName": "Prey Kub",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100308",
+      "KhName": "អូរនាង",
+      "EnName": "Ou Neang",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100309",
+      "KhName": "អណ្ដូងថ្មមាស",
+      "EnName": "Andoung Thma Meas",
+      "Parent": "11003"
+    },
+    {
+      "Type": "V",
+      "Code": "1100310",
+      "KhName": "ស្ទឹងបត់",
+      "EnName": "Stueng Bat",
+      "Parent": "11003"
+    }
+  ]
+}

@@ -5,8 +5,8 @@ import {idGenerator} from 'meteor/theara:id-generator';
 import {Location} from '../../common/collections/location';
 
 Location.before.insert(function (userId, doc) {
-    doc._id = idGenerator.gen(Location, 8);
-
+    // doc._id = idGenerator.gen(Location, 8);
+    doc._id = doc.code;
     // Get ancestors
     if (doc.parent) {
         let getAncestors = Location.findOne({_id: doc.parent});
