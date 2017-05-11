@@ -121,6 +121,9 @@ Meteor.methods({
             return Journal.remove({refId: refId, refFrom: refFrom});
         } catch (error) {
             console.log("Accounting Prepare By Narong Sao");
+            if (error) {
+                console.log(error.message);
+            }
             throw new Meteor.Error(error.message);
         }
     }

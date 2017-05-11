@@ -4,9 +4,9 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {Product} from '../../common/collections/product.js';
 
 Meteor.startup(function () {
-    if (Product.find().count() == 0) {
+    /*if (Product.find().count() == 0) {
         let data = [
-            /* 1 */
+            /!* 1 *!/
             {
                 "_id": "001",
                 "name": "General",
@@ -52,5 +52,5 @@ Meteor.startup(function () {
         _.forEach(data, (val) => {
             Product.insert(val);
         });
-    }
+    }*/
 });

@@ -252,7 +252,7 @@ LoanAcc.generalSchema = new SimpleSchema({
     },
     voucherCode: {
         type: String,
-        optional: true,
+        /*optional: true,*/
         defaultValue: ""
     },
     isAddToGroup: {

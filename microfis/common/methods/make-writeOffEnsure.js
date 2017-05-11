@@ -33,7 +33,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                     dataForAccount.branchId = loanAcc.branchId;
                     dataForAccount.voucherId = "";
                     dataForAccount.currencyId = loanAcc.currencyId;
-                    dataForAccount.memo = "Write Off " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                    dataForAccount.memo = "Write Off " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                     dataForAccount.refId = loanAcc._id;
                     dataForAccount.refFrom = "Write Off Ensure";
                     dataForAccount.total = opts['writeOff.amount'];
@@ -78,7 +78,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                     dataForAccount.branchId = loanAcc.branchId;
                     dataForAccount.voucherId = "";
                     dataForAccount.currencyId = loanAcc.currencyId;
-                    dataForAccount.memo = "Repayment Write Off " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                    dataForAccount.memo = "Repayment Write Off " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                     dataForAccount.refId = loanAcc._id;
                     dataForAccount.refFrom = "Repayment Write Off";
                     dataForAccount.total = opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest;
@@ -93,9 +93,9 @@ export const makeWriteOffEnsure = new ValidatedMethod({
 
                     transaction.push({
                         account: acc_badDoubtfulGeneral.accountDoc.code + " | " + acc_badDoubtfulGeneral.accountDoc.name,
-                        dr:  opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest,
+                        dr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest,
                         cr: 0,
-                        drcr:  opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest
+                        drcr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest
 
                     }, {
                         account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,

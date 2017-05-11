@@ -163,6 +163,7 @@ Repayment.after.insert(function (userId, doc) {
                             SavingTransaction.insert(savingLoanDeposit, function (err) {
                                 if (err) {
                                     console.log(err);
+                                    integrate
                                 }
                             });
                         }
@@ -226,7 +227,7 @@ Repayment.after.insert(function (userId, doc) {
                             dataForAccount.branchId = doc.branchId;
                             dataForAccount.voucherId = doc.voucherId.substring(8, 20);
                             dataForAccount.currencyId = doc.currencyId;
-                            dataForAccount.memo = "Loan Repayment General " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                            dataForAccount.memo = "Loan Repayment General " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                             dataForAccount.refId = doc._id;
                             dataForAccount.refFrom = "Repayment General";
                             dataForAccount.total = doc.totalPaid - doc.waivedForClosing;
@@ -249,13 +250,14 @@ Repayment.after.insert(function (userId, doc) {
                                 drcr: doc.totalPaid
 
                             });
+
                             transaction.push({
                                 account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.principalPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.principalPaid
                             });
-                            transaction.push( {
+                            transaction.push({
                                 account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.interestPaid,
@@ -267,18 +269,20 @@ Repayment.after.insert(function (userId, doc) {
                                 cr: doc.detailDoc.totalSchedulePaid.penaltyPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.penaltyPaid
                             });
-                            transaction.push( {
+                            transaction.push({
                                 account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
                                 dr: 0,
                                 cr: doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid,
                                 drcr: -doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid
                             });
-                            transaction.push( {
+
+                            transaction.push({
                                 account: acc_unEarnIncome.accountDoc.code + " | " + acc_unEarnIncome.accountDoc.name,
                                 dr: 0,
-                                cr: doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid,
-                                drcr: -doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid
+                                cr: doc.totalPaid - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid),
+                                drcr: -(doc.totalPaid - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid))
                             });
+
 
                             dataForAccount.transaction = transaction;
                             Meteor.call("api_journalInsert", dataForAccount, function (err, result) {
@@ -293,7 +297,7 @@ Repayment.after.insert(function (userId, doc) {
                             dataForAccount.branchId = doc.branchId;
                             dataForAccount.voucherId = doc.voucherId.substring(8, 20);
                             dataForAccount.currencyId = doc.currencyId;
-                            dataForAccount.memo = "Loan Repayment Closing " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                            dataForAccount.memo = "Loan Repayment Closing " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                             dataForAccount.refId = doc._id;
                             dataForAccount.refFrom = "Repayment Closing";
                             dataForAccount.total = doc.totalPaid;
@@ -302,51 +306,53 @@ Repayment.after.insert(function (userId, doc) {
 
 
                             let acc_cash = MapClosing.findOne({chartAccountCompare: "Cash"});
-                            let acc_interestWaivedIncome = MapClosing.findOne({chartAccountCompare: "Interest Waived"});
+                            let acc_otherInterestIncome = MapClosing.findOne({chartAccountCompare: "Other Interest Income"});
                             let acc_penalty = MapClosing.findOne({chartAccountCompare: "Penalty"});
                             let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
                             let acc_unEarnIncome = MapClosing.findOne({chartAccountCompare: "Unearn Income"});
                             let acc_principal = checkPrincipal(loanAcc, loanType);
                             let acc_interest = checkInterest(loanAcc, loanType);
 
+
                             transaction.push({
-                                account: acc_cash.accountDoc.code + " | " + acc_cash.accountDoc.name,
-                                dr: doc.totalPaid,
-                                cr: 0,
-                                drcr: doc.totalPaid
+                                    account: acc_cash.accountDoc.code + " | " + acc_cash.accountDoc.name,
+                                    dr: doc.totalPaid,
+                                    cr: 0,
+                                    drcr: doc.totalPaid
 
-                            }, {
-                                account: acc_interestWaivedIncome.accountDoc.code + " | " + acc_interestWaivedIncome.accountDoc.name,
-                                dr: doc.waivedForClosing,
-                                cr: 0,
-                                drcr: doc.waivedForClosing
-
-                            }, {
-                                account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
-                                dr: 0,
-                                cr: doc.detailDoc.totalSchedulePaid.principalPaid,
-                                drcr: -doc.detailDoc.totalSchedulePaid.principalPaid
-                            }, {
-                                account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
-                                dr: 0,
-                                cr: doc.detailDoc.totalSchedulePaid.interestPaid + doc.waivedForClosing,
-                                drcr: -doc.detailDoc.totalSchedulePaid.interestPaid + doc.waivedForClosing
-                            }, {
-                                account: acc_penalty.accountDoc.code + " | " + acc_penalty.accountDoc.name,
-                                dr: 0,
-                                cr: doc.detailDoc.totalSchedulePaid.penaltyPaid,
-                                drcr: -doc.detailDoc.totalSchedulePaid.penaltyPaid
-                            }, {
-                                account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
-                                dr: 0,
-                                cr: doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid,
-                                drcr: -doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid
-                            }, {
-                                account: acc_unEarnIncome.accountDoc.code + " | " + acc_unEarnIncome.accountDoc.name,
-                                dr: 0,
-                                cr: doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid,
-                                drcr: -doc.totalPaid - doc.detailDoc.totalSchedulePaid.totalAmountPaid
-                            });
+                                },
+                                {
+                                    account: acc_unEarnIncome.accountDoc.code + " | " + acc_unEarnIncome.accountDoc.name,
+                                    dr: doc.savingBalance,
+                                    cr: 0,
+                                    drcr: doc.savingBalance
+                                },
+                                {
+                                    account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
+                                    dr: 0,
+                                    cr: doc.detailDoc.totalSchedulePaid.principalPaid,
+                                    drcr: -doc.detailDoc.totalSchedulePaid.principalPaid
+                                }, {
+                                    account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
+                                    dr: 0,
+                                    cr: doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.closing.interestAddition,
+                                    drcr: -(doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.closing.interestAddition)
+                                }, {
+                                    account: acc_otherInterestIncome.accountDoc.code + " | " + acc_otherInterestIncome.accountDoc.name,
+                                    dr: 0,
+                                    cr: doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition),
+                                    drcr: -(doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition))
+                                }, {
+                                    account: acc_penalty.accountDoc.code + " | " + acc_penalty.accountDoc.name,
+                                    dr: 0,
+                                    cr: doc.detailDoc.totalSchedulePaid.penaltyPaid,
+                                    drcr: -doc.detailDoc.totalSchedulePaid.penaltyPaid
+                                }, {
+                                    account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
+                                    dr: 0,
+                                    cr: doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid,
+                                    drcr: -doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid
+                                });
 
                             dataForAccount.transaction = transaction;
                             Meteor.call("api_journalInsert", dataForAccount, function (err, result) {
@@ -437,7 +443,7 @@ Repayment.after.insert(function (userId, doc) {
                                 dataForAccount.branchId = doc.branchId;
                                 dataForAccount.voucherId = doc.voucherId.substring(8, 20);
                                 dataForAccount.currencyId = doc.currencyId;
-                                dataForAccount.memo = "Loan Repayment Prepay " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                                dataForAccount.memo = "Loan Repayment Prepay " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                                 dataForAccount.refId = doc._id;
                                 dataForAccount.refFrom = "Repayment Prepay";
                                 dataForAccount.total = doc.totalPaid;
@@ -577,7 +583,7 @@ Repayment.after.insert(function (userId, doc) {
                                     dataForAccount.branchId = doc.branchId;
                                     dataForAccount.voucherId = doc.voucherId.substring(8, 20);
                                     dataForAccount.currencyId = doc.currencyId;
-                                    dataForAccount.memo = "Loan Repayment Reschedule " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                                    dataForAccount.memo = "Loan Repayment Reschedule " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                                     dataForAccount.refId = doc._id;
                                     dataForAccount.refFrom = "Repayment Reschedule";
                                     dataForAccount.total = doc.totalPaid;
@@ -751,7 +757,7 @@ Repayment.after.insert(function (userId, doc) {
                 dataForAccount.branchId = doc.branchId;
                 dataForAccount.voucherId = doc.voucherId.substring(8, 20);
                 dataForAccount.currencyId = doc.currencyId;
-                dataForAccount.memo = "Loan Repayment Fee " + clientDoc.khSurname + " " + clientDoc.khNickname;
+                dataForAccount.memo = "Loan Repayment Fee " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                 dataForAccount.refId = doc._id;
                 dataForAccount.refFrom = "Repayment Fee";
                 dataForAccount.total = doc.amountPaid;
@@ -822,7 +828,7 @@ Repayment.after.remove(function (userId, doc) {
                     }
                 })
             } else if (doc.type == "Close") {
-                Meteor.call("api_journalRemove", doc._id, "Repayment Close", function (err, result) {
+                Meteor.call("api_journalRemove", doc._id, "Repayment Closing", function (err, result) {
                     if (err) {
                         console.log(err.message);
                     }

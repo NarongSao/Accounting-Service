@@ -183,6 +183,7 @@ Meteor.methods({
 
             var profitAndLost = Meteor.call("getProfitLost", selectorProfit,
                 baseCurrency, exchangeDate);
+
             profitAndLost.reduce(function (key, val) {
                 if (!key[val.account]) {
                     var amountUsd = 0,

@@ -4,7 +4,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {SavingProduct} from '../../common/collections/saving-product.js';
 
 Meteor.startup(function () {
-    if (SavingProduct.find().count() == 0) {
+    /*if (SavingProduct.find().count() == 0) {
         let data = [
             {
                 "_id": "001",
@@ -42,11 +42,11 @@ Meteor.startup(function () {
                     "max": 12
                 },
             },
-            /* 1 */
+            /!* 1 *!/
         ];
 
         _.forEach(data, (val)=> {
             SavingProduct.insert(val);
         });
-    }
+    }*/
 });

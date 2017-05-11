@@ -5,9 +5,9 @@ import moment from 'moment';
 import {Fund} from '../../common/collections/fund.js';
 
 Meteor.startup(function () {
-    if (Fund.find().count() == 0) {
+    /*if (Fund.find().count() == 0) {
         let data = [
-            /* 1 */
+            /!* 1 *!/
             {
                 "_id": "001",
                 "name": "Rabbit Technolgy",
@@ -18,7 +18,7 @@ Meteor.startup(function () {
                 "email": "rabbittechnology@gmail.com",
                 "website": "www.rabbitits.com"
             },
-            /* 2 */
+            /!* 2 *!/
             {
                 "_id": "002",
                 "name": "Meteor Company",
@@ -34,5 +34,5 @@ Meteor.startup(function () {
         _.forEach(data, (val)=> {
             Fund.insert(val);
         });
-    }
+    }*/
 });

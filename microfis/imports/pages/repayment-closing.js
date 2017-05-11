@@ -146,7 +146,7 @@ formTmpl.onCreated(function () {
                     // }
 
                     if (result && result.closing) {
-                        minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal).minus(result.closing.interestAddition);
+                        minAmountPaid = minAmountPaid.plus(result.closing.totalDue).minus(totalSavingBal).minus(result.closing.interestReminderPenalty);
                         Session.set('minAmountPaid', minAmountPaid.toNumber());
                     }
 
@@ -208,7 +208,6 @@ formTmpl.helpers({
         return stateRepayment.get('checkRepayment');
     },
     defaultValue(){
-        debugger;
         let totalDue = new BigNumber(0),
             totalPenalty = new BigNumber(0),
             checkRepayment = stateRepayment.get('checkRepayment');
@@ -281,7 +280,6 @@ formTmpl.events({
         return !(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57));
     },
     'keyup [name="waivedForClosing"]'(e, t){
-        debugger;
         waivedClosing.set(parseFloat($(e.currentTarget).val()));
     }
 })

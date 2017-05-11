@@ -85,7 +85,6 @@ indexTmpl.events({
         alertify.endOfProcess(fa("plus", "End Of Process"), renderTemplate(newTmpl));
     },
     'click .remove': function (e, t) {
-        debugger;
         var id = this._id;
         let self = this;
 

@@ -5,9 +5,9 @@ import moment from 'moment';
 import {CreditOfficer} from '../../common/collections/credit-officer.js';
 
 Meteor.startup(function () {
-    if (CreditOfficer.find().count() == 0) {
+    /*if (CreditOfficer.find().count() == 0) {
         let data = [
-            /* 1 */
+            /!* 1 *!/
             {
                 "_id": "001-0001",
                 "khName": "ហេង យូសួរ",
@@ -19,7 +19,7 @@ Meteor.startup(function () {
                 // "photo": "",
                 "branchId": "001"
             },
-            /* 2 */
+            /!* 2 *!/
             {
                 "_id": "001-0002",
                 "khName": "កៅ វាសនា",
@@ -36,5 +36,5 @@ Meteor.startup(function () {
         _.forEach(data, (val)=> {
             CreditOfficer.insert(val);
         });
-    }
+    }*/
 });

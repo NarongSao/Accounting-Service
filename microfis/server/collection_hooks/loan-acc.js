@@ -52,13 +52,14 @@ LoanAcc.after.insert(function (userId, doc) {
     /*Integrated to Account*/
     let settingDoc = Setting.findOne();
     if (settingDoc.integrate == true) {
+        let clientDoc = Client.findOne({_id: doc.clientId});
         let dataForAccount = {};
 
         dataForAccount.journalDate = doc.disbursementDate;
         dataForAccount.branchId = doc.branchId;
         dataForAccount.voucherId = doc.voucherId;
         dataForAccount.currencyId = doc.currencyId;
-        dataForAccount.memo = "Loan Disbursement";
+        dataForAccount.memo = "Loan Disbursement " + clientDoc.khSurname + " " + clientDoc.khGivenName;
         dataForAccount.refId = doc._id;
         dataForAccount.refFrom = "Disbursement";
         dataForAccount.total = doc.loanAmount;
@@ -129,13 +130,14 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
     /*Integrated to Account*/
     let settingDoc = Setting.findOne();
     if (settingDoc.integrate == true) {
+        let clientDoc = Client.findOne({_id: doc.clientId});
         let dataForAccount = {};
 
         dataForAccount.journalDate = doc.disbursementDate;
         dataForAccount.branchId = doc.branchId;
         dataForAccount.voucherId = doc.voucherId;
         dataForAccount.currencyId = doc.currencyId;
-        dataForAccount.memo = "Loan Disbursement";
+        dataForAccount.memo = "Loan Disbursement " + clientDoc.khSurname + " " + clientDoc.khGivenName;
         dataForAccount.refId = doc._id;
         dataForAccount.refFrom = "Disbursement";
         dataForAccount.total = doc.loanAmount;
@@ -204,7 +206,7 @@ LoanAcc.after.remove(function (userId, doc) {
 
 // Create repayment schedule
 function _makeSchedule(doc) {
-    
+
     let schedule;
     if (doc.interestMethod == "Declining") {
         schedule = MakeSchedule.declinig.call({loanAccId: doc._id});

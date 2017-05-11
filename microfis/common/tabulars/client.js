@@ -24,7 +24,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_clientAction},
         {data: '_id', title: 'ID'},
         {data: 'khSurname', title: 'Kh Surname'},
-        {data: 'khGivenName', title: 'Kh Given Name'},
+        {data: 'khNickname', title: 'Kh Nick Name'},
         {data: 'gender', title: 'Gender'},
         {
             data: 'photo',
@@ -46,4 +46,4 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
 });
 
 export const
-ClientTabular = new Tabular.Table(tabularData);
+    ClientTabular = new Tabular.Table(tabularData);

@@ -35,13 +35,13 @@ Meteor.startup(function () {
             }, {
                 "_id": "006",
                 "chartAccountCompare": "Unearn Income"
-            },{
+            }, {
                 "_id": "007",
                 "chartAccountCompare": "Penalty"
             }, {
                 "_id": "008",
                 "chartAccountCompare": "Fee On Operation"
-            },{
+            }, {
                 "_id": "009",
                 "chartAccountCompare": "Fee On Disbursement"
             }, {
@@ -53,10 +53,13 @@ Meteor.startup(function () {
             }, {
                 "_id": "140",
                 "chartAccountCompare": "Interest Waived"
+            }, {
+                "_id": "141",
+                "chartAccountCompare": "Other Interest Income"
             }
 
             //Standard
-            ,{
+            , {
                 "_id": "012",
                 "chartAccountCompare": "Standard Loan Group Less than or Equal One Year"
             }, {
@@ -83,7 +86,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "020",
                 "chartAccountCompare": "Standard Loan Group Over One Year"
             }, {
@@ -111,7 +114,7 @@ Meteor.startup(function () {
 
 
             //Substandard
-            ,{
+            , {
                 "_id": "028",
                 "chartAccountCompare": "Substandard Loan Group Less than or Equal One Year"
             }, {
@@ -138,7 +141,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "036",
                 "chartAccountCompare": "Substandard Loan Group Over One Year"
             }, {
@@ -168,7 +171,7 @@ Meteor.startup(function () {
 
             //Doubtful
 
-            ,{
+            , {
                 "_id": "044",
                 "chartAccountCompare": "Doubtful Loan Group Less than or Equal One Year"
             }, {
@@ -195,7 +198,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "052",
                 "chartAccountCompare": "Doubtful Loan Group Over One Year"
             }, {
@@ -223,7 +226,7 @@ Meteor.startup(function () {
 
             //Loss
 
-            ,{
+            , {
                 "_id": "060",
                 "chartAccountCompare": "Loss Loan Group Less than or Equal One Year"
             }, {
@@ -250,7 +253,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "068",
                 "chartAccountCompare": "Loss Loan Group Over One Year"
             }, {
@@ -281,7 +284,7 @@ Meteor.startup(function () {
 
 
             //Interest Income Standard
-            ,{
+            , {
                 "_id": "076",
                 "chartAccountCompare": "Interest Income Standard Loan Group Less than or Equal One Year"
             }, {
@@ -308,7 +311,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "084",
                 "chartAccountCompare": "Interest Income Standard Loan Group Over One Year"
             }, {
@@ -336,7 +339,7 @@ Meteor.startup(function () {
 
 
             //Interest Income Substandard
-            ,{
+            , {
                 "_id": "092",
                 "chartAccountCompare": "Interest Income Substandard Loan Group Less than or Equal One Year"
             }, {
@@ -363,7 +366,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "100",
                 "chartAccountCompare": "Interest Income Substandard Loan Group Over One Year"
             }, {
@@ -393,7 +396,7 @@ Meteor.startup(function () {
 
             //Interest Income Doubtful
 
-            ,{
+            , {
                 "_id": "108",
                 "chartAccountCompare": "Interest Income Doubtful Loan Group Less than or Equal One Year"
             }, {
@@ -420,7 +423,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "116",
                 "chartAccountCompare": "Interest Income Doubtful Loan Group Over One Year"
             }, {
@@ -448,7 +451,7 @@ Meteor.startup(function () {
 
             //Interest Income Loss
 
-            ,{
+            , {
                 "_id": "124",
                 "chartAccountCompare": "Interest Income Loss Loan Group Less than or Equal One Year"
             }, {
@@ -475,7 +478,7 @@ Meteor.startup(function () {
             }
 
 
-            ,{
+            , {
                 "_id": "132",
                 "chartAccountCompare": "Interest Income Loss Loan Group Over One Year"
             }, {
@@ -502,14 +505,12 @@ Meteor.startup(function () {
             }
 
 
-
-
         ];
 
-        _.forEach(data, (val)=> {
+        _.forEach(data, (val) => {
             MapClosing.insert(val);
         });
-        
+
 
         /// Migrate
         /*MapClosing.insert({

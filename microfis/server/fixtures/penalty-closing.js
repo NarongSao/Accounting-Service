@@ -4,9 +4,9 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {PenaltyClosing} from '../../common/collections/penalty-closing.js';
 
 Meteor.startup(function () {
-    if (PenaltyClosing.find().count() == 0) {
+    /*if (PenaltyClosing.find().count() == 0) {
         let data = [
-            /* 1 */
+            /!* 1 *!/
             {
                 "_id": "001",
                 "name": "Penalty Closing 20%",
@@ -21,5 +21,5 @@ Meteor.startup(function () {
         _.forEach(data, (val)=> {
             PenaltyClosing.insert(val);
         });
-    }
+    }*/
 });
