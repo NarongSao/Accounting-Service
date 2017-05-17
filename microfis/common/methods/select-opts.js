@@ -261,7 +261,7 @@ SelectOptMethods.client = new ValidatedMethod({
 
             let data = Client.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.khSurname + ', ' + value.khGivenName;
+                let label = value._id + ' : ' + value.khSurname + ' ' + value.khGivenName;
                 list.push({label: label, value: value._id});
             });
 

@@ -80,6 +80,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                     <th>No</th>
                                     <th>LA Code</th>
                                     <th>Client Name</th>
+                                    <th>Product Name</th>
                                     <th>Vill</th>
                                     <th>CRC</th>
                                     <th>Type</th>
@@ -329,80 +330,81 @@ export const collectionSheetReport = new ValidatedMethod({
             let totalDueIntBase = 0;
             let totalDueFeeOnPaymentBase = 0;
 
+            if (loanDoc.length > 0) {
+                loanDoc.forEach(function (loanAccDoc) {
+                    let productStatusList;
+                    if (loanAccDoc.paymentMethod == "D") {
+                        if (loanAccDoc.term <= 365) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
 
-            loanDoc.forEach(function (loanAccDoc) {
-                let productStatusList;
-                if (loanAccDoc.paymentMethod == "D") {
-                    if (loanAccDoc.term <= 365) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else if (loanAccDoc.paymentMethod == "W") {
+                        if (loanAccDoc.term <= 52) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else if (loanAccDoc.paymentMethod == "M") {
+                        if (loanAccDoc.term <= 12) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
                     } else {
                         productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                     }
 
-                } else if (loanAccDoc.paymentMethod == "W") {
-                    if (loanAccDoc.term <= 52) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                    }
-                } else if (loanAccDoc.paymentMethod == "M") {
-                    if (loanAccDoc.term <= 12) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                    }
-                } else {
-                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                }
+
+                    let result = checkRepayment.run({
+                        loanAccId: loanAccDoc._id,
+                        checkDate: checkDate,
+                        opts: loanAccDoc
+                    });
 
 
-                let result = checkRepayment.run({
-                    loanAccId: loanAccDoc._id,
-                    checkDate: checkDate,
-                    opts: loanAccDoc
-                });
-
-
-                if (result.totalScheduleDue.dueDate.from) {
-                    if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
-                        result.totalScheduleDue.dueDate.from = null;
-                    }
-                }
-
-                let checkClassify = true;
-                if (params.classifyId && params.classifyId.includes("All") == false) {
-                    checkClassify = false;
-                }
-
-                let finProductStatus = function (obj) {
-                    return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
-                }
-                let proStatus = productStatusList.find(finProductStatus);
-
-
-                //check product status (Classify)
-                if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
-                    if (loanAccDoc.currencyId == "KHR") {
-                        totalDuePrinKHR += result.totalScheduleDue.principalDue;
-                        totalDueIntKHR += result.totalScheduleDue.interestDue;
-                        totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
-
-                    } else if (loanAccDoc.currencyId == "USD") {
-                        totalDuePrinUSD += result.totalScheduleDue.principalDue;
-                        totalDueIntUSD += result.totalScheduleDue.interestDue;
-                        totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
-                    } else if (loanAccDoc.currencyId == "THB") {
-                        totalDuePrinTHB += result.totalScheduleDue.principalDue;
-                        totalDueIntTHB += result.totalScheduleDue.interestDue;
-                        totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
+                    if (result.totalScheduleDue.dueDate.from) {
+                        if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
+                            result.totalScheduleDue.dueDate.from = null;
+                        }
                     }
 
+                    let checkClassify = true;
+                    if (params.classifyId && params.classifyId.includes("All") == false) {
+                        checkClassify = false;
+                    }
 
-                    content += `<tr>
+                    let finProductStatus = function (obj) {
+                        return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
+                    }
+                    let proStatus = productStatusList.find(finProductStatus);
+
+
+                    //check product status (Classify)
+                    if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
+                        if (loanAccDoc.currencyId == "KHR") {
+                            totalDuePrinKHR += result.totalScheduleDue.principalDue;
+                            totalDueIntKHR += result.totalScheduleDue.interestDue;
+                            totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
+
+                        } else if (loanAccDoc.currencyId == "USD") {
+                            totalDuePrinUSD += result.totalScheduleDue.principalDue;
+                            totalDueIntUSD += result.totalScheduleDue.interestDue;
+                            totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
+                        } else if (loanAccDoc.currencyId == "THB") {
+                            totalDuePrinTHB += result.totalScheduleDue.principalDue;
+                            totalDueIntTHB += result.totalScheduleDue.interestDue;
+                            totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
+                        }
+
+
+                        content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
-                                <td> ${loanAccDoc.locationDoc.name}</td>
+                                <td> ${loanAccDoc.productDoc.name}</td>
+                                <td> ${loanAccDoc.locationDoc.khName}</td>
 
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
@@ -417,12 +419,13 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 
-                                <td> ${loanAccDoc.clientDoc.telephone}</td>
+                                <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;
 
-                    i++;
-                }
-            })
+                        i++;
+                    }
+                })
+            }
 
             totalDuePrinBase = Meteor.call('microfis_exchange',
                     "KHR",
@@ -476,7 +479,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
 
             content += `<tr>
-                            <td colspan="9" align="right">Subtotal-KHR</td>
+                            <td colspan="10" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
@@ -485,7 +488,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="9" align="right">Subtotal-USD</td>
+                            <td colspan="10" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
@@ -494,7 +497,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="9" align="right">Subtotal-THB</td>
+                            <td colspan="10" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
@@ -503,7 +506,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="9" align="right">Total-${baseCurrency}</td>
+                            <td colspan="10" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>

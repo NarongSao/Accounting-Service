@@ -380,41 +380,42 @@ export const loanClassificationReport = new ValidatedMethod({
                             if (proStatus.code == "S") {
                                 standardLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberStandardLessOneYear++;
-                                provisionStandardLessOneYear += standardLessOneYear * proStatus.provision / 100;
+
+                                provisionStandardLessOneYear = standardLessOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "U") {
                                 subStandardLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberSubStandardLessOneYear++;
-                                provisionSubStandardLessOneYear += subStandardLessOneYear * proStatus.provision / 100;
+                                provisionSubStandardLessOneYear = subStandardLessOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "D") {
                                 doubtfulLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberDoubtfulLessOneYear++;
-                                provisionDoubtfulLessOneYear += doubtfulLessOneYear * proStatus.provision / 100;
+                                provisionDoubtfulLessOneYear = doubtfulLessOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "W") {
                                 lossLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberLossLessOneYear++;
-                                provisionLossLessOneYear += lossLessOneYear * proStatus.provision / 100;
+                                provisionLossLessOneYear = lossLessOneYear * proStatus.provision / 100;
                             }
 
                         } else {
                             if (proStatus.code == "S") {
                                 standardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberStandardOverOneYear++;
-                                provisionStandardOverOneYear += standardOverOneYear * proStatus.provision / 100;
+                                provisionStandardOverOneYear = standardOverOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "U") {
                                 subStandardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberSubStandardOverOneYear++;
-                                provisionSubStandardOverOneYear += subStandardOverOneYear * proStatus.provision / 100;
+                                provisionSubStandardOverOneYear = subStandardOverOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "D") {
                                 doubtfulOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberDoubtfulOverOneYear++;
-                                provisionDoubtfulOverOneYear += doubtfulOverOneYear * proStatus.provision / 100;
+                                provisionDoubtfulOverOneYear = doubtfulOverOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "W") {
                                 lossOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberLossOverOneYear++;
-                                provisionLossOverOneYear += lossOverOneYear * proStatus.provision / 100;
+                                provisionLossOverOneYear = lossOverOneYear * proStatus.provision / 100;
                             }
                         }
                     } else if (loanAccDoc.paymentMethod == "W") {
@@ -423,40 +424,40 @@ export const loanClassificationReport = new ValidatedMethod({
                             if (proStatus.code == "S") {
                                 standardLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberStandardLessOneYear++;
-                                provisionStandardLessOneYear += standardLessOneYear * proStatus.provision / 100;
+                                provisionStandardLessOneYear = standardLessOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "U") {
                                 subStandardLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberSubStandardLessOneYear++;
-                                provisionSubStandardLessOneYear += subStandardLessOneYear * proStatus.provision / 100;
+                                provisionSubStandardLessOneYear = subStandardLessOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "D") {
                                 doubtfulLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberDoubtfulLessOneYear++;
-                                provisionDoubtfulLessOneYear += doubtfulLessOneYear * proStatus.provision / 100;
+                                provisionDoubtfulLessOneYear = doubtfulLessOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "W") {
                                 lossLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberLossLessOneYear++;
-                                provisionLossLessOneYear += lossLessOneYear * proStatus.provision / 100;
+                                provisionLossLessOneYear = lossLessOneYear * proStatus.provision / 100;
                             }
                         } else {
                             if (proStatus.code == "S") {
                                 standardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberStandardOverOneYear++;
-                                provisionStandardOverOneYear += standardOverOneYear * proStatus.provision / 100;
+                                provisionStandardOverOneYear = standardOverOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "U") {
                                 subStandardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberSubStandardOverOneYear++;
-                                provisionSubStandardOverOneYear += subStandardOverOneYear * proStatus.provision / 100;
+                                provisionSubStandardOverOneYear = subStandardOverOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "D") {
                                 doubtfulOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberDoubtfulOverOneYear++;
-                                provisionDoubtfulOverOneYear += doubtfulOverOneYear * proStatus.provision / 100;
+                                provisionDoubtfulOverOneYear = doubtfulOverOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "W") {
                                 lossOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberLossOverOneYear++;
-                                provisionLossOverOneYear += lossOverOneYear * proStatus.provision / 100;
+                                provisionLossOverOneYear = lossOverOneYear * proStatus.provision / 100;
                             }
                         }
                     } else if (loanAccDoc.paymentMethod == "M") {
@@ -464,60 +465,60 @@ export const loanClassificationReport = new ValidatedMethod({
                             if (proStatus.code == "S") {
                                 standardLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberStandardLessOneYear++;
-                                provisionStandardLessOneYear += standardLessOneYear * proStatus.provision / 100;
+                                provisionStandardLessOneYear = standardLessOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "U") {
                                 subStandardLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberSubStandardLessOneYear++;
-                                provisionSubStandardLessOneYear += subStandardLessOneYear * proStatus.provision / 100;
+                                provisionSubStandardLessOneYear = subStandardLessOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "D") {
                                 doubtfulLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberDoubtfulLessOneYear++;
-                                provisionDoubtfulLessOneYear += doubtfulLessOneYear * proStatus.provision / 100;
+                                provisionDoubtfulLessOneYear = doubtfulLessOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "W") {
                                 lossLessOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberLossLessOneYear++;
-                                provisionLossLessOneYear += lossLessOneYear * proStatus.provision / 100;
+                                provisionLossLessOneYear = lossLessOneYear * proStatus.provision / 100;
                             }
                         } else {
                             if (proStatus.code == "S") {
                                 standardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberStandardOverOneYear++;
-                                provisionStandardOverOneYear += standardOverOneYear * proStatus.provision / 100;
+                                provisionStandardOverOneYear = standardOverOneYear * proStatus.provision / 100;
 
                             } else if (proStatus.code == "U") {
                                 subStandardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberSubStandardOverOneYear++;
-                                provisionSubStandardOverOneYear += subStandardOverOneYear * proStatus.provision / 100;
+                                provisionSubStandardOverOneYear = subStandardOverOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "D") {
                                 doubtfulOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberDoubtfulOverOneYear++;
-                                provisionDoubtfulOverOneYear += doubtfulOverOneYear * proStatus.provision / 100;
+                                provisionDoubtfulOverOneYear = doubtfulOverOneYear * proStatus.provision / 100;
                             } else if (proStatus.code == "W") {
                                 lossOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                                 numberLossOverOneYear++;
-                                provisionLossOverOneYear += lossOverOneYear * proStatus.provision / 100;
+                                provisionLossOverOneYear = lossOverOneYear * proStatus.provision / 100;
                             }
                         }
                     } else {
                         if (proStatus.code == "S") {
                             standardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                             numberStandardOverOneYear++;
-                            provisionStandardOverOneYear += standardOverOneYear * proStatus.provision / 100;
+                            provisionStandardOverOneYear = standardOverOneYear * proStatus.provision / 100;
 
                         } else if (proStatus.code == "U") {
                             subStandardOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                             numberSubStandardOverOneYear++;
-                            provisionSubStandardOverOneYear += subStandardOverOneYear * proStatus.provision / 100;
+                            provisionSubStandardOverOneYear = subStandardOverOneYear * proStatus.provision / 100;
                         } else if (proStatus.code == "D") {
                             doubtfulOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                             numberDoubtfulOverOneYear++;
-                            provisionDoubtfulOverOneYear += doubtfulOverOneYear * proStatus.provision / 100;
+                            provisionDoubtfulOverOneYear = doubtfulOverOneYear * proStatus.provision / 100;
                         } else if (proStatus.code == "W") {
                             lossOverOneYear += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
                             numberLossOverOneYear++;
-                            provisionLossOverOneYear += lossOverOneYear * proStatus.provision / 100;
+                            provisionLossOverOneYear = lossOverOneYear * proStatus.provision / 100;
                         }
                     }
 

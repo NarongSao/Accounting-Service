@@ -80,6 +80,7 @@ export const loanArrearsReport = new ValidatedMethod({
                                     <th>No</th>
                                     <th>LA Code</th>
                                     <th>Client Name</th>
+                                    <th>Product Name</th>
                                     <th>CRC</th>
                                     <th>Type</th>
                                     <th>Dis Date</th>
@@ -427,6 +428,8 @@ export const loanArrearsReport = new ValidatedMethod({
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.productDoc.name}</td>
+
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
@@ -437,7 +440,7 @@ export const loanArrearsReport = new ValidatedMethod({
                                 <td> ${result.totalScheduleDue.numOfDayLate}</td>
                                 <td> ${proStatus.name}</td>
                                 <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
-                                <td> ${loanAccDoc.locationDoc.name}</td>
+                                <td> ${loanAccDoc.locationDoc.khName}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
@@ -559,7 +562,7 @@ export const loanArrearsReport = new ValidatedMethod({
                     params.exchangeId
                 );
             content += `<tr>
-                            <td colspan="14" align="right">Subtotal-KHR</td>
+                            <td colspan="15" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
@@ -569,7 +572,7 @@ export const loanArrearsReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="14" align="right">Subtotal-USD</td>
+                            <td colspan="15" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
@@ -580,7 +583,7 @@ export const loanArrearsReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="14" align="right">Subtotal-THB</td>
+                            <td colspan="15" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
@@ -591,7 +594,7 @@ export const loanArrearsReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="14" align="right">Total-${baseCurrency}</td>
+                            <td colspan="15" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>

@@ -79,6 +79,7 @@ export const loanClosingReport = new ValidatedMethod({
                                     <th>LA Code</th>
                                     <th>Client Name</th>
                                     <th>Staff Name</th>
+                                    <th>Product Name</th>
                                     <th>CRC</th>
                                     <th>Type</th>
                                     <th>Disb Date</th>
@@ -336,94 +337,95 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossFeeOnPaymentBase = 0;
             let totalPenaltyBase = 0;
             let totalWaivedForClosingBase = 0;
+            if (loanDoc.length > 0) {
+                loanDoc.forEach(function (loanAccDoc) {
 
-            loanDoc.forEach(function (loanAccDoc) {
+                    let result = checkRepayment.run({
+                        loanAccId: loanAccDoc._id,
+                        checkDate: checkDate,
+                        opts: loanAccDoc
+                    });
 
-                let result = checkRepayment.run({
-                    loanAccId: loanAccDoc._id,
-                    checkDate: checkDate,
-                    opts: loanAccDoc
-                });
+                    let productStatusList;
 
-                let productStatusList;
+                    if (loanAccDoc.paymentMethod == "D") {
+                        if (loanAccDoc.term <= 365) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
 
-                if (loanAccDoc.paymentMethod == "D") {
-                    if (loanAccDoc.term <= 365) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else if (loanAccDoc.paymentMethod == "W") {
+                        if (loanAccDoc.term <= 52) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else if (loanAccDoc.paymentMethod == "M") {
+                        if (loanAccDoc.term <= 12) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
                     } else {
                         productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                     }
 
-                } else if (loanAccDoc.paymentMethod == "W") {
-                    if (loanAccDoc.term <= 52) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+
+                    let checkClassify = true;
+                    if (params.classifyId && params.classifyId.includes("All") == false) {
+                        checkClassify = false;
                     }
-                } else if (loanAccDoc.paymentMethod == "M") {
-                    if (loanAccDoc.term <= 12) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                    }
-                } else {
-                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                }
 
-
-                let checkClassify = true;
-                if (params.classifyId && params.classifyId.includes("All") == false) {
-                    checkClassify = false;
-                }
-
-                if (result.totalScheduleDue.dueDate.from) {
-                    if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
-                        result.totalScheduleDue.dueDate.from = null;
-                    }
-                }
-
-
-                let finProductStatus = function (obj) {
-                    return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
-                }
-                let proStatus = productStatusList.find(finProductStatus);
-
-                if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
-                    if (loanAccDoc.currencyId == "KHR") {
-                        totalDuePrinKHR += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
-                        totalDueIntKHR += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
-                        totalDueFeeOnPaymentKHR += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
-                        totalSumLossIntKHR += result.interestUnPaid;
-                        totalSumLossFeeOnPaymentKHR += result.feeOnPaymentUnPaid;
-                        totalPenaltyKHR += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
-                        totalWaivedForClosingKHR  += loanAccDoc.waivedForClosing;
-
-                    } else if (loanAccDoc.currencyId == "USD") {
-                        totalDuePrinUSD += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
-                        totalDueIntUSD += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
-                        totalDueFeeOnPaymentUSD += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
-                        totalSumLossIntUSD += result.interestUnPaid;
-                        totalSumLossFeeOnPaymentUSD += result.feeOnPaymentUnPaid;
-                        totalPenaltyUSD += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
-                        totalWaivedForClosingUSD  += loanAccDoc.waivedForClosing;
-
-                    } else if (loanAccDoc.currencyId == "THB") {
-                        totalDuePrinTHB += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
-                        totalDueIntTHB += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
-                        totalDueFeeOnPaymentTHB += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
-                        totalSumLossIntTHB += result.interestUnPaid;
-                        totalSumLossFeeOnPaymentTHB += result.feeOnPaymentUnPaid;
-                        totalPenaltyTHB += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
-                        totalWaivedForClosingTHB  += loanAccDoc.waivedForClosing;
-
+                    if (result.totalScheduleDue.dueDate.from) {
+                        if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
+                            result.totalScheduleDue.dueDate.from = null;
+                        }
                     }
 
 
-                    content += `<tr>
+                    let finProductStatus = function (obj) {
+                        return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
+                    }
+                    let proStatus = productStatusList.find(finProductStatus);
+
+                    if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
+                        if (loanAccDoc.currencyId == "KHR") {
+                            totalDuePrinKHR += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
+                            totalDueIntKHR += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
+                            totalDueFeeOnPaymentKHR += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
+                            totalSumLossIntKHR += result.interestUnPaid;
+                            totalSumLossFeeOnPaymentKHR += result.feeOnPaymentUnPaid;
+                            totalPenaltyKHR += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
+                            totalWaivedForClosingKHR += loanAccDoc.waivedForClosing;
+
+                        } else if (loanAccDoc.currencyId == "USD") {
+                            totalDuePrinUSD += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
+                            totalDueIntUSD += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
+                            totalDueFeeOnPaymentUSD += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
+                            totalSumLossIntUSD += result.interestUnPaid;
+                            totalSumLossFeeOnPaymentUSD += result.feeOnPaymentUnPaid;
+                            totalPenaltyUSD += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
+                            totalWaivedForClosingUSD += loanAccDoc.waivedForClosing;
+
+                        } else if (loanAccDoc.currencyId == "THB") {
+                            totalDuePrinTHB += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
+                            totalDueIntTHB += result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid;
+                            totalDueFeeOnPaymentTHB += result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid;
+                            totalSumLossIntTHB += result.interestUnPaid;
+                            totalSumLossFeeOnPaymentTHB += result.feeOnPaymentUnPaid;
+                            totalPenaltyTHB += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
+                            totalWaivedForClosingTHB += loanAccDoc.waivedForClosing;
+
+                        }
+
+
+                        content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
-                                <td> ${loanAccDoc.locationDoc.name}</td>
+                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
+                                <td> ${loanAccDoc.productDoc.name}</td>
 
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
@@ -447,10 +449,10 @@ export const loanClosingReport = new ValidatedMethod({
                                 
                               </tr>`;
 
-                    i++;
-                }
-            })
-
+                        i++;
+                    }
+                })
+            }
             totalDuePrinBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
@@ -572,7 +574,7 @@ export const loanClosingReport = new ValidatedMethod({
 
 
             content += `<tr>
-                            <td colspan="11" align="right">Subtotal-KHR</td>
+                            <td colspan="12" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingKHR)}</td>
@@ -584,7 +586,7 @@ export const loanClosingReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="11" align="right">Subtotal-USD</td>
+                            <td colspan="12" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingUSD)}</td>
@@ -596,7 +598,7 @@ export const loanClosingReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="11" align="right">Subtotal-THB</td>
+                            <td colspan="12" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingTHB)}</td>
@@ -608,7 +610,7 @@ export const loanClosingReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="11" align="right">Total-${baseCurrency}</td>
+                            <td colspan="12" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingBase)}</td>

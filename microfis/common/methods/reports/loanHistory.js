@@ -204,8 +204,9 @@ export const loanHistoryReport = new ValidatedMethod({
 
             let checkDate = moment(params.date, "DD/MM/YYYY").toDate();
 
-            //Loop Active Loan in check date
-            content += `<hr>
+            if (loanDoc.length > 0) {
+                //Loop Active Loan in check date
+                content += `<hr>
                     <div class="row">
                         <div class="col-md-12"><b><u>Customer Information</u></b></div>              
                     </div>
@@ -215,7 +216,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
                                         <ul class="list-unstyled">
-                                            <li><strong>Customer Code:</strong> ${loanDoc[0].clientId}</li>
+                                            <li><strong>Customer Code:</strong> ${loanDoc[0].clientId }</li>
                                         </ul>
                                     </div>
 
@@ -273,14 +274,15 @@ export const loanHistoryReport = new ValidatedMethod({
                                     </ul>
                                 </div>
                             </div>`;
-            loanDoc.forEach(function (loanAccDoc) {
 
-                let collateralNote = "";
+                loanDoc.forEach(function (loanAccDoc) {
 
-                if (loanAccDoc.collateralNote) {
-                    collateralNote = loanAccDoc.collateralNote;
-                }
-                content += `
+                        let collateralNote = "";
+
+                        if (loanAccDoc.collateralNote) {
+                            collateralNote = loanAccDoc.collateralNote;
+                        }
+                        content += `
                     <br>
                     <div class="row">
                         <div class="col-md-12"><b><u>Loan Disbursment Information (Cycle: ${loanAccDoc.cycle})</u></b></div>              
@@ -592,25 +594,25 @@ export const loanHistoryReport = new ValidatedMethod({
                             <tbody class="sub-body display-on-print-body-loan">`;
 
 
-                let lastScheduleDate = RepaymentSchedule.findOne({
-                    loanAccId: loanAccDoc._id,
-                    scheduleDate: {$lte: checkDate}
-                }, {$sort: {scheduleDate: -1}});
+                        let lastScheduleDate = RepaymentSchedule.findOne({
+                            loanAccId: loanAccDoc._id,
+                            scheduleDate: {$lte: checkDate}
+                        }, {$sort: {scheduleDate: -1}});
 
-                let scheduleDoc = RepaymentSchedule.find({
-                    loanAccId: loanAccDoc._id,
-                    scheduleDate: lastScheduleDate.scheduleDate
-                }).fetch();
+                        let scheduleDoc = RepaymentSchedule.find({
+                            loanAccId: loanAccDoc._id,
+                            scheduleDate: lastScheduleDate.scheduleDate
+                        }).fetch();
 
 
-                let paymentDetail = [];
+                        let paymentDetail = [];
 
-                scheduleDoc.forEach(function (obj) {
-                    if (obj.repaymentDoc && obj.repaymentDoc.detail.length > 0) {
-                        paymentDetail = paymentDetail.concat(obj.repaymentDoc.detail);
-                    }
+                        scheduleDoc.forEach(function (obj) {
+                            if (obj.repaymentDoc && obj.repaymentDoc.detail.length > 0) {
+                                paymentDetail = paymentDetail.concat(obj.repaymentDoc.detail);
+                            }
 
-                    content += `<tr>
+                            content += `<tr>
                                 <td>${obj.installment}</td>
                                 <td>${microfis_formatDate(obj.dueDate)}</td>
                                 <td> ${obj.numOfDay}</td>
@@ -622,10 +624,11 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(obj.balance)}</td>    
                             </tr>`;
 
-                    loanAccDoc.feeAmount = 0;
-                })
+                            loanAccDoc.feeAmount = 0;
+                        })
 
-                content += `                      
+
+                        content += `                      
                         
                         </tbody>
                       </table>
@@ -657,52 +660,52 @@ export const loanHistoryReport = new ValidatedMethod({
 
                 `;
 
-                let repaymentDoc = Repayment.find({loanAccId: loanAccDoc._id}, {sort: {voucherId: -1}});
-                let i = 1;
+                        let repaymentDoc = Repayment.find({loanAccId: loanAccDoc._id}, {sort: {voucherId: -1}});
+                        let i = 1;
 
-                let totalPrincipal = 0;
-                let totalInterest = 0;
-                let totalFee = 0;
-                let totalFeeOnPayment = 0;
-                let totalPenalty = 0;
-                let total = 0;
+                        let totalPrincipal = 0;
+                        let totalInterest = 0;
+                        let totalFee = 0;
+                        let totalFeeOnPayment = 0;
+                        let totalPenalty = 0;
+                        let total = 0;
 
-                repaymentDoc.forEach(function (obj) {
-                    let principal = 0;
-                    let interest = 0;
-                    let fee = 0;
-                    let feeOnPayment = 0;
+                        repaymentDoc.forEach(function (obj) {
+                            let principal = 0;
+                            let interest = 0;
+                            let fee = 0;
+                            let feeOnPayment = 0;
 
-                    let paymentDoc = paymentDetail.find(function (val) {
-                        return val.repaymentId = obj._id;
-                    })
+                            let paymentDoc = paymentDetail.find(function (val) {
+                                return val.repaymentId = obj._id;
+                            })
 
-                    let paymentStatusDoc = {};
-                    paymentStatusDoc.name = "";
+                            let paymentStatusDoc = {};
+                            paymentStatusDoc.name = "";
 
-                    if (obj.type == "Fee") {
-                        fee = obj.amountPaid;
-                    } else {
-                        principal = paymentDoc.principalPaid;
-                        interest = paymentDoc.interestPaid;
-                        feeOnPayment = paymentDoc.feeOnPaymentPaid;
-
-
-                        paymentStatusDoc = paymentStatusList.find(function (val) {
-                            return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
-                        });
-
-                    }
+                            if (obj.type == "Fee") {
+                                fee = obj.amountPaid;
+                            } else {
+                                principal = paymentDoc.principalPaid;
+                                interest = paymentDoc.interestPaid;
+                                feeOnPayment = paymentDoc.feeOnPaymentPaid;
 
 
-                    totalPrincipal += principal;
-                    totalInterest += interest;
-                    totalFee += fee;
-                    totalFeeOnPayment += feeOnPayment;
-                    totalPenalty += obj.penaltyPaid;
-                    total += principal + interest + feeOnPayment + fee + obj.penaltyPaid;
+                                paymentStatusDoc = paymentStatusList.find(function (val) {
+                                    return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
+                                });
 
-                    content += `<tr>
+                            }
+
+
+                            totalPrincipal += principal;
+                            totalInterest += interest;
+                            totalFee += fee;
+                            totalFeeOnPayment += feeOnPayment;
+                            totalPenalty += obj.penaltyPaid;
+                            total += principal + interest + feeOnPayment + fee + obj.penaltyPaid;
+
+                            content += `<tr>
                                 <td>${i}</td>
                                 <td>${(obj.voucherId).substr(8, 6)}</td>
                                 <td> ${obj.type}</td>
@@ -716,10 +719,10 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(principal + interest + feeOnPayment + fee + obj.penaltyPaid)}</td>    
                             </tr>`;
 
-                    i++;
-                })
+                            i++;
+                        })
 
-                content += `                      
+                        content += `                      
                         <tr>
                                 <th colspan="5" style="text-align: right"><strong>Total: </strong></th>
                                 <th class="numberAlign"> ${microfis_formatNumber(totalPrincipal)}</th>
@@ -733,8 +736,10 @@ export const loanHistoryReport = new ValidatedMethod({
                       </table>`;
 
 
-            })
+                    }
+                )
 
+            }
 
             data.content = content;
             return data

@@ -85,6 +85,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                     <th>No</th>
                                     <th>LA Code</th>
                                     <th>Client Name</th>
+                                    <th>Product Name</th>
                                     <th>CRC</th>
                                     <th>LP</th>
                                     <th>Dis Date</th>
@@ -304,24 +305,26 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             let totalFeeUSD = 0;
             let totalFeeTHB = 0;
             let totalFeeBase = 0;
+            if (loanDoc.length > 0) {
+                loanDoc.forEach(function (loanAccDoc) {
 
-            loanDoc.forEach(function (loanAccDoc) {
 
+                    if (loanAccDoc.currencyId == "KHR") {
+                        totalFeeKHR += loanAccDoc.feeAmount;
 
-                if (loanAccDoc.currencyId == "KHR") {
-                    totalFeeKHR += loanAccDoc.feeAmount;
+                    } else if (loanAccDoc.currencyId == "USD") {
+                        totalFeeUSD += loanAccDoc.feeAmount;
 
-                } else if (loanAccDoc.currencyId == "USD") {
-                    totalFeeUSD += loanAccDoc.feeAmount;
+                    } else if (loanAccDoc.currencyId == "THB") {
+                        totalFeeTHB += loanAccDoc.feeAmount;
 
-                } else if (loanAccDoc.currencyId == "THB") {
-                    totalFeeTHB += loanAccDoc.feeAmount;
-
-                }
-                content += `<tr>
+                    }
+                    content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.productDoc.name}</td>
+
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
@@ -336,9 +339,9 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                
                             </tr>`;
 
-                i++;
-            })
-
+                    i++;
+                })
+            }
 
             totalFeeBase = Meteor.call('microfis_exchange',
                     "KHR",
@@ -359,24 +362,24 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                     params.exchangeId
                 );
             content += `<tr>
-                            <td colspan="12" align="right">Subtotal-KHR</td>
+                            <td colspan="13" align="right">Subtotal-KHR</td>
     
                             <td>${microfis_formatNumber(totalFeeKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-USD</td>
+                            <td colspan="13" align="right">Subtotal-USD</td>
                       
                             <td>${microfis_formatNumber(totalFeeUSD)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-THB</td>
+                            <td colspan="13" align="right">Subtotal-THB</td>
                          
                             <td>${microfis_formatNumber(totalFeeTHB)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Total-${baseCurrency}</td>
+                            <td colspan="13" align="right">Total-${baseCurrency}</td>
                       
                             <td>${microfis_formatNumber(totalFeeBase)}</td>
 

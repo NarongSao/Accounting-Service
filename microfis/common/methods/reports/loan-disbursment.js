@@ -84,6 +84,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
                                     <th>LA Code</th>
                                     <th>KH Client Name</th>
                                     <th>KH Staff Name</th>
+                                    <th>Product Name</th>
                                     <th>CRC</th>
                                     <th>Acc Type</th>
                                     <th>Dis Date</th>
@@ -366,7 +367,8 @@ export const loanDisbursmentReport = new ValidatedMethod({
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
                                 <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
-
+                                
+                                <td> ${loanAccDoc.productDoc.name}</td>
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
@@ -458,7 +460,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
             content += `
 
                         <tr>
-                            <td colspan="12" align="right">Subtotal-KHR</td>
+                            <td colspan="13" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanAmountKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntKHR)}</td>
@@ -467,7 +469,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-USD</td>
+                            <td colspan="13" align="right">Subtotal-USD</td>
                       <td class="numberAlign">${microfis_formatNumber(totalLoanAmountUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntUSD)}</td>
@@ -477,7 +479,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-THB</td>
+                            <td colspan="13" align="right">Subtotal-THB</td>
                          <td class="numberAlign">${microfis_formatNumber(totalLoanAmountTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntTHB)}</td>
@@ -486,7 +488,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Total-${baseCurrency}</td>
+                            <td colspan="13" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalLoanAmountBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalFeeBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalProIntBase)}</td>

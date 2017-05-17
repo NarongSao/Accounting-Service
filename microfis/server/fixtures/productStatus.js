@@ -25,7 +25,7 @@ Meteor.startup(function () {
                 "name" : "Substandard",
                 "code" : "U",
                 "from" : 31,
-                "to" : 90,
+                "to" : 60,
                 "provision": 10
             },
 
@@ -35,8 +35,8 @@ Meteor.startup(function () {
                 "type": "Less Or Equal One Year",
                 "name" : "Doubtful",
                 "code" : "D",
-                "from" : 91,
-                "to" : 180,
+                "from" : 61,
+                "to" : 90,
                 "provision": 30
             },
 
@@ -46,7 +46,7 @@ Meteor.startup(function () {
                 "type": "Less Or Equal One Year",
                 "name" : "Loss",
                 "code" : "W",
-                "from" : 181,
+                "from" : 91,
                 "to" : 200000,
                 "provision": 100
             },

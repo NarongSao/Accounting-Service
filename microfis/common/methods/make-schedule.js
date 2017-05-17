@@ -163,7 +163,7 @@ MakeSchedule.declinig = new ValidatedMethod({
                     interest: interestDue,
                     currencyId: loanAccDoc.currencyId,
                     productDoc: loanAccDoc.productDoc,
-                    loanOutstanding: roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId)
+                    loanOutstanding: roundCurrency(previousLine.balance, loanAccDoc.currencyId)
                 })
 
 
@@ -326,7 +326,7 @@ MakeSchedule.annuity = new ValidatedMethod({
                     interest: interestDue,
                     currencyId: loanAccDoc.currencyId,
                     productDoc: loanAccDoc.productDoc,
-                    loanOutstanding: roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId)
+                    loanOutstanding: roundCurrency(previousLine.balance, loanAccDoc.currencyId)
                 })
 
                 totalDue = roundCurrency(principalDue + interestDue + feeOnPaymentDue, loanAccDoc.currencyId);
@@ -482,7 +482,7 @@ MakeSchedule.flat = new ValidatedMethod({
                     interest: interestDue,
                     currencyId: loanAccDoc.currencyId,
                     productDoc: loanAccDoc.productDoc,
-                    loanOutstanding: roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId)
+                    loanOutstanding: roundCurrency(previousLine.balance, loanAccDoc.currencyId)
                 })
 
                 totalDue = roundCurrency(principalDue + interestDue + feeOnPaymentDue, loanAccDoc.currencyId);

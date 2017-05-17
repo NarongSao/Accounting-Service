@@ -99,8 +99,8 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                                     <th>4</th>
                                    
                                     
-                                    <th>7=1+3</th>
-                                    <th>8=2+4</th>
+                                    <th>5=1+3</th>
+                                    <th>6=2+4</th>
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;

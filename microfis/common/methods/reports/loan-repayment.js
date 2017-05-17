@@ -85,6 +85,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                                         <th>Voucher Code</th>
                                     <th>LA Code</th>
                                     <th>Client Name</th>
+                                    <th>Product Name</th>
                                     <th>CRC</th>
                                     <th>Type</th>
                                     <th>Dis Date</th>
@@ -352,111 +353,113 @@ export const loanRepaymentReport = new ValidatedMethod({
                 $gte: fDate
             }
 
+            if (loanDoc.length > 0) {
+                loanDoc.forEach(function (loanAccDoc) {
 
-            loanDoc.forEach(function (loanAccDoc) {
+                    selectorRepayment.loanAccId = loanAccDoc._id;
+                    selectorRepayment.type = {$ne: "Fee"};
 
-                selectorRepayment.loanAccId = loanAccDoc._id;
-                selectorRepayment.type = {$ne: "Fee"};
+                    let productStatusList;
 
-                let productStatusList;
+                    if (loanAccDoc.paymentMethod == "D") {
+                        if (loanAccDoc.term <= 365) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
 
-                if (loanAccDoc.paymentMethod == "D") {
-                    if (loanAccDoc.term <= 365) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else if (loanAccDoc.paymentMethod == "W") {
+                        if (loanAccDoc.term <= 52) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+                    } else if (loanAccDoc.paymentMethod == "M") {
+                        if (loanAccDoc.term <= 12) {
+                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
                     } else {
                         productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                     }
 
-                } else if (loanAccDoc.paymentMethod == "W") {
-                    if (loanAccDoc.term <= 52) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                    }
-                } else if (loanAccDoc.paymentMethod == "M") {
-                    if (loanAccDoc.term <= 12) {
-                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                    }
-                } else {
-                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                }
+
+                    let repaymentDoc = Repayment.find(selectorRepayment).fetch();
+
+                    if (repaymentDoc != undefined && repaymentDoc.length > 0) {
+                        repaymentDoc.forEach(function (repaymentObj) {
+
+                            let repaymentScheduleDoc = RepaymentSchedule.aggregate([
+
+                                {
+                                    $project: {"repaymentDoc.detail": 1}
+                                },
+                                {$unwind: '$repaymentDoc.detail'},
+                                {$match: {"repaymentDoc.detail.repaymentId": repaymentObj._id}}
+                            ])
 
 
-                let repaymentDoc = Repayment.find(selectorRepayment).fetch();
+                            if (repaymentScheduleDoc.length > 0) {
 
-                if (repaymentDoc != undefined && repaymentDoc.length > 0) {
-                    repaymentDoc.forEach(function (repaymentObj) {
-
-                        let repaymentScheduleDoc = RepaymentSchedule.aggregate([
-
-                            {
-                                $project: {"repaymentDoc.detail": 1}
-                            },
-                            {$unwind: '$repaymentDoc.detail'},
-                            {$match: {"repaymentDoc.detail.repaymentId": repaymentObj._id}}
-                        ])
-
-
-                        if (repaymentScheduleDoc.length > 0) {
-
-                            let checkClassify = true;
-                            if (params.classifyId && params.classifyId.includes("All") == false) {
-                                checkClassify = false;
-                            }
-
-                            let principalPaid = 0;
-                            let interestPaid = 0;
-                            let feeOnPaymentPaid = 0;
-                            let penaltyPaid = 0;
-
-                            repaymentScheduleDoc.forEach(function (obj) {
-
-                                let finProductStatus = function (obj) {
-                                    return repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate >= obj.from && repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate <= obj.to;
+                                let checkClassify = true;
+                                if (params.classifyId && params.classifyId.includes("All") == false) {
+                                    checkClassify = false;
                                 }
-                                let proStatus = productStatusList.find(finProductStatus);
-                                //check product status (Classify)
-                                if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
 
+                                let principalPaid = 0;
+                                let interestPaid = 0;
+                                let feeOnPaymentPaid = 0;
+                                let penaltyPaid = 0;
 
-                                    principalPaid += obj.repaymentDoc.detail.principalPaid;
-                                    interestPaid += obj.repaymentDoc.detail.interestPaid;
-                                    feeOnPaymentPaid += obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                    penaltyPaid += obj.repaymentDoc.detail.penaltyPaid;
+                                repaymentScheduleDoc.forEach(function (obj) {
 
-
-                                    if (loanAccDoc.currencyId == "KHR") {
-
-                                        totalColPrinKHR += obj.repaymentDoc.detail.principalPaid;
-                                        totalColIntKHR += obj.repaymentDoc.detail.interestPaid;
-                                        totalColFeeOnPaymentKHR += obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                        totalColPrinIntKHR += obj.repaymentDoc.detail.principalPaid + obj.repaymentDoc.detail.interestPaid + obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                        totalColPenKHR += obj.repaymentDoc.detail.penaltyPaid;
-
-
-                                    } else if (loanAccDoc.currencyId == "USD") {
-                                        totalColPrinUSD += obj.repaymentDoc.detail.principalPaid;
-                                        totalColIntUSD += obj.repaymentDoc.detail.interestPaid;
-                                        totalColFeeOnPaymentUSD += obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                        totalColPrinIntUSD += obj.repaymentDoc.detail.principalPaid + obj.repaymentDoc.detail.interestPaid + obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                        totalColPenUSD += obj.repaymentDoc.detail.penaltyPaid;
-                                    } else if (loanAccDoc.currencyId == "THB") {
-                                        totalColPrinTHB = obj.repaymentDoc.detail.principalPaid;
-                                        totalColIntTHB = obj.repaymentDoc.detail.interestPaid;
-                                        totalColFeeOnPaymentTHB = obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                        totalColPrinIntTHB = obj.repaymentDoc.detail.principalPaid + obj.repaymentDoc.detail.interestPaid + obj.repaymentDoc.detail.feeOnPaymentPaid;
-                                        totalColPenTHB = obj.repaymentDoc.detail.penaltyPaid;
+                                    let finProductStatus = function (obj) {
+                                        return repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate >= obj.from && repaymentScheduleDoc[0].repaymentDoc.detail.numOfDayLate <= obj.to;
                                     }
-                                }
-                            })
+                                    let proStatus = productStatusList.find(finProductStatus);
+                                    //check product status (Classify)
+                                    if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
 
-                            content += `<tr>
+
+                                        principalPaid += obj.repaymentDoc.detail.principalPaid;
+                                        interestPaid += obj.repaymentDoc.detail.interestPaid;
+                                        feeOnPaymentPaid += obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                        penaltyPaid += obj.repaymentDoc.detail.penaltyPaid;
+
+
+                                        if (loanAccDoc.currencyId == "KHR") {
+
+                                            totalColPrinKHR += obj.repaymentDoc.detail.principalPaid;
+                                            totalColIntKHR += obj.repaymentDoc.detail.interestPaid;
+                                            totalColFeeOnPaymentKHR += obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                            totalColPrinIntKHR += obj.repaymentDoc.detail.principalPaid + obj.repaymentDoc.detail.interestPaid + obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                            totalColPenKHR += obj.repaymentDoc.detail.penaltyPaid;
+
+
+                                        } else if (loanAccDoc.currencyId == "USD") {
+                                            totalColPrinUSD += obj.repaymentDoc.detail.principalPaid;
+                                            totalColIntUSD += obj.repaymentDoc.detail.interestPaid;
+                                            totalColFeeOnPaymentUSD += obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                            totalColPrinIntUSD += obj.repaymentDoc.detail.principalPaid + obj.repaymentDoc.detail.interestPaid + obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                            totalColPenUSD += obj.repaymentDoc.detail.penaltyPaid;
+                                        } else if (loanAccDoc.currencyId == "THB") {
+                                            totalColPrinTHB = obj.repaymentDoc.detail.principalPaid;
+                                            totalColIntTHB = obj.repaymentDoc.detail.interestPaid;
+                                            totalColFeeOnPaymentTHB = obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                            totalColPrinIntTHB = obj.repaymentDoc.detail.principalPaid + obj.repaymentDoc.detail.interestPaid + obj.repaymentDoc.detail.feeOnPaymentPaid;
+                                            totalColPenTHB = obj.repaymentDoc.detail.penaltyPaid;
+                                        }
+                                    }
+                                })
+
+                                content += `<tr>
                                 <td>${i}</td>
                                 <td>${repaymentObj.voucherId}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.productDoc.name}</td>
+
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
@@ -474,38 +477,40 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(penaltyPaid)}</td>
                             </tr>`;
 
-                            i++;
+                                i++;
 
-                        } else {
-                            if (loanAccDoc.currencyId == "KHR") {
+                            } else {
+                                if (loanAccDoc.currencyId == "KHR") {
 
-                                totalColPrinKHR += 0;
-                                totalColIntKHR += 0;
-                                totalColFeeOnPaymentKHR += 0;
-                                totalColPrinIntKHR += repaymentObj.amountPaid;
-                                totalColPenKHR += 0;
-
-
-                            } else if (loanAccDoc.currencyId == "USD") {
-                                totalColPrinUSD += 0;
-                                totalColIntUSD += 0;
-                                totalColFeeOnPaymentUSD += 0;
-                                totalColPrinIntUSD += repaymentObj.amountPaid;
-                                totalColPenUSD += 0;
-                            } else if (loanAccDoc.currencyId == "THB") {
-                                totalColPrinTHB = 0;
-                                totalColIntTHB = 0;
-                                totalColFeeOnPaymentTHB = 0;
-                                totalColPrinIntTHB = repaymentObj.amountPaid;
-                                totalColPenTHB = 0;
-                            }
+                                    totalColPrinKHR += 0;
+                                    totalColIntKHR += 0;
+                                    totalColFeeOnPaymentKHR += 0;
+                                    totalColPrinIntKHR += repaymentObj.amountPaid;
+                                    totalColPenKHR += 0;
 
 
-                            content += `<tr>
+                                } else if (loanAccDoc.currencyId == "USD") {
+                                    totalColPrinUSD += 0;
+                                    totalColIntUSD += 0;
+                                    totalColFeeOnPaymentUSD += 0;
+                                    totalColPrinIntUSD += repaymentObj.amountPaid;
+                                    totalColPenUSD += 0;
+                                } else if (loanAccDoc.currencyId == "THB") {
+                                    totalColPrinTHB = 0;
+                                    totalColIntTHB = 0;
+                                    totalColFeeOnPaymentTHB = 0;
+                                    totalColPrinIntTHB = repaymentObj.amountPaid;
+                                    totalColPenTHB = 0;
+                                }
+
+
+                                content += `<tr>
                                 <td>${i}</td>
                                 <td>${repaymentObj.voucherId}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
+                                <td> ${loanAccDoc.productDoc.name}</td>
+
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
@@ -523,13 +528,13 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(0)}</td>
                             </tr>`;
 
-                            i++;
-                        }
-                    })
-                }
+                                i++;
+                            }
+                        })
+                    }
 
-            })
-
+                })
+            }
 
             totalColPrinBase = Meteor.call('microfis_exchange',
                     "KHR",
@@ -618,7 +623,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                     params.exchangeId
                 );
             content += `<tr>
-                            <td colspan="13" align="right">Subtotal-KHR</td>
+                            <td colspan="14" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentKHR)}</td>
@@ -626,7 +631,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalColPenKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-USD</td>
+                            <td colspan="14" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentUSD)}</td>
@@ -635,7 +640,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-THB</td>
+                            <td colspan="14" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentTHB)}</td>
@@ -644,7 +649,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Total-${baseCurrency}</td>
+                            <td colspan="14" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentBase)}</td>

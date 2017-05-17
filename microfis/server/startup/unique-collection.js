@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 
 
 Meteor.startup(function () {
-    SavingTransaction._ensureIndex({
+    /*SavingTransaction._ensureIndex({
         voucherId: 1,
         branchId: 1,
         transactionType: 1,
@@ -16,7 +16,7 @@ Meteor.startup(function () {
     }, {
         sparse: 1,
         unique: 1
-    });
+    });*/
 
     Client._ensureIndex({idType: 1, idNumber: 1, uniqueByCondition: 1, branchId: 1}, {unique: 1});
     EndOfProcess._ensureIndex({month: 1, branchId: 1, year: 1, day: 1}, {unique: 1});

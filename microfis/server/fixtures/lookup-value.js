@@ -34,9 +34,10 @@ Meteor.startup(function () {
                 name: 'History',
                 private: true,
                 options: [
-                    {label: 'History0', value: 'History0', order: 0},
-                    {label: 'History1', value: 'History1', order: 1},
-                    {label: 'History2', value: 'History2', order: 2},
+                    {label: 'None', value: 'none', order: 0},
+                    {label: 'Not Good', value: 'notGood', order: 1},
+                    {label: 'Good', value: 'good', order: 2},
+                    {label: 'Very Good', value: 'veryGood', order: 3},
                 ]
             },
             // Purpose
@@ -57,9 +58,9 @@ Meteor.startup(function () {
                 name: 'Purpose Activity',
                 private: true,
                 options: [
-                    {label: 'Activity0', value: 'Activity0', order: 0},
-                    {label: 'Activity1', value: 'Activity1', order: 1},
-                    {label: 'Activity2', value: 'Activity2', order: 2},
+                    {label: 'Buying', value: 'buying', order: 0},
+                    {label: 'New', value: 'new', order: 1},
+                    {label: 'Expand', value: 'expand', order: 2},
                 ]
             },
             // Collateral Type
@@ -67,9 +68,12 @@ Meteor.startup(function () {
                 name: 'Collateral Type',
                 private: true,
                 options: [
-                    {label: 'Type0', value: 'Type0', order: 0},
-                    {label: 'Type1', value: 'Type1', order: 1},
-                    {label: 'Type2', value: 'Type2', order: 2},
+                    {label: 'None', value: 'none', order: 0},
+                    {label: 'Land Title', value: 'landtitle', order: 1},
+                    {label: 'Ownership Land title/Building', value: 'owner', order: 2},
+                    {label: 'Motor Vehicle', value: 'motor', order: 3},
+                    {label: 'Inventory', value: 'inventory', order: 4},
+                    {label: 'Other', value: 'other', order: 5},
                 ]
             },
             // Collateral Security
@@ -101,6 +105,11 @@ Meteor.startup(function () {
                 options: [
                     {label: 'Student', value: 'ST', order: 0},
                     {label: 'Agriculture', value: 'AG', order: 1},
+                    {label: 'Business', value: 'Business', order: 2},
+                    {label: 'Service', value: 'Service', order: 3},
+                    {label: 'Construction', value: 'Construction', order: 4},
+                    {label: 'Family', value: 'Family', order: 5},
+                    {label: 'Other', value: 'Other', order: 6},
                 ]
             },
             // Poverty Level
@@ -108,8 +117,9 @@ Meteor.startup(function () {
                 name: 'Poverty Level',
                 private: true,
                 options: [
-                    {label: 'Level 0', value: 'L0', order: 0},
-                    {label: 'Level 1', value: 'L1', order: 1},
+                    {label: 'Poor', value: 'poor', order: 0},
+                    {label: 'Average', value: 'Average', order: 1},
+                    {label: 'Rich', value: 'rich', order: 2},
                 ]
             },
         ];
