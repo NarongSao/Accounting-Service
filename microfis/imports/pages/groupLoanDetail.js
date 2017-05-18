@@ -35,7 +35,7 @@ var groupLoanDetailTPL = Template.microfis_groupLoanDetail;
 
 
 var groupLoanDetailCollection;
-let clientAccOpt = new ReactiveVar([]);
+clientAccOpt = new ReactiveVar([]);
 locationChange = new ReactiveVar("");
 
 //Created
@@ -50,7 +50,6 @@ groupLoanDetailTPL.onCreated(function () {
             groupLoanDetailCollection.insert(obj);
         })
     }
-
 
 
 })
@@ -89,10 +88,21 @@ groupLoanDetailTPL.helpers({
 
 groupLoanDetailTPL.events({
     'click .addItem': function (e, t) {
-
+        
         let loan = {};
         loan.id = t.$('[name="loanAccount"]').val();
         groupLoanDetailCollection.insert(loan);
+
+        // let index = clientAccOpt.get().findIndex(x => x.value == loan.id);
+
+        // delete clientAccOpt.get()[index];
+
+        let newArrayClientOpt = clientAccOpt.get().filter(function (obj) {
+            return obj.value !== loan.id;
+        });
+
+        clientAccOpt.set(newArrayClientOpt);
+
     },
     'click .removeItem': function (e, t) {
         var self = this;

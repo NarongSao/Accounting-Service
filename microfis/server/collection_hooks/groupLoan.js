@@ -5,6 +5,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 // Collection
 import {GroupLoan} from '../../common/collections/groupLoan';
 import {LoanAcc} from '../../common/collections/loan-acc';
+import {Group} from '../../common/collections/group';
 
 GroupLoan.before.insert(function (userId, doc) {
     let prefix = moment(doc.date).format("YYYY");
@@ -23,12 +24,16 @@ GroupLoan.after.insert(function (userId, doc) {
         LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: true}});
     })
 
+
+    Group.direct.update({_id: doc.groupId}, {$set: {status: true}});
+
 })
 
 GroupLoan.after.remove(function (userId, doc) {
     doc.loan.forEach(function (obj) {
         LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: false}});
     })
+    Group.direct.update({_id: doc.groupId}, {$set: {status: false}});
 })
 
 
@@ -41,5 +46,9 @@ GroupLoan.after.update(function (userId, doc) {
     doc.loan.forEach(function (obj) {
         LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: true}});
     })
+
+
+    Group.direct.update({_id: doc.groupId}, {$set: {status: true}});
+
 })
 

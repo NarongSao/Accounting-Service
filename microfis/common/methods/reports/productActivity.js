@@ -292,16 +292,16 @@ export const productActivityReport = new ValidatedMethod({
                             creditOfficerDoc: '$creditOfficerDoc'
                         },
                         newClient: {
-                            $sum: {$cond: [{$gt: ['$cycle', 1]}, 0, 1]}
+                            $sum: {$cond: [{$and: [{$eq: ['$cycle', 1]}, {$gte: ['$disbursementDate', fDate]}]}, 1, 0]}
                         },
                         oldClient: {
-                            $sum: {$cond: [{$gt: ['$cycle', 1]}, 1, 0]}
+                            $sum: {$cond: [{$and: [{$gt: ['$cycle', 1]}, {$gte: ['$disbursementDate', fDate]}]}, 1, 0]}
                         },
                         loanDisbursment: {
-                            $sum: '$loanAmount'
+                            $sum: {$cond: [{$gte: ['$disbursementDate', fDate]}, '$loanAmount', 0]}
                         },
                         totalFee: {
-                            $sum: '$feeAmount'
+                            $sum: {$cond: [{$gte: ['$disbursementDate', fDate]}, '$feeAmount', 0]}
                         },
                         loanAccIdList: {$push: "$_id"}
                     }

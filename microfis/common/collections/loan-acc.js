@@ -191,7 +191,10 @@ LoanAcc.generalSchema = new SimpleSchema({
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
                 optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.creditOfficer'
+                optionsMethod: 'microfis.selectOpts.creditOfficer',
+                optionsMethodParams: function () {
+                    return {branchId: Meteor.isClient && Session.get('currentBranch')};
+                }
             }
         }
     },

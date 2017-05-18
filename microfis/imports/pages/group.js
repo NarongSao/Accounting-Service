@@ -125,7 +125,7 @@ AutoForm.hooks({
         before: {
             update: function (doc) {
 
-                doc.$set.locationName= $('[name="locationId"]').select2('data')[0].text;
+                doc.$set.locationName = $('[name="locationId"]').select2('data')[0].text;
                 doc.$unset = {};
                 return doc;
             }

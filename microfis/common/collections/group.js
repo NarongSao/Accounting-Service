@@ -23,6 +23,11 @@ Group.schema = new SimpleSchema({
         type: String,
         label: 'Location Name',
         optional: true
+    },
+    status: {
+        type: Boolean,
+        optional: true,
+        defaultValue: false
     }
     ,
     branchId: {

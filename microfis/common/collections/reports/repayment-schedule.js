@@ -19,7 +19,7 @@ export const RepaymentScheduleSchema = new SimpleSchema({
                 optionsPlaceholder: true,
                 optionsMethod: 'microfis.selectOpts.client',
                 optionsMethodParams: function () {
-                    return Meteor.isClient && Session.get('currentBranch');
+                    return {branchId: Meteor.isClient && Session.get('currentBranch')};
                 }
             }
         }

@@ -53,9 +53,21 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
+        Session.set("groupStatus", [false])
         alertify.groupLoan(fa('plus', 'Group Loan'), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
+
+        Session.set("groupStatus", [false, true]);
+        let self = this;
+        Meteor.call("microfis_getGroupById", self.groupId, function (err, result) {
+            if (result) {
+                locationChange.set(result.locationId);
+            } else {
+                locationChange.set("");
+            }
+        })
+
         alertify.groupLoan(fa('pencil', 'Group Loan'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
@@ -100,7 +112,6 @@ newTmpl.helpers({
 
 newTmpl.events({
     'change [name="groupId"]'(e, t){
-        debugger;
         let group = $(e.currentTarget).val();
         Meteor.call("microfis_getGroupById", group, function (err, result) {
             if (result) {
@@ -125,7 +136,14 @@ editTmpl.helpers({
 
 editTmpl.events({
     'change [name="groupId"]'(e, t){
-        locationId.set($(e.currentTarget).val());
+        let group = $(e.currentTarget).val();
+        Meteor.call("microfis_getGroupById", group, function (err, result) {
+            if (result) {
+                locationChange.set(result.locationId);
+            } else {
+                locationChange.set("");
+            }
+        })
     }
 })
 
@@ -137,8 +155,6 @@ AutoForm.hooks({
     Microfis_groupLoanNew: {
         before: {
             insert: function (doc) {
-                debugger;
-
                 let loanData = groupLoanDetailCollection.find().fetch();
 
                 var loan = [];

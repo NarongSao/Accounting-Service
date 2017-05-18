@@ -247,6 +247,9 @@ SelectOptMethods.client = new ValidatedMethod({
             let values = options.values;
             let params = options.params || {};
 
+
+            selector.branchId = params.branchId;
+
             if (searchText) {
                 selector = {
                     $or: [
@@ -319,6 +322,8 @@ SelectOptMethods.creditOfficer = new ValidatedMethod({
             let searchText = options.searchText;
             let values = options.values;
             let params = options.params || {};
+
+            selector.branchId = params.branchId;
 
             if (searchText) {
                 selector = {

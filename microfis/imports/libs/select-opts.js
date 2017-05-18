@@ -272,7 +272,7 @@ export const SelectOpts = {
             Meteor.subscribe('microfis.group');
             let list = [];
             list.push({value: "", label: "(Select One)"});
-            let data = Group.find({branchId: branchId}).fetch();
+            let data = Group.find({branchId: branchId, status: {$in: Session.get("groupStatus")}}).fetch();
             data.forEach(function (value) {
                 list.push({value: value._id, label: value.name});
             });
