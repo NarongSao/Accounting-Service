@@ -47,66 +47,68 @@
     </div>
 </template>
 <template name="Microfis_loanHistoryReportPrintData">
-    <!--#print-data-->
-    <div id="print-data">
-        <div class="sub-div display-on-print-div-landscape-loan">
-            {{#if rptInit}}
-                {{#if rptData}}
-                    {{#with rptData}}
+    <div class="horizontal-scroll">
+        <!--#print-data-->
+        <div id="print-data">
+            <div class="sub-div display-on-print-div-landscape-loan">
+                {{#if rptInit}}
+                    {{#if rptData}}
+                        {{#with rptData}}
 
-                        <!--Title-->
-                        {{#with title}}
-                            <div class="rpt-title">
-                                <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
-                                <div class="rpt-title-2x">{{company.enName}}</div>
-                                <!--<div>សាខា: {{branch.khName}}</div>-->
-                                <div class="rpt-title-2x"><u>របាយការណ៍ប្រវត្តិអតិថិជន</u></div>
-                                <div>
-                                    <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
-                                    <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
+                            <!--Title-->
+                            {{#with title}}
+                                <div class="rpt-title">
+                                    <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
+                                    <div class="rpt-title-2x">{{company.enName}}</div>
+                                    <!--<div>សាខា: {{branch.khName}}</div>-->
+                                    <div class="rpt-title-2x"><u>របាយការណ៍ប្រវត្តិអតិថិជន</u></div>
+                                    <div>
+                                        <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
+                                        <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
+                                    </div>
                                 </div>
-                            </div>
-                        {{/with}}
+                            {{/with}}
 
-                        <!--Header-->
-                        {{#with header}}
-                            <div style="width: 100%">
-                                <div style="width: 60%; float: right">
-                                    <div style="width: 50%; float: left">
+                            <!--Header-->
+                            {{#with header}}
+                                <div style="width: 100%">
+                                    <div style="width: 60%; float: right">
+                                        <div style="width: 50%; float: left">
+                                            <ul class="list-unstyled">
+                                                <li><strong>Date:</strong> {{date}}</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="width: 50%; float: right">
+                                            <ul class="list-unstyled">
+                                                <li class="pull-right"><strong>clientId:</strong> {{clientId}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div style="width: 40%;">
                                         <ul class="list-unstyled">
-                                            <li><strong>Date:</strong> {{date}}</li>
+                                            <li><strong>Branch:</strong> {{branchId}}</li>
                                         </ul>
                                     </div>
 
-                                    <div style="width: 50%; float: right">
-                                        <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>clientId:</strong> {{clientId}}</li>
-                                        </ul>
-                                    </div>
+
                                 </div>
 
-                                <div style="width: 40%;">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Branch:</strong> {{branchId}}</li>
-                                    </ul>
-                                </div>
+                            {{/with}}
 
-
-                            </div>
+                            <!--Content-->
+                            {{{content}}}
 
                         {{/with}}
 
-                        <!--Content-->
-                        {{{content}}}
-
-                    {{/with}}
-
-                {{else}}
-                    <div class="text-center">
-                        {{> iconLoading size="fa-5x"}}
-                    </div>
+                    {{else}}
+                        <div class="text-center">
+                            {{> iconLoading size="fa-5x"}}
+                        </div>
+                    {{/if}}
                 {{/if}}
-            {{/if}}
+            </div>
         </div>
     </div>
     <!--/#print-data-->

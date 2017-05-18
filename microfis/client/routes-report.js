@@ -39,6 +39,22 @@ MicrofisRoutes.route('/repayment-schedule-report', {
         parent: 'microfis.home'
     }
 });
+// Repayment schedule summary
+import '../imports/reports/repayment-schedule-summary.js';
+MicrofisRoutes.route('/repayment-schedule-summary-report', {
+    name: 'microfis.repaymentScheduleSummaryReport',
+    title: 'Repayment Schedule Summary Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentScheduleSummaryReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Repayment Schedule Summary Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
 // loan outstanding
 import '../imports/reports/loan-outstanding.js';
 MicrofisRoutes.route('/loan-outstanding-report', {

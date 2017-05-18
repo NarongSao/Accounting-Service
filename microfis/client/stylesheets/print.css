@@ -99,6 +99,10 @@
     border: 1px solid black !important;
 }
 
+.horizontal-scroll {
+    overflow-x: scroll;
+}
+
 
 
 

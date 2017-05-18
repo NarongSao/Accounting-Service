@@ -37,7 +37,6 @@ Product.after.update(function (userId, doc) {
     PenaltyClosing.direct.update({_id: oldData.penaltyClosingId}, {$inc: {numberOfProduct: -1}}, {multi: true});
     Penalty.direct.update({_id: oldData.penaltyId}, {$inc: {numberOfProduct: -1}}, {multi: true});
 
-    console.log(doc);
     Fee.direct.update({_id: {$in: _.isArray(doc.feeId) ? doc.feeId : [doc.feeId]}}, {$inc: {numberOfProduct: 1}}, {multi: true});
     PenaltyClosing.direct.update({_id: doc.penaltyClosingId}, {$inc: {numberOfProduct: 1}}, {multi: true});
     Penalty.direct.update({_id: doc.penaltyId}, {$inc: {numberOfProduct: 1}}, {multi: true});

@@ -301,7 +301,6 @@ export const SelectOptsReport = {
         if (branchId != undefined) {
             selector.branchId = branchId;
         }
-        console.log(selector);
         list.push({label: "(Select All)", value: "All"});
         CreditOfficer.find(selector)
             .forEach(function (obj) {
