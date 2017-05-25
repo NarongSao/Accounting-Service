@@ -438,7 +438,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                         <ul class="list-unstyled">
                                             <li><strong>Income Amount:</strong> </li>
                                         </ul>
-                                    </div>
+                                    </div>=
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
@@ -660,7 +660,7 @@ export const loanHistoryReport = new ValidatedMethod({
 
                 `;
 
-                        let repaymentDoc = Repayment.find({loanAccId: loanAccDoc._id}, {sort: {voucherId: -1}});
+                        let repaymentDoc = Repayment.find({loanAccId: loanAccDoc._id}, {sort: {voucherId: -1}}).fetch();
                         let i = 1;
 
                         let totalPrincipal = 0;
@@ -676,12 +676,14 @@ export const loanHistoryReport = new ValidatedMethod({
                             let fee = 0;
                             let feeOnPayment = 0;
 
-                            let paymentDoc = paymentDetail.find(function (val) {
-                                return val.repaymentId = obj._id;
-                            })
+                            /*let paymentDoc = paymentDetail.find(function (val) {
+                             return val.repaymentId == obj._id;
+                             })*/
+                            let paymentDoc = paymentDetail.find(x => x.repaymentId == obj._id);
 
                             let paymentStatusDoc = {};
                             paymentStatusDoc.name = "";
+
 
                             if (obj.type == "Fee") {
                                 fee = obj.amountPaid;

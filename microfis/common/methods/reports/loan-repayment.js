@@ -467,7 +467,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                                 content += `<tr>
                                 <td>${i}</td>
-                                <td>${repaymentObj.voucherId}</td>
+                                <td>${repaymentObj.voucherId.substr(8)}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
                                 <td> ${loanAccDoc.productDoc.name}</td>
