@@ -46,8 +46,6 @@ Repayment.after.insert(function (userId, doc) {
 
 
                 if (settingDoc.integrate == true) {
-
-
                     if (doc.type != "Write Off" && doc.type != "Reschedule" && doc.type != "Prepay") {
                         let productStatusList;
                         if (loanAcc.paymentMethod == "D") {
@@ -56,7 +54,6 @@ Repayment.after.insert(function (userId, doc) {
                             } else {
                                 productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                             }
-
                         } else if (loanAcc.paymentMethod == "W") {
                             if (loanAcc.term <= 52) {
                                 productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
@@ -114,9 +111,17 @@ Repayment.after.insert(function (userId, doc) {
                                         'repaymentDoc.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
                                         'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
                                         'repaymentDoc.totalInterestWaived': o.interestWaived,
-                                        'repaymentDoc.totalFeeOnPaymentWaived': o.feeOnPaymentWaived
+                                        'repaymentDoc.totalFeeOnPaymentWaived': o.feeOnPaymentWaived,
+
+
+                                        'repaymentDocRealTime.totalPrincipalPaid': o.principalPaid,
+                                        'repaymentDocRealTime.totalInterestPaid': o.interestPaid,
+                                        'repaymentDocRealTime.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
+                                        'repaymentDocRealTime.totalPenaltyPaid': o.penaltyPaid,
+                                        'repaymentDocRealTime.totalInterestWaived': o.interestWaived,
+                                        'repaymentDocRealTime.totalFeeOnPaymentWaived': o.feeOnPaymentWaived
                                     },
-                                    $push: {'repaymentDoc.detail': o},
+                                    $push: {'repaymentDoc.detail': o, 'repaymentDocRealTime.detail': o},
                                     $set: updatePay
                                 }, function (err) {
                                     if (err) {
@@ -163,7 +168,7 @@ Repayment.after.insert(function (userId, doc) {
                             SavingTransaction.insert(savingLoanDeposit, function (err) {
                                 if (err) {
                                     console.log(err);
-                                    integrate
+
                                 }
                             });
                         }
@@ -383,8 +388,17 @@ Repayment.after.insert(function (userId, doc) {
                                 }
 
                                 updatePay.isPrePay = true;
-
+                                o.repaymentId = doc._id;
                                 RepaymentSchedule.update({_id: o.scheduleId}, {
+                                    $inc: {
+                                        'repaymentDocRealTime.totalPrincipalPaid': o.principalPaid,
+                                        'repaymentDocRealTime.totalInterestPaid': o.interestPaid,
+                                        'repaymentDocRealTime.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
+                                        'repaymentDocRealTime.totalPenaltyPaid': o.penaltyPaid,
+                                        'repaymentDocRealTime.totalInterestWaived': o.interestWaived,
+                                        'repaymentDocRealTime.totalFeeOnPaymentWaived': o.feeOnPaymentWaived
+                                    },
+                                    $push: {'repaymentDocRealTime.detail': o},
                                     $set: updatePay
                                 }, function (err) {
                                     if (err) {
@@ -903,9 +917,20 @@ Repayment.after.remove(function (userId, doc) {
                                         'repaymentDoc.totalFeeOnPaymentPaid': -o.feeOnPaymentPaid,
                                         'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
                                         'repaymentDoc.totalInterestWaived': -o.interestWaived,
-                                        'repaymentDoc.totalFeeOnPaymentWaived': -o.feeOnPaymentWaived
+                                        'repaymentDoc.totalFeeOnPaymentWaived': -o.feeOnPaymentWaived,
+
+
+                                        'repaymentDocRealTime.totalPrincipalPaid': -o.principalPaid,
+                                        'repaymentDocRealTime.totalInterestPaid': -o.interestPaid,
+                                        'repaymentDocRealTime.totalFeeOnPaymentPaid': -o.feeOnPaymentPaid,
+                                        'repaymentDocRealTime.totalPenaltyPaid': -o.penaltyPaid,
+                                        'repaymentDocRealTime.totalInterestWaived': -o.interestWaived,
+                                        'repaymentDocRealTime.totalFeeOnPaymentWaived': -o.feeOnPaymentWaived
                                     },
-                                    $pull: {'repaymentDoc.detail': {repaymentId: doc._id}},
+                                    $pull: {
+                                        'repaymentDoc.detail': {repaymentId: doc._id},
+                                        'repaymentDocRealTime.detail': {repaymentId: doc._id}
+                                    },
                                     $set: {isPay: false, isFullPay: false}
                                 }, function (err) {
                                     if (err) {
@@ -925,7 +950,20 @@ Repayment.after.remove(function (userId, doc) {
                             _.forEach(schedulePaid, (o) => {
 
                                 RepaymentSchedule.update({_id: o.scheduleId}, {
-                                    $set: {isPay: false, isFullPay: false, isPrePay: false}
+                                    $set: {isPay: false, isFullPay: false, isPrePay: false},
+                                    $inc: {
+
+                                        'repaymentDocRealTime.totalPrincipalPaid': -o.principalPaid,
+                                        'repaymentDocRealTime.totalInterestPaid': -o.interestPaid,
+                                        'repaymentDocRealTime.totalFeeOnPaymentPaid': -o.feeOnPaymentPaid,
+                                        'repaymentDocRealTime.totalPenaltyPaid': -o.penaltyPaid,
+                                        'repaymentDocRealTime.totalInterestWaived': -o.interestWaived,
+                                        'repaymentDocRealTime.totalFeeOnPaymentWaived': -o.feeOnPaymentWaived
+                                    },
+                                    $pull: {
+                                        'repaymentDocRealTime.detail': {repaymentId: doc._id}
+                                    }
+
                                 }, function (err) {
                                     if (err) {
                                         console.log(err);

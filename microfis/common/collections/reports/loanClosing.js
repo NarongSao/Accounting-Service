@@ -140,5 +140,21 @@ export const LoanClosingSchema = new SimpleSchema({
                 return coType;
             }
         }
+    },
+    repayFrequency: {
+        type: Number,
+        label: 'Repay Frequency',
+        defaultValue: 0,
+        autoform: {
+            type: "select2",
+            options: function () {
+                let repayFrequency = [{label: "All", value: 0}];
+                let i = 1;
+                for (i; i < 100; i++) {
+                    repayFrequency.push({label: i.toString(), value: i})
+                }
+                return repayFrequency;
+            }
+        }
     }
 });

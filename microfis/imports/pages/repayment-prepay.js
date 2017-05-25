@@ -25,6 +25,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Method
 import {checkRepayment} from '../../common/methods/check-repayment';
+import {checkRepaymentRealTime} from '../../common/methods/check-repayment';
 
 // API Lib
 import {MakeRepayment} from '../../common/libs/make-repayment.js';
@@ -87,12 +88,12 @@ formTmpl.onCreated(function () {
             if (repaidDate) {
 
                 /*if (isBlock == false) {
-                    $.blockUI({
-                        onBlock: function () {
-                            isBlock = true;
-                        }
-                    });
-                }*/
+                 $.blockUI({
+                 onBlock: function () {
+                 isBlock = true;
+                 }
+                 });
+                 }*/
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({
@@ -104,9 +105,9 @@ formTmpl.onCreated(function () {
                     });
                 }
 
-
+                debugger;
                 // Call check repayment from method
-                checkRepayment.callPromise({
+                checkRepaymentRealTime.callPromise({
                     loanAccId: loanAccDoc._id,
                     checkDate: repaidDate
                 }).then(function (result) {
@@ -176,15 +177,23 @@ formTmpl.helpers({
         return stateRepayment.get('checkRepayment');
     },
     defaultValue(){
+        debugger;
         // let totalDue = Session.get('maxAmountPaid'),
         let totalDue = 0,
             totalPenalty = 0,
             checkRepayment = stateRepayment.get('checkRepayment');
 
         if (checkRepayment && checkRepayment.scheduleNext[0]) {
-            totalDue = checkRepayment.scheduleNext[0].totalDue;
-        }
 
+            if (checkRepayment.scheduleNext[0].repaymentDocRealTime && checkRepayment.scheduleNext[0].repaymentDocRealTime.detail.length > 0) {
+                checkRepayment.scheduleNext[0].repaymentDocRealTime.detail.forEach(function (obj) {
+                    totalDue = obj.totalPrincipalInterestBal;
+
+                })
+            } else {
+                totalDue = checkRepayment.scheduleNext[0].totalDue;
+            }
+        }
         return {totalDue, totalPenalty};
     },
     jsonViewData(data){
@@ -296,7 +305,7 @@ let hooksObject = {
     onSuccess (formType, result) {
         alertify.repayment().close();
         displaySuccess();
-        Session.set("resetQuickPayment",true);
+        Session.set("resetQuickPayment", true);
 
     },
     onError (formType, error) {

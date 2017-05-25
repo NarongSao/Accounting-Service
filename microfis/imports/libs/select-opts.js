@@ -417,7 +417,7 @@ export const SelectOptsReport = {
         list.push({label: "(Select All)", value: "All"});
         ProductStatus.find()
             .forEach(function (obj) {
-                list.push({label: obj.name, value: obj._id});
+                list.push({label: obj.name + " " + checkProductStatus(obj.type), value: obj._id});
             });
 
         return list;
@@ -435,3 +435,12 @@ export const SelectOptsReport = {
     }
 
 };
+
+
+function checkProductStatus(val) {
+    if (val == "Over One Year") {
+        return ">1year"
+    }
+    return "<1year";
+
+}

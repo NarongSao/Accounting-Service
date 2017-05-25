@@ -115,6 +115,11 @@ RepaymentSchedule.schema = new SimpleSchema({
         optional: true,
         blackbox: true
     },
+    repaymentDocRealTime: {
+        type: Object,
+        optional: true,
+        blackbox: true
+    },
     isPay: {
         type: Boolean,
         defaultValue: false

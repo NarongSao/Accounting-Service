@@ -107,16 +107,30 @@ EndOfProcess.after.insert(function (userId, doc) {
                                     o.repaymentId = savingTransaction.paymentId;
                                     o.endId = doc._id;
 
+
+                                    let prepaidDoc = RepaymentSchedule.findOne({_id: o.scheduleId});
+
+                                    if (prepaidDoc.repaymentDocRealTime && prepaidDoc.repaymentDocRealTime.detail.length > 0) {
+                                        prepaidDoc.repaymentDocRealTime.detail.forEach(function (obj) {
+                                            obj.endId = doc._id;
+                                            obj.numOfDayLate = 0;
+                                            obj.repaidDate = tDate;
+                                        })
+                                    }
+
+
+                                    updatePay["repaymentDoc"] = prepaidDoc.repaymentDocRealTime;
+
                                     RepaymentSchedule.update({_id: o.scheduleId}, {
-                                        $inc: {
-                                            'repaymentDoc.totalPrincipalPaid': o.principalPaid,
-                                            'repaymentDoc.totalInterestPaid': o.interestPaid,
-                                            'repaymentDoc.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
-                                            'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
-                                            'repaymentDoc.totalInterestWaived': o.interestWaived,
-                                            'repaymentDoc.totalFeeOnPaymentWaived': o.feeOnPaymentWaived
-                                        },
-                                        $push: {'repaymentDoc.detail': o},
+                                        /*$inc: {
+                                         'repaymentDoc.totalPrincipalPaid': o.principalPaid,
+                                         'repaymentDoc.totalInterestPaid': o.interestPaid,
+                                         'repaymentDoc.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
+                                         'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
+                                         'repaymentDoc.totalInterestWaived': o.interestWaived,
+                                         'repaymentDoc.totalFeeOnPaymentWaived': o.feeOnPaymentWaived
+                                         },*/
+                                        // $push: {'repaymentDoc.detail': o},
                                         $set: updatePay
                                     });
 

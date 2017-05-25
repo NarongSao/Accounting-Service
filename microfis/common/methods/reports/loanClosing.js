@@ -22,6 +22,8 @@ import {Fund} from '../../../common/collections/fund.js';
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepayment} from '../check-repayment.js';
 
+import LocationClass from "../../../imports/libs/getLocation";
+
 export const loanClosingReport = new ValidatedMethod({
     name: 'microfis.loanClosingReport',
     mixins: [CallPromiseMixin],
@@ -67,6 +69,7 @@ export const loanClosingReport = new ValidatedMethod({
             header.fundId = "All";
             header.classifyId = "All";
             header.paymentMethod = "All";
+            header.repayFrequency = "All";
 
 
             let baseCurrency = Setting.findOne().baseCurrency;
@@ -84,16 +87,17 @@ export const loanClosingReport = new ValidatedMethod({
                                     <th>Type</th>
                                     <th>Disb Date</th>
                                     <th>Mat Date</th>
+                                    <th>Address</th>
                                     
                                     <th>Loan Amount</th>
                                     <th>Project Interest</th>                                   
                                     <th>Fin Date</th>                                   
                                     <th>Sum Loss Interest</th>                                   
-                                    <th>Sum Loss FeeOnPayment</th>                                   
+                                    <th>Sum Loss Operation Fee</th>                                   
                                     <th>Waived</th>                                   
                                     <th>Sum Col Prin Last</th>                                   
                                     <th>Sum Col Int Last</th>                                   
-                                    <th>Sum Col FeeOnPayment Last</th>                                   
+                                    <th>Sum Col Operation Fee Last</th>                                   
                                     <th>Total Sum Col Last</th>
                                     <th>Sum Col Pen Last</th>
                                    
@@ -215,6 +219,11 @@ export const loanClosingReport = new ValidatedMethod({
                 });
 
                 header.classifyId = classifyList;
+            }
+
+            if (params.repayFrequency > 0) {
+                selector.repaidFrequency = parseInt(params.repayFrequency);
+                header.repayFrequency = params.repayFrequency;
             }
 
             selector.disbursementDate = {
@@ -431,6 +440,9 @@ export const loanClosingReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
+                                
+                                <td> ${LocationClass.getLocationByVillage(loanAccDoc.locationId)}</td>
+
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
                                 
@@ -574,7 +586,7 @@ export const loanClosingReport = new ValidatedMethod({
 
 
             content += `<tr>
-                            <td colspan="12" align="right">Subtotal-KHR</td>
+                            <td colspan="13" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingKHR)}</td>
@@ -586,7 +598,7 @@ export const loanClosingReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-USD</td>
+                            <td colspan="13" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingUSD)}</td>
@@ -598,7 +610,7 @@ export const loanClosingReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Subtotal-THB</td>
+                            <td colspan="13" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingTHB)}</td>
@@ -610,7 +622,7 @@ export const loanClosingReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="12" align="right">Total-${baseCurrency}</td>
+                            <td colspan="13" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalSumLossFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalWaivedForClosingBase)}</td>

@@ -67,6 +67,7 @@ export const loanOutstandingReport = new ValidatedMethod({
             header.classifyId = "All";
             header.paymentMethod = "All";
 
+            header.repayFrequency = "All";
 
             /****** Content *****/
 
@@ -217,6 +218,12 @@ export const loanOutstandingReport = new ValidatedMethod({
 
                 header.classifyId = classifyList;
             }
+
+            if (params.repayFrequency > 0) {
+                selector.repaidFrequency = parseInt(params.repayFrequency);
+                header.repayFrequency = params.repayFrequency;
+            }
+
 
 
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();

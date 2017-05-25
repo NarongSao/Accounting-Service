@@ -35,6 +35,7 @@
                             <div class="col-md-4">
                                 {{> afQuickField name="fundId"}}
                                 {{> afQuickField name="classifyId"}}
+                                {{> afQuickField name="repayFrequency"}}
                                 {{> afQuickField name="exchangeId"}}
                             </div>
                         </div>
@@ -43,6 +44,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
+                    <!--<a href="#" id="exportToExcel">download</a>-->
                     {{> formFooterWithButtonReport}}
                 </div>
                 <!-- /.box-footer-->
@@ -148,9 +150,23 @@
 
                                 </div>
                                 <div style="width: 100%">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Exchange:</strong> {{exchangeData}}</li>
-                                    </ul>
+                                    <div style="width: 60%;float: right">
+                                        <div style="width: 50%; float: left">
+                                            <ul class="list-unstyled">
+                                                <li><strong>Repay Frequency:</strong> {{repayFrequency}}</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="width: 50%; float: right">
+
+                                        </div>
+                                    </div>
+                                    <div style="width: 40%; float: left">
+                                        <ul class="list-unstyled">
+                                            <li><strong>Exchange:</strong> {{exchangeData}}</li>
+                                        </ul>
+                                    </div>
+
                                 </div>
 
                             {{/with}}
@@ -159,6 +175,7 @@
                             {{{content}}}
 
                         {{/with}}
+                        {{> ReportSignFooter}}
 
                     {{else}}
                         <div class="text-center">

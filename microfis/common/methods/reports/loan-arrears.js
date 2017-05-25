@@ -66,7 +66,7 @@ export const loanArrearsReport = new ValidatedMethod({
             header.fundId = "All";
             header.classifyId = "All";
             header.paymentMethod = "All";
-
+            header.repayFrequency = "All";
 
             /****** Content *****/
 
@@ -87,18 +87,18 @@ export const loanArrearsReport = new ValidatedMethod({
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>
-                                    <th>Pro FeeOnPayment</th>
+                                    <th>Pro Operation Fee</th>
                                                                 <th>Arrears</th>        
                                     <th>Classify</th>
                                     <th>Staff</th>
                                     <th>Location</th>
                                                                 <th>Arrears Prin</th>                                            	
                                     	                        <th>Arrears Int</th>        
-                                    	                        <th>Arrears FeeOnPayment</th>        
+                                    	                        <th>Arrears Operation Fee</th>        
                                     	                        <th>Total Arrears</th>
                                     <th>Loan Out Prin</th>
                                     <th>Loan Out Int</th>
-                                    <th>Loan Out FeeOnPayment</th>
+                                    <th>Loan Out Operation Fee</th>
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;
@@ -218,6 +218,12 @@ export const loanArrearsReport = new ValidatedMethod({
                 });
 
                 header.classifyId = classifyList;
+            }
+
+
+            if (params.repayFrequency > 0) {
+                selector.repaidFrequency = parseInt(params.repayFrequency);
+                header.repayFrequency = params.repayFrequency;
             }
 
 

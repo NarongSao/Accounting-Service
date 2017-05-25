@@ -73,24 +73,24 @@ reportTpl.onCreated(function () {
             Meteor.call('acc_journalReport', params, function (err, result) {
 
                 if (result) {
-                    let arrResult=[];
-                    let contentDocs=result.content;
+                    let arrResult = [];
+                    let contentDocs = result.content;
                     contentDocs.forEach(function (contentDoc) {
-                        contentDoc.firstTransaction=[];
-                        contentDoc.secondTransaction=[];
-                        let transactions=contentDoc.transaction;
-			if (data.transactionAsset != undefined) {
-                        for(let i=0;i<transactions.length;i++ ){
-                            if(i==0){
-                                contentDoc.firstTransaction.push(transactions[i]);
-                            }else{
-                                contentDoc.secondTransaction.push(transactions[i]);
+                        contentDoc.firstTransaction = [];
+                        contentDoc.secondTransaction = [];
+                        let transactions = contentDoc.transaction;
+                        if (transactions != undefined) {
+                            for (let i = 0; i < transactions.length; i++) {
+                                if (i == 0) {
+                                    contentDoc.firstTransaction.push(transactions[i]);
+                                } else {
+                                    contentDoc.secondTransaction.push(transactions[i]);
+                                }
                             }
+                            arrResult.push(contentDoc);
                         }
-                        arrResult.push(contentDoc);
-			}
                     });
-                    result.content=arrResult;
+                    result.content = arrResult;
 
                     rptDataState.set(result);
                 } else {
@@ -144,11 +144,9 @@ reportTpl.events({
     'click .btn-print'(event, instance){
 
 
-
         $('#print-data').printThis();
     }
 });
-
 
 
 reportTpl.onDestroyed(function () {
@@ -317,26 +315,26 @@ generateTpl.helpers({
         Fetcher.setDefault('data', false);
         Fetcher.retrieve('data', 'acc_journalReport', q);
 
-        let doc= Fetcher.get('data');
+        let doc = Fetcher.get('data');
 
-        if(doc.content){
-            let contentDocs=doc.content;
-            let arrResult=[];
+        if (doc.content) {
+            let contentDocs = doc.content;
+            let arrResult = [];
             contentDocs.forEach(function (contentDoc) {
-                contentDoc.firstTransaction=[];
-                contentDoc.secondTransaction=[];
-                let transactions=contentDoc.transaction;
+                contentDoc.firstTransaction = [];
+                contentDoc.secondTransaction = [];
+                let transactions = contentDoc.transaction;
 
-                for(let i=0;i<transactions.length;i++ ){
-                    if(i==0){
+                for (let i = 0; i < transactions.length; i++) {
+                    if (i == 0) {
                         contentDoc.firstTransaction.push(transactions[i]);
-                    }else{
+                    } else {
                         contentDoc.secondTransaction.push(transactions[i]);
                     }
                 }
                 arrResult.push(contentDoc);
             });
-            doc.content=arrResult;
+            doc.content = arrResult;
         }
 
         return doc;

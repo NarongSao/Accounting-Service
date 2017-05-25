@@ -63,14 +63,15 @@ export const loanRepaymentReport = new ValidatedMethod({
             header.currencyId = "All";
             header.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
 
-            header.date = moment(params.date).format("DD/MM/YYYY");
+            header.date = moment(fDate).format("DD/MM/YYYY") + " - " + moment(tDate).format("DD/MM/YYYY");
             header.productId = "All";
             header.locationId = "All";
 
             header.fundId = "All";
             header.classifyId = "All";
             header.paymentMethod = "All";
-
+            header.repayFrequency = "All";
+            header.status = "All";
 
             /****** Content *****/
 
@@ -92,12 +93,12 @@ export const loanRepaymentReport = new ValidatedMethod({
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>
-                                    <th>Pro FeeOnPayment</th>
+                                    <th>Pro Operation Fee</th>
                                         <th>Col Date</th>
                                         <th>Status</th>	
                                     <th>Col Prin</th>
                                     <th>Col Int</th>
-                                    <th>Col FeeOnPayment</th>
+                                    <th>Col Operation Fee</th>
                                     <th>Total Col</th>
                                     <th>Col Pen</th>
                               </tr>
@@ -220,6 +221,10 @@ export const loanRepaymentReport = new ValidatedMethod({
                 header.classifyId = classifyList;
             }
 
+            if (params.repayFrequency > 0) {
+                selector.repaidFrequency = parseInt(params.repayFrequency);
+                header.repayFrequency = params.repayFrequency;
+            }
 
             // let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
             /*selector.disbursementDate = {$lte: dateParam};
@@ -228,6 +233,14 @@ export const loanRepaymentReport = new ValidatedMethod({
              {writeOffDate: {$exists: true, $gt: dateParam}},
              {restructureDate: {$exists: true, $gt: dateParam}}
              ];*/
+
+            let selectorRepayment = {};
+            if (params.status !== "All") {
+                selectorRepayment.$and = [{type: params.status}, {type: {$ne: "Fee"}}];
+                header.status = params.status;
+            } else {
+                selectorRepayment.type = {$ne: "Fee"};
+            }
 
 
             data.header = header;
@@ -347,7 +360,7 @@ export const loanRepaymentReport = new ValidatedMethod({
             let totalColPrinIntBase = 0;
             let totalColPenBase = 0;
 
-            let selectorRepayment = {};
+
             selectorRepayment.repaidDate = {
                 $lte: tDate,
                 $gte: fDate
@@ -357,7 +370,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                 loanDoc.forEach(function (loanAccDoc) {
 
                     selectorRepayment.loanAccId = loanAccDoc._id;
-                    selectorRepayment.type = {$ne: "Fee"};
 
                     let productStatusList;
 

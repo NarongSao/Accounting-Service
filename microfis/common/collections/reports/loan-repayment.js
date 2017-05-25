@@ -126,21 +126,60 @@ export const LoanRepaymentSchema = new SimpleSchema({
         }
 
     },
-    coType:{
+    coType: {
         type: String,
         label: "CO Type",
         defaultValue: "All",
         autoform: {
             type: "select2",
             options: function () {
-                let coType=[];
+                let coType = [];
                 coType.push(
-                    {label: "Only",value: "Only"},
-                    {label: "Transfer",value: "Transfer"},
-                    {label: "All",value: "All"}
+                    {label: "Only", value: "Only"},
+                    {label: "Transfer", value: "Transfer"},
+                    {label: "All", value: "All"}
                 )
                 return coType;
             }
         }
+    },
+    repayFrequency: {
+        type: Number,
+        label: 'Repay Frequency',
+        defaultValue: 0,
+        autoform: {
+            type: "select2",
+            options: function () {
+                let repayFrequency = [{label: "All", value: 0}];
+                let i = 1;
+                for (i; i < 100; i++) {
+                    repayFrequency.push({label: i.toString(), value: i})
+                }
+                return repayFrequency;
+            }
+        }
+    },
+    status: {
+        type: String,
+        label: "Status",
+        defaultValue: "All",
+        autoform: {
+            type: "select2",
+            options: function () {
+                let status = [{label: "All", value: "All"}];
+
+                status.push({label: "General", value: "General"});
+                status.push({label: "Prepay", value: "Prepay"});
+                status.push({label: "Reschedule", value: "Reschedule"});
+                status.push({label: "Close", value: "Close"});
+                status.push({label: "Restructure", value: "Restructure"});
+                status.push({label: "Write Off", value: "Write Off"});
+                status.push({label: "Waive-interest", value: "Waive-interest"});
+
+                return status;
+            }
+        }
+
+
     }
 });

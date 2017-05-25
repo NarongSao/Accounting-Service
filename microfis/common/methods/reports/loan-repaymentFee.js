@@ -72,7 +72,6 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             header.repaidFrequency = "All";
             header.paymentMethod = "All";
 
-
             /****** Content *****/
 
 
@@ -92,7 +91,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>
-                                    <th>Pro FeeOnPayment</th>
+                                    <th>Pro Operation Fee</th>
                                     
                                     <th>Col Date</th>
                                     <th>Status</th>

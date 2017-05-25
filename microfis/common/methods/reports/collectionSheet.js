@@ -20,7 +20,7 @@ import {Fund} from '../../../common/collections/fund.js';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
-import  {checkRepayment} from '../check-repayment.js';
+import  {checkRepaymentRealTime} from '../check-repayment.js';
 
 export const collectionSheetReport = new ValidatedMethod({
     name: 'microfis.collectionSheetReport',
@@ -66,7 +66,7 @@ export const collectionSheetReport = new ValidatedMethod({
             header.fundId = "All";
             header.classifyId = "All";
             header.paymentMethod = "All";
-
+            header.repayFrequency = "All";
 
             /****** Content *****/
 
@@ -86,7 +86,9 @@ export const collectionSheetReport = new ValidatedMethod({
                                     <th>Type</th>
                                     <th>Mat Date</th>
                                     <th>Late Date</th>
-                                    <th>Due Date</th>                                   
+                                    <th>Due Date</th>  
+                                    <th>CO</th>  
+                                                                     
                                     <th>Sum Due Prin</th>
                                     <th>Sum Due Int</th>
                                     <th>Sum Due Fee</th>
@@ -207,6 +209,11 @@ export const collectionSheetReport = new ValidatedMethod({
                 });
                 header.classifyId = classifyList;
 
+            }
+
+            if (params.repayFrequency > 0) {
+                selector.repaidFrequency = parseInt(params.repayFrequency);
+                header.repayFrequency = params.repayFrequency;
             }
 
             data.header = header;
@@ -357,7 +364,7 @@ export const collectionSheetReport = new ValidatedMethod({
                     }
 
 
-                    let result = checkRepayment.run({
+                    let result = checkRepaymentRealTime.run({
                         loanAccId: loanAccDoc._id,
                         checkDate: checkDate,
                         opts: loanAccDoc
@@ -383,23 +390,24 @@ export const collectionSheetReport = new ValidatedMethod({
 
                     //check product status (Classify)
                     if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
-                        if (loanAccDoc.currencyId == "KHR") {
-                            totalDuePrinKHR += result.totalScheduleDue.principalDue;
-                            totalDueIntKHR += result.totalScheduleDue.interestDue;
-                            totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
+                        if (result.totalScheduleDue.dueDate.to != null) {
+                            if (loanAccDoc.currencyId == "KHR") {
+                                totalDuePrinKHR += result.totalScheduleDue.principalDue;
+                                totalDueIntKHR += result.totalScheduleDue.interestDue;
+                                totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
 
-                        } else if (loanAccDoc.currencyId == "USD") {
-                            totalDuePrinUSD += result.totalScheduleDue.principalDue;
-                            totalDueIntUSD += result.totalScheduleDue.interestDue;
-                            totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
-                        } else if (loanAccDoc.currencyId == "THB") {
-                            totalDuePrinTHB += result.totalScheduleDue.principalDue;
-                            totalDueIntTHB += result.totalScheduleDue.interestDue;
-                            totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
-                        }
+                            } else if (loanAccDoc.currencyId == "USD") {
+                                totalDuePrinUSD += result.totalScheduleDue.principalDue;
+                                totalDueIntUSD += result.totalScheduleDue.interestDue;
+                                totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
+                            } else if (loanAccDoc.currencyId == "THB") {
+                                totalDuePrinTHB += result.totalScheduleDue.principalDue;
+                                totalDueIntTHB += result.totalScheduleDue.interestDue;
+                                totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
+                            }
 
 
-                        content += `<tr>
+                            content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
@@ -409,10 +417,12 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
+                                
 
                                 <td> ${microfis_formatDate(result.totalScheduleDue.dueDate.from)}</td>
                                 <td> ${microfis_formatDate(result.totalScheduleDue.dueDate.to)}</td>
-                                
+                                <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
+
                                
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
@@ -422,7 +432,8 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;
 
-                        i++;
+                            i++;
+                        }
                     }
                 })
             }
@@ -479,7 +490,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
 
             content += `<tr>
-                            <td colspan="10" align="right">Subtotal-KHR</td>
+                            <td colspan="11" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
@@ -488,7 +499,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="10" align="right">Subtotal-USD</td>
+                            <td colspan="11" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
@@ -497,7 +508,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="10" align="right">Subtotal-THB</td>
+                            <td colspan="11" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
@@ -506,7 +517,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="10" align="right">Total-${baseCurrency}</td>
+                            <td colspan="11" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>

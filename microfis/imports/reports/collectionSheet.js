@@ -142,9 +142,12 @@ indexTmpl.events({
     },
     'click .btn-print'(event, instance){
 
-            $('#print-data').printThis();
+        $('#print-data').printThis();
 
 
+    },
+    'click #exportToExcel'(e, t){
+        fnExcelReport();
     }
 });
 
@@ -170,16 +173,16 @@ let hooksObject = {
         formDataState.set(result);
 
         /*$('[name="branchId"]').val(result.branchId);
-        $('[name="creditOfficerId"]').val(result.creditOfficerId);
-        $('[name="paymentMethod"]').val(result.paymentMethod);
-        $('[name="currencyId"]').val(result.currencyId);
-        $('[name="productId"]').val(result.productId);
-        $('[name="locationId"]').val(result.locationId);
-        $('[name="fundId"]').val(result.fundId);
-        $('[name="classifyId"]').val(result.classifyId);
+         $('[name="creditOfficerId"]').val(result.creditOfficerId);
+         $('[name="paymentMethod"]').val(result.paymentMethod);
+         $('[name="currencyId"]').val(result.currencyId);
+         $('[name="productId"]').val(result.productId);
+         $('[name="locationId"]').val(result.locationId);
+         $('[name="fundId"]').val(result.fundId);
+         $('[name="classifyId"]').val(result.classifyId);
 
-        // $('[name="date"]').val(result.date);
-        $('[name="exchangeId"]').val(result.exchangeId);*/
+         // $('[name="date"]').val(result.date);
+         $('[name="exchangeId"]').val(result.exchangeId);*/
     },
     onError: function (formType, error) {
         displayError(error.message);
@@ -187,3 +190,40 @@ let hooksObject = {
 };
 
 AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
+
+
+function fnExcelReport() {
+    debugger;
+
+    var tab_text = `<html xmlns:x="urn:schemas-microsoft-com:office:excel">`;
+    tab_text = tab_text + '<head><meta charset="utf-8" /><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+
+    // tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
+
+    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head>';
+
+    tab_text = tab_text + $('#print-data').html();
+    tab_text = tab_text + '</body></html>';
+
+    console.log(tab_text);
+
+    var data_type = 'data:application/vnd.ms-excel';
+
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+        if (window.navigator.msSaveBlob) {
+            var blob = new Blob([tab_text], {
+                type: "application/csv;charset=utf-8;"
+            });
+            navigator.msSaveBlob(blob, 'Test file.xls');
+        }
+    } else {
+        $('#exportToExcel').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+        $('#exportToExcel').attr('download', 'Test file.xls');
+    }
+
+
+}

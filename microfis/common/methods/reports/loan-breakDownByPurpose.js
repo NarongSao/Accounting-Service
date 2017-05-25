@@ -387,12 +387,15 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                     });
                     let productStatusList;
 
+                    let coefficient = 1;
+
                     if (loanAccDoc.paymentMethod == "D") {
                         if (loanAccDoc.term <= 365) {
                             productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
                         } else {
                             productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                         }
+                        coefficient = 30;
 
                     } else if (loanAccDoc.paymentMethod == "W") {
                         if (loanAccDoc.term <= 52) {
@@ -400,14 +403,18 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                         } else {
                             productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                         }
+                        coefficient = 4;
+
                     } else if (loanAccDoc.paymentMethod == "M") {
                         if (loanAccDoc.term <= 12) {
                             productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
                         } else {
                             productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                         }
+                        coefficient = 1;
                     } else {
                         productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        coefficient = 1 / 12;
                     }
 
 
@@ -431,12 +438,12 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                                 numberAgriculterIndividual++;
                                 balanceAgriculterIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
 
-                                totalRateIndividual += loanAccDoc.interestRate;
+                                totalRateIndividual += coefficient * loanAccDoc.interestRate;
 
                             } else if (loanAccDoc.accountType == "GL") {
                                 numberAgriculterGroup++;
                                 balanceAgriculterGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                                totalRateGroup += loanAccDoc.interestRate;
+                                totalRateGroup += coefficient * loanAccDoc.interestRate;
                             }
 
                         } else if (loanAccDoc.purpose == "Business") {
@@ -445,11 +452,11 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                                 numberBusinessIndividual++;
                                 balanceBusinessIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
 
-                                totalRateIndividual += loanAccDoc.interestRate;
+                                totalRateIndividual += coefficient * loanAccDoc.interestRate;
                             } else if (loanAccDoc.accountType == "GL") {
                                 numberBusinessGroup++;
                                 balanceBusinessGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                                totalRateGroup += loanAccDoc.interestRate;
+                                totalRateGroup += coefficient * loanAccDoc.interestRate;
                             }
 
 
@@ -459,11 +466,11 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                                 numberServiceIndividual++;
                                 balanceServiceIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
 
-                                totalRateIndividual += loanAccDoc.interestRate;
+                                totalRateIndividual += coefficient * loanAccDoc.interestRate;
                             } else if (loanAccDoc.accountType == "GL") {
                                 numberServiceGroup++;
                                 balanceServiceGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                                totalRateGroup += loanAccDoc.interestRate;
+                                totalRateGroup += coefficient * loanAccDoc.interestRate;
                             }
 
 
@@ -473,11 +480,11 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                                 numberConstructIndividual++;
                                 balanceConstructIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
 
-                                totalRateIndividual += loanAccDoc.interestRate;
+                                totalRateIndividual += coefficient * loanAccDoc.interestRate;
                             } else if (loanAccDoc.accountType == "GL") {
                                 numberConstructGroup++;
                                 balanceConstructGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                                totalRateGroup += loanAccDoc.interestRate;
+                                totalRateGroup += coefficient * loanAccDoc.interestRate;
                             }
 
                         } else if (loanAccDoc.purpose == "Family") {
@@ -486,25 +493,25 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                                 numberFamilyIndividual++;
                                 balanceFamilyIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
 
-                                totalRateIndividual += loanAccDoc.interestRate;
+                                totalRateIndividual += coefficient * loanAccDoc.interestRate;
                             } else if (loanAccDoc.accountType == "GL") {
                                 numberFamilyGroup++;
                                 balanceFamilyGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                                totalRateGroup += loanAccDoc.interestRate;
+                                totalRateGroup += coefficient * loanAccDoc.interestRate;
                             }
 
 
-                        } else if (loanAccDoc.purpose =="Other") {
+                        } else if (loanAccDoc.purpose == "Other") {
 
                             if (loanAccDoc.accountType == "IL") {
                                 numberOtherIndividual++;
                                 balanceOtherIndividual += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
 
-                                totalRateIndividual += loanAccDoc.interestRate;
+                                totalRateIndividual += coefficient * loanAccDoc.interestRate;
                             } else if (loanAccDoc.accountType == "GL") {
                                 numberOtherGroup++;
                                 balanceOtherGroup += Meteor.call('exchangeNBC', loanAccDoc.currencyId, "KHR", result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                                totalRateGroup += loanAccDoc.interestRate;
+                                totalRateGroup += coefficient * loanAccDoc.interestRate;
                             }
 
 
@@ -541,14 +548,13 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
             balanceTotalTotal = balanceTotalGroup + balanceTotalIndividual;
 
 
+            if (totalRateGroup > 0) {
 
-            if(totalRateGroup>0){
-
-                averageRateGroup = totalRateGroup/numberTotalGroup;
+                averageRateGroup = totalRateGroup / numberTotalGroup;
             }
 
-            if(totalRateIndividual>0){
-                averageRateIndividual=totalRateIndividual/numberTotalIndividual;
+            if (totalRateIndividual > 0) {
+                averageRateIndividual = totalRateIndividual / numberTotalIndividual;
             }
 
             let k = 0;
@@ -559,7 +565,6 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
             if (averageRateGroup > 0) {
                 k++;
             }
-
 
 
             if (averageRateIndividual + averageRateGroup > 0) {
