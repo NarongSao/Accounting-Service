@@ -72,7 +72,7 @@ Repayment.after.insert(function (userId, doc) {
 
 
                         let finProductStatus = function (obj) {
-                            return doc.detailDoc.totalScheduleDue.numOfDayLate >= obj.from && doc.detailDoc.totalScheduleDue.numOfDayLate <= obj.to;
+                            return (doc.detailDoc.totalScheduleDue.numOfDayLate < 0 ? 0 : doc.detailDoc.totalScheduleDue.numOfDayLate) >= obj.from && (doc.detailDoc.totalScheduleDue.numOfDayLate < 0 ? 0 : doc.detailDoc.totalScheduleDue.numOfDayLate) <= obj.to;
                         }
 
                         let proStatus = productStatusList.find(finProductStatus);

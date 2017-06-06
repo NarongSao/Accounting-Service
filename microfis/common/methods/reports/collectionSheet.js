@@ -383,7 +383,7 @@ export const collectionSheetReport = new ValidatedMethod({
                     }
 
                     let finProductStatus = function (obj) {
-                        return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
+                        return (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) >= obj.from && (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) <= obj.to;
                     }
                     let proStatus = productStatusList.find(finProductStatus);
 

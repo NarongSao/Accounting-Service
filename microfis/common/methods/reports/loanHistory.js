@@ -709,7 +709,7 @@ export const loanHistoryReport = new ValidatedMethod({
 
                             content += `<tr>
                                 <td>${i}</td>
-                                <td>${(obj.voucherId).substr(8, 6)}</td>
+                                <td>${(obj.voucherId).substr(8, obj.voucherId.length - 1)}</td>
                                 <td> ${obj.type}</td>
                                 <td> ${paymentStatusDoc.name}</td>
                                 <td> ${microfis_formatDate(obj.repaidDate)}</td>

@@ -319,6 +319,7 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
         totalAmountBal: new BigNumber(0)
     };
 
+
     for (let o of scheduleNext) {
         if (tmpAmountPaid > 0) {
             let currentDue = o.currentDue;

@@ -79,6 +79,11 @@
             </a>
 
             <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.clearPrepay'}}">
+                    <a href="{{pathFor 'microfis.clearPrepay'}}">
+                        <i class="fa fa-circle-o"></i> <span>Clear Prepay</span>
+                    </a>
+                </li>
                 <li class="{{isActiveRoute name='microfis.endOfProcess'}}">
                     <a href="{{pathFor 'microfis.endOfProcess'}}">
                         <i class="fa fa-circle-o"></i> <span>End Of Process</span>
@@ -147,6 +152,11 @@
                 <li class="{{isActiveRoute name='microfis.loanRepaymentFeeReport'}}">
                     <a href="{{pathFor 'microfis.loanRepaymentFeeReport'}}">
                         <i class="fa fa-circle-o"></i> <span>Loan Repayment Fee</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.clearPrepaymentReport'}}">
+                    <a href="{{pathFor 'microfis.clearPrepaymentReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Clear Prepayment</span>
                     </a>
                 </li>
                 <li class="{{isActiveRoute name='microfis.productActivityReport'}}">

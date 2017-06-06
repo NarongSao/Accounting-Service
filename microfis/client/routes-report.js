@@ -273,3 +273,20 @@ MicrofisRoutes.route('/loanNetworkInformation-report', {
         parent: 'microfis.home'
     }
 });
+
+// Clear Prepayment
+import '../imports/reports/clearPrepayment';
+MicrofisRoutes.route('/clearPrepayment-report', {
+    name: 'microfis.clearPrepaymentReport',
+    title: 'Clear Prepayment Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_clearPrepaymentReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Clear Prepayment Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

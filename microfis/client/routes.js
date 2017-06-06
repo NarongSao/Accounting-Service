@@ -451,3 +451,20 @@ MicrofisRoutes.route('/endOfProcess', {
     }
 });
 
+// Clear Prepay
+import '../imports/pages/clearPrepay';
+MicrofisRoutes.route('/clearPrepay', {
+    name: 'microfis.clearPrepay',
+    title: 'Clear Prepay',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_clearPrepay');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Clear Prepay',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+

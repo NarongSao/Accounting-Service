@@ -367,7 +367,7 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
                 content += `<tr>
                                 <td>${i}</td>
-                                <td>${loanAccDoc.voucherId}</td>
+                                <td>${loanAccDoc.voucherId.substr(8, loanAccDoc.voucherId.length - 1)}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
                                 <td> ${loanAccDoc.creditOfficerDoc.khName}</td>

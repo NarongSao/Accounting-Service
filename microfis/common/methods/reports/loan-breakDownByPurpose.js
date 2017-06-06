@@ -425,7 +425,7 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
 
 
                     let finProductStatus = function (obj) {
-                        return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
+                        return (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) >= obj.from && (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) <= obj.to;
                     }
                     let proStatus = productStatusList.find(finProductStatus);
 
@@ -639,9 +639,9 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
                         </tr>   
                         <tr>
                             <th>អត្រាការប្រាក់ដែលបានយក</th>
-                            <th colspan="2"  class="numberAlign">${averageRateGroup}%</th>
-                            <th colspan="2"  class="numberAlign">${averageRateIndividual}%</th>
-                            <th colspan="2"  class="numberAlign">${averageRate}%</th>
+                            <th colspan="2"  class="numberAlign">${microfis_formatNumber(averageRateGroup)}%</th>
+                            <th colspan="2"  class="numberAlign">${microfis_formatNumber(averageRateIndividual)}%</th>
+                            <th colspan="2"  class="numberAlign">${microfis_formatNumber(averageRate)}%</th>
                         </tr>
 
                     `;

@@ -17,19 +17,20 @@ import '../../../core/imports/layouts/report/sign-footer.html';
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/form-footer.js';
 
+
 // Method
-import {collectionSheetReport} from '../../common/methods/reports/collectionSheet.js';
+import {clearPrepaymentReport} from '../../common/methods/reports/clearPrepayment';
 import {SelectOptMethods} from '../../common/methods/select-opts.js';
 
 // Schema
-import {CollectionSheetSchema} from '../../common/collections/reports/collectionSheet.js';
+import {ClearPrepaymentSchema} from '../../common/collections/reports/clear-prepayment';
 
 // Page
-import './collectionSheet.html';
+import './clearPrepayment.html';
 
 // Declare template
-let indexTmpl = Template.Microfis_collectionSheetReport,
-    tmplPrintData = Template.Microfis_collectionSheetReportPrintData;
+let indexTmpl = Template.Microfis_clearPrepaymentReport,
+    tmplPrintData = Template.Microfis_clearPrepaymentReportPrintData;
 // Form state
 let formDataState = new ReactiveVar(null);
 
@@ -38,7 +39,7 @@ let formDataState = new ReactiveVar(null);
 let rptInitState = new ReactiveVar(false);
 let rptDataState = new ReactiveVar(null);
 indexTmpl.onCreated(function () {
-    createNewAlertify('Microfis_collectionSheetReport');
+    createNewAlertify('Microfis_clearPrepaymentReport');
     this.autorun(() => {
         // Check form data
         if (formDataState.get()) {
@@ -47,7 +48,7 @@ indexTmpl.onCreated(function () {
 
             let params = formDataState.get();
 
-            collectionSheetReport.callPromise({params: params})
+            clearPrepaymentReport.callPromise({params: params})
                 .then((result) => {
                     rptDataState.set(result);
                 }).catch((err) => {
@@ -63,6 +64,8 @@ indexTmpl.onCreated(function () {
         this.locationOpt.set(result);
     });
 
+
+
 });
 tmplPrintData.helpers({
     rptInit(){
@@ -75,7 +78,7 @@ tmplPrintData.helpers({
 
 indexTmpl.helpers({
     schema(){
-        return CollectionSheetSchema;
+        return ClearPrepaymentSchema;
     },
     khNameForPaymentMethod(paymentMethod){
         let khName;
@@ -132,30 +135,52 @@ indexTmpl.helpers({
             return instance.locationOpt.get();
         }
         return [];
+    },
+    optCustomField(){
+        let customFieldList = [];
+
+        customFieldList = [
+            {label: "No", value: "No"},
+            {label: "Voucher Code", value: "Voucher Code"},
+            {label: "LA Code", value: "LA Code"},
+            {label: "Client Name", value: "Client Name"},
+            {label: "Product Name", value: "Product Name"},
+            {label: "CRC", value: "CRC"},
+            {label: "Type", value: "Type"},
+            {label: "Dis Date", value: "Dis Date"},
+            {label: "Mat Date", value: "Mat Date"},
+            {label: "Loan Amount", value: "Loan Amount"},
+            {label: "Pro Int", value: "Pro Int"},
+            {label: "Pro Operation Fee", value: "Pro Operation Fee"},
+            {label: "Col Date", value: "Col Date"},
+            {label: "Clear Date", value: "Clear Date"},
+            {label: "Col Prin", value: "Col Prin"},
+            {label: "Col Int", value: "Col Int"},
+            {label: "Col Operation Fee", value: "Col Operation Fee"},
+            {label: "Total Col", value: "Total Col"},
+            {label: "Col Pen", value: "Col Pen"}
+        ]
+
+        return customFieldList;
     }
 });
 
 indexTmpl.events({
     'click .fullScreen'(event, instance){
-
-        alertify.Microfis_collectionSheetReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
+        alertify.Microfis_clearPrepaymentReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     },
     'click .btn-print'(event, instance){
 
         $('#print-data').printThis();
 
-
-    },
-    'click #exportToExcel'(e, t){
-        fnExcelReport();
     }
 });
 
 tmplPrintData.onDestroyed(function () {
 
+
 });
 indexTmpl.onDestroyed(function () {
-
     formDataState.set(null);
     rptDataState.set(null);
     rptInitState.set(false);
@@ -181,7 +206,7 @@ let hooksObject = {
          $('[name="fundId"]').val(result.fundId);
          $('[name="classifyId"]').val(result.classifyId);
 
-         // $('[name="date"]').val(result.date);
+         $('[name="date"]').val(moment(result.date).format("DD/MM/YYYY"));
          $('[name="exchangeId"]').val(result.exchangeId);*/
     },
     onError: function (formType, error) {
@@ -189,41 +214,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
-
-
-function fnExcelReport() {
-    debugger;
-
-    var tab_text = `<html xmlns:x="urn:schemas-microsoft-com:office:excel">`;
-    tab_text = tab_text + '<head><meta charset="utf-8" /><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
-
-    // tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
-
-    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
-    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head>';
-
-    tab_text = tab_text + $('#print-data').html();
-    tab_text = tab_text + '</body></html>';
-
-
-
-    var data_type = 'data:application/vnd.ms-excel';
-
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE ");
-
-    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
-        if (window.navigator.msSaveBlob) {
-            var blob = new Blob([tab_text], {
-                type: "application/csv;charset=utf-8;"
-            });
-            navigator.msSaveBlob(blob, 'Test file.xls');
-        }
-    } else {
-        $('#exportToExcel').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
-        $('#exportToExcel').attr('download', 'Test file.xls');
-    }
-
-
-}
+AutoForm.addHooks('Microfis_clearPrepaymentReport', hooksObject);

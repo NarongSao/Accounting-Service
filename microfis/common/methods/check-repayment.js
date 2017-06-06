@@ -104,7 +104,7 @@ export let checkRepayment = new ValidatedMethod({
 
 
                 // Check detail on repayment doc exist
-                checker.detailOnRepaymentDocExist = o.repaymentDoc && o.repaymentDoc.detail.length > 0;
+                checker.detailOnRepaymentDocExist = o.repaymentDoc && o.repaymentDoc.detail && o.repaymentDoc.detail.length > 0;
                 if (checker.detailOnRepaymentDocExist) {
 
                     let detailOnRepaymentDoc = [];
@@ -587,7 +587,8 @@ export let checkRepaymentRealTime = new ValidatedMethod({
 
 
                 // Check detail on repayment doc exist
-                checker.detailOnRepaymentDocExist = o.repaymentDocRealTime && o.repaymentDocRealTime.detail.length > 0;
+                checker.detailOnRepaymentDocExist = o.repaymentDocRealTime && o.repaymentDocRealTime.detail && o.repaymentDocRealTime.detail.length > 0;
+
 
                 if (checker.detailOnRepaymentDocExist) {
 

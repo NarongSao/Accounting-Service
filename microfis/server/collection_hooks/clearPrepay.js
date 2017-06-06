@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 // Collection
 import {MapClosing} from '../../../acc/imports/api/collections/mapCLosing';
 
-import {EndOfProcess} from '../../common/collections/endOfProcess.js';
+import {ClearPrepay} from '../../common/collections/clearPrepay';
 import {ProductStatus} from '../../common/collections/productStatus';
 import {Repayment} from '../../common/collections/repayment.js';
 import {LoanAcc} from '../../common/collections/loan-acc';
@@ -19,223 +19,297 @@ import {MakeRepayment} from '../../common/libs/make-repayment.js';
 import {Setting} from '../../../core/common/collections/setting';
 
 
-EndOfProcess.before.insert(function (userId, doc) {
+ClearPrepay.before.insert(function (userId, doc) {
+
     let date = moment(doc.closeDate, "DD/MM/YYYY").format("YYMM");
     let prefix = doc.branchId + "-" + date;
-    doc._id = idGenerator.genWithPrefix(EndOfProcess, prefix, 6);
+    doc._id = idGenerator.genWithPrefix(ClearPrepay, prefix, 6);
     doc.month = moment(doc.closeDate, "DD/MM/YYYY").format("MM");
     doc.day = moment(doc.closeDate, "DD/MM/YYYY").format("DD");
     doc.year = moment(doc.closeDate, "DD/MM/YYYY").format("YYYY");
 
 });
 
-EndOfProcess.after.insert(function (userId, doc) {
+ClearPrepay.after.insert(function (userId, doc) {
     Meteor.defer(function () {
         let tDate = moment(doc.closeDate).endOf('day').toDate();
 
+        let selectorPay = {};
+        selectorPay.dueDate = {$lte: tDate};
+        selectorPay.branchId = doc.branchId;
+        selectorPay.isPay = false;
+        selectorPay.installment = {$gt: 0};
+        /*selectorPay.isPrePay = true;*/
+
+        let detailPaid = [];
+
+        let loanListEnd = RepaymentSchedule.aggregate([
+            {$match: selectorPay},
+            {
+                $group: {
+                    _id: {
+                        "loanAccId": "$loanAccId",
+                        "savingAccId": "$savingAccId"
+                    }
+                }
+            }
+        ]);
+
         let settingDoc = Setting.findOne();
 
-        //    Adjust Principal Balance
-        //    Integrated to Account========================================================================================================================
-        if (settingDoc.integrate == true) {
-            let selector = {};
-            selector.disbursementDate = {$lte: moment(doc.closeDate).endOf("day").toDate()};
-            selector['$or'] = [{status: "Active"},
-                {closeDate: {$exists: true, $gt: moment(doc.closeDate).endOf("day").toDate()}},
-                {writeOffDate: {$exists: true, $gt: moment(doc.closeDate).endOf("day").toDate()}},
-                {restructureDate: {$exists: true, $gt: moment(doc.closeDate).endOf("day").toDate()}}
-            ];
+        loanListEnd.forEach(function (obj) {
+            let checkPayment = checkRepayment.run({loanAccId: obj._id.loanAccId, checkDate: doc.closeDate});
+            if (checkPayment) {
 
-            let loanAccPrincipalList = LoanAcc.find(selector).fetch();
+                let amountPaid = 0;
+                let savingTransaction = SavingTransaction.findOne({savingAccId: obj._id.savingAccId}, {
+                    sort: {
+                        _id: -1,
+                        transactionDate: -1
+                    }
+                });
 
-            let transactionUSD = [];
-            let transactionKHR = [];
-            let transactionTHB = [];
-
-            let totalUSD = 0;
-            let totalKHR = 0;
-            let totalTHB = 0;
-
-            loanAccPrincipalList.forEach(function (obj) {
-                if (obj) {
-                    let checkPyamentBefore = checkRepayment.run({
-                        loanAccId: obj._id,
-                        checkDate: moment(doc.closeDate).add(-1, "days").toDate()
-                    });
-
-
-                    let checkPayment = checkRepayment.run({loanAccId: obj._id, checkDate: doc.closeDate});
-
-
-                    let productStatusList;
-                    if (obj.paymentMethod == "D") {
-                        if (obj.term <= 365) {
-                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                if (savingTransaction) {
+                    if (math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2) > 0) {
+                        if (checkPayment.totalScheduleDue.totalPrincipalInterestDue < (savingTransaction.details.principalBal + savingTransaction.details.interestBal)) {
+                            amountPaid = math.round(checkPayment.totalScheduleDue.totalPrincipalInterestDue, 2);
                         } else {
-                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                            amountPaid = math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2);
                         }
 
-                    } else if (obj.paymentMethod == "W") {
-                        if (obj.term <= 52) {
-                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                        } else {
-                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+
+                        let makeRepayment = MakeRepayment.general({
+                            repaidDate: tDate,
+                            amountPaid: amountPaid,
+                            penaltyPaid: 0,
+                            scheduleDue: checkPayment.scheduleDue,
+                            totalScheduleDue: checkPayment.totalScheduleDue
+                        });
+
+
+                        //Make Payment To Update Scedule
+                        if (makeRepayment) {
+                            if (makeRepayment.schedulePaid) {
+                                let schedulePaid = makeRepayment.schedulePaid;
+                                _.forEach(schedulePaid, (o) => {
+
+                                    let isFullPay = RepaymentSchedule.findOne({_id: o.scheduleId}).isFullPay;
+
+                                    let updatePay = {};
+                                    if (o.totalPrincipalInterestBal == 0) {
+                                        updatePay.isPay = true;
+                                        updatePay.isFullPay = true;
+                                    } else {
+                                        updatePay.isPay = false;
+                                        updatePay.isFullPay = false;
+                                    }
+
+                                    o.repaymentId = savingTransaction.paymentId;
+                                    o.endId = doc._id;
+
+
+                                    let prepaidDoc = RepaymentSchedule.findOne({_id: o.scheduleId});
+
+                                    if (prepaidDoc.repaymentDocRealTime && prepaidDoc.repaymentDocRealTime.detail.length > 0) {
+                                        prepaidDoc.repaymentDocRealTime.detail.forEach(function (obj) {
+                                            obj.endId = doc._id;
+                                            obj.numOfDayLate = 0;
+                                            obj.repaidDate = tDate;
+                                        })
+                                    }
+
+
+                                    updatePay["repaymentDoc"] = prepaidDoc.repaymentDocRealTime;
+
+                                    RepaymentSchedule.update({_id: o.scheduleId}, {
+                                        /*$inc: {
+                                         'repaymentDoc.totalPrincipalPaid': o.principalPaid,
+                                         'repaymentDoc.totalInterestPaid': o.interestPaid,
+                                         'repaymentDoc.totalFeeOnPaymentPaid': o.feeOnPaymentPaid,
+                                         'repaymentDoc.totalPenaltyPaid': o.penaltyPaid,
+                                         'repaymentDoc.totalInterestWaived': o.interestWaived,
+                                         'repaymentDoc.totalFeeOnPaymentWaived': o.feeOnPaymentWaived
+                                         },*/
+                                        // $push: {'repaymentDoc.detail': o},
+                                        $set: updatePay
+                                    });
+
+
+                                    o.isFullPay = isFullPay;
+                                    detailPaid.push(o);
+
+                                    //    Integrated to Account========================================================================================================================
+
+                                    if (settingDoc.integrate == true) {
+                                        let loanAcc = LoanAcc.findOne({_id: obj._id.loanAccId});
+                                        let clientDoc = Client.findOne({_id: loanAcc.clientId});
+
+
+                                        let dataForAccount = {};
+
+                                        dataForAccount.journalDate = o.repaidDate;
+                                        dataForAccount.branchId = savingTransaction.branchId;
+                                        dataForAccount.voucherId = savingTransaction.voucherId.substring(8, 20);
+                                        dataForAccount.currencyId = savingTransaction.currencyId;
+                                        dataForAccount.memo = "Loan Repayment End Of Process " + clientDoc.khSurname + " " + clientDoc.khGivenName;
+                                        dataForAccount.refId = doc._id;
+                                        dataForAccount.refFrom = "Repayment End Of Process";
+                                        dataForAccount.total = o.totalPrincipalInterestPaid;
+
+                                        let transaction = [];
+
+
+                                        let acc_unEarnIncome = MapClosing.findOne({chartAccountCompare: "Unearn Income"});
+                                        let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
+                                        let acc_principal = checkPrincipal(loanAcc);
+                                        let acc_interest = checkInterest(loanAcc);
+
+
+                                        transaction.push({
+                                            account: acc_unEarnIncome.accountDoc.code + " | " + acc_unEarnIncome.accountDoc.name,
+                                            dr: o.totalPrincipalInterestPaid,
+                                            cr: 0,
+                                            drcr: o.totalPrincipalInterestPaid
+                                        }, {
+                                            account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
+                                            dr: 0,
+                                            cr: o.principalPaid,
+                                            drcr: -o.principalPaid
+                                        }, {
+                                            account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
+                                            dr: 0,
+                                            cr: o.interestPaid,
+                                            drcr: -o.interestPaid
+                                        }, {
+                                            account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
+                                            dr: 0,
+                                            cr: o.feeOnPaymentPaid,
+                                            drcr: -o.feeOnPaymentPaid
+                                        });
+
+                                        dataForAccount.transaction = transaction;
+                                        Meteor.call("api_journalInsert", dataForAccount, function (err, result) {
+                                            if (err) {
+                                                console.log(err.message);
+                                            }
+                                        })
+
+                                    }
+                                    //    =====================================================================================================
+
+                                });
+
+                            }
                         }
-                    } else if (obj.paymentMethod == "M") {
-                        if (obj.term <= 12) {
-                            productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
-                        } else {
-                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                        }
-                    } else {
-                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
-                    }
-
-                    let finProductStatus = function (obj) {
-                        return (checkPayment.totalScheduleDue.numOfDayLate < 0 ? 0 : checkPayment.totalScheduleDue.numOfDayLate) >= obj.from && (checkPayment.totalScheduleDue.numOfDayLate < 0 ? 0 : checkPayment.totalScheduleDue.numOfDayLate) <= obj.to;
-                    }
-
-                    let findProductStatusBefore = function (obj) {
-                        return (checkPyamentBefore.totalScheduleDue.numOfDayLate < 0 ? 0 : checkPyamentBefore.totalScheduleDue.numOfDayLate) >= obj.from && (checkPyamentBefore.totalScheduleDue.numOfDayLate < 0 ? 0 : checkPyamentBefore.totalScheduleDue.numOfDayLate) <= obj.to;
-                    }
-
-                    let proStatus = productStatusList.find(finProductStatus);
-                    let proStatusBefore = productStatusList.find(findProductStatusBefore);
-
-                    if (proStatus._id != proStatusBefore._id) {
-
-                        let acc_principalBefore = checkPrincipalAdjustBalance(obj, proStatusBefore._id);
-                        let acc_principal = checkPrincipalAdjustBalance(obj, proStatus._id);
 
 
-                        if (obj.currencyId == "USD") {
-                            totalUSD += checkPayment.balanceUnPaid;
-                            transactionUSD.push({
-                                account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
-                                dr: checkPayment.balanceUnPaid,
-                                cr: 0,
-                                drcr: checkPayment.balanceUnPaid
+                        //Withdrawal
+                        let savingWithdrawal = checkSavingTransaction.run({
+                            savingAccId: obj._id.savingAccId,
+                            checkDate: doc.closeDate
+                        })
 
-                            }, {
-                                account: acc_principalBefore.accountDoc.code + " | " + acc_principalBefore.accountDoc.name,
-                                dr: 0,
-                                cr: checkPayment.balanceUnPaid,
-                                drcr: -checkPayment.balanceUnPaid
+
+                        let savingLoanWithdrawal = {};
+                        savingLoanWithdrawal.paymentId = savingTransaction.paymentId;
+
+                        if (savingWithdrawal) {
+                            savingLoanWithdrawal.branchId = doc.branchId;
+                            savingLoanWithdrawal.savingAccId = obj._id.savingAccId;
+                            savingLoanWithdrawal.transactionDate = doc.closeDate;
+                            savingLoanWithdrawal.voucherId = savingTransaction.voucherId;
+                            savingLoanWithdrawal.memo = savingTransaction.note;
+                            savingLoanWithdrawal.currencyId = savingTransaction.currencyId;
+
+
+                            savingLoanWithdrawal.amount = amountPaid;
+
+                            // Cal principal, interest bal
+                            let amount = new BigNumber(savingLoanWithdrawal.amount);
+                            if (amount.lessThanOrEqualTo(savingWithdrawal.interestBal)) {
+                                savingWithdrawal.interestBal = new BigNumber(savingWithdrawal.interestBal).minus(amount).toNumber();
+                                savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).toNumber();
+                            } else {
+                                amount = amount.minus(savingWithdrawal.interestBal);
+                                savingWithdrawal.interestBal = new BigNumber(0).toNumber();
+                                savingWithdrawal.principalBal = new BigNumber(savingWithdrawal.principalOpening).minus(amount).toNumber();
+                            }
+
+                            // Remove last transaction
+                            delete savingWithdrawal.lastTransaction;
+
+                            savingLoanWithdrawal.transactionType = 'LR';
+                            savingLoanWithdrawal.details = savingWithdrawal;
+                            savingLoanWithdrawal.endId = doc._id;
+
+
+                            SavingTransaction.insert(savingLoanWithdrawal, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+
                             });
-                        } else if (obj.currencyId == "KHR") {
-                            totalKHR += checkPayment.balanceUnPaid;
-                            transactionKHR.push({
-                                account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
-                                dr: checkPayment.balanceUnPaid,
-                                cr: 0,
-                                drcr: checkPayment.balanceUnPaid
-
-                            }, {
-                                account: acc_principalBefore.accountDoc.code + " | " + acc_principalBefore.accountDoc.name,
-                                dr: 0,
-                                cr: checkPayment.balanceUnPaid,
-                                drcr: -checkPayment.balanceUnPaid
-                            });
-                        } else if (obj.currencyId == "THB") {
-                            totalTHB += checkPayment.balanceUnPaid;
-                            transactionTHB.push({
-                                account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
-                                dr: checkPayment.balanceUnPaid,
-                                cr: 0,
-                                drcr: checkPayment.balanceUnPaid
-
-                            }, {
-                                account: acc_principalBefore.accountDoc.code + " | " + acc_principalBefore.accountDoc.name,
-                                dr: 0,
-                                cr: checkPayment.balanceUnPaid,
-                                drcr: -checkPayment.balanceUnPaid
-                            });
                         }
-                    }
 
+                        Repayment.direct.update({_id: savingTransaction.paymentId}, {$set: {endId: doc._id}}, function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+
+                    }
                 }
-            })
 
-            if (transactionUSD.length > 0) {
-
-                let dataForAccount = {};
-
-                dataForAccount.journalDate = doc.closeDate;
-                dataForAccount.branchId = doc.branchId;
-                dataForAccount.voucherId = "0";
-                dataForAccount.currencyId = "USD";
-                dataForAccount.memo = "Adjust Principal USD ";
-                dataForAccount.refId = doc._id;
-                dataForAccount.refFrom = "End Of Process Adjust";
-                dataForAccount.total = totalUSD;
-                dataForAccount.transaction = transactionUSD;
-
-                Meteor.call("api_journalInsert", dataForAccount, function (err, result) {
-                    if (err) {
-                        console.log(err.message);
-                    }
-                })
             }
 
-            if (transactionKHR.length > 0) {
 
-                let dataForAccount = {};
+        })
 
-                dataForAccount.journalDate = doc.closeDate;
-                dataForAccount.branchId = doc.branchId;
-                dataForAccount.voucherId = "0";
-                dataForAccount.currencyId = "KHR";
-                dataForAccount.memo = "Adjust Principal KHR ";
-                dataForAccount.refId = doc._id;
-                dataForAccount.refFrom = "End Of Process Adjust";
-                dataForAccount.total = totalKHR;
-                dataForAccount.transaction = transactionKHR;
-                Meteor.call("api_journalInsert", dataForAccount, function (err, result) {
-                    if (err) {
-                        console.log(err.message);
-                    }
-                })
+        ClearPrepay.direct.update({_id: doc._id}, {$set: {detailPaid: detailPaid}}, function (err) {
+            if (err) {
+                console.log(err);
             }
-
-            if (transactionTHB.length > 0) {
-
-                let dataForAccount = {};
-
-                dataForAccount.journalDate = doc.closeDate;
-                dataForAccount.branchId = doc.branchId;
-                dataForAccount.voucherId = "0";
-                dataForAccount.currencyId = "THB";
-                dataForAccount.memo = "Adjust Principal THB ";
-                dataForAccount.refId = doc._id;
-                dataForAccount.refFrom = "End Of Process Adjust";
-                dataForAccount.total = totalTHB;
-                dataForAccount.transaction = transactionTHB;
-                Meteor.call("api_journalInsert", dataForAccount, function (err, result) {
-                    if (err) {
-                        console.log(err.message);
-                    }
-                })
-            }
-
-        }
-        //    ========================================================================================================================
+        });
     })
 })
 
-EndOfProcess.after.remove(function (userId, doc) {
-
+ClearPrepay.after.remove(function (userId, doc) {
     Meteor.defer(function () {
+        if (doc.detailPaid) {
+            doc.detailPaid.forEach(function (o) {
+                RepaymentSchedule.update({_id: o.scheduleId}, {
+                    $inc: {
+                        'repaymentDoc.totalPrincipalPaid': -o.principalPaid,
+                        'repaymentDoc.totalInterestPaid': -o.interestPaid,
+                        'repaymentDoc.totalFeeOnPaymentPaid': -o.feeOnPaymentPaid,
+                        'repaymentDoc.totalPenaltyPaid': -o.penaltyPaid,
+                        'repaymentDoc.totalInterestWaived': -o.interestWaived,
+                        'repaymentDoc.totalFeeOnPaymentWaived': -o.feeOnPaymentWaived
+                    },
+                    $pull: {'repaymentDoc.detail': {endId: doc._id}},
+                    $set: {isPay: false, isFullPay: o.isFullPay}
+                });
 
+                Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}}, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            })
+        }
         //    Integrated to Account========================================================================================================================
         let settingDoc = Setting.findOne();
         if (settingDoc.integrate == true) {
-            Meteor.call("api_journalRemove", doc._id, "End Of Process Adjust", function (err, result) {
+            Meteor.call("api_journalRemove", doc._id, "Repayment End Of Process", function (err, result) {
                 if (err) {
                     console.log(err.message);
                 }
             })
+
         }
         //   ========================================================================================================================
+        SavingTransaction.remove({endId: doc._id})
+
     })
 })
 
@@ -427,8 +501,6 @@ let checkPrincipal = function (doc) {
 
     return acc_principal;
 }
-
-
 let checkInterest = function (doc) {
 
     let acc_interest = {}
@@ -616,7 +688,6 @@ let checkInterest = function (doc) {
 
     return acc_interest;
 }
-
 let checkPrincipalAdjustBalance = function (doc, loanType) {
 
     let acc_principal = {}

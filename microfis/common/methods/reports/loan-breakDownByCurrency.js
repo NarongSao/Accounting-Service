@@ -353,7 +353,7 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
 
 
                     let finProductStatus = function (obj) {
-                        return result.totalScheduleDue.numOfDayLate >= obj.from && result.totalScheduleDue.numOfDayLate <= obj.to;
+                        return (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) >= obj.from && (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) <= obj.to;
                     }
                     let proStatus = productStatusList.find(finProductStatus);
 
@@ -413,7 +413,7 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
                             <td class="numberAlign">${numberLoanRiel}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalRiel)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalRielInRiel)}</td>
-                            <td class="numberAlign">${averageRateRiel}%</td>
+                            <td class="numberAlign">${microfis_formatNumber(averageRateRiel)}%</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -421,7 +421,7 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
                             <td class="numberAlign">${numberLoanDollar}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDollar)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDollarInRiel)}</td>
-                            <td class="numberAlign">${averageRateDollar}%</td>
+                            <td class="numberAlign">${microfis_formatNumber(averageRateDollar)}%</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -429,7 +429,7 @@ export const loanBreakDownByCurrencyReport = new ValidatedMethod({
                             <td class="numberAlign">${numberLoanBaht}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalBaht)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalBahtInRiel)}</td>
-                            <td class="numberAlign">${averageRateBaht}%</td>
+                            <td class="numberAlign">${microfis_formatNumber(averageRateBaht)}%</td>
                             <td></td>
                         </tr>
                         <tr>
