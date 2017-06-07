@@ -303,8 +303,9 @@ export const loanRepaymentReport = new ValidatedMethod({
                     },
                     {
                         $sort: {
-                            'repaymentCollectionDoc.repaidDate': 1,
-                            'repaymentCollectionDoc.voucherId': 1
+                            'repaymentCollectionDoc.voucherId': 1,
+                            'repaymentCollectionDoc.repaidDate': 1
+
 
                         }
                     }
@@ -393,33 +394,34 @@ export const loanRepaymentReport = new ValidatedMethod({
                         if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
 
 
-                            principalPaid += repaidListDoc.repaymentDocRealTime.detail.principalPaid;
-                            interestPaid += repaidListDoc.repaymentDocRealTime.detail.interestPaid;
-                            feeOnPaymentPaid += repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                            penaltyPaid += repaidListDoc.repaymentDocRealTime.detail.penaltyPaid;
+
+                            principalPaid = repaidListDoc.repaymentDocRealTime.detail.principalPaid;
+                            interestPaid = repaidListDoc.repaymentDocRealTime.detail.interestPaid;
+                            feeOnPaymentPaid = repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
+                            penaltyPaid = repaidListDoc.repaymentDocRealTime.detail.penaltyPaid;
 
 
                             if (repaidListDoc.loanDoc.currencyId == "KHR") {
 
-                                totalColPrinKHR += repaidListDoc.repaymentDocRealTime.detail.principalPaid;
-                                totalColIntKHR += repaidListDoc.repaymentDocRealTime.detail.interestPaid;
-                                totalColFeeOnPaymentKHR += repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                                totalColPrinIntKHR += repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                                totalColPenKHR += repaidListDoc.repaymentDocRealTime.detail.penaltyPaid;
+                                totalColPrinKHR += principalPaid;
+                                totalColIntKHR += interestPaid;
+                                totalColFeeOnPaymentKHR += feeOnPaymentPaid;
+                                totalColPrinIntKHR += principalPaid + interestPaid + feeOnPaymentPaid;
+                                totalColPenKHR += penaltyPaid;
 
 
                             } else if (repaidListDoc.loanDoc.currencyId == "USD") {
-                                totalColPrinUSD += repaidListDoc.repaymentDocRealTime.detail.principalPaid;
-                                totalColIntUSD += repaidListDoc.repaymentDocRealTime.detail.interestPaid;
-                                totalColFeeOnPaymentUSD += repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                                totalColPrinIntUSD += repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                                totalColPenUSD += repaidListDoc.repaymentDocRealTime.detail.penaltyPaid;
+                                totalColPrinUSD += principalPaid;
+                                totalColIntUSD += interestPaid;
+                                totalColFeeOnPaymentUSD += feeOnPaymentPaid;
+                                totalColPrinIntUSD += principalPaid + interestPaid + feeOnPaymentPaid;
+                                totalColPenUSD += penaltyPaid;
                             } else if (repaidListDoc.loanDoc.currencyId == "THB") {
-                                totalColPrinTHB = repaidListDoc.repaymentDocRealTime.detail.principalPaid;
-                                totalColIntTHB = repaidListDoc.repaymentDocRealTime.detail.interestPaid;
-                                totalColFeeOnPaymentTHB = repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                                totalColPrinIntTHB = repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
-                                totalColPenTHB = repaidListDoc.repaymentDocRealTime.detail.penaltyPaid;
+                                totalColPrinTHB = principalPaid;
+                                totalColIntTHB = interestPaid;
+                                totalColFeeOnPaymentTHB = feeOnPaymentPaid;
+                                totalColPrinIntTHB = principalPaid + interestPaid + feeOnPaymentPaid;
+                                totalColPenTHB = penaltyPaid;
                             }
 
 
@@ -443,7 +445,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(principalPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(interestPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(feeOnPaymentPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(principalPaid + interestPaid + feeOnPaymentPaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(penaltyPaid)}</td>
                             </tr>`;
 

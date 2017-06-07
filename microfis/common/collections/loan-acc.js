@@ -253,7 +253,7 @@ LoanAcc.generalSchema = new SimpleSchema({
         defaultValue: 0,
         optional: true
     },
-    voucherCode: {
+    voucherId: {
         type: String,
         /*optional: true,*/
         defaultValue: ""

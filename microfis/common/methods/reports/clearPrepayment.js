@@ -301,8 +301,9 @@ export const clearPrepaymentReport = new ValidatedMethod({
                     {$unwind: {path: "$repaymentCollectionDoc", preserveNullAndEmptyArrays: true}},
                     {
                         $sort: {
-                            'endOfProcessDoc.closeDate': 1,
-                            'repaymentCollectionDoc.voucherId': 1
+                            'repaymentCollectionDoc.voucherId': 1,
+                            'endOfProcessDoc.closeDate': 1
+
 
                         }
                     }

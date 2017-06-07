@@ -295,7 +295,7 @@ MicrofisRoutes.route('/repayment/:clientId/:loanAccId/:savingAccId/', {
 import '../imports/pages/repaymentQuickForm';
 MicrofisRoutes.route('/repaymentQuickForm', {
     name: 'microfis.repaymentQuickForm',
-    title: 'Loan',
+    title: 'Repayment',
     action: function (params, queryParams) {
         Layout.main('Microfis_repaymentQuickForm');
     },

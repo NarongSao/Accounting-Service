@@ -28,6 +28,9 @@ LoanAcc.before.insert(function (userId, doc) {
     let productDoc = lookupProduct.call({_id: doc.productId}),
         penaltyClosingDoc = productDoc.penaltyClosingDoc;
 
+    var year = moment(doc.disbursementDate).format("YYYY");
+    doc.voucherId = doc.branchId + "-" + year + s.pad(doc.voucherId, 6, "0");
+
     if (penaltyClosingDoc.installmentType == "P") {
         doc.installmentAllowClosing = math.ceil((penaltyClosingDoc.installmentTermLessThan * doc.term) / 100);
     } else {
