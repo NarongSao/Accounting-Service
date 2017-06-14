@@ -172,9 +172,9 @@ export const LoanRepaymentSchema = new SimpleSchema({
                 status.push({label: "Prepay", value: "Prepay"});
                 status.push({label: "Reschedule", value: "Reschedule"});
                 status.push({label: "Close", value: "Close"});
-                status.push({label: "Restructure", value: "Restructure"});
-                status.push({label: "Write Off", value: "Write Off"});
-                status.push({label: "Waive-interest", value: "Waive-interest"});
+                //status.push({label: "Restructure", value: "Restructure"});
+                //status.push({label: "Write Off", value: "Write Off"});
+                //status.push({label: "Waive-interest", value: "Waive-interest"});
 
                 return status;
             }

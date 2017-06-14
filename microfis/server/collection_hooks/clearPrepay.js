@@ -57,8 +57,10 @@ ClearPrepay.after.insert(function (userId, doc) {
 
         let settingDoc = Setting.findOne();
 
+
         loanListEnd.forEach(function (obj) {
             let checkPayment = checkRepayment.run({loanAccId: obj._id.loanAccId, checkDate: doc.closeDate});
+
             if (checkPayment) {
 
                 let amountPaid = 0;
@@ -71,7 +73,9 @@ ClearPrepay.after.insert(function (userId, doc) {
 
                 if (savingTransaction) {
                     if (math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2) > 0) {
+
                         if (checkPayment.totalScheduleDue.totalPrincipalInterestDue < (savingTransaction.details.principalBal + savingTransaction.details.interestBal)) {
+
                             amountPaid = math.round(checkPayment.totalScheduleDue.totalPrincipalInterestDue, 2);
                         } else {
                             amountPaid = math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2);
@@ -92,6 +96,7 @@ ClearPrepay.after.insert(function (userId, doc) {
                             if (makeRepayment.schedulePaid) {
                                 let schedulePaid = makeRepayment.schedulePaid;
                                 _.forEach(schedulePaid, (o) => {
+
 
                                     let isFullPay = RepaymentSchedule.findOne({_id: o.scheduleId}).isFullPay;
 
@@ -251,7 +256,12 @@ ClearPrepay.after.insert(function (userId, doc) {
                             });
                         }
 
-                        Repayment.direct.update({_id: savingTransaction.paymentId}, {$set: {endId: doc._id}}, function (err) {
+                        Repayment.direct.update({_id: savingTransaction.paymentId}, {
+                            $set: {
+                                endId: doc._id,
+                                endDate: doc.closeDate
+                            }
+                        }, function (err) {
                             if (err) {
                                 console.log(err);
                             }
@@ -290,7 +300,7 @@ ClearPrepay.after.remove(function (userId, doc) {
                     $set: {isPay: false, isFullPay: o.isFullPay}
                 });
 
-                Repayment.direct.update({endId: doc._id}, {$set: {endId: "0"}}, function (err) {
+                Repayment.direct.update({endId: doc._id}, {$set: {endId: "0", endDate: ""}}, function (err) {
                     if (err) {
                         console.log(err);
                     }

@@ -31,7 +31,6 @@ Meteor.methods({
 
         let fee = 0;
         let data = Fee.find({_id: {$in: productDoc.feeOnPaymentId}}).fetch();
-
         if (data) {
             data.forEach(function (obj) {
                 if (obj.feeTypeOf == "Disbursement") {
@@ -46,6 +45,8 @@ Meteor.methods({
                 }
                 else if (obj.feeTypeOf == "Interest Due") {
                     fee += feeOnPayment(obj.calculateType, interest, obj.amount, currencyId, productDoc);
+                } else {
+                    fee += feeOnPayment(obj.calculateType, 0, obj.amount, currencyId, productDoc);
                 }
             })
         }

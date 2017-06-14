@@ -26,8 +26,8 @@ import {Repayment} from '../../../common/collections/repayment';
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepayment} from '../check-repayment.js';
 
-export const loanRepaymentReport = new ValidatedMethod({
-        name: 'microfis.loanRepaymentReport',
+export const loanRepaymentReport3 = new ValidatedMethod({
+        name: 'microfis.loanRepaymentReport3',
         mixins: [CallPromiseMixin],
         validate: new SimpleSchema({
             params: {type: Object, optional: true, blackbox: true}
@@ -102,7 +102,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                                     <th>Col Operation Fee</th>
                                     <th>Over Amount</th>
                                     <th>Total Col</th>
-                                    <th>Clear Prepaid</th>
                                     <th>Col Pen</th>
                               </tr>
                             </thead>
@@ -217,7 +216,18 @@ export const loanRepaymentReport = new ValidatedMethod({
                     header.repayFrequency = params.repayFrequency;
                 }
 
+
+                let selectorRepay = {};
+                if (params.status !== "All") {
+                    selectorRepay.$and = [{"repaymentCollectionDoc.type": params.status}, {"repaymentCollectionDoc.type": {$ne: "Fee"}}];
+                    header.status = params.status;
+                } else {
+                    selectorRepay["repaymentCollectionDoc.type"] = {$nin: ["Fee","Prepay"]};
+                }
+
                 let selectorRepayment = {};
+
+
                 if (params.branchId && params.branchId.includes("All") == false) {
                     selectorRepayment.branchId = {$in: params.branchId};
                     let branchList = Branch.find({_id: {$in: params.branchId}}, {
@@ -232,30 +242,76 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                 }
 
-                if (params.status !== "All") {
-                    selectorRepayment.type = {$eq: params.status, $ne: "Fee"};
-                    header.status = params.status;
-                } else {
-                    selectorRepayment.type = {$nin: ["Fee"]};
-                }
-
-                selectorRepayment.$or = [
-                    {
-                        repaidDate: {
-                            $gte: fDate,
-                            $lte: tDate
-                        }
-                    }, {
-                        endDate: {
-                            $gte: fDate,
-                            $lte: tDate
-                        }
-                    }];
+                // selectorRepayment['repaymentDoc.detail.endId'] = {$exists: true};
+                selectorRepayment['repaymentDocRealTime.detail.repaidDate'] = {$gte: fDate, $lte: tDate};
 
 
                 data.header = header;
 
                 //All Active Loan in check date
+
+
+                let repaidList = RepaymentSchedule.aggregate([
+                    {$unwind: "$repaymentDocRealTime.detail"},
+                    {
+                        $match: selectorRepayment
+                    },
+                    {
+                        $lookup: {
+                            from: "microfis_loanAcc",
+                            localField: "loanAccId",
+                            foreignField: "_id",
+                            as: "loanDoc"
+                        }
+                    }
+                    ,
+                    {$unwind: {path: "$loanDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $match: selector
+                    },
+                    {
+                        $lookup: {
+                            from: "microfis_client",
+                            localField: "loanDoc.clientId",
+                            foreignField: "_id",
+                            as: "clientDoc"
+                        }
+                    }
+                    ,
+                    {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $lookup: {
+                            from: "microfis_product",
+                            localField: "loanDoc.productId",
+                            foreignField: "_id",
+                            as: "productDoc"
+                        }
+                    }
+                    ,
+                    {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $lookup: {
+                            from: "microfis_repayment",
+                            localField: "repaymentDocRealTime.detail.repaymentId",
+                            foreignField: "_id",
+                            as: "repaymentCollectionDoc"
+                        }
+                    }
+                    ,
+                    {$unwind: {path: "$repaymentCollectionDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $match: selectorRepay
+                    },
+                    {
+                        $sort: {
+                            'repaymentCollectionDoc.voucherId': 1,
+                            'repaymentCollectionDoc.repaidDate': 1
+
+
+                        }
+                    }
+
+                ])
 
 
                 let i = 1;
@@ -270,7 +326,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                 let totalColPrinIntKHR = 0;
                 let totalColPenKHR = 0;
                 let totalOverAmountKHR = 0;
-                let totalClearPrepaidKHR = 0;
 
                 let totalColPrinUSD = 0;
                 let totalColIntUSD = 0;
@@ -278,7 +333,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                 let totalColPrinIntUSD = 0;
                 let totalColPenUSD = 0;
                 let totalOverAmountUSD = 0;
-                let totalClearPrepaidUSD = 0;
 
 
                 let totalColPrinTHB = 0;
@@ -287,7 +341,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                 let totalColPrinIntTHB = 0;
                 let totalColPenTHB = 0;
                 let totalOverAmountTHB = 0;
-                let totalClearPrepaidTHB = 0;
 
 
                 let totalColPrinBase = 0;
@@ -296,249 +349,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                 let totalColPrinIntBase = 0;
                 let totalColPenBase = 0;
                 let totalOverAmountBase = 0;
-                let totalClearPrepaidBase = 0;
 
-
-                let repaidList = Repayment.aggregate([
-                        {
-                            $match: selectorRepayment
-                        },
-
-                        {
-                            $lookup: {
-                                from: "microfis_repaymentSchedule",
-                                localField: "_id",
-                                foreignField: "repaymentDoc.detail.repaymentId",
-                                as: "scheduleDoc"
-                            }
-                        },
-                        {
-                            $unwind: {path: '$scheduleDoc', preserveNullAndEmptyArrays: true}
-                        },
-                        {
-
-                            $project: {
-                                scheduleDoc: {
-                                    $filter: {
-                                        input: '$scheduleDoc.repaymentDoc.detail',
-                                        as: 'payment',
-                                        cond: {
-                                            $eq: ["$$payment.repaymentId", "$_id"]
-                                        }
-                                    }
-                                },
-                                amountPaid: {
-                                    $cond: [
-                                        {
-                                            $and: [
-                                                {$gte: ["$repaidDate", fDate]},
-                                                {$lte: ["$repaidDate", tDate]}
-                                            ]
-                                        },
-                                        "$amountPaid",
-                                        0
-                                    ]
-                                },
-                                clearPrepaid: "$amountPaid",
-                                detailDoc: 1,
-                                branchId: 1,
-                                currencyId: 1,
-                                endId: 1,
-                                loanAccId: 1,
-                                penaltyPaid: 1,
-                                repaidDate: 1,
-                                savingBalance: 1,
-                                type: 1,
-                                voucherId: 1,
-                                waivedForClosing: 1
-                            }
-                        },
-                        {
-                            $unwind: {path: '$scheduleDoc', preserveNullAndEmptyArrays: true}
-                        },
-                        {
-                            $group: {
-                                _id: "$scheduleDoc.repaymentId",
-                                principalPaid: {
-                                    $sum: {
-                                        $cond: [
-                                            {
-                                                $and: [
-                                                    {$gte: ["$scheduleDoc.repaidDate", fDate]},
-                                                    {$lte: ["$scheduleDoc.repaidDate", tDate]}
-                                                ]
-                                            },
-                                            "$scheduleDoc.principalPaid",
-                                            0
-                                        ]
-                                    }
-                                },
-                                interestPaid: {
-                                    $sum: {
-                                        $cond: [
-                                            {
-                                                $and: [
-                                                    {$gte: ["$scheduleDoc.repaidDate", fDate]},
-                                                    {$lte: ["$scheduleDoc.repaidDate", tDate]}
-                                                ]
-                                            },
-                                            "$scheduleDoc.interestPaid",
-                                            0
-                                        ]
-                                    }
-
-                                },
-                                feeOnPaymentPaid: {
-                                    $sum: {
-                                        $cond: [
-                                            {
-                                                $and: [
-                                                    {$gte: ["$scheduleDoc.repaidDate", fDate]},
-                                                    {$lte: ["$scheduleDoc.repaidDate", tDate]}
-                                                ]
-                                            }
-                                            ,
-                                            "$scheduleDoc.feeOnPaymentPaid",
-                                            0
-                                        ]
-                                    }
-                                }
-                                ,
-                                penaltyPaid: {
-                                    $sum: {
-                                        $cond: [
-                                            {
-                                                $and: [
-                                                    {$gte: ["$scheduleDoc.repaidDate", fDate]},
-                                                    {$lte: ["$scheduleDoc.repaidDate", tDate]}
-                                                ]
-                                            },
-                                            "$scheduleDoc.penaltyPaid",
-                                            0
-                                        ]
-                                    }
-                                }
-                                ,
-                                amountPaid: {
-                                    $last: '$amountPaid'
-                                },
-                                clearPrepaid: {
-                                    $last: {
-                                        $cond: [
-                                            {
-                                                $and: [
-                                                    {$gte: ["$scheduleDoc.repaidDate", fDate]},
-                                                    {$lte: ["$scheduleDoc.repaidDate", tDate]},
-                                                    {
-                                                        $eq: ["$type", "Prepay"]
-                                                    }
-                                                ]
-                                            },
-                                            "$clearPrepaid",
-                                            0
-                                        ]
-                                    }
-                                }
-                                ,
-                                branchId: {
-                                    $last: "$branchId"
-                                }
-                                ,
-                                detailDoc: {
-                                    $last: "$detailDoc"
-                                }
-                                ,
-                                currencyId: {
-                                    $last: "$currencyId"
-                                }
-                                ,
-                                endId: {
-                                    $last: "$endId"
-                                }
-                                ,
-                                loanAccId: {
-                                    $last: "$loanAccId"
-                                }
-                                ,
-                                repaidDate: {
-                                    $last: "$repaidDate"
-                                }
-                                ,
-                                savingBalance: {
-                                    $last: "$savingBalance"
-                                }
-                                ,
-                                type: {
-                                    $last: "$type"
-                                }
-                                ,
-                                voucherId: {
-                                    $last: "$voucherId"
-                                }
-                                ,
-                                waivedForClosing: {
-                                    $last: "$waivedForClosing"
-                                }
-
-                            }
-                        },
-                        {
-                            $lookup: {
-                                from: "microfis_loanAcc",
-                                localField: "loanAccId",
-                                foreignField: "_id",
-                                as: "loanDoc"
-                            }
-                        }
-                        ,
-                        {
-                            $unwind: {
-                                path: "$loanDoc", preserveNullAndEmptyArrays: true
-                            }
-                        }
-                        ,
-                        {
-                            $match: selector
-                        }
-                        ,
-                        {
-                            $lookup: {
-                                from: "microfis_client",
-                                localField: "loanDoc.clientId",
-                                foreignField: "_id",
-                                as: "clientDoc"
-                            }
-                        }
-                        ,
-                        {
-                            $unwind: {
-                                path: "$clientDoc", preserveNullAndEmptyArrays: true
-                            }
-                        }
-                        ,
-                        {
-                            $lookup: {
-                                from: "microfis_product",
-                                localField: "loanDoc.productId",
-                                foreignField: "_id",
-                                as: "productDoc"
-                            }
-                        }
-                        ,
-                        {
-                            $unwind: {
-                                path: "$productDoc", preserveNullAndEmptyArrays: true
-                            }
-                        }
-                        ,
-                        {
-                            $sort: {
-                                voucherId: 1,
-                                repaidDate: 1
-                            }
-                        }
-                    ])
-                ;
 
                 if (repaidList.length > 0) {
                     repaidList.forEach(function (repaidListDoc) {
@@ -580,57 +391,57 @@ export const loanRepaymentReport = new ValidatedMethod({
 
 
                         let finProductStatus = function (obj) {
-                            return (repaidListDoc.detailDoc && repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate < 0 ? 0 : repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate) >= obj.from && (repaidListDoc.detailDoc && repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate < 0 ? 0 : repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate) <= obj.to;
+                            return (repaidListDoc.repaymentDocRealTime.detail.numOfDayLate < 0 ? 0 : repaidListDoc.repaymentDocRealTime.detail.numOfDayLate) >= obj.from && (repaidListDoc.repaymentDocRealTime.detail.numOfDayLate < 0 ? 0 : repaidListDoc.repaymentDocRealTime.detail.numOfDayLate) <= obj.to;
                         }
                         let proStatus = productStatusList.find(finProductStatus);
+
 
                         //check product status (Classify)
                         if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
 
-                            principalPaid = repaidListDoc.principalPaid;
-                            interestPaid = repaidListDoc.interestPaid;
-                            feeOnPaymentPaid = repaidListDoc.feeOnPaymentPaid;
-                            penaltyPaid = repaidListDoc.penaltyPaid;
-
-                            let overAmount;
-                            if (repaidListDoc.type == "Prepay") {
-                                overAmount = 0;
+                            if ((repaidListDoc.dueDate >= fDate && repaidListDoc.dueDate <= tDate && repaidListDoc.repaymentDocRealTime.detail.repaidDate <= repaidListDoc.dueDate) || (repaidListDoc.repaymentDocRealTime.detail.repaidDate >= fDate && repaidListDoc.repaymentDocRealTime.detail.repaidDate <= tDate && repaidListDoc.repaymentDocRealTime.detail.repaidDate >= repaidListDoc.dueDate)) {
+                                principalPaid = repaidListDoc.repaymentDocRealTime.detail.principalPaid;
+                                interestPaid = repaidListDoc.repaymentDocRealTime.detail.interestPaid;
+                                feeOnPaymentPaid = repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid;
+                                penaltyPaid = repaidListDoc.repaymentDocRealTime.detail.penaltyPaid;
                             } else {
-                                overAmount = repaidListDoc.amountPaid - (repaidListDoc.principalPaid + repaidListDoc.interestPaid + repaidListDoc.feeOnPaymentPaid);
+                                principalPaid = 0;
+                                interestPaid = 0;
+                                feeOnPaymentPaid = 0;
+                                penaltyPaid = 0;
                             }
+
 
                             if (repaidListDoc.loanDoc.currencyId == "KHR") {
 
                                 totalColPrinKHR += principalPaid;
                                 totalColIntKHR += interestPaid;
                                 totalColFeeOnPaymentKHR += feeOnPaymentPaid;
-                                totalColPrinIntKHR += repaidListDoc.amountPaid;
-                                totalOverAmountKHR += overAmount;
+                                totalColPrinIntKHR += repaidListDoc.repaymentCollectionDoc.amountPaid;
+                                totalOverAmountKHR += repaidListDoc.repaymentCollectionDoc.amountPaid - (repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid);
                                 totalColPenKHR += penaltyPaid;
-                                totalClearPrepaidKHR += repaidListDoc.clearPrepaid;
 
 
                             } else if (repaidListDoc.loanDoc.currencyId == "USD") {
                                 totalColPrinUSD += principalPaid;
                                 totalColIntUSD += interestPaid;
                                 totalColFeeOnPaymentUSD += feeOnPaymentPaid;
-                                totalColPrinIntUSD += repaidListDoc.amountPaid;
-                                totalOverAmountUSD += overAmount;
+                                totalColPrinIntUSD += repaidListDoc.repaymentCollectionDoc.amountPaid;
+                                totalOverAmountUSD += repaidListDoc.repaymentCollectionDoc.amountPaid - (repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid);
                                 totalColPenUSD += penaltyPaid;
-                                totalClearPrepaidUSD += repaidListDoc.clearPrepaid;
                             } else if (repaidListDoc.loanDoc.currencyId == "THB") {
                                 totalColPrinTHB = principalPaid;
                                 totalColIntTHB = interestPaid;
                                 totalColFeeOnPaymentTHB = feeOnPaymentPaid;
-                                totalColPrinIntTHB += repaidListDoc.amountPaid;
-                                totalOverAmountTHB += overAmount;
+                                totalColPrinIntTHB += repaidListDoc.repaymentCollectionDoc.amountPaid;
+                                totalOverAmountTHB += repaidListDoc.repaymentCollectionDoc.amountPaid - (repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid);
                                 totalColPenTHB = penaltyPaid;
-                                totalClearPrepaidTHB += repaidListDoc.clearPrepaid;
                             }
+
 
                             content += `<tr>
                                 <td>${i}</td>
-                                <td>${repaidListDoc.voucherId.substr(8, repaidListDoc.voucherId.length - 1)}</td>
+                                <td>${repaidListDoc.repaymentCollectionDoc.voucherId.substr(8, repaidListDoc.repaymentCollectionDoc.voucherId.length - 1)}</td>
                                 <td>${repaidListDoc.loanDoc._id}</td>
                                 <td> ${repaidListDoc.clientDoc.khSurname}  ${repaidListDoc.clientDoc.khGivenName} </td>
                                 <td> ${repaidListDoc.productDoc.name}</td>
@@ -643,14 +454,13 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectInterest)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectFeeOnPayment)}</td>
                               
-                                <td> ${microfis_formatDate(repaidListDoc.repaidDate)}</td>
-                                <td> ${repaidListDoc.type}</td>
+                                <td> ${microfis_formatDate(repaidListDoc.repaymentCollectionDoc.repaidDate)}</td>
+                                <td> ${repaidListDoc.repaymentCollectionDoc.type}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(principalPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(interestPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(feeOnPaymentPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(overAmount)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.amountPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.clearPrepaid)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.repaymentCollectionDoc.amountPaid - (repaidListDoc.repaymentDocRealTime.detail.principalPaid + repaidListDoc.repaymentDocRealTime.detail.interestPaid + repaidListDoc.repaymentDocRealTime.detail.feeOnPaymentPaid))}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.repaymentCollectionDoc.amountPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(penaltyPaid)}</td>
                             </tr>`;
 
@@ -660,7 +470,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                         }
                     })
                 }
-
 
                 totalColPrinBase = Meteor.call('microfis_exchange',
                         "KHR",
@@ -767,25 +576,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                         totalOverAmountTHB,
                         params.exchangeId
                     );
-
-                totalClearPrepaidBase = Meteor.call('microfis_exchange',
-                        "KHR",
-                        baseCurrency,
-                        totalClearPrepaidKHR,
-                        params.exchangeId
-                    )
-                    + Meteor.call('microfis_exchange',
-                        "USD",
-                        baseCurrency,
-                        totalClearPrepaidUSD,
-                        params.exchangeId
-                    )
-                    + Meteor.call('microfis_exchange',
-                        "THB",
-                        baseCurrency,
-                        totalClearPrepaidTHB,
-                        params.exchangeId
-                    );
                 content += `<tr>
                             <td colspan="14" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinKHR)}</td>
@@ -793,7 +583,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalOverAmountKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalClearPrepaidKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenKHR)}</td>
                         </tr>
                         <tr>
@@ -804,7 +593,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalOverAmountUSD)}</td>
 
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalClearPrepaidUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenUSD)}</td>
 
                         </tr>
@@ -816,7 +604,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalOverAmountTHB)}</td>
 
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalClearPrepaidTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenTHB)}</td>
 
                         </tr>
@@ -828,7 +615,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalOverAmountBase)}</td>
 
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalClearPrepaidBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPenBase)}</td>
 
                         </tr>

@@ -150,6 +150,14 @@ tmplPrintData.onDestroyed(function () {
 
 
 });
+tmplPrintData.onRendered(function () {
+    Meteor.setTimeout(function () {
+        $("table.sub-table").fixMe();
+    }, 1000)
+
+});
+
+
 indexTmpl.onDestroyed(function () {
     formDataState.set(null);
     rptDataState.set(null);
@@ -168,16 +176,16 @@ let hooksObject = {
         formDataState.set(result);
 
         /*$('[name="branchId"]').val(result.branchId);
-        $('[name="creditOfficerId"]').val(result.creditOfficerId);
-        $('[name="paymentMethod"]').val(result.paymentMethod);
-        $('[name="currencyId"]').val(result.currencyId);
-        $('[name="productId"]').val(result.productId);
-        $('[name="locationId"]').val(result.locationId);
-        $('[name="fundId"]').val(result.fundId);
-        $('[name="classifyId"]').val(result.classifyId);
+         $('[name="creditOfficerId"]').val(result.creditOfficerId);
+         $('[name="paymentMethod"]').val(result.paymentMethod);
+         $('[name="currencyId"]').val(result.currencyId);
+         $('[name="productId"]').val(result.productId);
+         $('[name="locationId"]').val(result.locationId);
+         $('[name="fundId"]').val(result.fundId);
+         $('[name="classifyId"]').val(result.classifyId);
 
-        $('[name="date"]').val(moment(result.date).format("DD/MM/YYYY"));
-        $('[name="exchangeId"]').val(result.exchangeId);*/
+         $('[name="date"]').val(moment(result.date).format("DD/MM/YYYY"));
+         $('[name="exchangeId"]').val(result.exchangeId);*/
     },
     onError: function (formType, error) {
         displayError(error.message);

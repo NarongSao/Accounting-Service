@@ -193,7 +193,6 @@ AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
 
 
 function fnExcelReport() {
-    debugger;
 
     var tab_text = `<html xmlns:x="urn:schemas-microsoft-com:office:excel">`;
     tab_text = tab_text + '<head><meta charset="utf-8" /><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';

@@ -7,7 +7,7 @@ import {Group} from '../../common/collections/group';
 import {GroupLoan} from '../../common/collections/groupLoan';
 
 Group.before.insert(function (userId, doc) {
-    let prefix = moment(doc.date).format("YYYY");
+    let prefix = doc.branchId + "-" + moment(doc.date).format("YYYY");
     doc._id = idGenerator2.genWithPrefix(Group, {
         prefix: prefix,
         length: 6

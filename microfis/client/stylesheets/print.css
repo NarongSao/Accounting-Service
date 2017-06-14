@@ -67,6 +67,7 @@
 }
 
 .sub-div {
+
     font-family: Arial, Verdana, Geneva, sans-serif;
     color: #000000;
     font-size: 14px;
@@ -102,6 +103,17 @@
 .horizontal-scroll {
     overflow-x: scroll;
 
+}
+
+.fixed {
+    top: 0;
+    position: fixed;
+    width: auto;
+    display: none;
+}
+
+.end {
+    margin-top: 800px;
 }
 
 

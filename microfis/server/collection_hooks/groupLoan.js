@@ -8,7 +8,7 @@ import {LoanAcc} from '../../common/collections/loan-acc';
 import {Group} from '../../common/collections/group';
 
 GroupLoan.before.insert(function (userId, doc) {
-    let prefix = moment(doc.date).format("YYYY");
+    let prefix = doc.branchId + "-" + moment(doc.date).format("YYYY");
 
     var year = moment(doc.date).format("YYYY");
     doc.code = doc.branchId + "-" + year + s.pad(doc.code, 6, "0");

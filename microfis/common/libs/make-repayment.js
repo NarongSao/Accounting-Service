@@ -363,7 +363,7 @@ MakeRepayment.prepay = function ({repaidDate, amountPaid, scheduleNext, opts}) {
                 principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
                 interestBal = new BigNumber(currentDue.interest).minus(interestPaid),
                 feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid),
-                totalPrincipalInterestBal = principalBal.plus(interestBal),
+                totalPrincipalInterestBal = principalBal.plus(interestBal.plus(feeOnPaymentBal)),
                 penaltyBal = 0,
                 totalAmountBal = totalPrincipalInterestBal;
 
@@ -595,7 +595,7 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
                 principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
                 interestBal = new BigNumber(currentDue.interest).minus(interestPaid).minus(interestWaived),
                 feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid).minus(feeOnPaymentWaived),
-                totalPrincipalInterestBal = principalBal.plus(interestBal),
+                totalPrincipalInterestBal = principalBal.plus(interestBal.plus(feeOnPaymentBal)),
                 penaltyBal = new BigNumber(currentDue.penalty).minus(penaltyPaid),
                 totalAmountBal = totalPrincipalInterestBal.plus(penaltyBal);
 

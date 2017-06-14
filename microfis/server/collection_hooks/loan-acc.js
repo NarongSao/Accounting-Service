@@ -60,7 +60,7 @@ LoanAcc.after.insert(function (userId, doc) {
 
         dataForAccount.journalDate = doc.disbursementDate;
         dataForAccount.branchId = doc.branchId;
-        dataForAccount.voucherId = doc.voucherId;
+        dataForAccount.voucherId = doc.voucherId.substring(8, 20);
         dataForAccount.currencyId = doc.currencyId;
         dataForAccount.memo = "Loan Disbursement " + clientDoc.khSurname + " " + clientDoc.khGivenName;
         dataForAccount.refId = doc._id;
@@ -138,7 +138,7 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
 
         dataForAccount.journalDate = doc.disbursementDate;
         dataForAccount.branchId = doc.branchId;
-        dataForAccount.voucherId = doc.voucherId;
+        dataForAccount.voucherId = doc.voucherId.substring(8, 20);
         dataForAccount.currencyId = doc.currencyId;
         dataForAccount.memo = "Loan Disbursement " + clientDoc.khSurname + " " + clientDoc.khGivenName;
         dataForAccount.refId = doc._id;

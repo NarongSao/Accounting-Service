@@ -28,7 +28,7 @@ Repayment.schema = new SimpleSchema({
                     maxDate: moment().toDate()
                 }
             }
-        },
+        }
     },
     type: {
         type: String,
@@ -36,19 +36,19 @@ Repayment.schema = new SimpleSchema({
         allowedValues: ['General', 'Prepay', 'Reschedule', 'Waive-interest', 'Close', 'Restructure', 'Write Off', "Fee"]
     },
     /*amountType: {
-        type: String,
-        label: 'Payment By',
-        autoform: {
-            type: "select-radio-inline",
-            defaultValue: 'CA',
-            options: function () {
-                return [
-                    {label: 'Cash', value: 'CA'},
-                    {label: 'Saving Acc', value: 'SA'}
-                ];
-            }
-        }
-    },*/
+     type: String,
+     label: 'Payment By',
+     autoform: {
+     type: "select-radio-inline",
+     defaultValue: 'CA',
+     options: function () {
+     return [
+     {label: 'Cash', value: 'CA'},
+     {label: 'Saving Acc', value: 'SA'}
+     ];
+     }
+     }
+     },*/
     amountPaid: {
         type: Number,
         label: 'Amount',
@@ -101,7 +101,7 @@ Repayment.schema = new SimpleSchema({
     waivedForClosing: {
         type: Number,
         decimal: true,
-        defaultValue:0,
+        defaultValue: 0,
         optional: true
     },
     totalPaid: {
@@ -146,6 +146,11 @@ Repayment.schema = new SimpleSchema({
         type: Number,
         decimal: true,
         defaultValue: 0
+    },
+    endDate: {
+        type: Date,
+        label: 'End date',
+        optional: true
     }
 });
 

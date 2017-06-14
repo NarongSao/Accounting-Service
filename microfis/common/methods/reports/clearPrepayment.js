@@ -280,7 +280,7 @@ export const clearPrepaymentReport = new ValidatedMethod({
 
                     {
                         $lookup: {
-                            from: "microfis_endOfProcess",
+                            from: "microfis_clearPrepay",
                             localField: "repaymentDoc.detail.endId",
                             foreignField: "_id",
                             as: "endOfProcessDoc"
@@ -296,9 +296,19 @@ export const clearPrepaymentReport = new ValidatedMethod({
                             foreignField: "_id",
                             as: "repaymentCollectionDoc"
                         }
+                    },
+                    {
+                        $match: {
+                            "repaymentCollectionDoc.type": "Prepay"
+                        }
                     }
                     ,
-                    {$unwind: {path: "$repaymentCollectionDoc", preserveNullAndEmptyArrays: true}},
+                    {
+                        $unwind: {
+                            path: "$repaymentCollectionDoc", preserveNullAndEmptyArrays: true
+                        }
+                    }
+                    ,
                     {
                         $sort: {
                             'repaymentCollectionDoc.voucherId': 1,
