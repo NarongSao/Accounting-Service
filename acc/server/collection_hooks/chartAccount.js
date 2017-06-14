@@ -65,10 +65,10 @@ ChartAccount.after.update(function (userId, doc, fieldNames, modifier, options) 
     Journal.direct.update({'transaction.accountDoc._id': doc._id}, {
         $set: {
             'transaction.$.accountDoc': doc,
-            'transaction.$.account': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            'transaction.$.account': doc.code + " | " + doc.name
         }
     }, {multi: true});
-    Journal.direct.update({'transactionAsset.account': Spacebars.SafeString(SpaceChar.space(oldData.level * 6) + oldData.code).string + " | " + oldData.name}, {$set: {'transactionAsset.$.account': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name}}, {multi: true});
+    Journal.direct.update({'transactionAsset.account': oldData.code + " | " + oldData.name}, {$set: {'transactionAsset.$.account': doc.code + " | " + doc.name}}, {multi: true});
     //Map Closing
     MapClosing.direct.update({'accountDoc._id': doc._id}, {
         $set: {
@@ -86,7 +86,7 @@ ChartAccount.after.update(function (userId, doc, fieldNames, modifier, options) 
     MapFixAsset.direct.update({'fixAssetDoc._id': doc._id}, {
         $set: {
             fixAssetDoc: doc,
-            fixAssetCon: Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            fixAssetCon: doc.code + " | " + doc.name
         }
     }, {multi: true});
 
@@ -100,7 +100,7 @@ ChartAccount.after.update(function (userId, doc, fieldNames, modifier, options) 
     MapUserAndAccount.direct.update({'transaction.accountDoc._id': doc._id}, {
         $set: {
             'transaction.$.accountDoc': doc,
-            'transaction.$.chartAccount': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            'transaction.$.chartAccount': doc.code + " | " + doc.name
         }
     }, {multi: true});
 
@@ -113,20 +113,20 @@ ChartAccount.after.update(function (userId, doc, fieldNames, modifier, options) 
     //FixAssetExpense
     FixAssetExpense.direct.update({'transactionExpense.account': oldData.code + " | " + oldData.name}, {
         $set: {
-            'transactionExpense.$.account': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            'transactionExpense.$.account': doc.code + " | " + doc.name
         }
     }, {multi: true});
 
     //FixAsset Dep
     FixAssetDep.direct.update({'transactionAsset.account': oldData.code + " | " + oldData.name}, {
         $set: {
-            'transactionAsset.$.account': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name,
+            'transactionAsset.$.account': doc.code + " | " + doc.name,
         }
     }, {multi: true});
     //DepExpList
-    DepExpList.direct.update({account: Spacebars.SafeString(SpaceChar.space(oldData.level * 6) + oldData.code).string + " | " + oldData.name}, {
+    DepExpList.direct.update({account: oldData.code + " | " + oldData.name}, {
         $set: {
-            account: Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            account: doc.code + " | " + doc.name
         }
     }, {multi: true});
     //CloseChartAccount
@@ -180,7 +180,7 @@ ChartAccount.after.update(function (userId, doc, fieldNames, modifier, options) 
     MapNBCIncomeKH.direct.update({'transaction.accountDoc._id': doc._id}, {
         $set: {
             'transaction.$.accountDoc': doc,
-            'transaction.$.account': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            'transaction.$.account': doc.code + " | " + doc.name
         }
     }, {multi: true});
 
@@ -188,7 +188,7 @@ ChartAccount.after.update(function (userId, doc, fieldNames, modifier, options) 
     MapNBCBalanceKH.direct.update({'transaction.accountDoc._id': doc._id}, {
         $set: {
             'transaction.$.accountDoc': doc,
-            'transaction.$.account': Spacebars.SafeString(SpaceChar.space(doc.level * 6) + doc.code).string + " | " + doc.name
+            'transaction.$.account': doc.code + " | " + doc.name
         }
     }, {multi: true});
 
