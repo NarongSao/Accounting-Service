@@ -43,7 +43,7 @@
     <div class="horizontal-scroll">
         <!--#print-data-->
         <div id="print-data">
-            <div class="sub-div display-on-print-div">
+            <div class="sub-div display-on-print-div-2">
                 {{#if rptInit}}
                     {{#if rptData}}
                         {{#with rptData}}
@@ -51,10 +51,10 @@
                             <!--Title-->
                             {{#with title}}
                                 <div class="rpt-title">
-                                    <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
-                                    <div class="rpt-title-2x">{{company.enName}}</div>
+                                    <div class="rpt-title-5x rpt-kh-muol">{{company.khName}}</div>
+                                    <div class="rpt-title-4x">{{company.enName}}</div>
                                     <!--<div>សាខា: {{branch.khName}}</div>-->
-                                    <div class="rpt-title-2x"><u>កាលវិភាគសងប្រាក់</u></div>
+                                    <div class="rpt-title-3x"><u>កាលវិភាគសងប្រាក់</u></div>
                                     <div>
                                         <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
                                         <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
@@ -66,59 +66,67 @@
                             {{#with header}}
                                 <div style="width: 100%">
                                     <div style="width: 35%; float: left">
-                                        <div><strong>លេខគណនីឥណទាន:</strong> {{_id}} ({{accountType}})</div>
-                                        <div>
-                                            <strong>ឈ្មោះអ្នកខ្ចី:</strong> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}
+                                        <div class="marigin-header"><strong>លេខគណនី:</strong> {{_id}} ({{accountType}})
                                         </div>
-                                        <div>
+                                        <div class="marigin-header">
+                                            <strong>ឈ្មោះអ្នកខ្ចី: </strong><b style="font-family: 'Khmer OS Muol'"> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</b>
+                                        </div>
+                                        <div class="marigin-header">
                                             <strong>ថ្ងៃផ្តល់ទុន:</strong> {{moFormat disbursementDate "DD/MM/YYYY"}}
                                         </div>
-                                        <div>
+                                        <div class="marigin-header">
                                             <strong>ចំនួនប្រាក់ខ្ចី:</strong> {{numFormat loanAmount
                                                                                           "0,0.00"}} {{currencyId}}
                                         </div>
-                                        <div><strong>ប្រភេទការសង:</strong> {{khNameForPaymentMethod paymentMethod}}
+                                        <div class="marigin-header">
+                                            <strong>ប្រភេទការសង:</strong> {{khNameForPaymentMethod paymentMethod}}
                                         </div>
-                                        <div>
+                                        <div class="marigin-header">
                                             <strong>សងការប្រាក់រៀងរាល់:</strong> {{repaidFrequency}} {{khNameForPaymentMethod
                                                 paymentMethod}}
                                             ម្តង
                                         </div>
-                                        <div><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង</div>
+                                        <div class="marigin-header"><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង</div>
                                     </div>
 
                                     <div style="width: 65%; float: right">
                                         <div style="width: 100%">
                                             <div style="width: 50%; float: left">
-                                                <div>
+                                                <div class="marigin-header">
                                                     <strong>សងប្រាក់ដើមរៀងរាល់:</strong> {{principalInstallment.frequency}}
                                                     វគ្គម្តង
                                                 </div>
-                                                <div>
+                                                <div class="marigin-header">
                                                     <strong>វិធីរំលស់ប្រាក់ដើម:</strong> {{principalInstallment.calculateType}}
                                                 </div>
-                                                <div>
+                                                <div class="marigin-header">
                                                     <strong>ចំនួនប្រាក់ដើមរំលស់:</strong>{{numFormat
                                                         principalInstallment.amount "0,0.00"}}
                                                     {{#if isPercentage}} % {{else}} {{currencyId}} {{/if}}
                                                 </div>
-                                                <div>
+                                                <div class="marigin-header">
                                                     <strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate "0,0.00"}}
                                                     %
                                                     ក្នុងមួយ{{khNameForPaymentMethod paymentMethod}}</div>
-                                                <div>
+                                                <div class="marigin-header">
                                                     <strong>កាលបរិច្ឆេទសងបញ្ចប់:</strong> {{moFormat maturityDate
                                                                                                      "DD/MM/YYYY"}}
                                                 </div>
-                                                <div><strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
+                                                <div class="marigin-header">
+                                                    <strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
                                             </div>
 
                                             <div style="width: 50%; float: right">
-                                                <div><strong>ចំនួនដងនៃការខ្ចី:</strong> {{cycle}}</div>
-                                                <div><strong>ទីកន្លែងបង់ប្រាក់:</strong> {{paymentLocation}}</div>
-                                                <div><strong>ប្រភពទុន:</strong> {{fundDoc.name}}</div>
-                                                <div><strong>មន្រ្តីឥណទាន:</strong> {{creditOfficerDoc.khName}}</div>
-                                                <div><strong>ទូរស័ព្ទ:</strong> {{creditOfficerDoc.telephone}}</div>
+                                                <div class="marigin-header"><strong>ចំនួនដងនៃការខ្ចី:</strong> {{cycle}}
+                                                </div>
+                                                <div class="marigin-header">
+                                                    <strong>ទីកន្លែងបង់ប្រាក់:</strong> {{paymentLocation}}</div>
+                                                <div class="marigin-header"><strong>ប្រភពទុន:</strong> {{fundDoc.name}}
+                                                </div>
+                                                <div class="marigin-header">
+                                                    <strong>មន្រ្តីឥណទាន:</strong> {{creditOfficerDoc.khName}}</div>
+                                                <div class="marigin-header">
+                                                    <strong>ទូរស័ព្ទ:</strong> {{creditOfficerDoc.telephone}}</div>
                                             </div>
                                         </div>
 
@@ -127,8 +135,8 @@
                             {{/with}}
 
                             <!--Content-->
-                            <table class="sub-table table table-striped  table-hover diplay-on-print-table">
-                                <thead class="sub-header diplay-on-print-header">
+                            <table class="sub-table table table-striped  table-hover diplay-on-print-table-2">
+                                <thead class="sub-header diplay-on-print-header-2">
                                 <tr>
                                     <th>ល.រ</th>
                                     <th>ថ្ងៃសងប្រាក់</th>
@@ -142,7 +150,7 @@
                                 </tr>
                                 </thead>
 
-                                <tbody class="sub-body display-on-print-body">
+                                <tbody class="sub-body display-on-print-body-2">
                                 {{#each content.data}}
                                     <tr>
                                         <td>

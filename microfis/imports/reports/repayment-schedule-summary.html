@@ -43,7 +43,7 @@
     <div class="horizontal-scroll">
         <!--#print-data-->
         <div id="print-data">
-            <div class="sub-div display-on-print-div">
+            <div class="sub-div display-on-print-div-2">
                 {{#if rptInit}}
                     {{#if rptData}}
                         {{#with rptData}}
@@ -66,7 +66,8 @@
                                     <div style="width: 80%; float: left">
                                         <div><strong>លេខកូដ:</strong> {{_id}} ({{accountType}})</div>
                                         <div>
-                                            <strong>ឈ្មោះ:</strong> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}
+                                            <strong>ឈ្មោះ:</strong>
+                                            <b>{{clientDoc.khSurname}} {{clientDoc.khGivenName}}</b>
                                         </div>
                                         <div>
                                             <div><strong>ភ្នាក់ងារទីផ្សារ:</strong> {{creditOfficerDoc.khName}}</div>
@@ -94,8 +95,8 @@
                             {{/with}}
 
                             <!--Content-->
-                            <table class="sub-table table table-striped  table-hover diplay-on-print-table">
-                                <thead class="sub-header diplay-on-print-header">
+                            <table class="sub-table table table-striped  table-hover diplay-on-print-table-2">
+                                <thead class="sub-header diplay-on-print-header-2">
                                 <tr>
                                     <th>ល.រ</th>
                                     <th>ថ្ងៃ ខែ ឆ្នាំ <br>បង់ប្រាក់</th>
@@ -105,7 +106,7 @@
                                 </tr>
                                 </thead>
 
-                                <tbody class="sub-body display-on-print-body">
+                                <tbody class="sub-body display-on-print-body-2">
                                 {{#each content.data}}
                                     <tr>
                                         <td>

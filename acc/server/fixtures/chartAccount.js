@@ -8,864 +8,864 @@ Meteor.startup(function () {
 
         /*//  NWDA
 
-        ChartAccount.insert(
-            {
-                _id: "002",
-                code: '111102',
-                name: 'Cash on Hand',
-                accountTypeId: "10"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "003",
-                code: '116302',
-                name: 'Demand and Saving bank',
-                accountTypeId: "10"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "004",
-                code: '116302A',
-                name: 'Saving ACLEDA bank',
-                accountTypeId: "10",
-                parentId: "003",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "005",
-                code: '116302B',
-                name: 'Saving CANADAI bank',
-                accountTypeId: "10",
-                parentId: "003",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "006",
-                code: '116302C',
-                name: 'Saving COMPUC bank',
-                accountTypeId: "10",
-                parentId: "003",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "007",
-                code: '116302D',
-                name: 'Saving RDB bank',
-                accountTypeId: "10",
-                parentId: "003",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "008",
-                code: '131202',
-                name: 'Standard Loans Individual',
-                accountTypeId: "10"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "009",
-                code: '171202',
-                name: 'Less Reserve for General',
-                accountTypeId: "10"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "010",
-                code: '221502',
-                name: 'Prepaid Rent',
-                accountTypeId: "10"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "011",
-                code: '221652',
-                name: 'Prepaid Other',
-                accountTypeId: "10"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "012",
-                code: '296502',
-                name: 'Advance For staff',
-                accountTypeId: "10"
-            }
-        );
+         ChartAccount.insert(
+         {
+         _id: "002",
+         code: '111102',
+         name: 'Cash on Hand',
+         accountTypeId: "10"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "003",
+         code: '116302',
+         name: 'Demand and Saving bank',
+         accountTypeId: "10"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "004",
+         code: '116302A',
+         name: 'Saving ACLEDA bank',
+         accountTypeId: "10",
+         parentId: "003",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "005",
+         code: '116302B',
+         name: 'Saving CANADAI bank',
+         accountTypeId: "10",
+         parentId: "003",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "006",
+         code: '116302C',
+         name: 'Saving COMPUC bank',
+         accountTypeId: "10",
+         parentId: "003",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "007",
+         code: '116302D',
+         name: 'Saving RDB bank',
+         accountTypeId: "10",
+         parentId: "003",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "008",
+         code: '131202',
+         name: 'Standard Loans Individual',
+         accountTypeId: "10"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "009",
+         code: '171202',
+         name: 'Less Reserve for General',
+         accountTypeId: "10"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "010",
+         code: '221502',
+         name: 'Prepaid Rent',
+         accountTypeId: "10"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "011",
+         code: '221652',
+         name: 'Prepaid Other',
+         accountTypeId: "10"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "012",
+         code: '296502',
+         name: 'Advance For staff',
+         accountTypeId: "10"
+         }
+         );
 
-        ChartAccount.insert(
-            {
-                _id: "014",
-                code: '291102 ',
-                name: 'Land',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "015",
-                code: '293102',
-                name: 'Furniture and fixture',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "016",
-                code: '293302',
-                name: 'Computer and Equipment',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "017",
-                code: '293402',
-                name: 'Motors and Vehicles',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "018",
-                code: '293502',
-                name: 'Software',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "019",
-                code: '294402',
-                name: 'Accu-Depre-Funiture',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "020",
-                code: '294602 ',
-                name: 'Acc-dep-Computer &Equip',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "021",
-                code: '294702',
-                name: 'Accu-Depr-Motor&Vehicle',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "022",
-                code: '294802',
-                name: 'Acc-Depr-software',
-                accountTypeId: "11"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "023",
-                code: '296602',
-                name: 'Equivalence Exchange Acc',
-                accountTypeId: "12"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "024",
-                code: '322902',
-                name: 'Compulsory Deposits',
-                accountTypeId: "20"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "025",
-                code: '332202',
-                name: 'Subordinated Debt',
-                accountTypeId: "20"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "026",
-                code: '361202',
-                name: 'Accrued Bonus payable',
-                accountTypeId: "20"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "027",
-                code: '361203',
-                name: 'Accrued tax on Salary',
-                accountTypeId: "20"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "028",
-                code: '371203',
-                name: 'Staff Retire Deposit',
-                accountTypeId: "20"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "029",
-                code: '381102',
-                name: 'Account payable',
-                accountTypeId: "20"
-            }
-        );
+         ChartAccount.insert(
+         {
+         _id: "014",
+         code: '291102 ',
+         name: 'Land',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "015",
+         code: '293102',
+         name: 'Furniture and fixture',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "016",
+         code: '293302',
+         name: 'Computer and Equipment',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "017",
+         code: '293402',
+         name: 'Motors and Vehicles',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "018",
+         code: '293502',
+         name: 'Software',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "019",
+         code: '294402',
+         name: 'Accu-Depre-Funiture',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "020",
+         code: '294602 ',
+         name: 'Acc-dep-Computer &Equip',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "021",
+         code: '294702',
+         name: 'Accu-Depr-Motor&Vehicle',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "022",
+         code: '294802',
+         name: 'Acc-Depr-software',
+         accountTypeId: "11"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "023",
+         code: '296602',
+         name: 'Equivalence Exchange Acc',
+         accountTypeId: "12"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "024",
+         code: '322902',
+         name: 'Compulsory Deposits',
+         accountTypeId: "20"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "025",
+         code: '332202',
+         name: 'Subordinated Debt',
+         accountTypeId: "20"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "026",
+         code: '361202',
+         name: 'Accrued Bonus payable',
+         accountTypeId: "20"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "027",
+         code: '361203',
+         name: 'Accrued tax on Salary',
+         accountTypeId: "20"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "028",
+         code: '371203',
+         name: 'Staff Retire Deposit',
+         accountTypeId: "20"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "029",
+         code: '381102',
+         name: 'Account payable',
+         accountTypeId: "20"
+         }
+         );
 
-        ChartAccount.insert(
-            {
-                _id: "031",
-                code: '334302',
-                name: 'long term Borrowing bank',
-                accountTypeId: "21"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "032",
-                code: '345302',
-                name: 'AIP-long-term-bank',
-                accountTypeId: "21"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "033",
-                code: '3000',
-                name: 'Opening Bal Equity',
-                accountTypeId: "30"
-            }
-        );
+         ChartAccount.insert(
+         {
+         _id: "031",
+         code: '334302',
+         name: 'long term Borrowing bank',
+         accountTypeId: "21"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "032",
+         code: '345302',
+         name: 'AIP-long-term-bank',
+         accountTypeId: "21"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "033",
+         code: '3000',
+         name: 'Opening Bal Equity',
+         accountTypeId: "30"
+         }
+         );
 
-        ChartAccount.insert(
-            {
-                _id: "035",
-                code: '401102',
-                name: 'Paid Up Capital',
-                accountTypeId: "30"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "036",
-                code: '402202',
-                name: 'Donated Capital previous',
-                accountTypeId: "30"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "037",
-                code: '404302',
-                name: 'Perpeted subordinated d',
-                accountTypeId: "30"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "038",
-                code: '405202',
-                name: 'Capital',
-                accountTypeId: "30"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "039",
-                code: '407102',
-                name: 'Retained Earning',
-                accountTypeId: "30"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "040",
-                code: '408102',
-                name: 'Profit Current year',
-                accountTypeId: "30"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "041",
-                code: '515302',
-                name: 'Interest income (bank)',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "042",
-                code: '521202',
-                name: 'Interest income (client)',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "043",
-                code: '564102',
-                name: 'Other interest Income',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "044",
-                code: '571102',
-                name: 'Fees &Commission Loan',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "045",
-                code: '571202',
-                name: 'Other Fees(Penalty)',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "046",
-                code: '573102',
-                name: 'Other Non-Inter income',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "047",
-                code: '574102',
-                name: 'Foreign Exchange Gain',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "048",
-                code: '575102',
-                name: 'Gain on deposal fixasset',
-                accountTypeId: "40"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "049",
-                code: '612902',
-                name: 'Inter-Exp-Com. Deposit',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "050",
-                code: '622302',
-                name: 'Inter-Exp.Subordinated',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "051",
-                code: '624302',
-                name: 'Inter-Exp-Long-loan bank',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "052",
-                code: '629902',
-                name: 'Interest expense Other',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "053",
-                code: '631102',
-                name: 'Salary & Bonuse Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "054",
-                code: '631102A',
-                name: 'Salary of BOD',
-                accountTypeId: "50",
-                parentId: "053",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "055",
-                code: '631102B',
-                name: 'Salary of Technical',
-                accountTypeId: "50",
-                parentId: "053",
-                level: "1"
+         ChartAccount.insert(
+         {
+         _id: "035",
+         code: '401102',
+         name: 'Paid Up Capital',
+         accountTypeId: "30"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "036",
+         code: '402202',
+         name: 'Donated Capital previous',
+         accountTypeId: "30"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "037",
+         code: '404302',
+         name: 'Perpeted subordinated d',
+         accountTypeId: "30"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "038",
+         code: '405202',
+         name: 'Capital',
+         accountTypeId: "30"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "039",
+         code: '407102',
+         name: 'Retained Earning',
+         accountTypeId: "30"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "040",
+         code: '408102',
+         name: 'Profit Current year',
+         accountTypeId: "30"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "041",
+         code: '515302',
+         name: 'Interest income (bank)',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "042",
+         code: '521202',
+         name: 'Interest income (client)',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "043",
+         code: '564102',
+         name: 'Other interest Income',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "044",
+         code: '571102',
+         name: 'Fees &Commission Loan',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "045",
+         code: '571202',
+         name: 'Other Fees(Penalty)',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "046",
+         code: '573102',
+         name: 'Other Non-Inter income',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "047",
+         code: '574102',
+         name: 'Foreign Exchange Gain',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "048",
+         code: '575102',
+         name: 'Gain on deposal fixasset',
+         accountTypeId: "40"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "049",
+         code: '612902',
+         name: 'Inter-Exp-Com. Deposit',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "050",
+         code: '622302',
+         name: 'Inter-Exp.Subordinated',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "051",
+         code: '624302',
+         name: 'Inter-Exp-Long-loan bank',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "052",
+         code: '629902',
+         name: 'Interest expense Other',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "053",
+         code: '631102',
+         name: 'Salary & Bonuse Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "054",
+         code: '631102A',
+         name: 'Salary of BOD',
+         accountTypeId: "50",
+         parentId: "053",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "055",
+         code: '631102B',
+         name: 'Salary of Technical',
+         accountTypeId: "50",
+         parentId: "053",
+         level: "1"
 
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "056",
-                code: '631102C',
-                name: 'Salary of Staff',
-                accountTypeId: "50",
-                parentId: "053",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "057",
-                code: '631102D',
-                name: 'Bonuse expense',
-                accountTypeId: "50",
-                parentId: "053",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "058",
-                code: '631103',
-                name: 'Staff Retire Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "059",
-                code: '631202',
-                name: 'Employee overtime exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "060",
-                code: '631302',
-                name: 'Employee Tranining Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "061",
-                code: '631402',
-                name: 'Employee Medical Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "062",
-                code: '631802',
-                name: 'Employee Pension Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "063",
-                code: '631902',
-                name: 'Other Employee Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "064",
-                code: '631902A',
-                name: 'Newspaper, Pure drink',
-                accountTypeId: "50",
-                parentId: "063",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "065",
-                code: '631902B',
-                name: 'Mission,Guest',
-                accountTypeId: "50",
-                parentId: "063",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "066",
-                code: '631902C',
-                name: 'Support Food',
-                accountTypeId: "50",
-                parentId: "063",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "067",
-                code: '642202',
-                name: 'Depr Expense Building',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "068",
-                code: '642352',
-                name: 'Depre-Exp-Furniture&Fix',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "069",
-                code: '642502',
-                name: 'Depre-Exp-Motor&Vihicle',
-                accountTypeId: "50"
-            });
-        ChartAccount.insert(
-            {
-                _id: "070",
-                code: '642532',
-                name: 'Depre-Softwear',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "071",
-                code: '653102',
-                name: 'Repair and Maintain Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "072",
-                code: '653102A',
-                name: 'Repair&Maintain car',
-                accountTypeId: "50",
-                parentId: "071",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "073",
-                code: '653102B',
-                name: 'Repair&Maintain Motor',
-                accountTypeId: "50",
-                parentId: "071",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "074",
-                code: '653102C',
-                name: 'Repair&Maintain Office',
-                accountTypeId: "50",
-                parentId: "071",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "105",
-                code: '653102D',
-                name: 'Repair&Maintain Software',
-                accountTypeId: "50",
-                parentId: "071",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "075",
-                code: '653202',
-                name: 'Rental Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "076",
-                code: '653302',
-                name: 'Utility Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "077",
-                code: '653402',
-                name: 'Sm Items of Fur.Fix&Equ',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "078",
-                code: '654102',
-                name: 'Marketing and adv Exp.',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "079",
-                code: '654202',
-                name: 'Professional Service exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "080",
-                code: '654302',
-                name: 'Tax fees Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "081",
-                code: '654302A',
-                name: 'Tax on Salary',
-                accountTypeId: "50",
-                parentId: "080",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "082",
-                code: '654302B',
-                name: 'Tax on Label',
-                accountTypeId: "50",
-                parentId: "080",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "083",
-                code: '654302C',
-                name: 'Tax For Car',
-                accountTypeId: "50",
-                parentId: "080",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "084",
-                code: '654302D',
-                name: 'Tax For Motor',
-                accountTypeId: "50",
-                parentId: "080",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "085",
-                code: '654502',
-                name: 'Legal fees expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "086",
-                code: '655102',
-                name: 'Tavel expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "087",
-                code: '655202',
-                name: 'Business Meal&Enter Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "088",
-                code: '655302',
-                name: 'Communication Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "089",
-                code: '655302A',
-                name: 'cellcard & Telephone',
-                accountTypeId: "50",
-                parentId: "088",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "090",
-                code: '655302B',
-                name: 'Send Document',
-                accountTypeId: "50",
-                parentId: "088",
-                level: "1"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "091",
-                code: '657102',
-                name: 'Stationery & Supply Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "092",
-                code: '657202',
-                name: 'Printing and Forms Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "093",
-                code: '658902',
-                name: 'Other Insurance Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "094",
-                code: '661102',
-                name: 'Security Expense',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "095",
-                code: '662102 ',
-                name: 'Boad of Directors fee',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "096",
-                code: '662202',
-                name: 'Shareholders Meeting Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "097",
-                code: '668102',
-                name: 'Gasholine operating Exp',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "098",
-                code: '669902',
-                name: 'Miscellaneous Exp.',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "099",
-                code: '671102',
-                name: 'Bad & Doubtful Debts',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "100",
-                code: '681102',
-                name: 'Loss on Foreign Exchang',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "101",
-                code: '681602',
-                name: 'Loss on Sale/Disposal As',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "102",
-                code: '692102',
-                name: 'Coresponden Bank Charge',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "103",
-                code: '692202',
-                name: 'Fees&Commiss on Borrow',
-                accountTypeId: "50"
-            }
-        );
-        ChartAccount.insert(
-            {
-                _id: "104",
-                code: '654402',
-                name: 'License Fees Expense',
-                accountTypeId: "51"
-            }
-        );*/
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "056",
+         code: '631102C',
+         name: 'Salary of Staff',
+         accountTypeId: "50",
+         parentId: "053",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "057",
+         code: '631102D',
+         name: 'Bonuse expense',
+         accountTypeId: "50",
+         parentId: "053",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "058",
+         code: '631103',
+         name: 'Staff Retire Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "059",
+         code: '631202',
+         name: 'Employee overtime exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "060",
+         code: '631302',
+         name: 'Employee Tranining Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "061",
+         code: '631402',
+         name: 'Employee Medical Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "062",
+         code: '631802',
+         name: 'Employee Pension Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "063",
+         code: '631902',
+         name: 'Other Employee Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "064",
+         code: '631902A',
+         name: 'Newspaper, Pure drink',
+         accountTypeId: "50",
+         parentId: "063",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "065",
+         code: '631902B',
+         name: 'Mission,Guest',
+         accountTypeId: "50",
+         parentId: "063",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "066",
+         code: '631902C',
+         name: 'Support Food',
+         accountTypeId: "50",
+         parentId: "063",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "067",
+         code: '642202',
+         name: 'Depr Expense Building',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "068",
+         code: '642352',
+         name: 'Depre-Exp-Furniture&Fix',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "069",
+         code: '642502',
+         name: 'Depre-Exp-Motor&Vihicle',
+         accountTypeId: "50"
+         });
+         ChartAccount.insert(
+         {
+         _id: "070",
+         code: '642532',
+         name: 'Depre-Softwear',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "071",
+         code: '653102',
+         name: 'Repair and Maintain Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "072",
+         code: '653102A',
+         name: 'Repair&Maintain car',
+         accountTypeId: "50",
+         parentId: "071",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "073",
+         code: '653102B',
+         name: 'Repair&Maintain Motor',
+         accountTypeId: "50",
+         parentId: "071",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "074",
+         code: '653102C',
+         name: 'Repair&Maintain Office',
+         accountTypeId: "50",
+         parentId: "071",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "105",
+         code: '653102D',
+         name: 'Repair&Maintain Software',
+         accountTypeId: "50",
+         parentId: "071",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "075",
+         code: '653202',
+         name: 'Rental Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "076",
+         code: '653302',
+         name: 'Utility Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "077",
+         code: '653402',
+         name: 'Sm Items of Fur.Fix&Equ',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "078",
+         code: '654102',
+         name: 'Marketing and adv Exp.',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "079",
+         code: '654202',
+         name: 'Professional Service exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "080",
+         code: '654302',
+         name: 'Tax fees Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "081",
+         code: '654302A',
+         name: 'Tax on Salary',
+         accountTypeId: "50",
+         parentId: "080",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "082",
+         code: '654302B',
+         name: 'Tax on Label',
+         accountTypeId: "50",
+         parentId: "080",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "083",
+         code: '654302C',
+         name: 'Tax For Car',
+         accountTypeId: "50",
+         parentId: "080",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "084",
+         code: '654302D',
+         name: 'Tax For Motor',
+         accountTypeId: "50",
+         parentId: "080",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "085",
+         code: '654502',
+         name: 'Legal fees expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "086",
+         code: '655102',
+         name: 'Tavel expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "087",
+         code: '655202',
+         name: 'Business Meal&Enter Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "088",
+         code: '655302',
+         name: 'Communication Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "089",
+         code: '655302A',
+         name: 'cellcard & Telephone',
+         accountTypeId: "50",
+         parentId: "088",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "090",
+         code: '655302B',
+         name: 'Send Document',
+         accountTypeId: "50",
+         parentId: "088",
+         level: "1"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "091",
+         code: '657102',
+         name: 'Stationery & Supply Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "092",
+         code: '657202',
+         name: 'Printing and Forms Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "093",
+         code: '658902',
+         name: 'Other Insurance Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "094",
+         code: '661102',
+         name: 'Security Expense',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "095",
+         code: '662102 ',
+         name: 'Boad of Directors fee',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "096",
+         code: '662202',
+         name: 'Shareholders Meeting Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "097",
+         code: '668102',
+         name: 'Gasholine operating Exp',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "098",
+         code: '669902',
+         name: 'Miscellaneous Exp.',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "099",
+         code: '671102',
+         name: 'Bad & Doubtful Debts',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "100",
+         code: '681102',
+         name: 'Loss on Foreign Exchang',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "101",
+         code: '681602',
+         name: 'Loss on Sale/Disposal As',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "102",
+         code: '692102',
+         name: 'Coresponden Bank Charge',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "103",
+         code: '692202',
+         name: 'Fees&Commiss on Borrow',
+         accountTypeId: "50"
+         }
+         );
+         ChartAccount.insert(
+         {
+         _id: "104",
+         code: '654402',
+         name: 'License Fees Expense',
+         accountTypeId: "51"
+         }
+         );*/
 
         //CFO
 
         //Riel
-         ChartAccount.insert({_id:	"002"	,code:	"111101"	,name:	"Cash in Vault and on Hand ",accountTypeId:	"10"	})
+        /*ChartAccount.insert({_id:	"002"	,code:	"111101"	,name:	"Cash in Vault and on Hand ",accountTypeId:	"10"	})
          ChartAccount.insert({_id:	"003"	,code:	"111201"	,name:	"Cash in Transit ",accountTypeId:	"10"	})
          ChartAccount.insert({_id:	"004"	,code:	"111301"	,name:	"Cheques in Transit",accountTypeId:	"10"	})
          ChartAccount.insert({_id:	"005"	,code:	"114101"	,name:	"Due from NBC",accountTypeId:	"10"	})
@@ -1308,7 +1308,7 @@ Meteor.startup(function () {
          ChartAccount.insert({_id:	"446"	,code:	"691101"	,name:	"Rebates/Commissions to Borrowing Groups",accountTypeId:	"50"	})
          ChartAccount.insert({_id:	"447"	,code:	"691201"	,name:	"Village Bank/Association costs",accountTypeId:	"50"	})
          ChartAccount.insert({_id:	"448"	,code:	"692101"	,name:	"Correspondent Bank Charges",accountTypeId:	"50"	})
-         ChartAccount.insert({_id:	"449"	,code:	"692201"	,name:	"Fee and Commission on Borrowing",accountTypeId:	"50"	})
+         ChartAccount.insert({_id:	"449"	,code:	"692201"	,name:	"Fee and Commission on Borrowing",accountTypeId:	"50"	})*/
 
 
         //    ICe
@@ -1586,5 +1586,584 @@ Meteor.startup(function () {
          ChartAccount.insert({_id:	"271"	,code:	"4580"	,name:	"Gain on Exchange Rate",accountTypeId:	"40"	});
          ChartAccount.insert({_id:	"272"	,code:	"4590"	,name:	"Other Incomes",accountTypeId:	"40"	});
          */
+
+
+        //Nikom
+
+
+        ChartAccount.insert({name: "សាច់ប្រាក់សកម្ម", _id: "001", code: "10001", accountTypeId: "10", level: 0});
+        ChartAccount.insert({
+            name: "សាច់ប្រាក់ក្នុងដៃ",
+            _id: "002",
+            code: "10001A",
+            accountTypeId: "10",
+            level: 1,
+            parentId: "001"
+        });
+        ChartAccount.insert({
+            name: "សាច់ប្រាក់ក្នុងធនាគារ",
+            _id: "003",
+            code: "10001B",
+            accountTypeId: "10",
+            level: 1,
+            parentId: "001"
+        });
+        ChartAccount.insert({name: "គណនីត្រូវទទួល", _id: "004", code: "11001", accountTypeId: "10", level: 0});
+        ChartAccount.insert({name: "ថ្លៃកក់", _id: "005", code: "12001", accountTypeId: "10", level: 0});
+        ChartAccount.insert({
+            name: "ថ្លៃកក់អាគារ / ផ្ទះ",
+            _id: "006",
+            code: "12001A",
+            accountTypeId: "10",
+            level: 1,
+            parentId: "005"
+        });
+        ChartAccount.insert({
+            name: "កក់ថ្លៃឈ្នួល",
+            _id: "007",
+            code: "12001B",
+            accountTypeId: "10",
+            level: 1,
+            parentId: "005"
+        });
+        ChartAccount.insert({
+            name: "បង់ទុកមុន",
+            _id: "008",
+            code: "12001C",
+            accountTypeId: "10",
+            level: 1,
+            parentId: "005"
+        });
+        ChartAccount.insert({name: "ដី", _id: "009", code: "21001", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "អាគារ / ផ្ទះ", _id: "010", code: "22001", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "ឡាន", _id: "011", code: "22011", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "ម៉ូតូ", _id: "012", code: "22021", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "កំព្យួទ័រ", _id: "013", code: "22031", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "ម៉ាស៊ីនព្រីន", _id: "014", code: "22041", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "ទូរដែកសុវត្ថិភាព", _id: "015", code: "22051", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "សំភារៈបរិក្ខារ", _id: "016", code: "22061", accountTypeId: "11", level: 0});
+        ChartAccount.insert({name: "ប្រព័ន្ធកំព្យូទ័រ", _id: "017", code: "22071", accountTypeId: "11", level: 0});
+        ChartAccount.insert({
+            name: "Software Computer",
+            _id: "018",
+            code: "22071A",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "017"
+        });
+        ChartAccount.insert({name: "រំលស់ទ្រព្យ", _id: "019", code: "26001", accountTypeId: "11", level: 0});
+        ChartAccount.insert({
+            name: "តំលៃរំលស់អាគារ/ផ្ទះ",
+            _id: "020",
+            code: "26001A",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({
+            name: "តំលៃរំលស់ឡាន",
+            _id: "021",
+            code: "26001B",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({
+            name: "តំលៃរំលស់ម៉ូតូ",
+            _id: "022",
+            code: "26001C",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({
+            name: "តំលៃរំលស់កំព្យួទ័រ",
+            _id: "023",
+            code: "26001D",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({
+            name: "តំលៃរំលស់ម៉ាស៊ីនព្រីន",
+            _id: "024",
+            code: "26001E",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({
+            name: "តំលៃរំលស់ទូរដែកសុវត្ថិភាព",
+            _id: "025",
+            code: "26001F",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({
+            name: "តំលៃរំលស់សំភារៈបរិក្ខារ",
+            _id: "026",
+            code: "26001G",
+            accountTypeId: "11",
+            level: 1,
+            parentId: "019"
+        });
+        ChartAccount.insert({name: "ចំណូលការប្រាក់", _id: "027", code: "50001", accountTypeId: "40", level: 0});
+        ChartAccount.insert({name: "ចំណូលមិនមែនការប្រាក់", _id: "028", code: "51001", accountTypeId: "40", level: 0});
+        ChartAccount.insert({
+            name: "ចំណូលថ្លៃសេវា",
+            _id: "029",
+            code: "51001A",
+            accountTypeId: "40",
+            level: 1,
+            parentId: "028"
+        });
+        ChartAccount.insert({
+            name: "ចំណូលថ្លៃបង់ពិន័យ",
+            _id: "030",
+            code: "51001B",
+            accountTypeId: "40",
+            level: 1,
+            parentId: "028"
+        });
+        ChartAccount.insert({
+            name: "ចំណូលបង់ទឹកភ្លើង",
+            _id: "031",
+            code: "51001C",
+            accountTypeId: "40",
+            level: 1,
+            parentId: "028"
+        });
+        ChartAccount.insert({
+            name: "ចំណូលប្តូរប្រាក់",
+            _id: "032",
+            code: "51001D",
+            accountTypeId: "40",
+            level: 1,
+            parentId: "028"
+        });
+        ChartAccount.insert({name: "ចំណូលផ្សេងៗ", _id: "033", code: "52001", accountTypeId: "41", level: 0});
+        ChartAccount.insert({name: "ចំណូលពីបំណុលខ្មៅ", _id: "034", code: "53001", accountTypeId: "41", level: 0});
+        ChartAccount.insert({
+            name: "ចំណូលបានពីអតិថិជនដែល Write-Off",
+            _id: "035",
+            code: "53001A",
+            accountTypeId: "41",
+            level: 1,
+            parentId: "034"
+        });
+        ChartAccount.insert({name: "ជួសជុលការិយ៉ាល័យ", _id: "036", code: "60001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយជួសជុលអាគារការិយាល័យ",
+            _id: "037",
+            code: "60001A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "036"
+        });
+        ChartAccount.insert({name: "ថ្លៃភ្លើង-ទឹក", _id: "038", code: "61001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "បង់ថ្លៃទឹក",
+            _id: "039",
+            code: "61001A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "038"
+        });
+        ChartAccount.insert({
+            name: "បង់ថ្លៃភ្លើង",
+            _id: "040",
+            code: "61001B",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "038"
+        });
+        ChartAccount.insert({
+            name: "ទិញទឹកងូត",
+            _id: "041",
+            code: "61001C",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "038"
+        });
+        ChartAccount.insert({name: "សំភារៈការិយាល័យ", _id: "042", code: "62001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "ចំណាយផ្សេងៗ", _id: "043", code: "63001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "បៀវត្ស / ប្រាក់ខែ", _id: "044", code: "64001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ប្រាក់ខែបុគ្គលិក",
+            _id: "045",
+            code: "64001A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "044"
+        });
+        ChartAccount.insert({
+            name: "ប្រាក់លើកទឹកចិត្តប្រចាំខែ",
+            _id: "046",
+            code: "64001B",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "044"
+        });
+        ChartAccount.insert({
+            name: "ប្រាក់លើកទឹកចិត្តប្រចាំឆ្នាំ",
+            _id: "047",
+            code: "64001C",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "044"
+        });
+        ChartAccount.insert({
+            name: "ប្រាក់រង្វាន់",
+            _id: "048",
+            code: "64001D",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "044"
+        });
+        ChartAccount.insert({name: "ប្រាក់ឧបត្ថម្ភ", _id: "049", code: "65001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ប្រាក់ឧបត្ថម្ភនានា",
+            _id: "050",
+            code: "65001A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "049"
+        });
+        ChartAccount.insert({name: "សាំង និង ប្រេងរំអិល", _id: "051", code: "65011", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "ឈ្នួលផ្ទះ", _id: "052", code: "65021", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយជួលផ្ទះប្រចាំខែ",
+            _id: "053",
+            code: "65021A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "052"
+        });
+        ChartAccount.insert({name: "កាតទូស័ព្ទ", _id: "054", code: "65031", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "កាតទូរស័ព្ទបុគ្គលិក",
+            _id: "055",
+            code: "65031A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "054"
+        });
+        ChartAccount.insert({name: "បេសកម្ម", _id: "056", code: "65041", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "បោះពុម្ព", _id: "057", code: "65051", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "ប្រាក់ឧបត្ថម្ភតួនាទី", _id: "058", code: "65061", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ប្រាក់ឧបត្ថម្ភតួនាទី",
+            _id: "059",
+            code: "65061A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "058"
+        });
+        ChartAccount.insert({name: "ប្រាក់ឧបត្ថម្ភតួតំបន់", _id: "060", code: "65071", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ប្រាក់ឧបត្ថម្ភតំបន់ដល់បុគ្គលិក",
+            _id: "061",
+            code: "65071A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "060"
+        });
+        ChartAccount.insert({name: "ជួសជុល និង ថែរក្សារ", _id: "062", code: "65081", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយជួសជុលម៉ូតូ...",
+            _id: "063",
+            code: "65081A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "062"
+        });
+        ChartAccount.insert({name: "ជីវភាព", _id: "064", code: "65091", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "បំណុលខ្មៅ", _id: "065", code: "66011", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយ Write-Off",
+            _id: "066",
+            code: "66011A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "065"
+        });
+        ChartAccount.insert({name: "ចុះទៅផ្ទះបុគ្គលិក", _id: "067", code: "66021", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយចុះទៅផ្ទះបុគ្គលិក",
+            _id: "068",
+            code: "66021A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "067"
+        });
+        ChartAccount.insert({name: "ចំណាយផ្ទេរប្រាក់", _id: "069", code: "66031", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយផ្ទេរប្រាក់ទៅសាខា",
+            _id: "070",
+            code: "66031A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "069"
+        });
+        ChartAccount.insert({name: "ចំណាយថ្លៃមេធាវី", _id: "071", code: "66041", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយរត់ការមេធាវី",
+            _id: "072",
+            code: "66041A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "071"
+        });
+        ChartAccount.insert({name: "ទឹកសុទ្ធ", _id: "073", code: "66051", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយទិញទឹកសុទ្ធ",
+            _id: "074",
+            code: "66051A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "073"
+        });
+        ChartAccount.insert({name: "បណ្តុះបណ្តាលបុគ្កលិក", _id: "075", code: "66061", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយបណ្តុះបណ្តាលបុគ្គលិក",
+            _id: "076",
+            code: "66061A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "075"
+        });
+        ChartAccount.insert({name: "ចំណាយរត់ការ", _id: "077", code: "66071", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយរត់ការ",
+            _id: "078",
+            code: "66071A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "077"
+        });
+        ChartAccount.insert({name: "ចំណាយការប្រាក់", _id: "079", code: "66081", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "ចំណាយប្តូរប្រាក់", _id: "080", code: "66091", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "បង់ពន្ធ", _id: "081", code: "67001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "បង់ពន្ធប្រចាំខែ",
+            _id: "082",
+            code: "67001A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "081"
+        });
+        ChartAccount.insert({
+            name: "បង់ពន្ធប្រចាំឆ្នាំ",
+            _id: "083",
+            code: "67001B",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "081"
+        });
+        ChartAccount.insert({
+            name: "បង់ពន្ធបាតង់",
+            _id: "084",
+            code: "67001C",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "081"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយប្រតិបត្តិការប្រាក់បង្គរ",
+            _id: "085",
+            code: "67011",
+            accountTypeId: "50",
+            level: 0
+        });
+        ChartAccount.insert({name: "ចំណាយតអាជ្ញាប័ណ្ណ", _id: "086", code: "67021", accountTypeId: "50", level: 0});
+        ChartAccount.insert({name: "ចំណាយរំលស់", _id: "087", code: "69001", accountTypeId: "50", level: 0});
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់អាគារ/ផ្ទះ",
+            _id: "088",
+            code: "69001A",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់ឡាន",
+            _id: "089",
+            code: "69001B",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់ម៉ូតូ",
+            _id: "090",
+            code: "69001C",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់កំព្យួទ័រ",
+            _id: "091",
+            code: "69001D",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់ម៉ាស៊ីនព្រីន",
+            _id: "092",
+            code: "69001E",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់ទូរដែកសុវត្ថិភាព",
+            _id: "093",
+            code: "69001F",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({
+            name: "ចំណាយរំលស់សំភារៈបរិក្ខារ",
+            _id: "094",
+            code: "69001G",
+            accountTypeId: "50",
+            level: 1,
+            parentId: "087"
+        });
+        ChartAccount.insert({name: "គណនីត្រូវបង់", _id: "095", code: "30001", accountTypeId: "20", level: 0});
+        ChartAccount.insert({name: "ការប្រាក់ត្រូវបង់", _id: "096", code: "11012", accountTypeId: "10", level: 0});
+        ChartAccount.insert({name: "បុគ្គលិកខ្ចី", _id: "097", code: "11022", accountTypeId: "10", level: 0});
+        ChartAccount.insert({
+            name: "បុគ្គលិកខ្ចីប្រាក់",
+            _id: "098",
+            code: "11022A",
+            accountTypeId: "10",
+            level: 1,
+            parentId: "097"
+        });
+        ChartAccount.insert({name: "ដាក់ទុន", _id: "099", code: "40001", accountTypeId: "30", level: 0});
+        ChartAccount.insert({name: "ដកទុន", _id: "100", code: "41001", accountTypeId: "30", level: 0});
+        ChartAccount.insert({name: "ចែកភាគលាភ", _id: "101", code: "42001", accountTypeId: "30", level: 0});
+
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
