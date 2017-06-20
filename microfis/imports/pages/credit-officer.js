@@ -40,7 +40,7 @@ indexTmpl.onCreated(function () {
 
     // Reactive table filter
     this.filter = new ReactiveTable.Filter('microfis.creditOfficerByBranch', ['branchId']);
-    this.autorun(()=> {
+    this.autorun(() => {
         this.filter.set(Session.get('currentBranch'));
     });
 });
@@ -129,7 +129,7 @@ indexTmpl.onDestroyed(function () {
 
 // Form
 formTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         if (currentData) {
             this.subscribe('microfis.creditOfficer', {_id: currentData._id});
@@ -170,9 +170,9 @@ showTmpl.helpers({
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        if (formType == 'update') {
-            alertify.creditOfficer().close();
-        }
+        /*if (formType == 'update') {*/
+        alertify.creditOfficer().close();
+        /*}*/
         displaySuccess();
     },
     onError (formType, error) {

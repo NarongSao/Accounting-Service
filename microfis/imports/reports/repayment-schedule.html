@@ -69,7 +69,8 @@
                                         <div class="marigin-header"><strong>លេខគណនី:</strong> {{_id}} ({{accountType}})
                                         </div>
                                         <div class="marigin-header">
-                                            <strong>ឈ្មោះអ្នកខ្ចី: </strong><b style="font-family: 'Khmer OS Muol'"> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</b>
+                                            <strong>ឈ្មោះអ្នកខ្ចី: </strong><b
+                                                style="font-family: 'Khmer OS Muol'"> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</b>
                                         </div>
                                         <div class="marigin-header">
                                             <strong>ថ្ងៃផ្តល់ទុន:</strong> {{moFormat disbursementDate "DD/MM/YYYY"}}
@@ -86,7 +87,6 @@
                                                 paymentMethod}}
                                             ម្តង
                                         </div>
-                                        <div class="marigin-header"><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង</div>
                                     </div>
 
                                     <div style="width: 65%; float: right">
@@ -112,8 +112,9 @@
                                                     <strong>កាលបរិច្ឆេទសងបញ្ចប់:</strong> {{moFormat maturityDate
                                                                                                      "DD/MM/YYYY"}}
                                                 </div>
-                                                <div class="marigin-header">
-                                                    <strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
+                                                <div class="marigin-header"><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង
+                                                </div>
+
                                             </div>
 
                                             <div style="width: 50%; float: right">
@@ -127,9 +128,15 @@
                                                     <strong>មន្រ្តីឥណទាន:</strong> {{creditOfficerDoc.khName}}</div>
                                                 <div class="marigin-header">
                                                     <strong>ទូរស័ព្ទ:</strong> {{creditOfficerDoc.telephone}}</div>
+                                                <div class="marigin-header">
+                                                    <strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
                                             </div>
                                         </div>
 
+                                    </div>
+                                    <div style="width: 100%; float: left">
+                                        <div class="marigin-header"><strong>អាស័យដ្ឋាន:</strong> {{clientDoc.address}}
+                                        </div>
                                     </div>
                                 </div>
                             {{/with}}

@@ -207,6 +207,12 @@ indexTmpl.helpers({
                 },
                 {key: 'type', label: 'Type'},
                 {
+                    key: 'voucherId', label: 'Voucher',
+                    fn(value, object, key){
+                        return value.substr(8, value.length - 1);
+                    }
+                },
+                {
                     key: 'detailDoc.totalSchedulePaid.totalPrincipalInterestDue',
                     label: 'Amount Due',
                     fn(value, object, key) {
@@ -514,8 +520,9 @@ indexTmpl.events({
 
     },
     'click .js-display'(event, instance) {
-
-        alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showTmpl, this));
+        let self = this;
+        self.voucherId = self.voucherId.substr(8, self.voucherId.length - 1)
+        alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showTmpl, self));
     },
     'click .js-display-savingTransaction'(event, instance) {
         alertify.repaymentShow(fa('eye', 'Repayment'), renderTemplate(showSavingTmpl, this));

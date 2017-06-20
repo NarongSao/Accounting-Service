@@ -806,7 +806,7 @@ MakeRepayment.waiveInterest = function ({repaidDate, amountPaid, scheduleDue, sc
     };
 };
 
-MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, scheduleNext, closing, principalUnpaid, feeOnPaymentUnPaid, opts}) {
+MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDue, scheduleNext, closing, principalUnpaid, feeOnPaymentUnPaid, interestUnPaid, opts}) {
     new SimpleSchema({
         repaidDate: {
             type: Date
@@ -856,6 +856,12 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
             blackbox: true,
             optional: true
         },
+        interestUnPaid: {
+            type: Number,
+            decimal: true,
+            blackbox: true,
+            optional: true
+        },
         opts: {
             type: Object,
             optional: true,
@@ -870,6 +876,7 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         closing,
         principalUnpaid,
         feeOnPaymentUnPaid,
+        interestUnPaid,
         opts
     });
 
@@ -906,11 +913,12 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     let tmpAmountPaid = {
         principal: new BigNumber(principalUnpaid),
         feeOnPayment: new BigNumber(feeOnPaymentUnPaid),
-        interest: new BigNumber(amountPaid).minus(principalUnpaid).minus(feeOnPaymentUnPaid)
+        interest: new BigNumber(interestUnPaid)
     };
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);
 
     // Check schedule due
+
     for (let o of scheduleDue) {
         let currentDue = o.currentDue;
 
@@ -935,6 +943,8 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
         // Check interest paid
 
+
+
         if (tmpAmountPaid.interest.lessThanOrEqualTo(currentDue.interest)) {
             interestPaid = tmpAmountPaid.interest;
             interestWaived = new BigNumber(currentDue.interest).minus(interestPaid);
@@ -943,7 +953,6 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
             interestPaid = new BigNumber(currentDue.interest);
             tmpAmountPaid.interest = tmpAmountPaid.interest.minus(interestPaid);
         }
-
 
         // Check principal paid
         if (tmpAmountPaid.principal.lessThanOrEqualTo(currentDue.principal)) {
@@ -971,6 +980,8 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
         // Data push to schedule paid
         let totalPrincipalInterestPaid = principalPaid.plus(interestPaid.plus(feeOnPaymentPaid)),
             totalAmountPaid = totalPrincipalInterestPaid.plus(penaltyPaid),
+
+
             principalBal = new BigNumber(currentDue.principal).minus(principalPaid),
             interestBal = new BigNumber(currentDue.interest).minus(interestPaid).minus(interestWaived),
             feeOnPaymentBal = new BigNumber(currentDue.feeOnPayment).minus(feeOnPaymentPaid).minus(feeOnPaymentWaived),

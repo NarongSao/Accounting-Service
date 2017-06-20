@@ -358,7 +358,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                         },
                         {
                             $group: {
-                                _id: "$scheduleDoc.repaymentId",
+                                _id: "$_id",
                                 principalPaid: {
                                     $sum: {
                                         $cond: [
@@ -539,6 +539,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                         }
                     ])
                 ;
+                
 
                 if (repaidList.length > 0) {
                     repaidList.forEach(function (repaidListDoc) {
@@ -629,30 +630,30 @@ export const loanRepaymentReport = new ValidatedMethod({
                             }
 
                             content += `<tr>
-                                <td>${i}</td>
-                                <td>${repaidListDoc.voucherId.substr(8, repaidListDoc.voucherId.length - 1)}</td>
-                                <td>${repaidListDoc.loanDoc._id}</td>
-                                <td> ${repaidListDoc.clientDoc.khSurname}  ${repaidListDoc.clientDoc.khGivenName} </td>
-                                <td> ${repaidListDoc.productDoc.name}</td>
+                 <td>${i}</td>
+                 <td>${repaidListDoc.voucherId.substr(8, repaidListDoc.voucherId.length - 1)}</td>
+                 <td>${repaidListDoc.loanDoc._id}</td>
+                 <td> ${repaidListDoc.clientDoc.khSurname}  ${repaidListDoc.clientDoc.khGivenName} </td>
+                 <td> ${repaidListDoc.productDoc.name}</td>
 
-                                <td> ${repaidListDoc.loanDoc.currencyId}</td>
-                                <td> ${repaidListDoc.loanDoc.accountType}</td>
-                                <td> ${microfis_formatDate(repaidListDoc.loanDoc.disbursementDate)}</td>
-                                <td> ${microfis_formatDate(repaidListDoc.loanDoc.maturityDate)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.loanAmount)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectInterest)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectFeeOnPayment)}</td>
-                              
-                                <td> ${microfis_formatDate(repaidListDoc.repaidDate)}</td>
-                                <td> ${repaidListDoc.type}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(principalPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(interestPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(feeOnPaymentPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(overAmount)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.amountPaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.clearPrepaid)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(penaltyPaid)}</td>
-                            </tr>`;
+                 <td> ${repaidListDoc.loanDoc.currencyId}</td>
+                 <td> ${repaidListDoc.loanDoc.accountType}</td>
+                 <td> ${microfis_formatDate(repaidListDoc.loanDoc.disbursementDate)}</td>
+                 <td> ${microfis_formatDate(repaidListDoc.loanDoc.maturityDate)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.loanAmount)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectInterest)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectFeeOnPayment)}</td>
+
+                 <td> ${microfis_formatDate(repaidListDoc.repaidDate)}</td>
+                 <td> ${repaidListDoc.type}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(principalPaid)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(interestPaid)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(feeOnPaymentPaid)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(overAmount)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.amountPaid)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.clearPrepaid)}</td>
+                 <td class="numberAlign"> ${microfis_formatNumber(penaltyPaid)}</td>
+                 </tr>`;
 
                             i++;
 

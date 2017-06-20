@@ -65,7 +65,6 @@ export const repaymentScheduleReport = new ValidatedMethod({
                 ]);
             data.content = content[0];
 
-
             return data
         }
     }

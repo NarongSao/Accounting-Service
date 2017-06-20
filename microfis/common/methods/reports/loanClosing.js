@@ -354,6 +354,7 @@ export const loanClosingReport = new ValidatedMethod({
                         checkDate: checkDate,
                         opts: loanAccDoc
                     });
+                    
 
                     let productStatusList;
 
