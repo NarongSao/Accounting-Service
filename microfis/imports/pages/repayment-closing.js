@@ -337,7 +337,7 @@ let hooksObject = {
                     closing: checkRepayment.closing,
                     principalUnpaid: checkRepayment.balanceUnPaid,
                     feeOnPaymentUnPaid: checkRepayment.feeOnPaymentUnPaid,
-                    interestUnPaid: checkRepayment.interestUnPaid
+                    totalScheduleDue: checkRepayment.totalScheduleDue
                 });
 
 

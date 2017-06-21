@@ -570,7 +570,7 @@ scheduleDetailTmpl.helpers({
     },
     outstanding(item) {
         if (item.repaymentDoc) {
-            let totalPaidAndInterestWaived = (item.repaymentDoc.totalPrincipalPaid + item.repaymentDoc.totalInterestPaid + item.repaymentDoc.totalInterestWaived + item.repaymentDoc.totalFeeOnPaymentPaid )
+            let totalPaidAndInterestWaived = (item.repaymentDoc.totalPrincipalPaid + item.repaymentDoc.totalInterestPaid + item.repaymentDoc.totalInterestWaived + item.repaymentDoc.totalFeeOnPaymentPaid + item.repaymentDoc.totalFeeOnPaymentWaived )
             return item.totalDue - totalPaidAndInterestWaived;
         } else {
             return item.totalDue;

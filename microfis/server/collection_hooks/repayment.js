@@ -311,7 +311,7 @@ Repayment.after.insert(function (userId, doc) {
 
 
                             let acc_cash = MapClosing.findOne({chartAccountCompare: "Cash"});
-                            let acc_otherInterestIncome = MapClosing.findOne({chartAccountCompare: "Other Interest Income"});
+                            /*let acc_otherInterestIncome = MapClosing.findOne({chartAccountCompare: "Other Interest Income"});*/
                             let acc_penalty = MapClosing.findOne({chartAccountCompare: "Penalty"});
                             let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
                             let acc_unEarnIncome = MapClosing.findOne({chartAccountCompare: "Unearn Income"});
@@ -340,14 +340,17 @@ Repayment.after.insert(function (userId, doc) {
                                 }, {
                                     account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
                                     dr: 0,
-                                    cr: doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.closing.interestAddition,
-                                    drcr: -(doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.closing.interestAddition)
-                                }, {
-                                    account: acc_otherInterestIncome.accountDoc.code + " | " + acc_otherInterestIncome.accountDoc.name,
-                                    dr: 0,
-                                    cr: doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition),
-                                    drcr: -(doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition))
-                                }, {
+                                    cr: doc.detailDoc.totalSchedulePaid.interestPaid /*+ doc.detailDoc.closing.interestAddition*/,
+                                    drcr: -(doc.detailDoc.totalSchedulePaid.interestPaid /*+ doc.detailDoc.closing.interestAddition*/)
+                                },
+
+                                /*{
+                                 account: acc_otherInterestIncome.accountDoc.code + " | " + acc_otherInterestIncome.accountDoc.name,
+                                 dr: 0,
+                                 cr: doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition),
+                                 drcr: -(doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition))
+                                 }, */
+                                {
                                     account: acc_penalty.accountDoc.code + " | " + acc_penalty.accountDoc.name,
                                     dr: 0,
                                     cr: doc.detailDoc.totalSchedulePaid.penaltyPaid,
