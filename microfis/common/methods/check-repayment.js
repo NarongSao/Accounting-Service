@@ -407,7 +407,7 @@ export let checkRepayment = new ValidatedMethod({
             }
 
 
-            closing.interestWaived = round2(closing.interestReminder - closing.interestReminderPenalty, _round.precision, _round.type);
+            closing.interestWaived = round2(closing.interestReminder - closing.interestReminderPenalty > 0 ? closing.interestReminder - closing.interestReminderPenalty : 0, _round.precision, _round.type);
             closing.feeOnPaymentWaived = round2(closing.feeOnPaymentReminder, _round.precision, _round.type);
             closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty, _round.precision, _round.type);
 

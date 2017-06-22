@@ -912,7 +912,7 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
     let tmpAmountPaid = {
         principal: new BigNumber(principalUnpaid),
-        feeOnPayment: new BigNumber(amountPaid).minus(totalScheduleDue.interestDue).minus(closing.interestAddition).minus(principalUnpaid),
+        feeOnPayment: new BigNumber(amountPaid).minus(totalScheduleDue.interestDue).minus(closing.interestAddition).minus(principalUnpaid).minus(closing.interestReminderPenalty),
         interest: new BigNumber(totalScheduleDue.interestDue).plus(closing.interestAddition)
     };
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);

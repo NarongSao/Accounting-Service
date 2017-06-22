@@ -98,6 +98,7 @@ export const loanClosingReport = new ValidatedMethod({
                                     <th>Sum Col Prin Last</th>                                   
                                     <th>Sum Col Int Last</th>                                   
                                     <th>Sum Col Operation Fee Last</th>                                   
+                                    <th>Sum Col Penalty Closing Last</th>                                   
                                     <th>Total Sum Col Last</th>
                                     <th>Sum Col Pen Last</th>
                                    
@@ -321,6 +322,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossFeeOnPaymentKHR = 0;
             let totalPenaltyKHR = 0;
             let totalWaivedForClosingKHR = 0;
+            let totalPenaltyClosingKHR = 0;
 
 
             let totalDuePrinUSD = 0;
@@ -330,6 +332,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossFeeOnPaymentUSD = 0;
             let totalPenaltyUSD = 0;
             let totalWaivedForClosingUSD = 0;
+            let totalPenaltyClosingUSD = 0;
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
@@ -338,6 +341,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossFeeOnPaymentTHB = 0;
             let totalPenaltyTHB = 0;
             let totalWaivedForClosingTHB = 0;
+            let totalPenaltyClosingTHB = 0;
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
@@ -346,6 +350,7 @@ export const loanClosingReport = new ValidatedMethod({
             let totalSumLossFeeOnPaymentBase = 0;
             let totalPenaltyBase = 0;
             let totalWaivedForClosingBase = 0;
+            let totalPenaltyClosingBase = 0;
             if (loanDoc.length > 0) {
                 loanDoc.forEach(function (loanAccDoc) {
 
@@ -354,7 +359,7 @@ export const loanClosingReport = new ValidatedMethod({
                         checkDate: checkDate,
                         opts: loanAccDoc
                     });
-                    
+
 
                     let productStatusList;
 
@@ -408,6 +413,7 @@ export const loanClosingReport = new ValidatedMethod({
                             totalSumLossFeeOnPaymentKHR += result.feeOnPaymentUnPaid;
                             totalPenaltyKHR += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
                             totalWaivedForClosingKHR += loanAccDoc.waivedForClosing;
+                            totalPenaltyClosingKHR += result.lastRepayment.detailDoc.closing.interestReminderPenalty;
 
                         } else if (loanAccDoc.currencyId == "USD") {
                             totalDuePrinUSD += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
@@ -417,6 +423,8 @@ export const loanClosingReport = new ValidatedMethod({
                             totalSumLossFeeOnPaymentUSD += result.feeOnPaymentUnPaid;
                             totalPenaltyUSD += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
                             totalWaivedForClosingUSD += loanAccDoc.waivedForClosing;
+                            totalPenaltyClosingUSD += result.lastRepayment.detailDoc.closing.interestReminderPenalty;
+
 
                         } else if (loanAccDoc.currencyId == "THB") {
                             totalDuePrinTHB += result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid;
@@ -426,6 +434,8 @@ export const loanClosingReport = new ValidatedMethod({
                             totalSumLossFeeOnPaymentTHB += result.feeOnPaymentUnPaid;
                             totalPenaltyTHB += result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid;
                             totalWaivedForClosingTHB += loanAccDoc.waivedForClosing;
+                            totalPenaltyClosingTHB += result.lastRepayment.detailDoc.closing.interestReminderPenalty;
+
 
                         }
 
@@ -456,6 +466,9 @@ export const loanClosingReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.principalPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.interestPaid)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.feeOnPaymentPaid)}</td>
+                                
+                                <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.closing.interestReminderPenalty)}</td>
+                                
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.totalPrincipalInterestPaid)}</td>
                                 
                                 <td class="numberAlign"> ${microfis_formatNumber(result.lastRepayment.detailDoc.totalSchedulePaid.penaltyPaid)}</td>
@@ -585,6 +598,23 @@ export const loanClosingReport = new ValidatedMethod({
                     totalWaivedForClosingTHB,
                     params.exchangeId);
 
+            totalPenaltyClosingBase = Meteor.call('microfis_exchange',
+                    "KHR",
+                    baseCurrency,
+                    totalPenaltyClosingKHR,
+                    params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPenaltyClosingUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPenaltyClosingTHB,
+                    params.exchangeId);
+
 
             content += `<tr>
                             <td colspan="13" align="right">Subtotal-KHR</td>
@@ -594,7 +624,8 @@ export const loanClosingReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyClosingKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR + totalPenaltyClosingKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyKHR)}</td>
 
                         </tr>
@@ -606,7 +637,8 @@ export const loanClosingReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyClosingUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD + totalPenaltyClosingUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyUSD)}</td>
 
                         </tr>
@@ -618,7 +650,8 @@ export const loanClosingReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyClosingTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB + totalPenaltyClosingTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyTHB)}</td>
 
                         </tr>
@@ -630,7 +663,8 @@ export const loanClosingReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPenaltyClosingBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase + totalPenaltyClosingBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalPenaltyBase)}</td>
 
                         </tr>

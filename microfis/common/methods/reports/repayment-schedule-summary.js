@@ -13,6 +13,7 @@ import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
+import LocationClass from "../../../imports/libs/getLocation";
 
 export const repaymentScheduleSummaryReport = new ValidatedMethod({
     name: 'microfis.repaymentScheduleSummaryReport',
@@ -43,6 +44,7 @@ export const repaymentScheduleSummaryReport = new ValidatedMethod({
             } else {
                 loanAccDoc.isPercentage = false;
             }
+            loanAccDoc.locationName = LocationClass.getLocationByVillage(loanAccDoc.locationId);
 
             data.header = loanAccDoc;
 
