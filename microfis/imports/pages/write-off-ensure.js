@@ -226,6 +226,11 @@ let hooksObject = {
             return false;
         }
 
+        if (loanAccDoc.status == "Waived") {
+            alertify.warning("You already Waived");
+            return false;
+        }
+
 
         let updateWriteOff = {status: "Write Off", writeOffDate: doc.writeOff.writeOffDate};
         updateWriteOff['writeOff.writeOffDate'] = doc.writeOff.writeOffDate;

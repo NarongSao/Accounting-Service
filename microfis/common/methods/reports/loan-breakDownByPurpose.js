@@ -214,7 +214,8 @@ export const loanBreakDownByPurposeReport = new ValidatedMethod({
             selector['$or'] = [{status: "Active"},
                 {closeDate: {$exists: true, $gt: dateParam}},
                 {writeOffDate: {$exists: true, $gt: dateParam}},
-                {restructureDate: {$exists: true, $gt: dateParam}}
+                {restructureDate: {$exists: true, $gt: dateParam}},
+                {waivedDate: {$exists: true, $gt: dateParam}}
             ];
 
 

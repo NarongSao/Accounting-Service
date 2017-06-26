@@ -159,6 +159,10 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: Date,
         optional: true
     },
+    waivedDate: {
+        type: Date,
+        optional: true
+    },
     closeDate: {
         type: Date,
         optional: true
@@ -750,17 +754,17 @@ LoanAcc.locationSchema = new SimpleSchema({
         type: String,
         label: 'Location',
         /*autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'microfis.selectOpts.location',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        return {type: 'V'};
-                    }
-                }
-            }
-        }*/
+         type: 'universe-select',
+         afFieldInput: {
+         uniPlaceholder: 'Select One',
+         optionsMethod: 'microfis.selectOpts.location',
+         optionsMethodParams: function () {
+         if (Meteor.isClient) {
+         return {type: 'V'};
+         }
+         }
+         }
+         }*/
     },
     geography: {
         type: String,
@@ -943,7 +947,8 @@ LoanAcc.attachSchema([
     LoanAcc.interestSchema,
     LoanAcc.locationSchema,
     LoanAcc.writeOff,
-    LoanAcc.otherSchema
+    LoanAcc.otherSchema,
+    LoanAcc.waived
 ]);
 
 // Custom validate
@@ -1415,5 +1420,85 @@ LoanAcc.writeOff = new SimpleSchema({
                 return inputmaskOptions.decimal({digits: 2});
             }
         }
+    }
+});
+
+
+LoanAcc.waived = new SimpleSchema({
+    waived: {
+        type: Object,
+        optional: true
+    },
+    'waived.waivedDate': {
+        type: Date,
+        defaultValue: moment().toDate(),
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'bootstrap-datetimepicker',
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
+                }
+            }
+        }
+    },
+    'waived.amount': {
+        type: Number,
+        label: 'Amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
+    },
+    'waived.interest': {
+        type: Number,
+        label: 'Interest',
+        decimal: true,
+
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    }, 'waived.feeOnPayment': {
+        type: Number,
+        label: 'Fee On Payment',
+        decimal: true,
+
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Credit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal({digits: 2});
+            }
+        }
+    },
+    'waived.description': {
+        type: String,
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'summernote',
+                class: 'editor',
+                settings: {
+                    height: 80,
+                    minHeight: null,
+                    maxHeight: null,
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol']]
+
+                    ]
+                }
+            }
+        }
+
     }
 });

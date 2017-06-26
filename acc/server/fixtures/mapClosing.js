@@ -56,6 +56,9 @@ Meteor.startup(function () {
             }, {
                 "_id": "141",
                 "chartAccountCompare": "Other Interest Income"
+            }, {
+                "_id": "142",
+                "chartAccountCompare": "Waived For Death"
             }
 
             //Standard

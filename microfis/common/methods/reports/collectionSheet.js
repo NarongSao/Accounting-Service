@@ -226,7 +226,8 @@ export const collectionSheetReport = new ValidatedMethod({
             selector['$or'] = [{status: "Active"},
                 {closeDate: {$exists: true, $gte: tDate}},
                 {writeOffDate: {$exists: true, $gte: tDate}},
-                {restructureDate: {$exists: true, $gte: tDate}}
+                {restructureDate: {$exists: true, $gte: tDate}},
+                {waivedDate: {$exists: true, $gte: tDate}}
             ];
 
             //All Active Loan in check date

@@ -235,6 +235,11 @@ let hooksObject = {
                 return false;
             }
 
+            if (loanAccDoc.status == "Waived") {
+                alertify.warning("You already Waived");
+                return false;
+            }
+
             if (loanAccDoc.status == "Close") {
                 alertify.warning("You already Close");
                 return false;

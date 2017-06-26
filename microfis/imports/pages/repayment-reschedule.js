@@ -262,6 +262,11 @@ let hooksObject = {
                 return false;
             }
 
+            if (loanAccDoc.status == "Waived") {
+                alertify.warning("You already Waived");
+                return false;
+            }
+
             //Check write Off
             if (loanAccDoc.writeOffDate != null) {
                 alertify.warning("You already write off!!!");

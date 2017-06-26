@@ -25,6 +25,7 @@ import {lookupLoanAcc} from '../../common/methods/lookup-loan-acc.js';
 import {lookupProduct} from '../../common/methods/lookup-product.js';
 
 import {removeWriteOffEnsure} from '../../common/methods/remove-writeOffEnsure.js';
+import {removeWaived} from '../../common/methods/remove-waived';
 import {updateLoanAccPaymentWrteOff} from '../../common/methods/update-LoanAccPaymentWriteOff.js';
 import {getLastRepayment} from '../../common/methods/get-last-repayment.js';
 
@@ -55,6 +56,7 @@ import './repayment-writeOff.js';
 import './repayment-fee.js';
 
 import './write-off-ensure.js';
+import './waived.js';
 import './saving-transaction.html';
 
 // Declare template
@@ -71,6 +73,7 @@ let indexTmpl = Template.Microfis_repayment,
     closingFormTmpl = Template.Microfis_repaymentClosingForm,
     writeOffFormTmpl = Template.Microfis_repaymentWriteOffForm,
     writeOffEnsureFormTmpl = Template.Microfis_writeOffEnsure,
+    waivedFormTmpl = Template.Microfis_waived,
     rescheduleFormTmpl = Template.Microfis_rescheduleForm,
     reStructureForm = Template.Microfis_reStructure;
 
@@ -82,7 +85,9 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('repayment', {size: 'lg'});
     createNewAlertify('writeOff');
-    createNewAlertify('fee');
+    createNewAlertify('waived', {size: "md"});
+    createNewAlertify('writeOffEnsure', {size: "md"});
+    createNewAlertify('fee', {size: "md"});
     createNewAlertify('repaymentShow');
 
     // Default stat
@@ -315,7 +320,17 @@ indexTmpl.events({
             scheduleDoc: stateRepayment.get('scheduleDoc'),
         };
 
-        alertify.writeOff(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
+        alertify.writeOffEnsure(fa('plus', 'Write-Off Ensure'), renderTemplate(writeOffEnsureFormTmpl, data));
+
+    },
+    'click .js-waived'(event, instance) {
+
+        let data = {
+            loanAccDoc: stateRepayment.get('loanAccDoc'),
+            scheduleDoc: stateRepayment.get('scheduleDoc'),
+        };
+
+        alertify.waived(fa('plus', 'Waived'), renderTemplate(waivedFormTmpl, data));
 
     }, 'click .js-create-write-off'(event, instance) {
 
@@ -513,6 +528,53 @@ indexTmpl.events({
                     }
 
                 }
+            } else {
+                alertify.error("Already End Of Process!!!");
+            }
+        })
+
+    },
+    'click .js-removeWaived'(event, instance) {
+        let self = this;
+        Meteor.call('microfis_getLastEndOfProcess', self.branchId, function (err, endOfProcess) {
+            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.waived.waivedDate.getTime()) {
+
+                let loanAccDoc = stateRepayment.get('loanAccDoc');
+
+                let opts = {};
+
+                opts.waived = "";
+                opts.waivedDate = "";
+
+
+                alertify.confirm(
+                    fa("remove", "Waived"),
+                    "Are you sure to delete waived?",
+                    function () {
+                        removeWaived.callPromise({
+                            loanAccId: loanAccDoc._id,
+                            opts: opts
+                        }).then(function (result) {
+                            alertify.success("Remove Success.");
+
+                            lookupLoanAcc.callPromise({
+                                _id: loanAccDoc._id
+                            }).then(function (result) {
+                                stateRepayment.set('loanAccDoc', result);
+                            }).catch(function (err) {
+                                console.log(err.message);
+                            });
+
+
+                        }).catch(function (err) {
+                            alertify.error(err.message);
+                            console.log(err.message);
+                        });
+                    },
+                    null
+                );
+
+
             } else {
                 alertify.error("Already End Of Process!!!");
             }

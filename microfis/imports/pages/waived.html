@@ -1,0 +1,47 @@
+<template name="Microfis_waived">
+    <div class="box-header with-border">
+        {{#with loanAccDoc}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="box-title text-blue">
+                        <b>Product:</b> {{productId}},
+                        <b>Disbursement Date:</b> {{moFormat disbursementDate "DD/MM/YYYY"}},
+                        <b>Currency:</b> {{currencyId}}
+                    </h3>
+                </div>
+                <div class="col-md-6 text-bold">
+                    <h3 class="box-title text-blue pull-right">
+                        <span class="badge bg-orange-active"><i class="fa fa-heart-o"></i> {{status}} </span>
+
+                        <a href="#" class="js-display-disbursement">
+                            {{clientId}} : {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</a>
+                    </h3>
+                </div>
+            </div>
+        {{/with}}
+
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm schema=schema id="Microfis_waived" doc=data resetOnSuccess=false}}
+                <fieldset>
+                    <legend>Waived</legend>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{> afQuickField name="waived.waivedDate"}}
+                            {{> afQuickField name="waived.amount" value=balanceUnPaid readonly=true}}
+                            {{> afQuickField name="waived.interest" value=interestUnPaid readonly=true}}
+                            {{> afQuickField name="waived.feeOnPayment" value=feeOnPaymentUnPaid readonly=true}}
+                            {{> afQuickField name="waived.description"}}
+                        </div>
+                    </div>
+                </fieldset>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>

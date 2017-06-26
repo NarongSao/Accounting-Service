@@ -45,6 +45,7 @@
                             <li><a class="js-create-write-off-ensure" href="#">Write Off Ensure</a></li>
                             <!--<li><a class="js-create-waive-interest" href="#">Waive Interest</a></li>-->
                             <li><a class="js-reStructure" href="#">Restructure</a></li>
+                            <li><a class="js-waived" href="#">Waived</a></li>
                         </ul>
                     </div>
                 </div>
@@ -76,6 +77,7 @@
                 <li class="active"><a href="#tab_schedule" data-toggle="tab" aria-expanded="false">Schedule</a></li>
                 <li class=""><a href="#tab_transaction" data-toggle="tab" aria-expanded="false">Transaction</a></li>
                 <li class=""><a href="#tab_writeOff" data-toggle="tab" aria-expanded="false">Write Off</a></li>
+                <li class=""><a href="#tab_waived" data-toggle="tab" aria-expanded="false">Waived</a></li>
                 <li class=""><a href="#tab_restructure" data-toggle="tab" aria-expanded="false">Restructure</a></li>
                 <li class=""><a href="#tab_savingTransaction" data-toggle="tab" aria-expanded="false">Saving
                     Transaction</a></li>
@@ -100,6 +102,10 @@
 
                 <div class="tab-pane" id="tab_writeOff">
                     {{> Microfis_writeOffEnsureDetail data=loanAccDoc}}
+                </div>
+
+                <div class="tab-pane" id="tab_waived">
+                    {{> Microfis_waivedDetail data=loanAccDoc}}
                 </div>
 
                 <!-- /.tab-pane -->
@@ -279,6 +285,42 @@
                         </button>
                     </div>
                 </div>
+            {{/if}}
+        {{/with}}
+    </div>
+</template>
+
+<!--Waived-->
+<template name="Microfis_waivedDetail">
+    <div class="row">
+        {{#with data}}
+            {{#if waived}}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#Id</th>
+                        <th>Waived Date</th>
+                        <th>Amount</th>
+                        <th>Interest</th>
+                        <th>Operation Fee</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{_id}}</td>
+                        <td>{{moFormat waived.waivedDate "DD/MM/YYYY"}}</td>
+                        <td>{{numFormat waived.amount "0,0.00"}}</td>
+                        <td>{{numFormat waived.interest "0,0.00"}}</td>
+                        <td>{{numFormat waived.feeOnPayment "0,0.00"}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="pull-right">
+                    <button class="btn btn-danger js-removeWaived"><i class=" fa fa-times" aria-hidden="true"></i>
+                        Remove
+                    </button>
+                </div>
+
             {{/if}}
         {{/with}}
     </div>

@@ -265,6 +265,11 @@ let hooksObject = {
                 return false;
             }
 
+            if (loanAccDoc.status == "Waived") {
+                alertify.warning("You already Waived");
+                return false;
+            }
+
             // Check have current due amount
             if (checkRepayment && checkRepayment.scheduleDue && checkRepayment.scheduleDue.length > 0) {
                 displayError("Have current due amount, so can't prepay");

@@ -98,7 +98,8 @@ Product.accountSchema = new SimpleSchema({
         }
     },
     exchange: {
-        type: Object
+        type: Object,
+        label: "Exchange *"
     },
     'exchange.USD': {
         type: Number,
@@ -147,7 +148,8 @@ Product.accountSchema = new SimpleSchema({
         }
     },
     loanAmount: {
-        type: Object
+        type: Object,
+        label: "Loan Amount *"
     },
     'loanAmount.min': {
         type: Number,

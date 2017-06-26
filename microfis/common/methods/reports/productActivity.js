@@ -220,7 +220,8 @@ export const productActivityReport = new ValidatedMethod({
             selector['$or'] = [{status: "Active"},
                 {closeDate: {$exists: true, $gt: tDate}},
                 {writeOffDate: {$exists: true, $gt: tDate}},
-                {restructureDate: {$exists: true, $gt: tDate}}
+                {restructureDate: {$exists: true, $gt: tDate}},
+                {waivedDate: {$exists: true, $gt: tDate}}
             ];
 
 
