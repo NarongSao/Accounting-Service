@@ -264,10 +264,10 @@ formTmpl.events({
     'click [name="repaidDate"]'(){
         let $repaidDateObj = $('[name="repaidDate"]');
         if (stateRepayment.get('lastTransactionDate')) {
-            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate()).maxDate(moment().add(365, "days").toDate());
         } else {
             let loanDoc = stateRepayment.get("loanAccDoc");
-            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate());
+            $repaidDateObj.data("DateTimePicker").minDate(moment(loanDoc.disbursementDate).startOf('day').toDate()).maxDate(moment().add(365, "days").toDate());
         }
     },
     'keypress [name="voucherId"]': function (evt) {
@@ -301,6 +301,10 @@ let hooksObject = {
             let loanAccDoc = stateRepayment.get('loanAccDoc'),
                 checkRepayment = stateRepayment.get('checkRepayment');
 
+            if (moment(doc.repaidDate).toDate().getTime() > moment().endOf("days").toDate().getTime()) {
+                alertify.warning("Not Reach Of Date !!");
+                return false;
+            }
 
             var year = moment(doc.repaidDate).format("YYYY");
             doc.voucherId = doc.branchId + "-" + year + s.pad(doc.voucherId, 6, "0");

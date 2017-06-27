@@ -54,11 +54,21 @@ indexTmpl.events({
         alertify.product(fa('pencil', 'Saving Product'), renderTemplate(formTmpl, this)).maximize();
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            SavingProduct,
-            {_id: this._id},
-            {title: 'Product', itemTitle: this._id}
-        );
+
+        let self = this;
+        Meteor.call("microfis_getSavingAccByProductId", self._id, function (err, result) {
+            if (result == undefined) {
+                destroyAction(
+                    SavingProduct,
+                    {_id: self._id},
+                    {title: 'Product', itemTitle: self._id}
+                );
+            } else {
+                alertify.warning("You already use this Product!!");
+            }
+        })
+
+
     },
     'click .js-display' (event, instance) {
         alertify.product(fa('eye', 'Saving Product'), renderTemplate(showTmpl, this));
@@ -70,7 +80,7 @@ formTmpl.onCreated(function () {
     this.accountClassState = new ReactiveVar('E');
     this.interestMethodState = new ReactiveVar('Y');
 
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         if (currentData) {
             this.accountClassState.set(currentData.accountClass);
@@ -141,7 +151,7 @@ formTmpl.onDestroyed(function () {
 
 // Show
 showTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         if (currentData) {
             this.subscribe('microfis.savingProductById', currentData._id);

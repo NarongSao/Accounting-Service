@@ -23,7 +23,8 @@ import {Product} from '../../common/collections/product.js';
 
 // Method
 import {lookupProduct} from '../../common/methods/lookup-product.js';
-
+// Tabular
+import {ProductTabular} from '../../common/tabulars/product';
 // Page
 import './product.html';
 
@@ -41,6 +42,9 @@ indexTmpl.onCreated(function () {
 });
 
 indexTmpl.helpers({
+    tabularTable(){
+        return ProductTabular;
+    },
     tableSettings(){
         reactiveTableSettings.collection = 'microfis.reactiveTable.product';
         reactiveTableSettings.fields = [
@@ -96,11 +100,19 @@ indexTmpl.events({
         alertify.product(fa('pencil', 'Product'), renderTemplate(formTmpl, this)).maximize();
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Product,
-            {_id: this._id},
-            {title: 'Product', itemTitle: this._id}
-        );
+
+        let self = this;
+        Meteor.call("microfis_getLoanAccByProductId", self._id, function (err, result) {
+            if (result == undefined) {
+                destroyAction(
+                    Product,
+                    {_id: self._id},
+                    {title: 'Product', itemTitle: self._id}
+                );
+            } else {
+                alertify.warning("You already use this Product!!");
+            }
+        })
     },
     'click .js-display' (event, instance) {
         alertify.product(fa('eye', 'Product'), renderTemplate(showTmpl, this));

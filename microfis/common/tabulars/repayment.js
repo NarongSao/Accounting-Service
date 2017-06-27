@@ -32,6 +32,12 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         },
         {data: 'type', title: 'Type'},
         {
+            data: 'voucherId', title: 'Voucher',
+            render: function (value, object, key) {
+                return value.substr(8, value.length - 1);
+            }
+        },
+        {
             data: 'detailDoc.totalSchedulePaid.totalPrincipalInterestDue',
             title: 'Amount Due',
             render: function (val, type, doc) {
@@ -70,7 +76,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         }
     ],
-    exraFields: ['disbursementId', 'amountType'],
+    extraFields: ['disbursementId', 'amountType', "loanAccId", "endId"],
 });
 
 export const RepaymentTabular = new Tabular.Table(tabularData);

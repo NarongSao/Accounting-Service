@@ -84,7 +84,7 @@ Tracker.autorun(function () {
         var dobSelect = Session.get('dobSelect');
         var startYear = moment(dobSelect).year();
         var startDate = new Date('01/01/' + startYear);
-        Meteor.call('acc_getVoucherId', currentCurrency, startDate, Session.get("currentBranch"),Meteor.userId(), function (err, result) {
+        Meteor.call('acc_getVoucherId', currentCurrency, startDate, Session.get("currentBranch"), Meteor.userId(), function (err, result) {
             if (result != undefined) {
                 Session.set('lastVoucherId', parseInt((result.voucherId).substr(8, 13)) + 1);
             } else {
@@ -532,6 +532,11 @@ AutoForm.hooks({
                     total += obj.dr;
                     transactionList.push({account: obj.account, dr: obj.dr, cr: obj.cr, drcr: obj.dr - obj.cr})
                 });
+
+                if (transactionList.length == 0) {
+                    alertify.warning("At lease ,have one transaction!!");
+                    return false;
+                }
                 doc.transaction = transactionList;
                 let transactionAssetList = [];
                 let transactionAssetData = fixAssetDepCollection.find().fetch();
@@ -597,6 +602,11 @@ AutoForm.hooks({
                     });
 
                     transactionList.push({account: paymentMethod, dr: 0, cr: total, drcr: -total})
+
+                    if (transactionList.length == 1) {
+                        alertify.warning("At lease ,have one transaction!!");
+                        return false;
+                    }
 
                     doc.transaction = transactionList;
                     let transactionAssetList = [];
@@ -671,6 +681,12 @@ AutoForm.hooks({
 
                     transactionList.unshift({account: paymentMethod, dr: total, cr: 0, drcr: total})
 
+
+                    if (transactionList.length == 1) {
+                        alertify.warning("At lease ,have one transaction!!");
+                        return false;
+                    }
+
                     doc.transaction = transactionList;
                     let transactionAssetList = [];
                     let transactionAssetData = fixAssetDepCollection.find().fetch();
@@ -738,6 +754,12 @@ AutoForm.hooks({
                     total += obj.dr;
                     transactionList.push({account: obj.account, dr: obj.dr, cr: obj.cr, drcr: obj.dr - obj.cr})
                 });
+
+                if (transactionList.length == 0) {
+                    alertify.warning("At lease ,have one transaction!!");
+                    return false;
+                }
+
                 doc.$set.splitAccount = transactionData.length > 2 ? this.docId : 0;
                 doc.$set.total = total;
                 doc.$set.transaction = transactionList;

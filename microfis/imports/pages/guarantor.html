@@ -7,9 +7,14 @@
     </div>
     <!-- /.box-header -->
 
-    <div class="box-body">
-        <!--Reactive Table-->
+    <!--<div class="box-body">
+        &lt;!&ndash;Reactive Table&ndash;&gt;
         {{> reactiveTable settings=tableSettings}}
+    </div>-->
+
+
+    <div class="box-body">
+        {{> tabular table=tabularTable selector=tabularSelector class="table table-striped table-bordered table-condensed table-hover-pointer"}}
     </div>
     <!-- /.box-body -->
 </template>

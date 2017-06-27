@@ -149,10 +149,10 @@
                                     <th>ចំនួនថ្ងៃ</th>
                                     <th>ប្រាក់ដើម</th>
                                     <th>ប្រាក់ការ</th>
-                                    <th>សេវាប្រតិបត្តិការ</th>
+                                    <th>សេវា​​ប្រតិ​បត្តិការ</th>
                                     <th>ប្រាក់សរុប</th>
-                                    <th>សមតុល្យប្រាក់ដើម</th>
-                                    <th width="150px">ព័ត៌មានទទួលប្រាក់</th>
+                                    <th>សមតុល្យ<br>ប្រាក់ដើម</th>
+                                    <th width="150px">ផ្សេងៗ</th>
                                 </tr>
                                 </thead>
 
@@ -167,7 +167,7 @@
                                                 {{installment}}
                                             {{/if}}
                                         </td>
-                                        <td>{{khDayForDueDate dueDate}} {{moFormat dueDate "DD/MM/YYYY"}}</td>
+                                        <td>{{khDayForDueDate dueDate}}-{{moFormat dueDate "DD/MM/YYYY"}}</td>
                                         <td>{{numOfDay}}</td>
                                         <td class="numberAlign">{{numFormat principalDue "0,0.00"}}</td>
                                         <td class="numberAlign">{{numFormat interestDue "0,0.00"}}</td>
@@ -210,12 +210,12 @@
                             <strong><u> កំណត់សំគាល់:</u> </strong>
                             ស្មាមមេដៃខាងក្រោមបញ្ជាក់ថាអតិថិជនបានទទួលប្រាក់គ្រប់ចំនួន
                             និងយល់ព្រមបង់ប្រាក់ទៀងទាត់តាមតារាងសងប្រាក់ខាងលើ
-                            និងឯកភាពគ្រប់លក្ខខ័ណ្ឌតាមកិច្ចសន្យាចងការប្រាក់របស់ក្រុមហ៊ុនសំរឹទ្ធពេជ្រហ្វាយនែន ម.ក។
+                            និងឯកភាពគ្រប់លក្ខខ័ណ្ឌតាមកិច្ចសន្យាចងការប្រាក់របស់ក្រុមហ៊ុន {{title.company.khName}}។
 
                             <br>
                             <br>
                             <!--Sign-->
-                            <table width="100%" border="0" style="text-align: center">
+                            <table width="100%" border="0" style="text-align: center; font-size: 20px">
                                 <tr>
                                     <td width="50%">
                                         ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}

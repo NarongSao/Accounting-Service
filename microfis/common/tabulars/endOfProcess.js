@@ -21,6 +21,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
     collection: EndOfProcess,
     columns: [
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_endOfProcessAction},
+        {data: '_id', title: 'Id'},
         {
             data: "closeDate", title: "Date",
             render: function (val, type, doc) {

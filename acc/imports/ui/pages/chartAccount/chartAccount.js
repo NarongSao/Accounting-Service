@@ -163,20 +163,29 @@ Template.acc_chartAccount.events({
     },
     'click .remove': function (e, t) {
         var id = this._id;
-        alertify.confirm("Are you sure to delete [" + id + "]?")
-            .set({
-                onok: function (closeEvent) {
+        let selector = {};
+        selector["transaction.accountDoc._id"] = id;
+        Meteor.call("getJournal", selector, function (err, result) {
+            if (result == undefined) {
+                alertify.confirm("Are you sure to delete [" + id + "]?")
+                    .set({
+                        onok: function (closeEvent) {
 
-                    ChartAccount.remove(id, function (error) {
-                        if (error) {
-                            alertify.error(error.message);
-                        } else {
-                            alertify.success("Success");
-                        }
+                            ChartAccount.remove(id, function (error) {
+                                if (error) {
+                                    alertify.error(error.message);
+                                } else {
+                                    alertify.success("Success");
+                                }
+                            });
+                        },
+                        title: fa("remove", "Chart of Account")
                     });
-                },
-                title: fa("remove", "Chart of Account")
-            });
+
+            } else {
+                alertify.warning("You already use this Chart Account!!!");
+            }
+        })
 
     },
     'click .show': function (e, t) {

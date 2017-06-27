@@ -24,6 +24,8 @@ import {CreditOfficer} from '../../common/collections/credit-officer.js';
 
 // Page
 import './credit-officer.html';
+// Tabular
+import {CreditOfficerTabular} from '../../common/tabulars/creditOfficer';
 
 // Declare template
 let indexTmpl = Template.Microfis_creditOfficer,
@@ -46,6 +48,12 @@ indexTmpl.onCreated(function () {
 });
 
 indexTmpl.helpers({
+    tabularTable(){
+        return CreditOfficerTabular;
+    },
+    tabularSelector(){
+        return {branchId: Session.get('currentBranch')};
+    },
     tableSettings(){
         let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
             collection: 'microfis.reactiveTable.creditOfficer',

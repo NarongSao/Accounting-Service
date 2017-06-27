@@ -24,6 +24,9 @@ import {Guarantor} from '../../common/collections/guarantor.js';
 
 // Page
 import './guarantor.html';
+// Tabular
+import {GuarantorTabular} from '../../common/tabulars/guarantor';
+
 
 // Declare template
 let indexTmpl = Template.Microfis_guarantor,
@@ -40,6 +43,12 @@ indexTmpl.onCreated(function () {
 });
 
 indexTmpl.helpers({
+    tabularTable(){
+        return GuarantorTabular;
+    },
+    tabularSelector(){
+        return {branchId: Session.get('currentBranch')};
+    },
     tableSettings(){
         reactiveTableSettings.collection = 'microfis.reactiveTable.guarantor';
         reactiveTableSettings.fields = [
@@ -95,6 +104,7 @@ indexTmpl.helpers({
     }
 });
 
+
 indexTmpl.events({
     'click .js-create' (event, instance) {
         alertify.guarantor(fa('plus', 'Guarantor'), renderTemplate(formTmpl));
@@ -116,7 +126,7 @@ indexTmpl.events({
 
 // Form
 formTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         if (currentData) {
             this.subscribe('microfis.guarantor', {_id: currentData._id});
@@ -157,9 +167,9 @@ showTmpl.helpers({
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        if (formType == 'update') {
-            alertify.guarantor().close();
-        }
+        /*if (formType == 'update') {*/
+        alertify.guarantor().close();
+        /*}*/
         displaySuccess();
     },
     onError (formType, error) {

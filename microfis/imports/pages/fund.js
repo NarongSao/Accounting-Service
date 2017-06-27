@@ -20,6 +20,8 @@ import '../../../core/client/components/form-footer.js';
 // Collection
 import {Fund} from '../../common/collections/fund.js';
 
+// Tabular
+import {FundTabular} from '../../common/tabulars/fund';
 // Page
 import './fund.html';
 
@@ -39,6 +41,10 @@ indexTmpl.onCreated(function () {
 });
 
 indexTmpl.helpers({
+    tabularTable(){
+        return FundTabular;
+    },
+
     tableSettings(){
         reactiveTableSettings.collection = 'microfis.reactiveTable.fund';
         reactiveTableSettings.fields = [

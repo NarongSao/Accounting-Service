@@ -173,7 +173,7 @@ indexTmpl.helpers({
     tabularTable() {
         let selector = {loanAccId: FlowRouter.getParam('loanAccId')};
         return {
-            tabularTable: RepaymentTabular,
+            RepaymentTabular: RepaymentTabular,
             selector: selector
         };
     },
@@ -384,6 +384,7 @@ indexTmpl.events({
          );*/
 
 
+        debugger;
         let self = this;
         let loanAccDoc = stateRepayment.get('loanAccDoc');
         stateRepayment.set("repaidDate", self.repaidDate);

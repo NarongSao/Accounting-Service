@@ -136,7 +136,7 @@
     /*Default 2*/
     .display-on-print-div-2 {
         font-family: Arial, Verdana, Geneva, sans-serif;
-        font-size: 17px !important;
+        font-size: 20px !important;
         color: #000000;
         margin: 0px auto;
         padding: 0px;
@@ -162,7 +162,7 @@
         margin-top: 30px;
         font-family: Arial, Verdana, Geneva, sans-serif;
         color: #000000;
-        font-size: 17px !important;
+        font-size: 20px !important;
         border-collapse: collapse;
         border: 1px solid black !important;
     }
@@ -172,7 +172,7 @@
         width: 100%;
         padding: 0px;
         font-family: Arial, Verdana, Geneva, sans-serif;
-        font-size: 17px !important;
+        font-size: 20px !important;
         color: #000000;
         border-collapse: collapse;
     }
@@ -182,7 +182,7 @@
         background-color: lightgray !important;
         -webkit-print-color-adjust: exact;
         text-align: center !important;
-        font-size: 17px !important;
+        font-size: 20px !important;
 
     }
 
@@ -190,13 +190,13 @@
         border-collapse: collapse;
         width: 100%;
         margin-top: 30px;
-        font-size: 17px !important;
+        font-size: 20px !important;
 
     }
 
     .display-on-print-div-2 > .table > thead > tr > th, .display-on-print-div-2 > .table > tbody > tr > th, .display-on-print-div-2 > .table > tfoot > tr > th, .display-on-print-div-2 > .table > thead > tr > td, .display-on-print-div-2 > .table > tbody > tr > td, .display-on-print-div-2 > .table > tfoot > tr > td {
         border: 1px solid black !important;
-        font-size: 17px !important;
+        font-size: 20px !important;
     }
 
     footer {
