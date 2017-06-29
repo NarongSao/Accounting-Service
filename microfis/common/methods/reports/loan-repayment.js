@@ -26,6 +26,8 @@ import {Repayment} from '../../../common/collections/repayment';
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepayment} from '../check-repayment.js';
 
+import LocationClass from "./../../../imports/libs/getLocation"
+
 export const loanRepaymentReport = new ValidatedMethod({
         name: 'microfis.loanRepaymentReport',
         mixins: [CallPromiseMixin],
@@ -97,6 +99,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                                     <th>Pro Operation Fee</th>
                                         <th>Col Date</th>
                                         <th>Status</th>	
+                                        <th>Address</th>	
                                     <th>Col Prin</th>
                                     <th>Col Int</th>
                                     <th>Col Operation Fee</th>
@@ -539,7 +542,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                         }
                     ])
                 ;
-                
+
 
                 if (repaidList.length > 0) {
                     repaidList.forEach(function (repaidListDoc) {
@@ -572,6 +575,9 @@ export const loanRepaymentReport = new ValidatedMethod({
                         if (params.classifyId && params.classifyId.includes("All") == false) {
                             checkClassify = false;
                         }
+
+
+                        let locationName = LocationClass.getLocationByVillage(repaidListDoc.loanDoc.locationId);
 
 
                         let principalPaid = 0;
@@ -629,6 +635,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 totalClearPrepaidTHB += repaidListDoc.clearPrepaid;
                             }
 
+
                             content += `<tr>
                  <td>${i}</td>
                  <td>${repaidListDoc.voucherId.substr(8, repaidListDoc.voucherId.length - 1)}</td>
@@ -646,6 +653,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                  <td> ${microfis_formatDate(repaidListDoc.repaidDate)}</td>
                  <td> ${repaidListDoc.type}</td>
+                 <td> ${locationName}</td>
                  <td class="numberAlign"> ${microfis_formatNumber(principalPaid)}</td>
                  <td class="numberAlign"> ${microfis_formatNumber(interestPaid)}</td>
                  <td class="numberAlign"> ${microfis_formatNumber(feeOnPaymentPaid)}</td>
@@ -788,7 +796,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                         params.exchangeId
                     );
                 content += `<tr>
-                            <td colspan="14" align="right">Subtotal-KHR</td>
+                            <td colspan="15" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentKHR)}</td>
@@ -798,7 +806,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalColPenKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="14" align="right">Subtotal-USD</td>
+                            <td colspan="15" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentUSD)}</td>
@@ -810,7 +818,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="14" align="right">Subtotal-THB</td>
+                            <td colspan="15" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentTHB)}</td>
@@ -822,7 +830,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="14" align="right">Total-${baseCurrency}</td>
+                            <td colspan="15" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentBase)}</td>

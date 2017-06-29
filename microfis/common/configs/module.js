@@ -9,7 +9,8 @@ Module.Microfis = {
         'data-insert',
         'data-update',
         'data-remove',
-        'reporter'
+        'reporter',
+        'admin-reporter'
     ],
     dump: {
         setting: [

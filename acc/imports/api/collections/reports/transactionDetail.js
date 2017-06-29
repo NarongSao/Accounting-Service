@@ -14,7 +14,9 @@ export const TransactionDetailReport = new SimpleSchema({
         max: 100,
         autoform: {
             type: "select2",
-            defaultValue: "All",
+            defaultValue: function () {
+                return Session.get("currentBranch");
+            },
             options: function () {
                 return SelectOptsReport.branch();
             }

@@ -322,12 +322,21 @@ export const SelectOptsReport = {
     },
     branch: function () {
         var list = [];
-        list.push({label: "(Select All)", value: "All"});
-        Branch.find()
-            .forEach(function (obj) {
-                list.push({label: obj.enName, value: obj._id});
-            });
+        let userDoc = Meteor.user();
 
+        if (userDoc.roles.Microfis.indexOf("admin-reporter") > -1) {
+            list.push({label: "(Select All)", value: "All"});
+            Branch.find()
+                .forEach(function (obj) {
+                    list.push({label: obj.enName, value: obj._id});
+                });
+        } else {
+            Branch.find({_id: Session.get("currentBranch")})
+                .forEach(function (obj) {
+                    list.push({label: obj.enName, value: obj._id});
+                });
+
+        }
         return list;
     },
     accountType: function (selector) {
@@ -345,7 +354,7 @@ export const SelectOptsReport = {
         Meteor.subscribe('core.setting');
         var list = [];
         var currencyDoc = Setting.findOne();
-        if(currencyDoc) {
+        if (currencyDoc) {
             var baseCurrency = currencyDoc.baseCurrency
             list.push({label: "(Select One)", value: ""});
             Exchange.find({base: baseCurrency}, {sort: {exDate: -1}})

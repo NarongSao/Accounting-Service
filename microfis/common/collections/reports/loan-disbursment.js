@@ -124,10 +124,13 @@ export const LoanDisbursmentSchema = new SimpleSchema({
     branchId: {
         type: [String],
         label: "Branch",
-        defaultValue: ["All"],
         autoform: {
             type: "select2",
             multiple: true,
+            defaultValue: function () {
+                return [Session.get("currentBranch")];
+            },
+
             options: function () {
                 return SelectOptsReport.branch();
             }

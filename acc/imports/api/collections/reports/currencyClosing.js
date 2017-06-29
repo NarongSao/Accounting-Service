@@ -13,9 +13,12 @@ export const CurrencyClosing = new SimpleSchema({
         type: String,
         label: "Branch",
         max: 100,
-        defaultValue: "All",
         autoform: {
             type: "select2",
+            defaultValue: function () {
+                return Session.get("currentBranch");
+            },
+
             options: function () {
                 return SelectOptsReport.branchByClosing();
             }

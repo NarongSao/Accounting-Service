@@ -285,11 +285,21 @@ export const SelectOpts = {
 export const SelectOptsReport = {
     branch: function () {
         var list = [];
-        list.push({label: "(Select All)", value: "All"});
-        Branch.find()
-            .forEach(function (obj) {
-                list.push({label: obj.enName, value: obj._id});
-            });
+        let userDoc = Meteor.user();
+
+        if (userDoc.roles.Microfis.indexOf("admin-reporter") > -1) {
+            list.push({label: "(Select All)", value: "All"});
+            Branch.find()
+                .forEach(function (obj) {
+                    list.push({label: obj.enName, value: obj._id});
+                });
+        } else {
+            Branch.find({_id: Session.get("currentBranch")})
+                .forEach(function (obj) {
+                    list.push({label: obj.enName, value: obj._id});
+                });
+
+        }
 
         return list;
     },
@@ -298,14 +308,28 @@ export const SelectOptsReport = {
 
         var list = [];
         let selector = {};
+
+        var list = [];
+        let userDoc = Meteor.user();
         if (branchId != undefined) {
             selector.branchId = branchId;
         }
-        list.push({label: "(Select All)", value: "All"});
-        CreditOfficer.find(selector)
-            .forEach(function (obj) {
-                list.push({label: obj.khName, value: obj._id});
-            });
+        if (userDoc.roles.Microfis.indexOf("admin-reporter") > -1) {
+            list.push({label: "(Select All)", value: "All"});
+            CreditOfficer.find(selector)
+                .forEach(function (obj) {
+                    list.push({label: obj.khName, value: obj._id});
+                });
+
+        } else {
+            selector.branchId = Session.get("currentBranch");
+            CreditOfficer.find(selector)
+                .forEach(function (obj) {
+                    list.push({label: obj.khName, value: obj._id});
+                });
+
+        }
+
 
         return list;
     },
