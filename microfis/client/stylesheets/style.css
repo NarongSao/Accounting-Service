@@ -2,6 +2,10 @@
     text-align: right !important;
 }
 
-.overlayCSS  {
+.overlayCSS {
     background-color: rgba(0, 0, 0, 0);
+}
+
+.select2-container {
+    width: 100% !important;
 }
