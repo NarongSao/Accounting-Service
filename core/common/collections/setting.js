@@ -101,6 +101,25 @@ Setting.schema = new SimpleSchema({
         type: Boolean,
         label: __('core.setting.integrateLbl'),
         defaultValue: false
+    },
+    paymentMethod: {
+        type: [String],
+        label: "Payment Method",
+        autoform: {
+            type: "select-multiple",
+            options: function () {
+
+                let list = [];
+                list.push({value: 'D', label: 'Daily'});
+                list.push({value: 'W', label: 'Weekly'});
+                // list.push({value: 'F', label: 'Two Weekly'}); // Fortnightly
+                list.push({value: 'M', label: 'Monthly'});
+                // list.push({value: 'Q', label: 'Quarterly'});
+                // list.push({value: 'H', label: 'Half Yearly'});
+                list.push({value: 'Y', label: 'Yearly'});
+                return list;
+            }
+        }
     }
 });
 

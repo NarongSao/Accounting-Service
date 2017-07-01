@@ -23,7 +23,7 @@ var indexTmpl = Template.Core_setting;
 
 // Index
 indexTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         this.subscribe('core.setting');
         this.subscribe('core.branch');
         this.subscribe('core.currency');
@@ -36,6 +36,12 @@ indexTmpl.helpers({
     },
     data: function () {
         return Setting.findOne();
+    },
+    isConfigPaymentMethod(){
+        if (Meteor.user() && Meteor.user().username != 'super') {
+            return false;
+        }
+        return true;
     }
 });
 

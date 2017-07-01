@@ -5,7 +5,7 @@ module.exports = {
       host: '172.104.62.141',
       username: 'root',
       // pem: './path/to/pem'
-      password: 'rabbit$2017'
+      // password: 'server-password'
       // or neither for authenticate from ssh-agent
     }
   },
@@ -13,7 +13,7 @@ module.exports = {
   meteor: {
     // TODO: change app name and path
     name: 'microfis-samrith',
-    path: '../microfis',
+    path: '../../microfis',
 
     servers: {
       one: {},
@@ -27,7 +27,7 @@ module.exports = {
       // TODO: Change to your app's url
       // If you are using ssl, it needs to start with https://
       ROOT_URL: 'http://172.104.62.141',
-      MONGO_URL: 'mongodb://localhost/samrith-db'
+      MONGO_URL: 'mongodb://localhost/samrith-db',
     },
 
 
@@ -36,7 +36,6 @@ module.exports = {
     // Add 30 seconds if the server has 512mb of ram
     // And 30 more if you have binary npm dependencies.
     deployCheckWaitTime: 60,
-    dockerImage: 'abernix/meteord:base',
 
     // Show progress bar while uploading bundle to server
     // You might need to disable it on CI servers
@@ -44,7 +43,6 @@ module.exports = {
   },
 
   mongo: {
-    oplog: true,
     port: 27017,
     version: '3.4.1',
     servers: {

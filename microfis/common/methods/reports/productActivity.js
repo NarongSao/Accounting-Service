@@ -254,6 +254,7 @@ export const productActivityReport = new ValidatedMethod({
                         as: "repaymentDoc"
                     }
                 },
+                {$unwind: {path: "$repaymentDoc", preserveNullAndEmptyArrays: true}},
                 {
                     $lookup: {
                         from: "microfis_creditOfficer",
@@ -270,6 +271,7 @@ export const productActivityReport = new ValidatedMethod({
                         creditOfficerDoc: "$creditOfficerDoc",
                         cycle: "$cycle",
                         _id: "$_id",
+                        disbursementDate: "$disbursementDate",
                         loanAmount: {
                             $cond: {
                                 if: {$eq: ['$currencyId', 'USD']},
@@ -310,7 +312,7 @@ export const productActivityReport = new ValidatedMethod({
                 }
 
             ]);
-
+            
 
             let i = 1;
             let checkDate = date[1];

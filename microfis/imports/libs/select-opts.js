@@ -78,16 +78,25 @@ export const SelectOpts = {
     },
     paymentMethod: function (selectOne = true) {
         let list = [];
+        let rawList = [];
         if (selectOne) {
             list.push({value: '', label: '(Select One)'});
         }
-        list.push({value: 'D', label: 'Daily'});
-        list.push({value: 'W', label: 'Weekly'});
+        let setting = Setting.findOne();
+
+        rawList.push({value: 'D', label: 'Daily'});
+        rawList.push({value: 'W', label: 'Weekly'});
         // list.push({value: 'F', label: 'Two Weekly'}); // Fortnightly
-        list.push({value: 'M', label: 'Monthly'});
+        rawList.push({value: 'M', label: 'Monthly'});
         // list.push({value: 'Q', label: 'Quarterly'});
         // list.push({value: 'H', label: 'Half Yearly'});
-        list.push({value: 'Y', label: 'Yearly'});
+        rawList.push({value: 'Y', label: 'Yearly'});
+
+        rawList.forEach(function (obj) {
+            if (setting.paymentMethod.indexOf(obj.value) > -1) {
+                list.push(obj);
+            }
+        })
 
         return list;
     },
@@ -323,13 +332,13 @@ export const SelectOptsReport = {
 
         } else {
             selector.branchId = Session.get("currentBranch");
+            list.push({label: "(Select All)", value: "All"});
             CreditOfficer.find(selector)
                 .forEach(function (obj) {
                     list.push({label: obj.khName, value: obj._id});
                 });
 
         }
-
 
         return list;
     },
@@ -338,7 +347,7 @@ export const SelectOptsReport = {
 
         var list = [];
         list.push({label: "(Select One)", value: ""});
-        Client.find()
+        Client.find({branchId: Session.get("currentBranch")})
             .forEach(function (obj) {
                 list.push({label: obj.khSurname + " " + obj.khGivenName, value: obj._id});
             });
@@ -346,15 +355,28 @@ export const SelectOptsReport = {
         return list;
     },
     paymentMethod: function () {
-        var list = [];
-        list.push(
-            {label: "(Select All)", value: "All"},
-            {label: "Daily", value: "D"},
-            {label: "Month", value: "M"},
-            {label: "Week", value: "W"},
-            {label: "Yearly", value: "Y"}
-        );
+        let list = [];
+        let rawList = [];
+
+        list.push({value: 'All', label: '(Select All)'});
+        let setting = Setting.findOne();
+
+        rawList.push({value: 'D', label: 'Daily'});
+        rawList.push({value: 'W', label: 'Weekly'});
+        // list.push({value: 'F', label: 'Two Weekly'}); // Fortnightly
+        rawList.push({value: 'M', label: 'Monthly'});
+        // list.push({value: 'Q', label: 'Quarterly'});
+        // list.push({value: 'H', label: 'Half Yearly'});
+        rawList.push({value: 'Y', label: 'Yearly'});
+
+        rawList.forEach(function (obj) {
+            if (setting.paymentMethod.indexOf(obj.value) > -1) {
+                list.push(obj);
+            }
+        })
+
         return list;
+
     },
     exchange: function () {
         Meteor.subscribe('core.exchange');

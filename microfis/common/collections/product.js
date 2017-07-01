@@ -271,6 +271,8 @@ Product.interestSchema = new SimpleSchema({
         min: 0,
         autoform: {
             type: 'inputmask',
+
+
             afFieldInput: {
                 // placeholder: 'Min',
                 inputmaskOptions: inputmaskOptions.currency({prefix: ''})
@@ -282,9 +284,18 @@ Product.interestSchema = new SimpleSchema({
         type: Number,
         label: 'Default interest rate (%)',
         decimal: true,
-        min: 0,
         autoform: {
             type: 'inputmask',
+            min: function () {
+                let min = 0;
+                min = AutoForm.getFieldValue('interestRate.min');
+                return min;
+            },
+            max: function () {
+                let max = 10;
+                max = AutoForm.getFieldValue('interestRate.max');
+                return max;
+            },
             afFieldInput: {
                 // placeholder: 'Min',
                 inputmaskOptions: inputmaskOptions.currency({prefix: ''})
