@@ -107,6 +107,10 @@ LoanAcc.before.update(function (userId, doc, fieldNames, modifier, options) {
     let productDoc = lookupProduct.call({_id: modifier.$set.productId}),
         penaltyClosingDoc = productDoc.penaltyClosingDoc;
 
+
+    var year = moment(modifier.$set.disbursementDate).format("YYYY");
+    modifier.$set.voucherId = modifier.$set.branchId + "-" + year + s.pad(modifier.$set.voucherId, 6, "0");
+
     if (penaltyClosingDoc.installmentType == "P") {
         modifier.$set.installmentAllowClosing = math.ceil((penaltyClosingDoc.installmentTermLessThan * modifier.$set.term) / 100);
     } else {

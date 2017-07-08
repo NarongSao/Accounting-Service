@@ -300,6 +300,7 @@ formTmpl.helpers({
 
         if (currentData) {
             doc = LoanAcc.findOne({_id: currentData.loanAccId});
+            doc.voucherId = doc.voucherId.substr(8, doc.voucherId.length - 1);
             formType = 'update';
 
             if (doc.escapeDayMethod == "NO") {

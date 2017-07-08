@@ -1,7 +1,7 @@
 <!--Form-->
-<template name="Microfis_repaymentScheduleReport">
+<template name="Microfis_repaymentScheduleForm1Report">
     <div class="box-body">
-        {{#autoForm schema=schema id="Microfis_repaymentScheduleReport"  target="normal" resetOnSuccess=false}}
+        {{#autoForm schema=schema id="Microfis_repaymentScheduleForm1Report"  target="normal" resetOnSuccess=false}}
             <div class="animated fadeIn">
                 <div class="box box-primary direct-chat direct-chat-success">
                     <div class="box-header with-border">
@@ -34,12 +34,12 @@
                 </div>
             </div>
         {{/autoForm}}
-        {{> Microfis_repaymentScheduleReportPrintData}}
+        {{> Microfis_repaymentScheduleForm1ReportPrintData}}
     </div>
 </template>
 
 
-<template name="Microfis_repaymentScheduleReportPrintData">
+<template name="Microfis_repaymentScheduleForm1ReportPrintData">
     <div class="horizontal-scroll">
         <!--#print-data-->
         <div id="print-data">
@@ -82,11 +82,7 @@
                                         <div class="marigin-header">
                                             <strong>ប្រភេទការសង:</strong> {{khNameForPaymentMethod paymentMethod}}
                                         </div>
-                                        <div class="marigin-header">
-                                            <strong>សងការប្រាក់រៀងរាល់:</strong> {{repaidFrequency}} {{khNameForPaymentMethod
-                                                paymentMethod}}
-                                            ម្តង
-                                        </div>
+
                                     </div>
 
                                     <div style="width: 65%; float: right">
@@ -106,14 +102,17 @@
                                                     <strong>អត្រាការប្រាក់:</strong> {{numFormat interestRate "0,0.00"}}
                                                     %
                                                     ក្នុងមួយ{{khNameForPaymentMethod paymentMethod}}</div>
-                                                <div class="marigin-header"><strong>ប្រភពទុន:</strong> {{fundDoc.name}}
-                                                </div>
+
                                                 <div class="marigin-header">
                                                     <strong>កាលបរិច្ឆេទសងបញ្ចប់:</strong> {{moFormat maturityDate
                                                                                                      "DD/MM/YYYY"}}
                                                 </div>
-                                                <div class="marigin-header"><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង
+                                                <div class="marigin-header">
+                                                    <strong>សងការប្រាក់រៀងរាល់:</strong> {{repaidFrequency}} {{khNameForPaymentMethod
+                                                        paymentMethod}}
+                                                    ម្តង
                                                 </div>
+
 
                                             </div>
 
@@ -123,16 +122,13 @@
                                                 <div class="marigin-header">
                                                     <strong>ទីកន្លែងបង់ប្រាក់:</strong> {{paymentLocation}}</div>
 
-                                                <div class="marigin-header">
-                                                    <strong>វិធីរំលស់ប្រាក់ដើម:</strong> {{principalInstallment.calculateType}}
-                                                </div>
 
                                                 <div class="marigin-header">
                                                     <strong>មន្រ្តីឥណទាន:</strong> {{creditOfficerDoc.khName}}</div>
                                                 <div class="marigin-header">
                                                     <strong>ទូរស័ព្ទ:</strong> {{creditOfficerDoc.telephone}}</div>
-                                                <div class="marigin-header">
-                                                    <strong>ចំនួនថ្ងៃខ្ចីសរុប:</strong> {{tenor}}</div>
+                                                <div class="marigin-header"><strong>ចំនួនដងត្រូវសង:</strong> {{term}} ដង
+                                                </div>
                                             </div>
                                         </div>
 
@@ -221,20 +217,18 @@
                             <table width="100%" border="0" style="text-align: center; font-size: 20px">
                                 <tr>
                                     <td width="50%">
-                                        ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
-                                        <br>
                                         <strong>អ្នកបើកប្រាក់</strong>
                                         <br><br><br><br><br><br><br>
                                         __________________<br>
+                                        ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
                                     </td>
                                     <td>
-                                        ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
-                                        <br>
                                         <strong>ស្នាមមេដៃអ្នកទទួលប្រាក់</strong>
                                         <br><br><br><br><br><br>
                                         <strong>{{header.clientDoc.khSurname}} {{header.clientDoc.khGivenName}}</strong>
                                         <br>
                                         __________________<br>
+                                        ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
                                     </td>
                                 </tr>
 

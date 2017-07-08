@@ -344,7 +344,6 @@ export const SelectOptsReport = {
     },
     client: function () {
         Meteor.subscribe('microfis.client');
-
         var list = [];
         list.push({label: "(Select One)", value: ""});
         Client.find({branchId: Session.get("currentBranch")})
@@ -360,7 +359,6 @@ export const SelectOptsReport = {
 
         list.push({value: 'All', label: '(Select All)'});
         let setting = Setting.findOne();
-
         rawList.push({value: 'D', label: 'Daily'});
         rawList.push({value: 'W', label: 'Weekly'});
         // list.push({value: 'F', label: 'Two Weekly'}); // Fortnightly
@@ -370,11 +368,10 @@ export const SelectOptsReport = {
         rawList.push({value: 'Y', label: 'Yearly'});
 
         rawList.forEach(function (obj) {
-            if (setting.paymentMethod.indexOf(obj.value) > -1) {
+            if (setting.paymentMethod && setting.paymentMethod.indexOf(obj.value) > -1) {
                 list.push(obj);
             }
-        })
-
+        });
         return list;
 
     },
