@@ -324,7 +324,7 @@ export const SelectOptsReport = {
         var list = [];
         let userDoc = Meteor.user();
 
-        if (userDoc.roles.Microfis.indexOf("admin-reporter") > -1) {
+        if (userDoc.roles.Acc.indexOf("admin-reporter") > -1) {
             list.push({label: "(Select All)", value: "All"});
             Branch.find()
                 .forEach(function (obj) {
