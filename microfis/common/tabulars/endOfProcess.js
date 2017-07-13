@@ -40,7 +40,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
 
     ],
     extraFields: ['branchId'],
-    order: [[1, 'desc']],
+    order: [[2, 'desc']],
 });
 
 export const EndOfProcessTabular = new Tabular.Table(tabularData);
