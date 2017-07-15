@@ -33,6 +33,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
 
         // Interest
         {data: 'interestMethod', title: 'Interest Method'},
+        {data: 'interestType', title: 'Interest Type'},
 
 
     ],

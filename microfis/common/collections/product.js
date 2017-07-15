@@ -260,29 +260,45 @@ Product.interestSchema = new SimpleSchema({
             }
         }
     },
+    interestType: {
+        type: String,
+        label: 'Interest Type',
+        autoform: {
+            type: 'select2',
+            defaultValue: "P",
+            afFieldInput: {
+                options: function () {
+                    return [
+                        {value: "P", label: "Percent"},
+                        {value: "A", label: "Amount"}
+                    ];
+                }
+            }
+        }
+    },
     interestRate: {
         type: Object,
         label: 'Interest rate'
     },
     'interestRate.min': {
         type: Number,
-        label: 'Min of interest rate (%)',
+        label: 'Min of interest rate',
         decimal: true,
         min: 0,
         autoform: {
             type: 'inputmask',
-
-
             afFieldInput: {
                 // placeholder: 'Min',
-                inputmaskOptions: inputmaskOptions.currency({prefix: ''})
+                inputmaskOptions: function () {
+                    return AutoForm.getFieldValue('interestType') != "A" ? inputmaskOptions.percentage() : inputmaskOptions.currency();
+                }
             },
             label: false
         }
     },
     'interestRate.defaultRate': {
         type: Number,
-        label: 'Default interest rate (%)',
+        label: 'Default interest rate',
         decimal: true,
         autoform: {
             type: 'inputmask',
@@ -298,21 +314,25 @@ Product.interestSchema = new SimpleSchema({
             },
             afFieldInput: {
                 // placeholder: 'Min',
-                inputmaskOptions: inputmaskOptions.currency({prefix: ''})
+                inputmaskOptions: function () {
+                    return AutoForm.getFieldValue('interestType') != "A" ? inputmaskOptions.percentage() : inputmaskOptions.currency();
+                }
             },
             label: false
         }
     },
     'interestRate.max': {
         type: Number,
-        label: 'Max of interest rate (%)',
+        label: 'Max of interest rate',
         decimal: true,
         min: 0,
         autoform: {
             type: 'inputmask',
             afFieldInput: {
                 // placeholder: 'Max',
-                inputmaskOptions: inputmaskOptions.currency({prefix: ''})
+                inputmaskOptions: function () {
+                    return AutoForm.getFieldValue('interestType') != "A" ? inputmaskOptions.percentage() : inputmaskOptions.currency();
+                }
             },
             label: false
         },

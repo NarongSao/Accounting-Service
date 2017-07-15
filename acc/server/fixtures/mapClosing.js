@@ -25,6 +25,10 @@ Meteor.startup(function () {
                 "_id": "004",
                 "chartAccountCompare": "Retain Earning"
             },
+            {
+                "_id": "143",
+                "chartAccountCompare": "Foreign Exchange Position Account"
+            },
 
 
             //Data for Integrate

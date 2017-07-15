@@ -144,14 +144,17 @@ MakeSchedule.declinig = new ValidatedMethod({
 
 
                 //Calculate Interest
-
-                interestDue = Calculate.interest.call({
-                    amount: previousLine.balance,
-                    numOfDay: numOfDay,
-                    interestRate: loanAccDoc.interestRate,
-                    method: loanAccDoc.paymentMethod,
-                    currencyId: loanAccDoc.currencyId
-                });
+                if (loanAccDoc.interestType == undefined || loanAccDoc.interestType == "P") {
+                    interestDue = Calculate.interest.call({
+                        amount: previousLine.balance,
+                        numOfDay: numOfDay,
+                        interestRate: loanAccDoc.interestRate,
+                        method: loanAccDoc.paymentMethod,
+                        currencyId: loanAccDoc.currencyId
+                    });
+                } else {
+                    interestDue = loanAccDoc.interestRate;
+                }
 
 
                 //Calculate Fee On Payment
@@ -303,13 +306,19 @@ MakeSchedule.annuity = new ValidatedMethod({
 
                 //Calculate Interest
 
-                interestDue = Calculate.interest.call({
-                    amount: previousLine.balance,
-                    numOfDay: numOfDay,
-                    interestRate: loanAccDoc.interestRate,
-                    method: loanAccDoc.paymentMethod,
-                    currencyId: loanAccDoc.currencyId
-                });
+
+                if (loanAccDoc.interestType == undefined || loanAccDoc.interestType == "P") {
+                    interestDue = Calculate.interest.call({
+                        amount: previousLine.balance,
+                        numOfDay: numOfDay,
+                        interestRate: loanAccDoc.interestRate,
+                        method: loanAccDoc.paymentMethod,
+                        currencyId: loanAccDoc.currencyId
+                    });
+                } else {
+                    interestDue = loanAccDoc.interestRate;
+                }
+
 
                 //calculate principal
                 principalDue = principalInstallmentAmountPerLine - interestDue;
@@ -400,8 +409,15 @@ MakeSchedule.flat = new ValidatedMethod({
             principalInstallmentAmountPerLine = roundCurrency(principalInstallmentAmountPerLine, loanAccDoc.currencyId);
 
 
-            let interestDue = loanAccDoc.loanAmount * loanAccDoc.interestRate / 100;
-            interestDue = roundCurrency(interestDue, loanAccDoc.currencyId);
+            let interestDue;
+
+            if (loanAccDoc.interestType == undefined || loanAccDoc.interestType == "P") {
+                interestDue = loanAccDoc.loanAmount * loanAccDoc.interestRate / 100;
+                interestDue = roundCurrency(interestDue, loanAccDoc.currencyId);
+            } else {
+                interestDue = loanAccDoc.interestRate;
+            }
+
 
             if (loanAccDoc.currencyId == "USD") {
                 principalInstallmentAmountPerLine = math.round(principalInstallmentAmountPerLine);
@@ -486,7 +502,7 @@ MakeSchedule.flat = new ValidatedMethod({
                 })
 
                 totalDue = roundCurrency(principalDue + interestDue + feeOnPaymentDue, loanAccDoc.currencyId);
-                balance = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
+                let balance = roundCurrency(previousLine.balance - principalDue, loanAccDoc.currencyId);
 
                 // Check installment can close without penalty
                 let allowClosing = false;

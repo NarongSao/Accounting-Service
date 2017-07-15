@@ -39,8 +39,8 @@ Meteor.methods({
                 data.title = Company.findOne();
 
                 /****** Header *****/
-                let exchangeData=Exchange.findOne({_id: params.exchangeDate});
-                params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+                let exchangeData = Exchange.findOne({_id: params.exchangeDate});
+                params.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
 
 
                 data.header = params;
@@ -208,15 +208,26 @@ Meteor.methods({
                     var equ = MapClosing.findOne({
                         chartAccountCompare: "Equivalance Exchange Account"
                     });
+
+                    var foreignExchangePositionAccount = MapClosing.findOne({
+                        chartAccountCompare: "Foreign Exchange Position Account"
+                    });
+
+
                     var gainFor = MapClosing.findOne({
                         chartAccountCompare: "Foreign Exchange Gain"
                     });
                     var lostFor = MapClosing.findOne({
                         chartAccountCompare: "Loss on Foreign Exchange"
                     });
+
                     //Get ChartAccount by Id
                     var accountDocDetail = ChartAccount.findOne({
                         _id: equ.accountDoc._id
+                    });
+
+                    var accountDocForeignExchangePositionDetail = ChartAccount.findOne({
+                        _id: foreignExchangePositionAccount.accountDoc._id
                     });
 
 
@@ -348,12 +359,12 @@ Meteor.methods({
 
 
                         arrBase.push({
-                            account: accountDocDetail.code + " | " +
-                            accountDocDetail.name + " | " + "Other Asset",
+                            account: accountDocForeignExchangePositionDetail.code + " | " +
+                            accountDocForeignExchangePositionDetail.name + " | " + "Other Current Liability",
                             dr: dr,
                             cr: cr,
                             drcr: dr - cr,
-                            accountDoc: accountDocDetail
+                            accountDoc: accountDocForeignExchangePositionDetail
                         });
 
                         var voucher = Meteor.call('acc_getVoucherId', data.currencySelectBase, branchId);
@@ -386,12 +397,10 @@ Meteor.methods({
                     // Get Equivalence Exchange Account Old
 
 
-
-
                     // Selected Currency
                     var selectorEquivalBaseOld = {};
                     selectorEquivalBaseOld.currencyId = self.currencyId;
-                    selectorEquivalBaseOld['transaction.accountDoc.code'] =accountDocDetail.code;
+                    selectorEquivalBaseOld['transaction.accountDoc.code'] = accountDocDetail.code;
                     selectorEquivalBaseOld.branchId = self.branchId;
 
                     if (!_.isEmpty(self.date)) {
@@ -413,7 +422,7 @@ Meteor.methods({
                     // Base Currency
                     var selectorEquivalOld = {};
                     selectorEquivalOld.currencyId = baseCurrencyClosing;
-                    selectorEquivalOld['transaction.accountDoc.code'] =accountDocDetail.code;
+                    selectorEquivalOld['transaction.accountDoc.code'] = accountDocForeignExchangePositionDetail.code;
                     selectorEquivalOld.branchId = self.branchId;
 
                     if (!_.isEmpty(self.date)) {
@@ -430,7 +439,7 @@ Meteor.methods({
 
                     var amountEquiv = 0;
                     equivalOld.forEach(function (obj) {
-                        if (obj.code == accountDocDetail.code) {
+                        if (obj.code == accountDocForeignExchangePositionDetail.code) {
                             amountEquiv += obj.result;
                         }
                     });

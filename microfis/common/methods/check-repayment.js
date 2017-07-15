@@ -92,7 +92,6 @@ export let checkRepayment = new ValidatedMethod({
                 schedulePrevious = [],
                 scheduleNext = [];
 
-
             scheduleDoc.forEach((o) => {
 
                 let checker = {};
@@ -158,7 +157,8 @@ export let checkRepayment = new ValidatedMethod({
                                 numOfDay: numOfDayLate,
                                 interestRate: penaltyDoc.amount,
                                 method: 'D',
-                                currencyId: loanAccDoc.currencyId
+                                currencyId: loanAccDoc.currencyId,
+                                interestType: loanAccDoc.interestType
                             });
                         } else {
                             if (loanAccDoc.currencyId == "KHR") {
@@ -334,6 +334,7 @@ export let checkRepayment = new ValidatedMethod({
                 numOfDayAddition: 0,
                 interestAddition: 0,
                 interestReminderPenalty: 0,
+                feeOnpaymentReminderPenalty: 0,
                 interestWaived: 0,
                 feeOnPaymentWaived: 0,
                 totalDue: 0
@@ -354,7 +355,8 @@ export let checkRepayment = new ValidatedMethod({
                     numOfDay: closing.numOfDayAddition,
                     interestRate: loanAccDoc.interestRate,
                     method: loanAccDoc.paymentMethod,
-                    currencyId: loanAccDoc.currencyId
+                    currencyId: loanAccDoc.currencyId,
+                    interestType: loanAccDoc.interestType
                 });
 
                 closing.interestReminder = round2(closing.interestReminder - closing.interestAddition, _round.precision, _round.type);
@@ -407,9 +409,16 @@ export let checkRepayment = new ValidatedMethod({
             }
 
 
+            //check fee on payment reminder
+
+            if (scheduleDue.length < 1 && scheduleNext.length > 0) {
+                closing.feeOnpaymentReminderPenalty = scheduleNext[0].feeOnPaymentDue;
+            }
+
+
             closing.interestWaived = round2(closing.interestReminder - closing.interestReminderPenalty > 0 ? closing.interestReminder - closing.interestReminderPenalty : 0, _round.precision, _round.type);
             closing.feeOnPaymentWaived = round2(closing.feeOnPaymentReminder, _round.precision, _round.type);
-            closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty, _round.precision, _round.type);
+            closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty + closing.feeOnpaymentReminderPenalty, _round.precision, _round.type);
 
 
             /*------ Calculate Principal Installment ---------*/
@@ -438,7 +447,8 @@ export let checkRepayment = new ValidatedMethod({
                     numOfDay: principalInstallment.numOfDayAddition,
                     interestRate: loanAccDoc.interestRate,
                     method: loanAccDoc.paymentMethod,
-                    currencyId: loanAccDoc.currencyId
+                    currencyId: loanAccDoc.currencyId,
+                    interestType: loanAccDoc.interestType
                 });
 
             }
@@ -643,7 +653,8 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                                 numOfDay: numOfDayLate,
                                 interestRate: penaltyDoc.amount,
                                 method: 'D',
-                                currencyId: loanAccDoc.currencyId
+                                currencyId: loanAccDoc.currencyId,
+                                interestType: loanAccDoc.interestType
                             });
                         } else {
                             if (loanAccDoc.currencyId == "KHR") {
@@ -819,6 +830,7 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                 numOfDayAddition: 0,
                 interestAddition: 0,
                 interestReminderPenalty: 0,
+                feeOnpaymentReminderPenalty: 0,
                 interestWaived: 0,
                 feeOnPaymentWaived: 0,
                 totalDue: 0
@@ -839,7 +851,8 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                     numOfDay: closing.numOfDayAddition,
                     interestRate: loanAccDoc.interestRate,
                     method: loanAccDoc.paymentMethod,
-                    currencyId: loanAccDoc.currencyId
+                    currencyId: loanAccDoc.currencyId,
+                    interestType: loanAccDoc.interestType
                 });
 
                 closing.interestReminder = round2(closing.interestReminder - closing.interestAddition, _round.precision, _round.type);
@@ -892,9 +905,16 @@ export let checkRepaymentRealTime = new ValidatedMethod({
             }
 
 
+            //check fee on payment reminder
+
+            if (scheduleDue.length < 1 && scheduleNext.length > 0) {
+                closing.feeOnpaymentReminderPenalty = scheduleNext[0].feeOnPaymentDue;
+            }
+
+
             closing.interestWaived = round2(closing.interestReminder - closing.interestReminderPenalty, _round.precision, _round.type);
             closing.feeOnPaymentWaived = round2(closing.feeOnPaymentReminder, _round.precision, _round.type);
-            closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty, _round.precision, _round.type);
+            closing.totalDue = round2(closing.principalReminder + closing.interestAddition + closing.interestReminderPenalty + closing.feeOnpaymentReminderPenalty, _round.precision, _round.type);
 
 
             /*------ Calculate Principal Installment ---------*/
@@ -923,7 +943,8 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                     numOfDay: principalInstallment.numOfDayAddition,
                     interestRate: loanAccDoc.interestRate,
                     method: loanAccDoc.paymentMethod,
-                    currencyId: loanAccDoc.currencyId
+                    currencyId: loanAccDoc.currencyId,
+                    interestType: loanAccDoc.interestType
                 });
 
             }

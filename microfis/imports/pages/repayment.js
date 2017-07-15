@@ -152,7 +152,17 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     loanAccDoc() {
-        return stateRepayment.get('loanAccDoc');
+
+        let doc = stateRepayment.get('loanAccDoc');
+        if (doc) {
+            if (doc.interestType == "A") {
+                doc.interestType = " " + doc.currencyId;
+            } else {
+                doc.interestType = "%";
+            }
+        }
+
+        return doc;
     },
     checkPayment(){
         return stateRepayment.get('checkRepayment');
@@ -384,7 +394,6 @@ indexTmpl.events({
          );*/
 
 
-        debugger;
         let self = this;
         let loanAccDoc = stateRepayment.get('loanAccDoc');
         stateRepayment.set("repaidDate", self.repaidDate);

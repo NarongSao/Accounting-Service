@@ -81,9 +81,14 @@
                     <fieldset>
                         <legend>Interest</legend>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 {{> afQuickField name="interestMethod"}}
                             </div>
+                            <div class="col-md-6">
+                                {{> afQuickField name="interestType"}}
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 {{> afQuickField name="interestRate.min" label=true}}
                             </div>
@@ -181,6 +186,7 @@
                     <legend>Interest</legend>
                     <dt>Method</dt>
                     <dd>{{interestMethod}}</dd>
+                    <dd>{{interestType}}</dd>
                     <dt>Rate</dt>
                     <dd>
                         Min: {{interestRate.min}} |

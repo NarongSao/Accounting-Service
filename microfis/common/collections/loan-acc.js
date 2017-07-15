@@ -64,6 +64,10 @@ if (Meteor.isClient) {
 
             // Interest Method
             state.set('interestRate', productDoc.interestRate);
+
+            // Interest Type
+            let interestType = productDoc.interestType != undefined ? productDoc.interestType : "P";
+            state.set("interestType", interestType);
         }
     });
 }
@@ -621,7 +625,7 @@ LoanAcc.repaymentSchema = new SimpleSchema({
                         if (calculateType == "P") {
                             return '1 - 100 %';
                         } else {
-                            return numeral(min).format('0,0.00') + ' - ' + numeral(max).format('0,0.00') + ` ${prefix}`;
+                            return numeral(min).format('0,00.00') + ' - ' + numeral(max).format('0,00.00') + ` ${prefix}`;
                         }
                     }
                 },
@@ -729,20 +733,46 @@ LoanAcc.interestSchema = new SimpleSchema({
          }
          }*/
     },
+    interestType: {
+        type: String,
+        label: 'Interest Type',
+        defaultValue: function () {
+            return state.get('interestType');
+        }
+
+    },
     interestRate: {
         type: Number,
-        label: 'Interest rate (%)',
+        label: 'Interest rate',
         decimal: true,
         autoform: {
             type: "inputmask",
             afFieldInput: {
                 placeholder: function () {
                     let interestRate = state.get('interestRate');
+                    let currencyId = AutoForm.getFieldValue('currencyId'),
+                        exchange = state.get('exchange');
+
+                    if (interestRate && currencyId) {
+                        if (currencyId == 'KHR') {
+                            interestRate.min = roundKhr(interestRate.min * exchange.KHR);
+                            interestRate.max = roundKhr(interestRate.max * exchange.KHR);
+                        } else if (currencyId == 'THB') {
+                            interestRate.min = math.round(interestRate.min * exchange.THB);
+                            interestRate.max = math.round(interestRate.max * exchange.THB);
+                        }
+                    }
                     if (interestRate) {
-                        return numeral(interestRate.min).format('0.00') + ' - ' + numeral(interestRate.max).format('0.00');
+                        return numeral(interestRate.min).format('0,00.00') + ' - ' + numeral(interestRate.max).format('0,00.00');
                     }
                 },
-                inputmaskOptions: inputmaskOptions.percentage()
+                inputmaskOptions: function () {
+                    let prefix = "$";
+                    if (state.get('currencySymbol')) {
+                        prefix = state.get('currencySymbol');
+                    }
+                    return state.get('interestType') == "P" ? inputmaskOptions.percentage() : inputmaskOptions.currency({prefix: prefix});
+                }
             }
         }
     }
@@ -1010,7 +1040,7 @@ LoanAcc.reStructure = new SimpleSchema({
                 placeholder: function () {
                     let interestRate = state.get('interestRate');
                     if (interestRate) {
-                        return numeral(interestRate.min).format('0.00') + ' - ' + numeral(interestRate.max).format('0.00');
+                        return numeral(interestRate.min).format('0,00.00') + ' - ' + numeral(interestRate.max).format('0,00.00');
                     }
                 },
                 inputmaskOptions: inputmaskOptions.percentage()

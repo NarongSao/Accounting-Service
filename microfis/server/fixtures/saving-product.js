@@ -4,49 +4,41 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {SavingProduct} from '../../common/collections/saving-product.js';
 
 Meteor.startup(function () {
-    /*if (SavingProduct.find().count() == 0) {
+    if (SavingProduct.find().count() == 0) {
         let data = [
             {
                 "_id": "001",
-                "name": "Saving Loan",
-                "shortName": "SL",
-                "des": 'Welcome to saving loan',
+                "accountClass": "E",
                 "accountType": [
-                    "S",
-                    "J"
+                    "S"
                 ],
-                // "operationType": [
-                //     "Any",
-                //     "Tow",
-                //     "All"
-                // ],
                 "currencyId": [
                     "KHR",
-                    "USD",
-                    "THB"
+                    "USD"
                 ],
-                "minOpeningAmount": 0,
+                "daysInMethod": 365,
+                "des": "Welcome to saving loan",
                 "exchange": {
                     "USD": 1,
                     "KHR": 4000,
                     "THB": 35
                 },
-                "accountClass": "E",
-                "term": 0,
-                "penaltyForTermClosing": 0,
-                "interestTax": 4,
                 "interestMethod": "Y",
-                "daysInMethod": 365,
                 "interestRate": {
                     "min": 0,
                     "max": 12
                 },
-            },
-            /!* 1 *!/
+                "interestTax": 0,
+                "minOpeningAmount": 0,
+                "name": "Saving Loan",
+                "penaltyForTermClosing": 0,
+                "shortName": "SL",
+                "term": 0
+            }
         ];
 
-        _.forEach(data, (val)=> {
+        _.forEach(data, (val) => {
             SavingProduct.insert(val);
         });
-    }*/
+    }
 });

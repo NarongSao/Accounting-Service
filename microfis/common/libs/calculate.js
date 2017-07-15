@@ -41,6 +41,10 @@ Calculate.interest = new ValidatedMethod({
             type: String,
             optional: true
         },
+        interestType: {
+            type: String,
+            optional: true
+        }
     }).validator(),
     run(opts) {
         let ratePerDay, dayInMethod, interest;
@@ -67,8 +71,15 @@ Calculate.interest = new ValidatedMethod({
                     break;
             }
         }
-        ratePerDay = (opts.interestRate / 100) / dayInMethod;
-        interest = opts.amount * opts.numOfDay * ratePerDay;
+
+        if (opts.interestType == "A") {
+            ratePerDay = opts.interestRate / dayInMethod;
+            interest = opts.numOfDay * ratePerDay;
+
+        } else {
+            ratePerDay = (opts.interestRate / 100) / dayInMethod;
+            interest = opts.amount * opts.numOfDay * ratePerDay;
+        }
 
         // Check currency
         if (opts.currencyId) {

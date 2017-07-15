@@ -208,6 +208,7 @@ formTmpl.helpers({
         return stateRepayment.get('checkRepayment');
     },
     defaultValue(){
+
         let totalDue = new BigNumber(0),
             totalPenalty = new BigNumber(0),
             checkRepayment = stateRepayment.get('checkRepayment');
@@ -222,7 +223,7 @@ formTmpl.helpers({
         if (checkRepayment && checkRepayment.closing && data) {
             totalDue = totalDue.plus(checkRepayment.closing.totalDue).minus(data.details.principalBal).minus(data.details.interestBal);
         }
-
+        
         totalDue = totalDue.minus(waivedClosing.get());
 
         return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};

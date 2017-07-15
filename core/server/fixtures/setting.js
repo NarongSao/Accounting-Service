@@ -13,7 +13,8 @@ Meteor.startup(function () {
                 usdPrecision: 2,
                 thbPrecision: 0
             },
-            language: 'en'
+            language: 'en',
+            paymentMethod: ["W", "M"]
         };
 
         Setting.insert(data);

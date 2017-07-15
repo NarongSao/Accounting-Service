@@ -186,8 +186,9 @@ productFormTmpl.events({
                 _id: productId
             }).then(function (result) {
                 Session.set('productDoc', result);
+                let interestDefaultRate = result.interestRate.defaultRate;
 
-                state.set("defaultRate", result.interestRate.defaultRate);
+                state.set("defaultRate", interestDefaultRate);
 
                 Meteor.setTimeout(function () {
                     $.unblockUI();
@@ -277,6 +278,14 @@ formTmpl.onRendered(function () {
     }
 
     this.autorun(function () {
+        if (productDoc.interestType == "A") {
+            if (state.get("currencyId") == 'KHR') {
+                state.set("defaultRate", roundKhr(productDoc.interestRate.defaultRate * productDoc.exchange.KHR));
+            } else if (state.get("currencyId") == 'THB') {
+                state.set("defaultRate", roundKhr(productDoc.interestRate.defaultRate * productDoc.exchange.KHR));
+            }
+        }
+
         Meteor.call('locationForAppend', true, (err, result) => {
             if (result) {
                 $('[name="locationId"]').select2({data: result});
@@ -340,6 +349,7 @@ formTmpl.helpers({
         }
     },
     defaultRate(){
+
         return state.get("defaultRate");
     }
 
@@ -372,6 +382,7 @@ formTmpl.events({
         if ($submitDate) {
             $disbursementDate.data("DateTimePicker").minDate(moment($submitDate, "DD/MM/YYYY").startOf('day').toDate());
         }
+        console.log($disbursementDate);
     }
     ,
     'keyup [name="interestRate"]': _.debounce(function (e) {
@@ -403,7 +414,15 @@ formTmpl.events({
 
 // Hook
 let hooksObject = {
+    before: {
+        insert: function (doc) {
 
+            doc.disbursementDate = moment(doc.disbursementDate).startOf("day").add(12, "hours").toDate();
+            doc.firstRepaymentDate = moment(doc.firstRepaymentDate).startOf("day").add(12, "hours").toDate();
+            return doc;
+
+        }
+    },
 
     onSuccess (formType, result) {
         if (formType == "insert" && result.status != "Restructure") {
