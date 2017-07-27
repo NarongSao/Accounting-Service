@@ -306,7 +306,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                         {
                             $match: selectorRepayment
                         },
-
                         {
                             $lookup: {
                                 from: "microfis_repaymentSchedule",
@@ -319,7 +318,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                             $unwind: {path: '$scheduleDoc', preserveNullAndEmptyArrays: true}
                         },
                         {
-
                             $project: {
                                 scheduleDoc: {
                                     $filter: {
