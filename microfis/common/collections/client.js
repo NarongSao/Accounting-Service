@@ -40,12 +40,14 @@ Client.generalSchema = new SimpleSchema({
     enSurname: {
         type: String,
         label: 'En surname',
-        max: 250
+        max: 250,
+        optional: true
     },
     enGivenName: {
         type: String,
         label: 'En given name',
-        max: 250
+        max: 250,
+        optional: true
     },
     enNickname: {
         type: String,
@@ -131,6 +133,7 @@ Client.idTypeSchema = new SimpleSchema({
         type: String,
         label: 'ID number',
         max: 100,
+        defaultValue: "",
         optional: true,
         custom: function () {
             if (Meteor.isClient) {
@@ -187,6 +190,8 @@ Client.contactSchema = new SimpleSchema({
     address: {
         type: String,
         label: 'Address',
+        optional: true,
+        defaultValue: "",
         max: 500
     },
     telephone: {
@@ -199,6 +204,7 @@ Client.contactSchema = new SimpleSchema({
         type: String,
         label: 'Email',
         regEx: SimpleSchema.RegEx.Email,
+        defaultValue: "",
         max: 100,
         optional: true
     }

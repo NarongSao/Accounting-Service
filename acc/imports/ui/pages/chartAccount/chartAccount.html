@@ -5,6 +5,8 @@
             <h3 class="box-title">
                 <p class="inline">
                     <button type="button" class="btn btn-primary insert">{{fa "plus"}} Add New</button>
+                    <a href="{{pathFor 'acc.chartAccountReportGen'}}" target="_blank" type="button"
+                       class="btn btn-success">{{fa "print"}} Report</a>
                 </p>
 
 
@@ -100,4 +102,22 @@
             <dd>{{accountTypeId}}</dd>
         </dl>
     </div>
+</template>
+
+
+<template name="acc_chartAccountReportGen">
+    <!--Is ready-->
+    {{#if data}}
+        {{#ReportContent options}}
+
+            {{#with data}}
+
+                <div class="title"><u>Chart Account Report</u></div>
+
+                {{{data}}}
+            {{/with}}
+        {{/ReportContent}}
+    {{else}}
+        {{> loading}}
+    {{/if}}
 </template>

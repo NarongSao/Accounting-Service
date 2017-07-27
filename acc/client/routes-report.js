@@ -170,9 +170,9 @@ AccRoutes.route('/dateEndOfProcess', {
             'accDateEndOfProcess',
             Meteor.subscribe('accDateEndOfProcess')
         )/*, this.register(
-            'accCloseChartAccount',
-            Meteor.subscribe('accCloseChartAccount')
-        )*/;
+         'accCloseChartAccount',
+         Meteor.subscribe('accCloseChartAccount')
+         )*/;
     },
     action: function (params, queryParams) {
         Layout.main('acc_dateEndOfProcess');
@@ -455,5 +455,14 @@ AccRoutes.route('/profitLostComparationReportGen', {
     name: 'acc.profitLostComparationReportGen',
     action: function (params, queryParams) {
         Layout.report('acc_ProfitLostComparationReportGen');
+    }
+});
+
+
+import '../imports/ui/pages/chartAccount/chartAccount';
+AccRoutes.route('/chartAccountReportGen', {
+    name: 'acc.chartAccountReportGen',
+    action: function (params, queryParams) {
+        Layout.report('acc_chartAccountReportGen');
     }
 });

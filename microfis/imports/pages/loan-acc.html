@@ -86,17 +86,17 @@
                                     <a href="#" class="js-saving-addon">{{fa "list"}}</a>
                                 </span>
                                 </div>
-                                {{#if afFieldIsInvalid name="savingAccId"}}
-                                    <span class="help-block">{{afFieldMessage name="savingAccId"}}</span>
-                                {{/if}}
+
                             </div>
 
                         </div>
                         <div class="col-md-6">
-                            {{> afQuickField name="fundId"}}
+                            {{#if afFieldIsInvalid name="savingAccId"}}
+                                <span class="help-block">{{afFieldMessage name="savingAccId"}}</span>
+                            {{/if}}
+                            {{> afQuickField name="fundId" type="hidden"}}
                             {{> afQuickField name="creditOfficerId"}}
-                            {{> afQuickField name="attachFile"}}
-
+                            {{> afQuickField name="attachFile" type="hidden"}}
 
                         </div>
                     </div>
@@ -127,7 +127,12 @@
                     <div class="row">
                         {{> afQuickField name="interestMethod" readonly=true}}
                         {{> afQuickField name="interestType" readonly=true}}
-                        {{> afQuickField name="interestRate" value=defaultRate}}
+
+                        {{#if data.formTypeStatus}}
+                            {{> afQuickField name="interestRate" value=defaultRate}}
+                        {{else}}
+                            {{> afQuickField name="interestRate"}}
+                        {{/if}}
                     </div>
                 </div>
 
@@ -165,7 +170,7 @@
                             {{> afQuickField name="locationId"}}
                         </div>
                         <div class="col-md-6">
-                            {{> afQuickField name="geography"}}
+                            {{> afQuickField name="geography" type="hidden"}}
                         </div>
                     </div>
                 </div>
@@ -175,19 +180,17 @@
                 <div class="col-md-12">
                     <legend>Other</legend>
                     <div class="row">
-                        <div class="col-md-3">
-                            {{> afQuickField name="purpose"}}
-                            {{> afQuickField name="history"}}
-                        </div>
-                        <div class="col-md-3">
-                            {{> afQuickField name="purposeActivity"}}
+                        <div class="col-md-4">
+                            {{> afQuickField name="purpose" }}
                             {{> afQuickField name="collateralType"}}
+                            {{> afQuickField name="history" type="hidden"}}
+                            {{> afQuickField name="purposeActivity"  type="hidden"}}
                         </div>
-                        <div class="col-md-3">
-                            {{> afQuickField name="collateralSecurity"}}
-                            {{> afQuickField name="povertyLevel"}}
+                        <div class="col-md-4">
+                            {{> afQuickField name="collateralSecurity"  type="hidden"}}
+                            {{> afQuickField name="povertyLevel"  type="hidden"}}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             {{> afQuickField name="cycle" value=cycle readonly=true}}
                             {{> afQuickField name="collateralNote" rows=3}}
                         </div>

@@ -19,14 +19,15 @@
                         {{> afQuickField name='life' id='life'  }}
                     </div>
                     <div class="col-sm-2" style="padding-right:1px;padding-left:0px;">
-                        {{> afQuickField name='estSalvage' id='estSalvage'  }}
+                        {{> afQuickField name='estSalvage' id='estSalvage' value=0}}
                     </div>
                     <div class="col-sm-1" style="padding-right:1px;padding-left:0px;">
                         {{> afQuickField name='percent' id='percent' }}
                     </div>
                     <div class="col-sm-1" style="padding-right:0px;padding-left:0px;margin-top: 5px;">
                         <br>
-                        <button type="button" class="btn btn-add-round btn-primary addItem input-sm" {{cssClassForAddMoreFixedAsset}}>
+                        <button type="button"
+                                class="btn btn-add-round btn-primary addItem input-sm" {{cssClassForAddMoreFixedAsset}}>
                             {{fa "plus"}}
                         </button>
                     </div>
@@ -142,7 +143,7 @@
                         </div>
                     </div>
 
-                        <button type="submit" class="btn btn-primary pull-right">{{fa "floppy-o"}} Save</button>
+                    <button type="submit" class="btn btn-primary pull-right">{{fa "floppy-o"}} Save</button>
 
                 </fieldset>
             </div>

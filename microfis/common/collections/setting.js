@@ -9,8 +9,11 @@ export const Setting = new Mongo.Collection("microfis_setting");
 Setting.schema = new SimpleSchema({
     dayOfWeekToEscape: {
         type: [Number],
+        optional: true,
+        defaultValue: [],
         autoform: {
             type: "select-multiple",
+
             // multiple: true,
             options: function () {
                 return SelectOpts.dayOfWeekToEscape(false);

@@ -157,6 +157,12 @@ AutoForm.hooks({
             insert: function (doc) {
                 let loanData = groupLoanDetailCollection.find().fetch();
 
+                if (loanData.length == 0) {
+                    alertify.warning("Can't Not Empty Account!!!");
+
+                    return false;
+                }
+
                 var loan = [];
                 loanData.forEach(function (obj) {
                     loan.push({id: obj.id})
@@ -181,6 +187,13 @@ AutoForm.hooks({
 
                 let loanData = groupLoanDetailCollection.find().fetch();
 
+                if (loanData.length == 0) {
+                    alertify.warning("Can't Not Empty Account!!!");
+
+                    return false;
+                }
+
+                
                 var loan = [];
                 loanData.forEach(function (obj) {
                     loan.push({id: obj.id})

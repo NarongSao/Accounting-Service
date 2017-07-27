@@ -105,6 +105,74 @@ MicrofisRoutes.route('/collectionSheet-report', {
     }
 });
 
+
+// Write Off
+import '../imports/reports/loan-writeOff';
+MicrofisRoutes.route('/writeOff-report', {
+    name: 'microfis.writeOffReport',
+    title: 'Write Off Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_writeOffReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Write Off Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Write Off Ending
+import '../imports/reports/loan-writeOffEnding';
+MicrofisRoutes.route('/writeOffEnding-report', {
+    name: 'microfis.writeOffEndingReport',
+    title: 'Write Off Ending Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_writeOffEndingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Write Off Ending Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+// waived
+import '../imports/reports/loan-waived';
+MicrofisRoutes.route('/waived-report', {
+    name: 'microfis.waivedReport',
+    title: 'Waived Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_waivedReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Write Off Ending Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Client Balance
+import '../imports/reports/loan-clientBalance';
+MicrofisRoutes.route('/clientBalance-report', {
+    name: 'microfis.clientBalanceReport',
+    title: 'Client Balance Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_clientBalanceReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Client Balance Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
 // Loan Closing
 import '../imports/reports/loanClosing.js';
 MicrofisRoutes.route('/loanClosing-report', {

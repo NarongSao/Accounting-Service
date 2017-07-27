@@ -484,7 +484,7 @@ indexTmpl.events({
                     alertify.error("Already End Of Process!!!");
                 }
             } else {
-                alertify.error("Already End Of Process!!!");
+                alertify.error("Already End Of Process or Clear Prepay!!!");
             }
         })
 

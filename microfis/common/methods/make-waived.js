@@ -8,6 +8,11 @@ import {LoanAcc} from '../../common/collections/loan-acc.js';
 import {Client} from '../../common/collections/client';
 import {MapClosing} from '../../../acc/imports/api/collections/mapCLosing';
 import {Setting} from '../../../core/common/collections/setting.js';
+import {ProductStatus} from '../../common/collections/productStatus';
+
+import {checkRepayment} from '../../common/methods/check-repayment.js';
+
+import ClassCompareAccount from "../../imports/libs/classCompareAccount";
 
 export const makeWaived = new ValidatedMethod({
     name: 'microfis.makeWaived',
@@ -38,23 +43,67 @@ export const makeWaived = new ValidatedMethod({
 
                 let transaction = [];
 
+                let checkPayment = checkRepayment.run({loanAccId: loanAccId, checkDate: opts['waived.waivedDate']});
+                let productStatusList;
+                if (loanAcc.paymentMethod == "D") {
+                    if (loanAcc.term <= 365) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+
+                } else if (loanAcc.paymentMethod == "W") {
+                    if (loanAcc.term <= 52) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else if (loanAcc.paymentMethod == "M") {
+                    if (loanAcc.term <= 12) {
+                        productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                    } else {
+                        productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                    }
+                } else {
+                    productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                }
+
+                let finProductStatus = function (obj) {
+                    return (checkPayment.totalScheduleDue.numOfDayLate < 0 ? 0 : checkPayment.totalScheduleDue.numOfDayLate) >= obj.from && (checkPayment.totalScheduleDue.numOfDayLate < 0 ? 0 : checkPayment.totalScheduleDue.numOfDayLate) <= obj.to;
+                }
+
+                let proStatus = productStatusList.find(finProductStatus);
 
                 let acc_waivedForDeathExpense = MapClosing.findOne({chartAccountCompare: "Waived For Death"});
-                let acc_principal = checkPrincipal(loanAcc);
-
+                let acc_principal = ClassCompareAccount.checkPrincipal(loanAcc, proStatus._id);
+                let acc_interest = ClassCompareAccount.checkInterest(loanAcc, proStatus._id);
+                let acc_adminFee = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
 
                 transaction.push({
-                    account: acc_waivedForDeathExpense.accountDoc.code + " | " + acc_waivedForDeathExpense.accountDoc.name,
-                    dr: opts['waived.amount'],
-                    cr: 0,
-                    drcr: opts['waived.amount']
+                        account: acc_waivedForDeathExpense.accountDoc.code + " | " + acc_waivedForDeathExpense.accountDoc.name,
+                        dr: opts['waived.amount'] + opts['waived.interest'] + opts['waived.feeOnPayment'],
+                        cr: 0,
+                        drcr: opts['waived.amount'] + opts['waived.interest'] + opts['waived.feeOnPayment']
 
-                }, {
-                    account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
-                    dr: 0,
-                    cr: opts['waived.amount'],
-                    drcr: -opts['waived.amount']
-                });
+                    }, {
+                        account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
+                        dr: 0,
+                        cr: opts['waived.amount'],
+                        drcr: -opts['waived.amount']
+                    },
+                    {
+                        account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
+                        dr: 0,
+                        cr: opts['waived.interest'],
+                        drcr: -opts['waived.interest']
+                    },
+                    {
+                        account: acc_adminFee.accountDoc.code + " | " + acc_adminFee.accountDoc.name,
+                        dr: 0,
+                        cr: opts['waived.feeOnPayment'],
+                        drcr: -opts['waived.feeOnPayment']
+                    }
+                );
 
 
                 dataForAccount.transaction = transaction;
@@ -73,378 +122,7 @@ export const makeWaived = new ValidatedMethod({
 });
 
 
-let checkPrincipal = function (doc, loanType) {
 
-    let acc_principal = {}
 
-    if (doc.paymentMethod == "D") {
-        if (doc.term <= 365) {
 
-            if (doc.accountType == "IL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Less than or Equal One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Less than or Equal One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Less than or Equal One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Less than or Equal One Year"});
-            }
-
-
-        } else {
-            if (doc.accountType == "IL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Over One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Over One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Over One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Over One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Over One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Over One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Over One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Over One Year"});
-            }
-        }
-
-    } else if (doc.paymentMethod == "W") {
-        if (doc.term <= 52) {
-            if (doc.accountType == "IL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Less than or Equal One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Less than or Equal One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Less than or Equal One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Less than or Equal One Year"});
-            }
-        } else {
-            if (doc.accountType == "IL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Over One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Over One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Over One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Over One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Over One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Over One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Over One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Over One Year"});
-            }
-        }
-    } else if (doc.paymentMethod == "M") {
-        if (doc.term <= 12) {
-            if (doc.accountType == "IL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Less than or Equal One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Less than or Equal One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Less than or Equal One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Less than or Equal One Year"});
-            }
-        } else {
-            if (doc.accountType == "IL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Over One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Over One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Over One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Over One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Over One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Over One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Over One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Over One Year"});
-            }
-        }
-    } else {
-        if (doc.accountType == "IL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Individual Over One Year"});
-        } else if (doc.accountType == "GL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Group Over One Year"});
-
-        } else if (doc.accountType == "EL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Enterprise Over One Year"});
-
-        } else if (doc.accountType == "OL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Other Over One Year"});
-
-        } else if (doc.accountType == "RPAL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party External Auditors Over One Year"});
-
-        } else if (doc.accountType == "RPSL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Shareholder Over One Year"});
-
-        } else if (doc.accountType == "RPML") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Manager Over One Year"});
-
-        } else if (doc.accountType == "RPEL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "Loss Loan Related Party Employees Over One Year"});
-        }
-    }
-
-    return acc_principal;
-}
-
-
-let checkInterest = function (doc, loanType) {
-    let acc_interest = {}
-
-    if (doc.paymentMethod == "D") {
-        if (doc.term <= 365) {
-
-            if (doc.accountType == "IL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Less than or Equal One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Less than or Equal One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Less than or Equal One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Less than or Equal One Year"});
-            }
-
-
-        } else {
-            if (doc.accountType == "IL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Over One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Over One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Over One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Over One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Over One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Over One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Over One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Over One Year"});
-            }
-        }
-
-    } else if (doc.paymentMethod == "W") {
-        if (doc.term <= 52) {
-            if (doc.accountType == "IL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Less than or Equal One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Less than or Equal One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Less than or Equal One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Less than or Equal One Year"});
-            }
-        } else {
-            if (doc.accountType == "IL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Over One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Over One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Over One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Over One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Over One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Over One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Over One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Over One Year"});
-            }
-        }
-    } else if (doc.paymentMethod == "M") {
-        if (doc.term <= 12) {
-            if (doc.accountType == "IL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Less than or Equal One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Less than or Equal One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Less than or Equal One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Less than or Equal One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Less than or Equal One Year"});
-            }
-        } else {
-            if (doc.accountType == "IL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Over One Year"});
-            } else if (doc.accountType == "GL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Over One Year"});
-
-            } else if (doc.accountType == "EL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Over One Year"});
-
-            } else if (doc.accountType == "OL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Over One Year"});
-
-            } else if (doc.accountType == "RPAL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Over One Year"});
-
-            } else if (doc.accountType == "RPSL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Over One Year"});
-
-            } else if (doc.accountType == "RPML") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Over One Year"});
-
-            } else if (doc.accountType == "RPEL") {
-                acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Over One Year"});
-            }
-        }
-    } else {
-        if (doc.accountType == "IL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Individual Over One Year"});
-        } else if (doc.accountType == "GL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Group Over One Year"});
-
-        } else if (doc.accountType == "EL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Enterprise Over One Year"});
-
-        } else if (doc.accountType == "OL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Other Over One Year"});
-
-        } else if (doc.accountType == "RPAL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party External Auditors Over One Year"});
-
-        } else if (doc.accountType == "RPSL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Shareholder Over One Year"});
-
-        } else if (doc.accountType == "RPML") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Manager Over One Year"});
-
-        } else if (doc.accountType == "RPEL") {
-            acc_interest = MapClosing.findOne({chartAccountCompare: "Interest Income Loss Loan Related Party Employees Over One Year"});
-        }
-    }
-
-
-    return acc_interest;
-}
 

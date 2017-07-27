@@ -103,22 +103,32 @@
             </a>
 
             <ul class="treeview-menu" style="display: none">
-                <li class="{{isActiveRoute name='microfis.repaymentScheduleReport'}}">
+                <li class="treeview">
                     <a href="{{pathFor 'microfis.repaymentScheduleReport'}}">
                         <i class="fa fa-circle-o"></i> <span>Repayment Schedule</span>
+                        <i class="fa fa-angle-left pull-right"></i>
                     </a>
+
+                    <ul class="treeview-menu" style="display: none">
+                        <li class="{{isActiveRoute name='microfis.repaymentScheduleReport'}}">
+                            <a href="{{pathFor 'microfis.repaymentScheduleReport'}}">
+                                <i class="fa fa-circle-o"></i> <span>Repayment Schedule</span>
+                            </a>
+                        </li>
+                        <li class="{{isActiveRoute name='microfis.repaymentScheduleForm1Report'}}">
+                            <a href="{{pathFor 'microfis.repaymentScheduleForm1Report'}}">
+                                <i class="fa fa-circle-o"></i> <span>Repayment Schedule I</span>
+                            </a>
+                        </li>
+                        <li class="{{isActiveRoute name='microfis.repaymentScheduleSummaryReport'}}">
+                            <a href="{{pathFor 'microfis.repaymentScheduleSummaryReport'}}">
+                                <i class="fa fa-circle-o"></i> <span>Repayment Schedule II</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
-                <li class="{{isActiveRoute name='microfis.repaymentScheduleForm1Report'}}">
-                    <a href="{{pathFor 'microfis.repaymentScheduleForm1Report'}}">
-                        <i class="fa fa-circle-o"></i> <span>Repayment Schedule Form1</span>
-                    </a>
-                </li>
-                <li class="{{isActiveRoute name='microfis.repaymentScheduleSummaryReport'}}">
-                    <a href="{{pathFor 'microfis.repaymentScheduleSummaryReport'}}">
-                        <i class="fa fa-circle-o"></i> <span>Repayment Schedule Summary</span>
-                    </a>
-                </li>
+
                 <li class="{{isActiveRoute name='microfis.loanOutstandingReport'}}">
                     <a href="{{pathFor 'microfis.loanOutstandingReport'}}">
                         <i class="fa fa-circle-o"></i> <span>Loan Outstanding</span>
@@ -168,6 +178,27 @@
                 <li class="{{isActiveRoute name='microfis.productActivityReport'}}">
                     <a href="{{pathFor 'microfis.productActivityReport'}}">
                         <i class="fa fa-circle-o"></i> <span>Product Activity</span>
+                    </a>
+                </li>
+
+                <li class="{{isActiveRoute name='microfis.writeOffReport'}}">
+                    <a href="{{pathFor 'microfis.writeOffReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Write Off</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.writeOffEndingReport'}}">
+                    <a href="{{pathFor 'microfis.writeOffEndingReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Write Off Ending</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.waivedReport'}}">
+                    <a href="{{pathFor 'microfis.waivedReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Waived</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='microfis.clientBalanceReport'}}">
+                    <a href="{{pathFor 'microfis.clientBalanceReport'}}">
+                        <i class="fa fa-circle-o"></i> <span>Client Balance</span>
                     </a>
                 </li>
             </ul>

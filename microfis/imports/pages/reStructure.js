@@ -52,7 +52,7 @@ formTmpl.onCreated(function () {
 
 
         if (loanAccDoc.productId) {
-                       $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+            $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
             lookupProduct.callPromise({
                 _id: loanAccDoc.productId
@@ -69,7 +69,7 @@ formTmpl.onCreated(function () {
 
 
             if (disbursementDate) {
-                           $.blockUI({     overlayCSS: {         backgroundColor: '#fff',         opacity: 0.1,         cursor: 'wait'     } });
+                $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({
@@ -232,6 +232,7 @@ let hooksObject = {
         }).then(function (result) {
             if (result) {
                 alertify.repayment().close();
+                alertify.success("Success!");
                 let loanAccDocUpdate = stateRepayment.get("loanAccDoc");
                 loanAccDocUpdate.status = "Restructure";
 

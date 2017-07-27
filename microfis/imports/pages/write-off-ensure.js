@@ -105,6 +105,8 @@ formTmpl.onCreated(function () {
                     stateRepayment.set('balanceUnPaid', result.balanceUnPaid);
                     stateRepayment.set('interestUnPaid', result.interestUnPaid);
                     stateRepayment.set('feeOnPaymentUnPaid', result.feeOnPaymentUnPaid);
+                    stateRepayment.set("lateDate", result.lateDate);
+                    stateRepayment.set("loseDate", result.loseDate);
                     // Set last repayment
                     if (result.lastRepayment) {
                         Meteor.call("microfis_getLastEndOfProcess", Session.get('currentBranch'), loanAccDoc._id, function (err, endDoc) {
@@ -171,6 +173,12 @@ formTmpl.helpers({
     },
     feeOnPaymentUnPaid() {
         return stateRepayment.get('feeOnPaymentUnPaid');
+    },
+    lateDate(){
+        return stateRepayment.get('lateDate');
+    },
+    loseDate(){
+        return stateRepayment.get('loseDate');
     }
 
 });
@@ -196,7 +204,6 @@ formTmpl.onDestroyed(function () {
 // Hook
 let hooksObject = {
     onSubmit(doc) {
-
         let curDoc = stateRepayment.get('curData');
         let loanAccDoc = stateRepayment.get('loanAccDoc');
 
@@ -234,6 +241,8 @@ let hooksObject = {
 
         let updateWriteOff = {status: "Write Off", writeOffDate: doc.writeOff.writeOffDate};
         updateWriteOff['writeOff.writeOffDate'] = doc.writeOff.writeOffDate;
+        updateWriteOff['writeOff.lossDate'] = doc.writeOff.lossDate;
+        updateWriteOff['writeOff.lateDate'] = doc.writeOff.lateDate;
         updateWriteOff['writeOff.amount'] = doc.writeOff.amount;
         updateWriteOff['writeOff.interest'] = doc.writeOff.interest;
         updateWriteOff['writeOff.feeOnPayment'] = doc.writeOff.feeOnPayment;
@@ -261,18 +270,17 @@ let hooksObject = {
         }).then(function (result) {
             if (result) {
                 alertify.success("Success ");
-                alertify.writeOff().close();
+                alertify.writeOffEnsure().close();
 
-                if (result) {
-                    lookupLoanAcc.callPromise({
-                        _id: curDoc.loanAccDoc._id
-                    }).then(function (result) {
-                        stateRepayment.set('loanAccDoc', result);
-                    }).catch(function (err) {
-                        console.log(err.message);
-                    });
+                lookupLoanAcc.callPromise({
+                    _id: curDoc.loanAccDoc._id
+                }).then(function (result) {
+                    stateRepayment.set('loanAccDoc', result);
+                }).catch(function (err) {
+                    console.log(err.message);
+                });
 
-                }
+
             }
         }).catch(function (err) {
             console.log(err.message);
