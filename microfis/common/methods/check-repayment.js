@@ -20,6 +20,7 @@ import {lookupLoanAcc} from './lookup-loan-acc';
 import {LoanAcc} from '../../common/collections/loan-acc';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule';
 import {Repayment} from '../../common/collections/repayment';
+import {ProductStatus} from '../../common/collections/productStatus';
 
 export let checkRepayment = new ValidatedMethod({
     name: 'microfis.checkRepayment',
@@ -59,7 +60,6 @@ export let checkRepayment = new ValidatedMethod({
                     lastScheduleDate = repaymentDoc.scheduleDate;
                 }
             }
-
             let loanAccDoc = {};
 
             if (opts != undefined) {
@@ -341,10 +341,10 @@ export let checkRepayment = new ValidatedMethod({
             };
 
             // Cal addition
-            if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to) {
+            if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to && moment(checkDate).endOf("day").toDate().getTime() < moment(loanAccDoc.maturityDate).toDate().getTime()) {
                 closing.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalSchedulePrevious.dueDate.to).startOf('day'), 'days');
             }
-            if (totalScheduleDue && totalScheduleDue.dueDate.to) {
+            if (totalScheduleDue && totalScheduleDue.dueDate.to && moment(checkDate).endOf("day").toDate().getTime() < moment(loanAccDoc.maturityDate).toDate().getTime()) {
                 closing.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalScheduleDue.dueDate.to).startOf('day'), 'days');
             }
 
@@ -462,7 +462,10 @@ export let checkRepayment = new ValidatedMethod({
             let feeOnPaymentUnPaid = 0;
             let penaltyTotal = 0;
 
+
             scheduleDoc.forEach(function (obj) {
+
+
                 balanceUnPaid += obj.principalDue;
                 interestUnPaid += obj.interestDue;
                 feeOnPaymentUnPaid += obj.feeOnPaymentDue;
@@ -493,6 +496,32 @@ export let checkRepayment = new ValidatedMethod({
                 }
             }
 
+            //Write OFF
+            let productType = "";
+            if (loanAccDoc.paymentMethod == "M") {
+                productType = loanAccDoc.term <= 12 ? "S" : "L";
+            } else if (loanAccDoc.paymentMethod == "W") {
+                productType = loanAccDoc.term <= 52 ? "S" : "L";
+
+            } else if (loanAccDoc.paymentMethod == "Y") {
+                productType = "L";
+            } else {
+                productType = "S";
+            }
+
+
+            let numOfDayLose = 0;
+            if (productType == "S") {
+                let productStatusDoc = ProductStatus.findOne({code: "W", type: "Less Or Equal One Year"});
+                numOfDayLose = productStatusDoc.from;
+            } else {
+                let productStatusDoc = ProductStatus.findOne({code: "W", type: "Over One Year"});
+                numOfDayLose = productStatusDoc.from;
+            }
+
+            let lateDate = scheduleDue.length > 0 ? moment(scheduleDue[0].dueDate).format("DD/MM/YYYY") : "";
+            let loseDate = scheduleDue.length > 0 ? moment(scheduleDue[0].dueDate).add(numOfDayLose, "days").format("DD/MM/YYYY") : "";
+
             return {
                 scheduleDue: scheduleDue,
                 totalScheduleDue: totalScheduleDue,
@@ -507,7 +536,9 @@ export let checkRepayment = new ValidatedMethod({
                 balanceUnPaid: math.round(balanceUnPaid, 2),
                 interestUnPaid: math.round(interestUnPaid, 2),
                 feeOnPaymentUnPaid: math.round(feeOnPaymentUnPaid, 2),
-                penaltyTotal: math.round(penaltyTotal, 2)
+                penaltyTotal: math.round(penaltyTotal, 2),
+                lateDate: lateDate,
+                loseDate: loseDate
             };
         }
     }
@@ -837,10 +868,10 @@ export let checkRepaymentRealTime = new ValidatedMethod({
             };
 
             // Cal addition
-            if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to) {
+            if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to && moment(checkDate).endOf("day").toDate().getTime() < moment(loanAccDoc.maturityDate).toDate().getTime()) {
                 closing.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalSchedulePrevious.dueDate.to).startOf('day'), 'days');
             }
-            if (totalScheduleDue && totalScheduleDue.dueDate.to) {
+            if (totalScheduleDue && totalScheduleDue.dueDate.to && moment(checkDate).endOf("day").toDate().getTime() < moment(loanAccDoc.maturityDate).toDate().getTime()) {
                 closing.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalScheduleDue.dueDate.to).startOf('day'), 'days');
             }
 

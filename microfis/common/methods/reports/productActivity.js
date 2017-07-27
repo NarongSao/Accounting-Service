@@ -248,15 +248,6 @@ export const productActivityReport = new ValidatedMethod({
                 {$match: selector},
                 {
                     $lookup: {
-                        from: "microfis_repayment",
-                        localField: "_id",
-                        foreignField: "loanAccId",
-                        as: "repaymentDoc"
-                    }
-                },
-                {$unwind: {path: "$repaymentDoc", preserveNullAndEmptyArrays: true}},
-                {
-                    $lookup: {
                         from: "microfis_creditOfficer",
                         localField: "creditOfficerId",
                         foreignField: "_id",
@@ -288,7 +279,8 @@ export const productActivityReport = new ValidatedMethod({
                         }
 
                     }
-                },
+                }
+                ,
                 {
                     $group: {
                         _id: {
@@ -312,7 +304,6 @@ export const productActivityReport = new ValidatedMethod({
                 }
 
             ]);
-            
 
             let i = 1;
             let checkDate = date[1];

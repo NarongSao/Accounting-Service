@@ -18,8 +18,6 @@ import {MapClosing} from '../../../acc/imports/api/collections/mapCLosing.js';
 
 // Before insert
 LoanAcc.before.insert(function (userId, doc) {
-
-    console.log(doc.disbursementDate);
     let prefix = `${doc.clientId}-${doc.productId}`;
     doc._id = idGenerator2.genWithPrefix(LoanAcc, {
         prefix: prefix,

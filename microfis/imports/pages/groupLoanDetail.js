@@ -36,6 +36,7 @@ var groupLoanDetailTPL = Template.microfis_groupLoanDetail;
 
 var groupLoanDetailCollection;
 clientAccOpt = new ReactiveVar([]);
+clientAccOptTmp = new ReactiveVar([]);
 locationChange = new ReactiveVar("");
 
 //Created
@@ -59,6 +60,11 @@ groupLoanDetailTPL.onRendered(function () {
         Meteor.call("microfis_clientAccGroupOpt", Session.get("currentBranch"), locationChange.get(), function (err, result) {
             if (result) {
                 clientAccOpt.set(result);
+            }
+        })
+        Meteor.call("microfis_clientAccAllGroupOpt", Session.get("currentBranch"), locationChange.get(), function (err, result) {
+            if (result) {
+                clientAccOptTmp.set(result);
             }
         })
     })
@@ -88,9 +94,13 @@ groupLoanDetailTPL.helpers({
 
 groupLoanDetailTPL.events({
     'click .addItem': function (e, t) {
-        
+
         let loan = {};
         loan.id = t.$('[name="loanAccount"]').val();
+        if (loan.id == "") {
+            alertify.warning("Need to Choose!!!");
+            return false;
+        }
         groupLoanDetailCollection.insert(loan);
 
         // let index = clientAccOpt.get().findIndex(x => x.value == loan.id);
@@ -105,8 +115,18 @@ groupLoanDetailTPL.events({
 
     },
     'click .removeItem': function (e, t) {
-        var self = this;
+        debugger;
+        let self = this;
         groupLoanDetailCollection.remove(self._id);
+        let tmpCollection = groupLoanDetailCollection.find().fetch().map(function (obj) {
+            return obj.id;
+        })
+
+        let newArrayClientOpt = clientAccOptTmp.get().filter(function (obj) {
+            return tmpCollection.indexOf(obj.value) <= -1;
+        });
+
+        clientAccOpt.set(newArrayClientOpt);
     }
 });
 

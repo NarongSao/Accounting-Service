@@ -105,6 +105,7 @@ indexTmpl.events({
         $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
         let self = this;
+        state.set("currencyId", self.currencyId);
         state.set("disbursmentDate", self.disbursementDate);
 
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
@@ -304,20 +305,21 @@ formTmpl.helpers({
         return LoanAcc;
     },
     data(){
-        let doc = {}, formType = 'insert';
+        let doc = {}, formType = 'insert', formTypeStatus = true;
         let currentData = Template.currentData();
 
         if (currentData) {
             doc = LoanAcc.findOne({_id: currentData.loanAccId});
             doc.voucherId = doc.voucherId.substr(8, doc.voucherId.length - 1);
             formType = 'update';
+            formTypeStatus = false;
 
             if (doc.escapeDayMethod == "NO") {
                 stateClient.set('escapeFrequency', false);
             }
         }
 
-        return {doc, formType};
+        return {doc, formType, formTypeStatus};
     },
     cycle(){
         let currentData = Template.currentData();
@@ -382,18 +384,24 @@ formTmpl.events({
         if ($submitDate) {
             $disbursementDate.data("DateTimePicker").minDate(moment($submitDate, "DD/MM/YYYY").startOf('day').toDate());
         }
-        console.log($disbursementDate);
     }
     ,
     'keyup [name="interestRate"]': _.debounce(function (e) {
         let product = Session.get('productDoc');
         let val = $(e.currentTarget);
+        if (state.get("currencyId") == "KHR") {
+            product.interestRate.min = product.interestRate.min * product.exchange.KHR;
+            product.interestRate.max = product.interestRate.max * product.exchange.KHR;
+        } else if (state.get("currencyId") == "THB") {
+            product.interestRate.min = product.interestRate.min * product.exchange.THB;
+            product.interestRate.max = product.interestRate.max * product.exchange.THB;
+        }
         if (val.val() < product.interestRate.min || val.val() > product.interestRate.max) {
             alertify.warning('Value not in Rank');
             val.val('');
             return;
         }
-    }, 200)
+    }, 1500)
 
 });
 
@@ -463,7 +471,6 @@ showTmpl.onCreated(function () {
 showTmpl.helpers({
     data: function () {
         let data = Template.instance().dataLookup.get();
-        console.log(data);
         // data.attachFileUrl = null;
         // if (data.photo) {
         //     let file = Files.findOne(data.attachFile);

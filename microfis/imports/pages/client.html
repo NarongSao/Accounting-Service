@@ -32,6 +32,7 @@
         {{#if Template.subscriptionsReady}}
             {{#autoForm collection=collection id="Microfis_clientForm" doc=data type=formType}}
                 <fieldset>
+
                     <legend>General</legend>
                     <div class="row">
                         <div class="col-md-4">
@@ -42,17 +43,23 @@
                         </div>
                         <div class="col-md-4">
                             {{> afQuickField name="enSurname"}}
-                            {{> afQuickField name="enGivenName"}}
-                            {{> afQuickField name="enNickname"}}
+                            {{> afQuickField name="enGivenName" }}
+                            {{> afQuickField name="enNickname" }}
                             {{> afQuickField name="gender"}}
+
                         </div>
                         <div class="col-md-4">
                             {{> afQuickField name="dob"}}
                             {{> afQuickField name="maritalStatus"}}
+
                             {{> afQuickField name="photo"}}
                             {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+
+
                         </div>
                     </div>
+
+
                 </fieldset>
 
                 <fieldset>
@@ -71,23 +78,24 @@
                         {{/if}}
                     </div>
                 </fieldset>
-
-
                 <fieldset>
                     <legend>Contact</legend>
                     <div class="row">
                         <div class="col-md-4">
                             {{> afQuickField name="address" rows=2}}
-                        </div>
-                        <div class="col-md-4">
-                            {{> afQuickField name="telephone"}}
+
                         </div>
                         <div class="col-md-4">
                             {{> afQuickField name="email"}}
                         </div>
+                        <div class="col-md-4">
+                            {{> afQuickField name="telephone"}}
+
+                        </div>
+
+
                     </div>
                 </fieldset>
-
                 {{> formFooterWithButton}}
             {{/autoForm}}
         {{else}}

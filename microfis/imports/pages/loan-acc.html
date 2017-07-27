@@ -91,12 +91,13 @@
                                 {{/if}}
                             </div>
 
+
                         </div>
                         <div class="col-md-6">
+
                             {{> afQuickField name="fundId"}}
                             {{> afQuickField name="creditOfficerId"}}
                             {{> afQuickField name="attachFile"}}
-
 
                         </div>
                     </div>
@@ -127,7 +128,12 @@
                     <div class="row">
                         {{> afQuickField name="interestMethod" readonly=true}}
                         {{> afQuickField name="interestType" readonly=true}}
-                        {{> afQuickField name="interestRate" value=defaultRate}}
+
+                        {{#if data.formTypeStatus}}
+                            {{> afQuickField name="interestRate" value=defaultRate}}
+                        {{else}}
+                            {{> afQuickField name="interestRate"}}
+                        {{/if}}
                     </div>
                 </div>
 
@@ -176,7 +182,7 @@
                     <legend>Other</legend>
                     <div class="row">
                         <div class="col-md-3">
-                            {{> afQuickField name="purpose"}}
+                            {{> afQuickField name="purpose" }}
                             {{> afQuickField name="history"}}
                         </div>
                         <div class="col-md-3">
@@ -184,8 +190,8 @@
                             {{> afQuickField name="collateralType"}}
                         </div>
                         <div class="col-md-3">
-                            {{> afQuickField name="collateralSecurity"}}
-                            {{> afQuickField name="povertyLevel"}}
+                            {{> afQuickField name="collateralSecurity" }}
+                            {{> afQuickField name="povertyLevel" }}
                         </div>
                         <div class="col-md-3">
                             {{> afQuickField name="cycle" value=cycle readonly=true}}

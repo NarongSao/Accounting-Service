@@ -32,6 +32,7 @@ Meteor.methods({
     microfis_clientAccGroupOpt: function (branchId, locationId) {
         let arr = [];
         // let loanList = LoanAcc.find({branchId: branchId, status: {$ne: "Close"}}).fetch();
+
         arr.push({label: "(Select One)", value: ""});
         let loanList = LoanAcc.aggregate([
             {
@@ -40,6 +41,39 @@ Meteor.methods({
                     accountType: "GL",
                     locationId: locationId,
                     isAddToGroup: false,
+                    status: {$nin: ["Close", "Restructure"]}
+                }
+            },
+            {
+                $lookup: {
+                    from: "microfis_client",
+                    localField: "clientId",
+                    foreignField: "_id",
+                    as: "clientDoc"
+                }
+            },
+            {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}}
+        ])
+
+        loanList.forEach(function (obj) {
+            arr.push({
+                label: obj._id + " : " + obj.clientDoc.khSurname + " " + obj.clientDoc.khGivenName + "    " + moment(obj.disbursementDate).format("DD/MM/YYYY"),
+                value: obj._id
+            });
+        })
+        return arr;
+    },
+    microfis_clientAccAllGroupOpt: function (branchId, locationId) {
+        let arr = [];
+        // let loanList = LoanAcc.find({branchId: branchId, status: {$ne: "Close"}}).fetch();
+
+        arr.push({label: "(Select One)", value: ""});
+        let loanList = LoanAcc.aggregate([
+            {
+                $match: {
+                    branchId: branchId,
+                    accountType: "GL",
+                    locationId: locationId,
                     status: {$nin: ["Close", "Restructure"]}
                 }
             },

@@ -131,6 +131,7 @@ Client.idTypeSchema = new SimpleSchema({
         type: String,
         label: 'ID number',
         max: 100,
+        defaultValue: "",
         optional: true,
         custom: function () {
             if (Meteor.isClient) {
@@ -199,6 +200,7 @@ Client.contactSchema = new SimpleSchema({
         type: String,
         label: 'Email',
         regEx: SimpleSchema.RegEx.Email,
+        defaultValue: "",
         max: 100,
         optional: true
     }

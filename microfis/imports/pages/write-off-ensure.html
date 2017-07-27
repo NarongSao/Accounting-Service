@@ -1,5 +1,5 @@
 <template name="Microfis_writeOffEnsure">
-	<div class="box-header with-border">
+    <div class="box-header with-border">
         {{#with loanAccDoc}}
             <div class="row">
                 <div class="col-md-6">
@@ -21,28 +21,30 @@
         {{/with}}
 
     </div>
-	<!-- /.box-header -->
+    <!-- /.box-header -->
 
-	<div class="box-body">
-		{{#if Template.subscriptionsReady}} 
-        {{#autoForm schema=schema id="Microfis_writeOffEnsure" doc=data resetOnSuccess=false}}
-		<fieldset>
-			<legend>Write Off Ensure</legend>
-			<div class="row">
-                <div class="col-sm-12">
-                    {{> afQuickField name="writeOff.writeOffDate"}}
-                    {{> afQuickField name="writeOff.amount" value=balanceUnPaid readonly=true}}
-                    {{> afQuickField name="writeOff.interest" value=interestUnPaid readonly=true}}
-                    {{> afQuickField name="writeOff.feeOnPayment" value=feeOnPaymentUnPaid readonly=true}}
-                    {{> afQuickField name="writeOff.description"}}
-                </div>
-			</div>
-		</fieldset>
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm schema=schema id="Microfis_writeOffEnsure" doc=data resetOnSuccess=false}}
+                <fieldset>
+                    <legend>Write Off Ensure</legend>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{> afQuickField name="writeOff.writeOffDate"}}
+                            {{> afQuickField name="writeOff.amount" value=balanceUnPaid readonly=true}}
+                            {{> afQuickField name="writeOff.interest" value=interestUnPaid readonly=true}}
+                            {{> afQuickField name="writeOff.feeOnPayment" value=feeOnPaymentUnPaid readonly=true}}
+                            {{> afQuickField name="writeOff.description"}}
+                            {{> afQuickField name="writeOff.lateDate" type="hidden"   value=lateDate}}
+                            {{> afQuickField name="writeOff.lossDate" type="hidden" value=loseDate}}
+                        </div>
+                    </div>
+                </fieldset>
 
-		{{> formFooterWithButton}} 
-        {{/autoForm}} 
-        {{else}} 
-            {{> loading}} 
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
         {{/if}}
-	</div>
+    </div>
 </template>

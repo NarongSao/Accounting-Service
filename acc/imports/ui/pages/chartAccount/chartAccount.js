@@ -352,3 +352,31 @@ function getMapping() {
         }
     })
 }
+
+
+Template.acc_chartAccountReportGen.helpers({
+    options: function () {
+        // font size = null (default), bg
+        // paper = a4, a5, mini
+        // orientation = portrait, landscape
+        return {
+            //fontSize: 'bg',
+            paper: 'a4',
+            orientation: 'portrait'
+        };
+    },
+    data: function () {
+        // Get query params
+        //FlowRouter.watchPathChange();
+        // var q = FlowRouter.current().queryParams;
+
+        debugger;
+
+        Fetcher.setDefault('data', false);
+        Fetcher.retrieve('data', 'acc_chartAccountReport');
+
+        console.log(Fetcher.get('data'));
+        return Fetcher.get('data');
+    }
+});
+

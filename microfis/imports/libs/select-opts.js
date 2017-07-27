@@ -26,6 +26,7 @@ export const SelectOpts = {
         if (selectOne) {
             list.push({label: '(Select One)', value: ''});
         }
+        list.push({label: 'Not Escape', value: -1});
         list.push({label: 'Mon', value: 1});
         list.push({label: 'Tue', value: 2});
         list.push({label: 'Wed', value: 3});
