@@ -420,127 +420,127 @@ export const productActivityReport = new ValidatedMethod({
                     }
                 ])
 
+                if (dataCollection.length > 0) {
+                    let dataArrears = LoanAcc.aggregate([
+                        {$match: {_id: {$in: obj.loanAccIdList}}},
+                        {
+                            $lookup: {
+                                from: "microfis_client",
+                                localField: "clientId",
+                                foreignField: "_id",
+                                as: "clientDoc"
+                            }
+                        },
+                        {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
+                        {
+                            $lookup: {
+                                from: "microfis_fund",
+                                localField: "fundId",
+                                foreignField: "_id",
+                                as: "fundDoc"
+                            }
+                        },
+                        {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
+                        {
+                            $lookup: {
+                                from: "microfis_creditOfficer",
+                                localField: "creditOfficerId",
+                                foreignField: "_id",
+                                as: "creditOfficerDoc"
+                            }
+                        },
+                        {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
+                        {
+                            $lookup: {
+                                from: "microfis_location",
+                                localField: "locationId",
+                                foreignField: "_id",
+                                as: "locationDoc"
+                            }
+                        },
+                        {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
 
-                let dataArrears = LoanAcc.aggregate([
-                    {$match: {_id: {$in: obj.loanAccIdList}}},
-                    {
-                        $lookup: {
-                            from: "microfis_client",
-                            localField: "clientId",
-                            foreignField: "_id",
-                            as: "clientDoc"
+                        {
+                            $lookup: {
+                                from: "microfis_product",
+                                localField: "productId",
+                                foreignField: "_id",
+                                as: "productDoc"
+                            }
+                        },
+                        {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
+
+                        /*{
+                         $lookup: {
+                         from: "microfis_fee",
+                         localField: "productDoc.feeId",
+                         foreignField: "_id",
+                         as: "feeDoc"
+                         }
+                         },
+                         {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
+                         */
+                        {
+                            $lookup: {
+                                from: "microfis_penalty",
+                                localField: "productDoc.penaltyId",
+                                foreignField: "_id",
+                                as: "penaltyDoc"
+                            }
+                        },
+                        {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
+
+                        {
+                            $lookup: {
+                                from: "microfis_penaltyClosing",
+                                localField: "productDoc.penaltyClosingId",
+                                foreignField: "_id",
+                                as: "penaltyClosingDoc"
+                            }
+                        },
+                        {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
+                    ]);
+
+
+                    //Loop Active Loan in check date
+
+
+                    let subTotalLoanOut = 0;
+                    let subTotalArrearsPrin = 0;
+                    let subTotalArrearsInt = 0;
+                    let subTotalArrearsFeeOnPayment = 0;
+
+                    let subTotalArrearsPrinNBC = 0;
+
+                    let par = 0;
+                    let parNBC = 0;
+
+
+                    dataArrears.forEach(function (loanAccDoc) {
+
+                        let result = checkRepayment.run({
+                            loanAccId: loanAccDoc._id,
+                            checkDate: checkDate,
+                            opts: loanAccDoc
+                        });
+
+                        subTotalLoanOut += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
+                        subTotalArrearsPrin += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
+                        subTotalArrearsInt += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.interestDue, params.exchangeId);
+                        subTotalArrearsFeeOnPayment += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.feeOnPaymentDue, params.exchangeId);
+
+                        if (result.totalScheduleDue.numOfDayLate > 30) {
+                            subTotalArrearsPrinNBC += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
                         }
-                    },
-                    {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
-                    {
-                        $lookup: {
-                            from: "microfis_fund",
-                            localField: "fundId",
-                            foreignField: "_id",
-                            as: "fundDoc"
-                        }
-                    },
-                    {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
-                    {
-                        $lookup: {
-                            from: "microfis_creditOfficer",
-                            localField: "creditOfficerId",
-                            foreignField: "_id",
-                            as: "creditOfficerDoc"
-                        }
-                    },
-                    {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
-                    {
-                        $lookup: {
-                            from: "microfis_location",
-                            localField: "locationId",
-                            foreignField: "_id",
-                            as: "locationDoc"
-                        }
-                    },
-                    {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
 
-                    {
-                        $lookup: {
-                            from: "microfis_product",
-                            localField: "productId",
-                            foreignField: "_id",
-                            as: "productDoc"
-                        }
-                    },
-                    {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
+                    })
 
-                    /*{
-                     $lookup: {
-                     from: "microfis_fee",
-                     localField: "productDoc.feeId",
-                     foreignField: "_id",
-                     as: "feeDoc"
-                     }
-                     },
-                     {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
-                     */
-                    {
-                        $lookup: {
-                            from: "microfis_penalty",
-                            localField: "productDoc.penaltyId",
-                            foreignField: "_id",
-                            as: "penaltyDoc"
-                        }
-                    },
-                    {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
+                    par = subTotalArrearsPrin / subTotalLoanOut;
+                    parNBC = subTotalArrearsPrinNBC / subTotalLoanOut;
 
-                    {
-                        $lookup: {
-                            from: "microfis_penaltyClosing",
-                            localField: "productDoc.penaltyClosingId",
-                            foreignField: "_id",
-                            as: "penaltyClosingDoc"
-                        }
-                    },
-                    {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
-                ]);
+                    let numberOfClient = obj.loanAccIdList.length;
 
-
-                //Loop Active Loan in check date
-
-
-                let subTotalLoanOut = 0;
-                let subTotalArrearsPrin = 0;
-                let subTotalArrearsInt = 0;
-                let subTotalArrearsFeeOnPayment = 0;
-
-                let subTotalArrearsPrinNBC = 0;
-
-                let par = 0;
-                let parNBC = 0;
-
-
-                dataArrears.forEach(function (loanAccDoc) {
-
-                    let result = checkRepayment.run({
-                        loanAccId: loanAccDoc._id,
-                        checkDate: checkDate,
-                        opts: loanAccDoc
-                    });
-
-                    subTotalLoanOut += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue, params.exchangeId);
-                    subTotalArrearsPrin += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
-                    subTotalArrearsInt += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.interestDue, params.exchangeId);
-                    subTotalArrearsFeeOnPayment += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.feeOnPaymentDue, params.exchangeId);
-
-                    if (result.totalScheduleDue.numOfDayLate > 30) {
-                        subTotalArrearsPrinNBC += Meteor.call('microfis_exchange', loanAccDoc.currencyId, baseCurrency, result.totalScheduleDue.principalDue, params.exchangeId);
-                    }
-
-                })
-
-                par = subTotalArrearsPrin / subTotalLoanOut;
-                parNBC = subTotalArrearsPrinNBC / subTotalLoanOut;
-
-                let numberOfClient = obj.loanAccIdList.length;
-
-                content += `<tr>
+                    content += `<tr>
                                 <td>${i}</td>
                                 <td>${obj._id.creditOfficerDoc._id}</td>
                                 <td> ${obj._id.creditOfficerDoc.khName}</td>
@@ -562,25 +562,25 @@ export const productActivityReport = new ValidatedMethod({
                                 <td class="numberAlign">${microfis_formatNumber(parNBC * 100)}%</td>
                             </tr>`;
 
-                i++;
+                    i++;
 
-                totalLoanDisbursment += obj.loanDisbursment;
-                totalNewClient += obj.newClient;
-                totalOldClient += obj.oldClient;
-                totalFee += obj.totalFee;
+                    totalLoanDisbursment += obj.loanDisbursment;
+                    totalNewClient += obj.newClient;
+                    totalOldClient += obj.oldClient;
+                    totalFee += obj.totalFee;
 
-                totalCollPrin += dataCollection[0].collPrin;
-                totalCollInt += dataCollection[0].collInt;
-                totalCollFeeOnPayment += dataCollection[0].collFeeOnPayment;
-                totalCollPen += dataCollection[0].collPenalty;
-                totalColl += dataCollection[0].collTotal;
+                    totalCollPrin += dataCollection[0].collPrin;
+                    totalCollInt += dataCollection[0].collInt;
+                    totalCollFeeOnPayment += dataCollection[0].collFeeOnPayment;
+                    totalCollPen += dataCollection[0].collPenalty;
+                    totalColl += dataCollection[0].collTotal;
 
-                totalLoanOut += subTotalLoanOut;
-                totalAllClient += numberOfClient;
-                totalArrearsPrin += subTotalArrearsPrin;
-                totalArrearsInt += subTotalArrearsInt;
-                totalArrearsFeeOnPayment += subTotalArrearsFeeOnPayment;
-
+                    totalLoanOut += subTotalLoanOut;
+                    totalAllClient += numberOfClient;
+                    totalArrearsPrin += subTotalArrearsPrin;
+                    totalArrearsInt += subTotalArrearsInt;
+                    totalArrearsFeeOnPayment += subTotalArrearsFeeOnPayment;
+                }
 
             })
 
