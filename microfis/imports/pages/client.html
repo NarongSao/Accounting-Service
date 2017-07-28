@@ -70,19 +70,21 @@
                 </fieldset>
 
                 <fieldset>
-                    <legend>ID</legend>
-                    <div class="row">
-                        <div class="col-md-4">
-                            {{> afQuickField name="idType"}}
-                        </div>
-                        <div class="col-md-4">
-                            {{> afQuickField name="idNumber"}}
-                        </div>
-                        {{#if isHaveExpire}}
+                    <div class="col-md-12">
+                        <legend>ID</legend>
+                        <div class="row">
                             <div class="col-md-4">
-                                {{> afQuickField name="idExpiryDate"}}
+                                {{> afQuickField name="idType"}}
                             </div>
-                        {{/if}}
+                            <div class="col-md-4">
+                                {{> afQuickField name="idNumber"}}
+                            </div>
+                            {{#if isHaveExpire}}
+                                <div class="col-md-4">
+                                    {{> afQuickField name="idExpiryDate"}}
+                                </div>
+                            {{/if}}
+                        </div>
                     </div>
                 </fieldset>
                 {{> formFooterWithButton}}
@@ -111,20 +113,14 @@
                         <dd>{{khGivenName}}</dd>
                         <dt>Kh Nickname</dt>
                         <dd>{{khNickname}}</dd>
-                        <dt>En Surname</dt>
-                        <dd>{{enSurname}}</dd>
-                        <dt>En Given Name</dt>
-                        <dd>{{enGivenName}}</dd>
-                        <dt>En Nickname</dt>
-                        <dd>{{enNickname}}</dd>
+
                         <dt>Gender</dt>
                         <dd>{{gender}}</dd>
                         <dt>Birth Date</dt>
                         <dd>{{moFormat dob "DD/MM/YYYYY"}}</dd>
                         <dt>Marital Status</dt>
                         <dd>{{maritalStatus}}</dd>
-                        <dt>Photo</dt>
-                        <dd>{{lightbox url=photoUrl title=khName}}</dd>
+
                     </fieldset>
 
                     <fieldset>
@@ -143,8 +139,6 @@
                         <dd>{{address}}</dd>
                         <dt>Telephone</dt>
                         <dd>{{telephone}}</dd>
-                        <dt>Email</dt>
-                        <dd>{{email}}</dd>
                     </fieldset>
                 </dl>
             {{/with}}

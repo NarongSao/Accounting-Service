@@ -222,7 +222,7 @@ export const loanHistoryReport = new ValidatedMethod({
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>En Name:</strong> ${loanDoc[0].clientDoc.enSurname} ${loanDoc[0].clientDoc.enGivenName}</li>
+                                             <li class="pull-right"><b>Branch Office:</b> ${loanDoc[0].branchId}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -249,25 +249,13 @@ export const loanHistoryReport = new ValidatedMethod({
                                 </div>
                                 <div style="width: 40%;">
                                     <ul class="list-unstyled">
-                                        <li><b>En Nick Name:</b> ${loanDoc[0].clientDoc.enNickname}</li>
+                                        <li><b>Date Of Birth:</b> ${microfis_formatDate(loanDoc[0].clientDoc.dob)}</li>
                                     </ul>
                                 </div>
                             </div> 
                             
                             <div style="width: 100%">
-                                <div style="width: 60%; float: right">
-                                    <div style="width: 50%; float: left">
-                                        <ul class="list-unstyled">
-                                            <li><b>Date Of Birth:</b> ${microfis_formatDate(loanDoc[0].clientDoc.dob)}</li>
-                                        </ul>
-                                    </div>
-
-                                    <div style="width: 50%; float: right">
-                                        <ul class="list-unstyled">
-                                            <li class="pull-right"><b>Branch Office:</b> ${loanDoc[0].branchId}</li>
-                                        </ul>
-                                    </div>
-                                </div>
+                              
                                 <div style="width: 40%;">
                                     <ul class="list-unstyled">
                                         <li><b>Nationality:</b></li>
@@ -300,7 +288,7 @@ export const loanHistoryReport = new ValidatedMethod({
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>Fund:</strong> ${loanAccDoc.fundDoc.name}</li>
+                                            <li class="pull-right"><strong>Interest Rate:</strong> ${loanAccDoc.interestRate}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -375,14 +363,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 </div>
                             </div>
                             
-                            <div style="width: 100%">
-                               
-                                <div style="width: 40%;">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Interest Rate:</strong> ${loanAccDoc.interestRate}</li>
-                                    </ul>
-                                </div>
-                            </div>
+                       
                             
                             <hr>
                             <br>
@@ -398,7 +379,7 @@ export const loanHistoryReport = new ValidatedMethod({
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>Activity:</strong> ${loanAccDoc.purposeActivity || ""}</li>
+                                            <li class="pull-right"><strong>Purpose Des:</strong> </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -414,13 +395,13 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
                                         <ul class="list-unstyled">
-                                            <li><strong>Poverty Status:</strong> ${loanAccDoc.povertyLevel || ""}</li>
+                                            <li><strong>Family Member:</strong> </li>
                                         </ul>
                                     </div>
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>Collateral Type:</strong> ${loanAccDoc.collateralType || ""}</li>
+                                           <li class="pull-right"><strong>Purpose:</strong> ${loanAccDoc.purpose || ""}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -438,11 +419,11 @@ export const loanHistoryReport = new ValidatedMethod({
                                         <ul class="list-unstyled">
                                             <li><strong>Income Amount:</strong> </li>
                                         </ul>
-                                    </div>=
+                                    </div>
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>Security:</strong> ${loanAccDoc.collateralSecurity || ""}</li>
+                                            <li class="pull-right"><strong>Voucher Code:</strong> ${loanAccDoc.voucherId || ""}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -464,7 +445,7 @@ export const loanHistoryReport = new ValidatedMethod({
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>Security Des:</strong> ${collateralNote || ""}</li>
+                                            <li class="pull-right"><strong>Number Dependent:</strong> ${loanAccDoc.productDoc.name}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -502,7 +483,8 @@ export const loanHistoryReport = new ValidatedMethod({
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
                                         <ul class="list-unstyled">
-                                            <li><strong>History:</strong> ${loanAccDoc.history || ""}</li>
+                                            <li><strong>Address:</strong> ${loanAccDoc.clientDoc.address || ""}</li>
+
                                         </ul>
                                     </div>
 
@@ -519,55 +501,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 </div>
                             </div>
                             
-                            
-                            <div style="width: 100%">
-                                <div style="width: 60%; float: right">
-                                    <div style="width: 50%; float: left">
-                                        <ul class="list-unstyled">
-                                            <li><strong>Purpose:</strong> ${loanAccDoc.purpose || ""}</li>
-                                        </ul>
-                                    </div>
-
-                                    <div style="width: 50%; float: right">
-                                        <ul class="list-unstyled">
-                                            <li class="pull-right"><strong>Voucher Code:</strong> ${loanAccDoc.voucherId || ""}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div style="width: 40%;">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Family Member:</strong> </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            
-                            <div style="width: 100%">
-                                <div style="width: 60%; float: right">
-                                    <div style="width: 50%; float: left">
-                                        <ul class="list-unstyled">
-                                            <li><strong>Purpose Des:</strong> </li>
-                                        </ul>
-                                    </div>
-
-                                  
-                                </div>
-                                <div style="width: 40%;">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Number Dependent:</strong> ${loanAccDoc.productDoc.name}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            
-                            <div style="width: 100%">
-                               
-                                <div style="width: 40%;">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Address:</strong> ${loanAccDoc.clientDoc.address || ""}</li>
-                                    </ul>
-                                </div>
-                            </div>
+                           
                     
                     <br>
                     
@@ -679,6 +613,8 @@ export const loanHistoryReport = new ValidatedMethod({
                             /*let paymentDoc = paymentDetail.find(function (val) {
                              return val.repaymentId == obj._id;
                              })*/
+
+                        
                             let paymentDoc = paymentDetail.find(x => x.repaymentId == obj._id);
 
                             let paymentStatusDoc = {};

@@ -26,20 +26,20 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'khSurname', title: 'Kh Surname'},
         {data: 'khGivenName', title: 'Kh Given Name'},
         {data: 'gender', title: 'Gender'},
-        {
-            data: 'photo',
-            title: 'Photo',
-            render: function (val, type, doc) {
-                if (val) {
-                    let img = Files.findOne(val);
-                    if (img) {
-                        return Spacebars.SafeString(lightbox(img.url(), doc._id, doc.khGivenName));
-                    }
-                }
+        /*{
+         data: 'photo',
+         title: 'Photo',
+         render: function (val, type, doc) {
+         if (val) {
+         let img = Files.findOne(val);
+         if (img) {
+         return Spacebars.SafeString(lightbox(img.url(), doc._id, doc.khGivenName));
+         }
+         }
 
-                return null;
-            }
-        },
+         return null;
+         }
+         },*/
         {data: 'cycle', title: 'Cycle'}
     ],
     extraFields: ['idType']
