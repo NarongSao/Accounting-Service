@@ -92,6 +92,8 @@ export let checkRepayment = new ValidatedMethod({
                 schedulePrevious = [],
                 scheduleNext = [];
 
+            let checkDayLate = 0;
+
             scheduleDoc.forEach((o) => {
 
                 let checker = {};
@@ -132,7 +134,14 @@ export let checkRepayment = new ValidatedMethod({
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
-                    numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+
+                    if (checkDayLate == 0) {
+                        numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                        checkDayLate++;
+                    } else {
+                        numOfDayLate = 0;
+                    }
+
                     if (numOfDayLate > penaltyDoc.graceDay) {
 
                         // Check penalty type
@@ -616,6 +625,7 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                 schedulePrevious = [],
                 scheduleNext = [];
 
+            let checkDayLate = 0;
 
             scheduleDoc.forEach((o) => {
 
@@ -659,7 +669,12 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
-                    numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                    if (checkDayLate == 0) {
+                        numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                        checkDayLate++;
+                    } else {
+                        numOfDayLate = 0;
+                    }
                     if (numOfDayLate > penaltyDoc.graceDay) {
 
                         // Check penalty type
