@@ -232,7 +232,7 @@ export const loanClosingReport = new ValidatedMethod({
                 $lte: tDate
             };
             selector.status = "Close";
-            selector.closeDate = {$exists: true, $lte: tDate};
+            selector.closeDate = {$exists: true, $lte: tDate, $gte: fDate};
 
 
             data.header = header;
