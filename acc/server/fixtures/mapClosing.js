@@ -63,6 +63,12 @@ Meteor.startup(function () {
             }, {
                 "_id": "142",
                 "chartAccountCompare": "Waived For Death"
+            }, {
+                "_id": "144",
+                "chartAccountCompare": "Less Reserves for Specific"
+            }, {
+                "_id": "145",
+                "chartAccountCompare": "Less Reserves for General"
             }
 
             //Standard
