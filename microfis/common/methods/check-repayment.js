@@ -92,6 +92,7 @@ export let checkRepayment = new ValidatedMethod({
                 schedulePrevious = [],
                 scheduleNext = [];
 
+            let checkLate = 0;
             scheduleDoc.forEach((o) => {
 
                 let checker = {};
@@ -132,7 +133,13 @@ export let checkRepayment = new ValidatedMethod({
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
-                    numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+
+                    if (checkLate == 0) {
+                        numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                        checkLate++;
+                    } else {
+                        numOfDayLate = 0;
+                    }
                     if (numOfDayLate > penaltyDoc.graceDay) {
 
                         // Check penalty type
@@ -187,8 +194,6 @@ export let checkRepayment = new ValidatedMethod({
                     };
 
                     checker.dueDateIsSameOrBeforeCheckDate = moment(o.dueDate).isSameOrBefore(checkDate, 'day');
-
-
                     if (checker.dueDateIsSameOrBeforeCheckDate) {
                         scheduleDue.push(o);
                     } else {
@@ -616,7 +621,7 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                 schedulePrevious = [],
                 scheduleNext = [];
 
-
+            let checkLate = 0;
             scheduleDoc.forEach((o) => {
 
                 let checker = {};
@@ -659,7 +664,14 @@ export let checkRepaymentRealTime = new ValidatedMethod({
                     let numOfDayLate, penaltyDue = 0;
 
                     // Cal penalty
-                    numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+
+                    if (checkLate == 0) {
+                        numOfDayLate = moment(checkDate).startOf('day').diff(moment(o.dueDate).startOf('day'), 'days');
+                        checkLate++;
+                    } else {
+                        numOfDayLate = 0;
+                    }
+
                     if (numOfDayLate > penaltyDoc.graceDay) {
 
                         // Check penalty type
