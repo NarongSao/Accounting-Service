@@ -679,24 +679,33 @@ export const loanHistoryReport = new ValidatedMethod({
                             /*let paymentDoc = paymentDetail.find(function (val) {
                              return val.repaymentId == obj._id;
                              })*/
-                            let paymentDoc = paymentDetail.find(x => x.repaymentId == obj._id);
+                            // let paymentDoc = paymentDetail.find(x => x.repaymentId == obj._id);
+
 
                             let paymentStatusDoc = {};
                             paymentStatusDoc.name = "";
 
+                            let k = 0;
 
                             if (obj.type == "Fee") {
                                 fee = obj.amountPaid;
                             } else {
-                                principal = paymentDoc.principalPaid;
-                                interest = paymentDoc.interestPaid;
-                                feeOnPayment = paymentDoc.feeOnPaymentPaid;
+                                paymentDetail.forEach(function (paymentDoc) {
 
+                                    if (obj._id == paymentDoc.repaymentId) {
 
-                                paymentStatusDoc = paymentStatusList.find(function (val) {
-                                    return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
-                                });
+                                        principal += paymentDoc.principalPaid;
+                                        interest += paymentDoc.interestPaid;
+                                        feeOnPayment += paymentDoc.feeOnPaymentPaid;
 
+                                        if (k == 0) {
+                                            paymentStatusDoc = paymentStatusList.find(function (val) {
+                                                return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
+                                            });
+                                        }
+                                        k++;
+                                    }
+                                })
                             }
 
 
