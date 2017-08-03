@@ -89,12 +89,12 @@ formTmpl.onCreated(function () {
             if (repaidDate) {
 
                 /*if (isBlock == false) {
-                    $.blockUI({
-                        onBlock: function () {
-                            isBlock = true;
-                        }
-                    });
-                }*/
+                 $.blockUI({
+                 onBlock: function () {
+                 isBlock = true;
+                 }
+                 });
+                 }*/
 
 
                 if (loanAccDoc) {
@@ -279,6 +279,9 @@ let hooksObject = {
                 return false;
             }
 
+            doc.repaidDate = moment(doc.repaidDate).startOf("day").add(12, "hours").toDate();
+
+
             doc.detailDoc = {};
             doc.detailDoc.scheduleNext = checkRepayment.scheduleNext;
             doc.detailDoc.principalInstallment = checkRepayment.principalInstallment;
@@ -299,7 +302,7 @@ let hooksObject = {
         }).catch(function (err) {
             console.log(err.message);
         });
-        Session.set("resetQuickPayment",true);
+        Session.set("resetQuickPayment", true);
         displaySuccess();
     },
     onError(formType, error) {

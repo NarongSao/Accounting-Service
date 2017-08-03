@@ -393,6 +393,7 @@ export let checkRepayment = new ValidatedMethod({
                 penaltyClosingAmountTypeOfTotal = closing.interestReminder;
             }
 
+
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
                 if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing && isPenalty) {
@@ -412,7 +413,6 @@ export let checkRepayment = new ValidatedMethod({
                     }
                 }
             }
-
 
             //check fee on payment reminder
 
