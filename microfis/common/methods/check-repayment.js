@@ -210,11 +210,9 @@ export let checkRepayment = new ValidatedMethod({
 
             });
 
-            console.log(scheduleDue);
             // Total schedule due
             let totalScheduleDue = _.reduce(scheduleDue, (result, val, key) => {
 
-                console.log(result);
                 // Head
                 if (key == 0) {
                     result.installment.from = val.installment;
@@ -399,6 +397,7 @@ export let checkRepayment = new ValidatedMethod({
                 penaltyClosingAmountTypeOfTotal = closing.interestReminder;
             }
 
+
             // Cal interest penalty
             if (totalScheduleDue.installment.to) {
                 if (totalScheduleDue.installment.to < loanAccDoc.installmentAllowClosing && isPenalty) {
@@ -418,7 +417,6 @@ export let checkRepayment = new ValidatedMethod({
                     }
                 }
             }
-
 
             //check fee on payment reminder
 

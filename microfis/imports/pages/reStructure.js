@@ -225,6 +225,8 @@ let hooksObject = {
             return false;
         }
 
+        doc.disbursementDate = moment(doc.disbursementDate).startOf("day").add(12, "hours").toDate();
+        doc.firstRepaymentDate = moment(doc.firstRepaymentDate).startOf("day").add(12, "hours").toDate();
 
         makeReSchedule.callPromise({
             loanAccId: curDoc.loanAccDoc._id,
