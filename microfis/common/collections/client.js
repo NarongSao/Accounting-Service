@@ -200,7 +200,7 @@ Client.contactSchema = new SimpleSchema({
         type: String,
         label: 'Email',
         regEx: SimpleSchema.RegEx.Email,
-        defaultValue: "",
+        // defaultValue: "",
         max: 100,
         optional: true
     }
