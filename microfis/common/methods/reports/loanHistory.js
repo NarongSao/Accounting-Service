@@ -503,7 +503,14 @@ export const loanHistoryReport = new ValidatedMethod({
                             
                            
                     
-                    <br>
+                    <br>let paymentStatusDoc = {};
+                             paymentStatusDoc.name = "";
+ 
++                            let k = 0;
+ 
+                             if (obj.type == "Fee") {
+                                 fee = obj.amountPaid;
+                             } else {
                     
                     <div class="row">
                         <div class="col-md-12"><b><u>Repayment Schedule</u></b></div>              
@@ -614,25 +621,30 @@ export const loanHistoryReport = new ValidatedMethod({
                              return val.repaymentId == obj._id;
                              })*/
 
-                        
-                            let paymentDoc = paymentDetail.find(x => x.repaymentId == obj._id);
+
+                            // let paymentDoc = paymentDetail.find(x => x.repaymentId == obj._id);
 
                             let paymentStatusDoc = {};
                             paymentStatusDoc.name = "";
-
-
+                            let k = 0;
                             if (obj.type == "Fee") {
                                 fee = obj.amountPaid;
                             } else {
-                                principal = paymentDoc.principalPaid;
-                                interest = paymentDoc.interestPaid;
-                                feeOnPayment = paymentDoc.feeOnPaymentPaid;
+                                paymentDetail.forEach(function (paymentDoc) {
 
+                                    if (obj._id == paymentDoc.repaymentId) {
 
-                                paymentStatusDoc = paymentStatusList.find(function (val) {
-                                    return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
-                                });
-
+                                        principal += paymentDoc.principalPaid;
+                                        interest += paymentDoc.interestPaid;
+                                        feeOnPayment += paymentDoc.feeOnPaymentPaid;
+                                        if (k == 0) {
+                                            paymentStatusDoc = paymentStatusList.find(function (val) {
+                                                return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
+                                            });
+                                        }
+                                        k++;
+                                    }
+                                })
                             }
 
 

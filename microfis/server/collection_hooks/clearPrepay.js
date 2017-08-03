@@ -47,7 +47,6 @@ ClearPrepay.after.insert(function (userId, doc) {
         let lastClearPrepay = lastClearPrepayList.closeDate == undefined ? doc.closeDate : lastClearPrepayList.closeDate;
         while (lastClearPrepay.getTime() <= moment(doc.closeDate).endOf("days").toDate().getTime()) {
 
-
             let tDate = moment(lastClearPrepay).endOf('day').toDate();
 
             let selectorPay = {};
@@ -55,7 +54,7 @@ ClearPrepay.after.insert(function (userId, doc) {
             selectorPay.branchId = doc.branchId;
             selectorPay.isPay = false;
             selectorPay.installment = {$gt: 0};
-            /*selectorPay.isPrePay = true;*/
+            selectorPay.isPrePay = true;
 
             selectorPay.branchId = doc.branchId;
 
@@ -88,12 +87,13 @@ ClearPrepay.after.insert(function (userId, doc) {
                         if (math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2) > 0) {
 
                             if (checkPayment.totalScheduleDue.totalPrincipalInterestDue < (savingTransaction.details.principalBal + savingTransaction.details.interestBal)) {
-
                                 amountPaid = math.round(checkPayment.totalScheduleDue.totalPrincipalInterestDue, 2);
+
+
                             } else {
+
                                 amountPaid = math.round(savingTransaction.details.principalBal + savingTransaction.details.interestBal, 2);
                             }
-
 
                             let makeRepayment = MakeRepayment.general({
                                 repaidDate: tDate,
