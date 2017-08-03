@@ -206,11 +206,9 @@ export let checkRepayment = new ValidatedMethod({
 
             });
 
-            console.log(scheduleDue);
             // Total schedule due
             let totalScheduleDue = _.reduce(scheduleDue, (result, val, key) => {
 
-                console.log(result);
                 // Head
                 if (key == 0) {
                     result.installment.from = val.installment;
