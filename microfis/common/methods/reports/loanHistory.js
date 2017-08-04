@@ -700,10 +700,11 @@ export const loanHistoryReport = new ValidatedMethod({
 
                                         if (k == 0) {
                                             paymentStatusDoc = paymentStatusList.find(function (val) {
-                                                return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
+                                                return (paymentDoc.numOfDayLate < 0 ? -paymentDoc.numOfDayLate : paymentDoc.numOfDayLate) >= val.from && (paymentDoc.numOfDayLate < 0 ? -paymentDoc.numOfDayLate : paymentDoc.numOfDayLate) <= val.to;
                                             });
+                                            k++;
                                         }
-                                        k++;
+
                                     }
                                 })
                             }
@@ -715,7 +716,6 @@ export const loanHistoryReport = new ValidatedMethod({
                             totalFeeOnPayment += feeOnPayment;
                             totalPenalty += obj.penaltyPaid;
                             total += principal + interest + feeOnPayment + fee + obj.penaltyPaid;
-
                             content += `<tr>
                                 <td>${i}</td>
                                 <td>${(obj.voucherId).substr(8, obj.voucherId.length - 1)}</td>
