@@ -754,7 +754,8 @@ LoanAcc.interestSchema = new SimpleSchema({
                     let currencyId = AutoForm.getFieldValue('currencyId'),
                         exchange = state.get('exchange');
 
-                    if (interestRate && currencyId) {
+
+                    if (interestRate && currencyId && state.get('interestType') == "A") {
                         if (currencyId == 'KHR') {
                             interestRate.min = roundKhr(interestRate.min * exchange.KHR);
                             interestRate.max = roundKhr(interestRate.max * exchange.KHR);
@@ -1020,6 +1021,14 @@ LoanAcc.reStructure = new SimpleSchema({
             }
         }
     },
+    interestType: {
+        type: String,
+        label: 'Interest Type',
+        defaultValue: function () {
+            return state.get('interestType');
+        }
+
+    },
     interestRate: {
         type: Number,
         label: 'Interest rate',
@@ -1028,7 +1037,7 @@ LoanAcc.reStructure = new SimpleSchema({
             let interestRate = state.get('interestRate'),
                 currencyId = AutoForm.getFieldValue('currencyId'),
                 exchange = state.get('exchange');
-            if (interestRate && currencyId) {
+            if (interestRate && currencyId && state.get('interestType') == "A") {
                 if (currencyId == 'KHR') {
                     interestRate.min = roundKhr(interestRate.min * exchange.KHR);
                 } else if (currencyId == 'THB') {
@@ -1044,8 +1053,9 @@ LoanAcc.reStructure = new SimpleSchema({
             let interestRate = state.get('interestRate'),
                 currencyId = AutoForm.getFieldValue('currencyId'),
                 exchange = state.get('exchange');
+            console.log(state.get('interestType'));
 
-            if (interestRate && currencyId) {
+            if (interestRate && currencyId && state.get('interestType') == "A") {
                 if (currencyId == 'KHR') {
                     interestRate.max = roundKhr(interestRate.max * exchange.KHR);
                 } else if (currencyId == 'THB') {
@@ -1063,7 +1073,7 @@ LoanAcc.reStructure = new SimpleSchema({
                     let currencyId = AutoForm.getFieldValue('currencyId'),
                         exchange = state.get('exchange');
 
-                    if (interestRate && currencyId) {
+                    if (interestRate && currencyId && state.get('interestType') == "A") {
                         if (currencyId == 'KHR') {
                             interestRate.min = roundKhr(interestRate.min * exchange.KHR);
                             interestRate.max = roundKhr(interestRate.max * exchange.KHR);
@@ -1086,6 +1096,7 @@ LoanAcc.reStructure = new SimpleSchema({
             }
         }
     },
+
     currencyId: {
         type: String,
         label: 'Currency',
