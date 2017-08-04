@@ -503,14 +503,7 @@ export const loanHistoryReport = new ValidatedMethod({
                             
                            
                     
-                    <br>let paymentStatusDoc = {};
-                             paymentStatusDoc.name = "";
- 
-+                            let k = 0;
- 
-                             if (obj.type == "Fee") {
-                                 fee = obj.amountPaid;
-                             } else {
+                    <br>
                     
                     <div class="row">
                         <div class="col-md-12"><b><u>Repayment Schedule</u></b></div>              
