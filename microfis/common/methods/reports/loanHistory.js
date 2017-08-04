@@ -627,11 +627,11 @@ export const loanHistoryReport = new ValidatedMethod({
                             let paymentStatusDoc = {};
                             paymentStatusDoc.name = "";
                             let k = 0;
+
                             if (obj.type == "Fee") {
                                 fee = obj.amountPaid;
                             } else {
                                 paymentDetail.forEach(function (paymentDoc) {
-
                                     if (obj._id == paymentDoc.repaymentId) {
 
                                         principal += paymentDoc.principalPaid;
@@ -639,10 +639,11 @@ export const loanHistoryReport = new ValidatedMethod({
                                         feeOnPayment += paymentDoc.feeOnPaymentPaid;
                                         if (k == 0) {
                                             paymentStatusDoc = paymentStatusList.find(function (val) {
-                                                return paymentDoc.numOfDayLate >= val.from && paymentDoc.numOfDayLate <= val.to;
+                                                return (paymentDoc.numOfDayLate < 0 ? -paymentDoc.numOfDayLate : paymentDoc.numOfDayLate) >= val.from && (paymentDoc.numOfDayLate < 0 ? -paymentDoc.numOfDayLate : paymentDoc.numOfDayLate) <= val.to;
                                             });
+                                            k++;
                                         }
-                                        k++;
+
                                     }
                                 })
                             }
@@ -654,7 +655,6 @@ export const loanHistoryReport = new ValidatedMethod({
                             totalFeeOnPayment += feeOnPayment;
                             totalPenalty += obj.penaltyPaid;
                             total += principal + interest + feeOnPayment + fee + obj.penaltyPaid;
-
                             content += `<tr>
                                 <td>${i}</td>
                                 <td>${(obj.voucherId).substr(8, obj.voucherId.length - 1)}</td>
