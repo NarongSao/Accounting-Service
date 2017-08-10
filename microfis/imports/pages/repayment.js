@@ -125,7 +125,7 @@ indexTmpl.onCreated(function () {
             // Call check repayment from method
             checkRepayment.callPromise({
                 loanAccId: loanAccId,
-                checkDate: moment().toDate()
+                checkDate: moment().endOf("day").toDate()
             }).then(function (result) {
                 // Set state
                 if (result) {
