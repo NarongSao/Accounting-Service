@@ -6,27 +6,39 @@ import {moment} from 'meteor/momentjs:moment';
 
 // Lib
 import {SelectOpts} from '../../../imports/libs/select-opts.js';
+import {SelectOptsReport} from '../../../imports/libs/select-opts.js';
 import {SelectOptMethods} from '../../methods/select-opts.js';
 
 export const RepaymentScheduleSchema = new SimpleSchema({
     clientId: {
         type: String,
-        label: 'Client',
+        label: 'Client'
+        ,
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.client',
-                optionsMethodParams: function () {
-                    return {branchId: Meteor.isClient && Session.get('currentBranch')};
-                }
+            type: "select2",
+            options: function () {
+                return SelectOptsReport.client();
             }
         }
+
+        /*,
+         autoform: {
+         type: 'universe-select',
+         afFieldInput: {
+         uniPlaceholder: 'Please search... (limit 10)',
+         optionsPlaceholder: true,
+         optionsMethod: 'microfis.selectOpts.client',
+         optionsMethodParams: function () {
+         return {branchId: Meteor.isClient && Session.get('currentBranch')};
+         }
+         }
+         }*/
     },
     loanAccId: {
         type: String,
         label: 'Loan acc',
+
+
         autoform: {
             type: 'universe-select',
             afFieldInput: {

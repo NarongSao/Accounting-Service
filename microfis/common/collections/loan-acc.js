@@ -79,12 +79,19 @@ LoanAcc.productSchema = new SimpleSchema({
     productId: {
         type: String,
         label: 'Product',
+        /*autoform: {
+         type: 'universe-select',
+         afFieldInput: {
+         uniPlaceholder: 'Please search... (limit 10)',
+         optionsPlaceholder: true,
+         optionsMethod: 'microfis.selectOpts.product'
+         }
+         }*/
+
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.product'
+            type: "select2",
+            options: function () {
+                return SelectOpts.product();
             }
         }
     },
@@ -183,28 +190,45 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: String,
         label: 'Fund',
         autoform: {
-            type: 'universe-select',
+            type: 'select2',
             afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsPlaceholder: 'Unselect all',
-                optionsMethod: 'microfis.selectOpts.fund'
+                options: function () {
+                    return SelectOpts.fund();
+                }
             }
         }
+        /*autoform: {
+         type: 'universe-select',
+         afFieldInput: {
+         uniPlaceholder: 'Please search... (limit 10)',
+         optionsPlaceholder: 'Unselect all',
+         optionsMethod: 'microfis.selectOpts.fund'
+         }
+         }*/
     },
     creditOfficerId: {
         type: String,
         label: 'Credit officer',
         autoform: {
-            type: 'universe-select',
+            type: 'select2',
             afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 10)',
-                optionsPlaceholder: true,
-                optionsMethod: 'microfis.selectOpts.creditOfficer',
-                optionsMethodParams: function () {
-                    return {branchId: Meteor.isClient && Session.get('currentBranch')};
+                options: function () {
+                    return SelectOpts.creditOfficer(Session.get('currentBranch'));
                 }
             }
         }
+        /*,
+         autoform: {
+         type: 'universe-select',
+         afFieldInput: {
+         uniPlaceholder: 'Please search... (limit 10)',
+         optionsPlaceholder: true,
+         optionsMethod: 'microfis.selectOpts.creditOfficer',
+         optionsMethodParams: function () {
+         return {branchId: Meteor.isClient && Session.get('currentBranch')};
+         }
+         }
+         }*/
     },
     attachFile: {
         type: String,

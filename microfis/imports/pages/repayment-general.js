@@ -85,12 +85,12 @@ formTmpl.onCreated(function () {
             if (repaidDate) {
 
                 /*if (isBlock == false) {
-                    $.blockUI({
-                        onBlock: function () {
-                            isBlock = true;
-                        }
-                    });
-                }*/
+                 $.blockUI({
+                 onBlock: function () {
+                 isBlock = true;
+                 }
+                 });
+                 }*/
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({
@@ -165,7 +165,7 @@ formTmpl.onRendered(function () {
         }
 
         $repaidDateObj.on("dp.change", function (e) {
-            stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set('repaidDate', moment(e.date).endOf("days").toDate());
             stateRepayment.set("isVoucherId", true);
         });
     }
