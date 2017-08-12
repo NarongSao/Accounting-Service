@@ -767,7 +767,7 @@ LoanAcc.interestSchema = new SimpleSchema({
     },
     interestRate: {
         type: Number,
-        label: 'Interest rateinterestRate',
+        label: 'Interest Rate',
         decimal: true,
         autoform: {
             type: "inputmask",

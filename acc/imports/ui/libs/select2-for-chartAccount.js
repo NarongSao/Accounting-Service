@@ -40,6 +40,7 @@ let modelMatcher = function (params, data) {
     var original = (data.text).toUpperCase();
     var term = params.term.toUpperCase();
 
+
     let originalSplit = original.split(" | ");
 
     /*// Check if the text contains the term
@@ -56,8 +57,10 @@ let modelMatcher = function (params, data) {
         return data;
     }
 
+
     // If it doesn't contain the term, don't return anything
     return null;
+
 }
 select2chartAccount = function (jQueryName) {
     jQueryName.select2({
