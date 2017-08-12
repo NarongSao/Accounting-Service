@@ -49,16 +49,20 @@
                         {{#with rptData}}
 
                             <!--Header-->
+                            <!--Title-->
+
+                            <div class="rpt-title">
+                                <h3 style="font-family: 'Khmer OS Muol light'">មានទទួលបញ្ចាំ របស់មានតម្លៃ</h3>
+                                <h2 style="font-family: 'Khmer OS Muol light'; font-size: 18px"><u>តារាងបង់រំលស់ប្រាក់ចំនួន {{header.term}}
+                                    ​ដង </u></h2>
+
+                                {{#with title}}
+                                    <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
+                                    <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
+                                {{/with}}
+                            </div>
+
                             {{#with header}}
-                                <!--Title-->
-
-                                <div class="rpt-title">
-                                    <h3 style="font-family: 'Khmer OS Muol light'">មានទទួលបញ្ចាំ របស់មានតម្លៃ</h3>
-                                    <h2 style="font-family: 'Khmer OS Muol light'; font-size: 18px"><u>តារាងបង់រំលស់ប្រាក់ចំនួន {{term}}
-                                        ​ដង <br><br></u></h2>
-                                </div>
-
-
                                 <div style="width: 100%">
                                     <div style="width: 70%; float: left">
                                         <div><strong>លេខកូដ:</strong> {{_id}} ({{accountType}})</div>
@@ -87,6 +91,8 @@
                                         <div><strong>ចំនួនទឹកប្រាក់:</strong> {{numFormat loanAmount
                                                                                           "0,0.00"}} {{currencyId}}
                                         </div>
+                                        <div><strong>លេខទូរស័ទ្ទ:</strong> {{clientDoc.telephone}}
+                                        </div>
                                     </div>
                                 </div>
                                 <br>
@@ -101,9 +107,10 @@
                                 <tr>
                                     <th>ល.រ</th>
                                     <th>ថ្ងៃ ខែ ឆ្នាំ <br>បង់ប្រាក់</th>
-                                    <th>ប្រាក់សរុប<br>ដែលត្រូវសង</th>
-                                    <th>ហត្ថលខា<br>អ្នកប្រគល់</th>
-                                    <th>ហត្ថលេខា<br>អ្នកទទួល</th>
+                                    <th>ប្រាក់ដើម</th>
+                                    <th>ការប្រាក់</th>
+                                    <th>សរុប</th>
+                                    <th>ប្រាក់ដើមនៅសល់</th>
                                     <th>ផ្សេងៗ</th>
                                 </tr>
                                 </thead>
@@ -120,15 +127,15 @@
                                             {{/if}}
                                         </td>
                                         <td>{{khDayForDueDate dueDate}} {{moFormat dueDate "DD/MM/YYYY"}}</td>
+                                        <td class="numberAlign">{{numFormat principalDue "0,0.00"}}</td>
+                                        <td class="numberAlign">{{numFormat interestDue "0,0.00"}}</td>
                                         <td class="numberAlign">{{numFormat totalDue "0,0.00"}}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="numberAlign">{{numFormat balance "0,0.00"}}</td>
+
                                         <td></td>
                                     </tr>
                                 {{/each}}
                                 </tbody>
-
-
                             </table>
 
 
@@ -138,12 +145,8 @@
                             <table width="100%" border="0" style="text-align: center; font-size: 20px">
                                 <tr>
                                     <td width="50%">
-                                        <strong>លេខទំនាក់ទំនង</strong>
-                                        <br><br>
-                                        <strong>Tel:
-                                            .............................................................</strong><br><br>
-                                        <strong>Tel:
-                                            .............................................................</strong><br>
+                                        <strong>អ្នកបើកប្រាក់</strong>
+                                        <br><br><br><br><br>
                                         __________________<br>
                                         ថ្ងៃទី {{moFormat rptData.header.disbursementDate "DD/MM/YYYY"}}
                                     </td>

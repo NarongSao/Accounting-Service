@@ -764,11 +764,10 @@ LoanAcc.interestSchema = new SimpleSchema({
         defaultValue: function () {
             return state.get('interestType');
         }
-
     },
     interestRate: {
         type: Number,
-        label: 'Interest rateinterestRate',
+        label: 'Interest Rate',
         decimal: true,
         autoform: {
             type: "inputmask",
