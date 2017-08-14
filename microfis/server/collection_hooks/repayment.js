@@ -353,8 +353,8 @@ Repayment.after.insert(function (userId, doc) {
                                 {
                                     account: acc_penalty.accountDoc.code + " | " + acc_penalty.accountDoc.name,
                                     dr: 0,
-                                    cr: doc.detailDoc.totalSchedulePaid.penaltyPaid,
-                                    drcr: -doc.detailDoc.totalSchedulePaid.penaltyPaid
+                                    cr: (doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.closing.interestReminderPenalty),
+                                    drcr: -(doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.closing.interestReminderPenalty)
                                 }, {
                                     account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
                                     dr: 0,
