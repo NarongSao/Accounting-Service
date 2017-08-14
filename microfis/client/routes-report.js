@@ -160,14 +160,14 @@ MicrofisRoutes.route('/waived-report', {
 import '../imports/reports/loan-clientBalance';
 MicrofisRoutes.route('/clientBalance-report', {
     name: 'microfis.clientBalanceReport',
-    title: 'Client Balance Report',
+    title: 'Deposit Balance Report',
     action: function (params, queryParams) {
         Layout.main('Microfis_clientBalanceReport');
     },
     breadcrumb: {
         //params: ['id'],
         //queryParams: ['show', 'color'],
-        title: 'Client Balance Report',
+        title: 'Deposit Balance Report',
         icon: 'fa-circle-o',
         parent: 'microfis.home'
     }
