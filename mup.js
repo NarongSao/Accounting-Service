@@ -2,17 +2,17 @@ module.exports = {
   servers: {
     one: {
       // TODO: set host address, username, and authentication method
-      host: '172.104.62.141',
+      host: '172.104.171.83',
       username: 'root',
       // pem: './path/to/pem'
-      password: 'rabbit$2017'
+      password: 'rabbit$2017$'
       // or neither for authenticate from ssh-agent
     }
   },
 
   meteor: {
     // TODO: change app name and path
-    name: 'microfis-samrith',
+    name: 'microfis-makara',
     path: '../microfis',
 
     servers: {
@@ -26,8 +26,8 @@ module.exports = {
     env: {
       // TODO: Change to your app's url
       // If you are using ssl, it needs to start with https://
-      ROOT_URL: 'http://172.104.62.141',
-      MONGO_URL: 'mongodb://localhost/samrith-db'
+      ROOT_URL: 'http://172.104.171.83',
+      MONGO_URL: 'mongodb://localhost/makara-db'
     },
 
 
