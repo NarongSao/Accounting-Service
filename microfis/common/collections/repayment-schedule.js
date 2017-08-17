@@ -52,7 +52,7 @@ RepaymentSchedule.repaidDocSchema = new SimpleSchema({
         type: Number,
         decimal: true
     }
-    ,'detail.$.balanceFeeOnPayment': {
+    , 'detail.$.balanceFeeOnPayment': {
         type: Number,
         decimal: true
     },

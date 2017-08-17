@@ -736,6 +736,10 @@ LoanAcc.repaymentSchema = new SimpleSchema({
         type: Number,
         label: 'Tenor',
         optional: true
+    },
+    autoDis: {
+        type: String,
+        optional: true
     }
 });
 

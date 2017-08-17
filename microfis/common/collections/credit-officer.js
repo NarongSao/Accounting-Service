@@ -75,6 +75,10 @@ CreditOfficer.schema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    autoDis: {
+        type: String,
+        optional: true
     }
 });
 

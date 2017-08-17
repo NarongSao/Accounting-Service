@@ -24,7 +24,6 @@ LoanAcc.before.insert(function (userId, doc) {
         length: 3
     });
 
-
     // Cal installment allow closing
     let productDoc = lookupProduct.call({_id: doc.productId}),
         penaltyClosingDoc = productDoc.penaltyClosingDoc;
@@ -49,8 +48,7 @@ LoanAcc.after.insert(function (userId, doc) {
     if (doc.status != "Restructure") {
         Client.direct.update({_id: doc.clientId}, {$inc: {cycle: 1}});
     }
-
-    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}})
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}});
 
 
     /*Integrated to Account*/

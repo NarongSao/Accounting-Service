@@ -5,7 +5,7 @@ import {Location} from '../../common/collections/location.js';
 
 Meteor.startup(function () {
     if (Location.find().count() == 0) {
-        1
+
         let data = JSON.parse(Assets.getText('location.json')).ProvincialList;
         _.forEach(data, (value) => {
             value.Code = "0" + value.Code;

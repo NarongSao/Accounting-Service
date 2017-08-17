@@ -146,11 +146,13 @@ formTmpl.onRendered(function () {
         let $firstRepaymentDate = $('[name="firstRepaymentDate"]');
         let productDoc = Session.get('productDoc');
 
-        $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
-        $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
-
-        $firstRepaymentDate.data("DateTimePicker").minDate(moment().add(1, 'days').startOf('day'));
-
+        if ($disbursementDate) {
+            $disbursementDate.data("DateTimePicker").minDate(moment(productDoc.startDate).startOf('day'));
+            $disbursementDate.data("DateTimePicker").maxDate(moment(productDoc.endDate).endOf('day'));
+        }
+        if ($firstRepaymentDate) {
+            $firstRepaymentDate.data("DateTimePicker").minDate(moment().add(1, 'days').startOf('day'));
+        }
         // LoanAcc date change
         $disbursementDate.on("dp.change", function (e) {
             stateRepayment.set('disbursmentDate', moment(e.date).toDate());

@@ -180,6 +180,10 @@ Client.idTypeSchema = new SimpleSchema({
         type: Number,
         defaultValue: 0,
         optional: true
+    },
+    autoDis: {
+        type: String,
+        optional: true
     }
 });
 
