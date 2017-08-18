@@ -347,8 +347,8 @@ export const writeOffReport = new ValidatedMethod({
 
                                 <td> ${loanAccDoc.currencyId}</td>
                                 <td> ${loanAccDoc.accountType}</td>
-                                <td> ${loanAccDoc.writeOff.lateDate}</td>
-                                <td> ${loanAccDoc.writeOff.lossDate}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.writeOff.lateDate)}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.writeOff.lossDate)}</td>
                                 <td> ${microfis_formatDate(loanAccDoc.writeOff.writeOffDate)}</td>
                                 <td> ${loanAccDoc.creditOfficerDoc.khName}</td>
 

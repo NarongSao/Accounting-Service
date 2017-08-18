@@ -46,8 +46,8 @@ Meteor.methods({
                     doc.writeOffDate = moment(result.WriteOffDate, "DD/MM/YYYY").toDate();
                 }
 
-                if (result.LoseDate) {
-                    doc.loseDate = moment(result.LoseDate, "DD/MM/YYYY").toDate();
+                if (result.LossDate) {
+                    doc.lossDate = moment(result.LossDate, "DD/MM/YYYY").toDate();
                 }
                 if (result.LateDate) {
                     doc.lateDate = moment(result.LateDate, "DD/MM/YYYY").toDate();
@@ -114,7 +114,7 @@ Meteor.methods({
                 if (doc.writeOffDate) {
                     writeOff.writeOffDate = doc.writeOffDate;
                     writeOff.lateDate = doc.lateDate;
-                    writeOff.lossDate = doc.loseDate;
+                    writeOff.lossDate = doc.lossDate;
                     writeOff.loanAmount = doc.loanAmount;
                     writeOff.loanOutInt = doc.loanOutInt;
                     writeOff.loanOutFee = doc.loanOutFee;
