@@ -994,6 +994,10 @@ LoanAcc.otherSchema = new SimpleSchema({
             }
         }
     },
+    autoDis: {
+    type: String,
+        optional: true
+}
 });
 
 LoanAcc.attachSchema([

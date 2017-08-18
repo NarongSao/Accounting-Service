@@ -14,12 +14,34 @@ Module.Microfis = {
     ],
     dump: {
         setting: [
-            'microfis_workingDay'
+            'microfis_holiday',
+            'microfis_location',
+            'microfis_lookupValue',
+            'microfis_paymentStatus',
+            'microfis_penalty',
+            'microfis_penaltyClosing',
+            'microfis_product',
+            'microfis_productStatus',
+            'microfis_savingProduct',
+            'microfis_setting',
+            'microfis_fee',
+            'microfis_fund',
+            'roles',
+            'users'
         ],
         data: [
-            'microfis_creditOfficer'
+            'microfis_creditOfficer',
+            'microfis_clearPrepay',
+            'microfis_client',
+            'microfis_endOfProcess',
+            'microfis_group',
+            'microfis_groupLoan',
+            'microfis_loanAcc',
+            'microfis_repayment',
+            'microfis_repaymentSchedule',
+            'microfis_savingAcc',
+            'microfis_savingTransaction',
         ]
     }
 };
-
 
