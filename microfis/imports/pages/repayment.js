@@ -95,7 +95,7 @@ indexTmpl.onCreated(function () {
         loanAccDoc: null,
         scheduleDoc: null,
         lastTransactionDate: null,
-        repaidDate: moment().toDate(),
+        repaidDate: moment().endOf("day").toDate(),
         checkRepayment: null,
         disbursmentDate: null,
         isVoucherId: false
