@@ -318,15 +318,16 @@ Meteor.methods({
 
 
          db.microfis_savingAcc.remove({autoDis: "001"})
-         let loanList = db.microfis_loanAcc.find({autoDis: "001"});
+         let loanList=db.microfis_loanAcc.find({autoDis:"001"});
 
-         loanList.forEach(function (obj) {
+         loanList.forEach(function(obj){
          db.microfis_repaymentSchedule.remove({loanAccId: obj._id})
+         db.accJournal.remove({refId: obj._id,refFrom: "Disbursement"})
          })
 
 
-         db.microfis_loanAcc.remove({autoDis: "001"})
-         db.microfis_client.remove({autoDis: "001"})
+         db.microfis_loanAcc.remove({autoDis:"001"})
+         db.microfis_client.remove({autoDis:"001"})
          db.microfis_creditOfficer.remove({autoDis: "001"})
          */
     }
