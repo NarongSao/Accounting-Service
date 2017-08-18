@@ -109,7 +109,7 @@ formTmpl.onCreated(function () {
                 // Call check repayment from method
                 checkRepaymentRealTime.callPromise({
                     loanAccId: loanAccDoc._id,
-                    checkDate: repaidDate
+                    checkDate: moment(repaidDate).endOf("day").toDate()
                 }).then(function (result) {
 
                     // Set state
@@ -157,13 +157,13 @@ formTmpl.onRendered(function () {
     if ($repaidDateObj) {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-        stateRepayment.set('repaidDate', repaidDate);
+        stateRepayment.set('repaidDate', moment(repaidDate).endOf("day").toDate());
         stateRepayment.set("isVoucherId", true);
 
         // Repaid date picker
         $repaidDateObj.data("DateTimePicker").minDate(moment(stateRepayment.get('lastTransactionDate')).startOf('day').toDate());
         $repaidDateObj.on("dp.change", function (e) {
-            stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set('repaidDate', moment(e.date).endOf("day").toDate());
             stateRepayment.set("isVoucherId", true);
         });
     }
@@ -291,7 +291,7 @@ let hooksObject = {
             let checkBeforePayment = checkRepayment && checkRepayment.scheduleNext.length > 0 && doc.repaidDate && doc.amountPaid > 0;
             if (checkBeforePayment) {
                 let makeRepayment = MakeRepayment.prepay({
-                    repaidDate: doc.repaidDate,
+                    repaidDate: moment(doc.repaidDate).endOf("day").toDate(),
                     amountPaid: doc.amountPaid,
                     scheduleNext: checkRepayment.scheduleNext
                 });

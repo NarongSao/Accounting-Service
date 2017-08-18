@@ -122,7 +122,7 @@ formTmpl.onCreated(function () {
                 // Call check repayment from method
                 checkRepayment.callPromise({
                     loanAccId: loanAccDoc._id,
-                    checkDate: repaidDate
+                    checkDate: moment(repaidDate).endOf("day").toDate()
                 }).then(function (result) {
                     // Set state
                     stateRepayment.set('checkRepayment', result);
@@ -189,11 +189,11 @@ formTmpl.onRendered(function () {
     // Repaid date picker
     if ($repaidDateObj) {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
-        stateRepayment.set('repaidDate', repaidDate);
+        stateRepayment.set('repaidDate', moment(repaidDate).endOf("day").toDate());
         stateRepayment.set("isVoucherId", true);
 
         $repaidDateObj.on("dp.change", function (e) {
-            stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set('repaidDate', moment(e.date).endOf("day").toDate());
             stateRepayment.set("isVoucherId", true);
         });
     }
@@ -223,7 +223,7 @@ formTmpl.helpers({
         if (checkRepayment && checkRepayment.closing && data) {
             totalDue = totalDue.plus(checkRepayment.closing.totalDue).minus(data.details.principalBal).minus(data.details.interestBal);
         }
-        
+
         totalDue = totalDue.minus(waivedClosing.get());
 
         return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};
@@ -339,7 +339,7 @@ let hooksObject = {
             let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;
             if (checkBeforePayment) {
                 let makeRepayment = MakeRepayment.close({
-                    repaidDate: doc.repaidDate,
+                    repaidDate: moment(doc.repaidDate).endOf("day").toDate(),
                     amountPaid: totalPaidClosing,
                     penaltyPaid: doc.penaltyPaid,
                     scheduleDue: checkRepayment.scheduleDue,

@@ -91,12 +91,12 @@ formTmpl.onCreated(function () {
             if (repaidDate) {
 
                 /*if (isBlock == false) {
-                    $.blockUI({
-                        onBlock: function () {
-                            isBlock = true;
-                        }
-                    });
-                }*/
+                 $.blockUI({
+                 onBlock: function () {
+                 isBlock = true;
+                 }
+                 });
+                 }*/
 
                 if (loanAccDoc) {
                     lookupLoanAcc.callPromise({
@@ -111,7 +111,7 @@ formTmpl.onCreated(function () {
                 // Call check repayment from method
                 checkWriteOff.callPromise({
                     loanAccId: loanAccDoc._id,
-                    checkDate: repaidDate
+                    checkDate: moment(repaidDate).endOf("day").toDate()
                 }).then(function (result) {
                     // Set state
                     stateRepayment.set('checkWriteOff', result);
@@ -144,11 +144,11 @@ formTmpl.onRendered(function () {
     if ($repaidDateObj) {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
 
-        stateRepayment.set('repaidDate', repaidDate);
+        stateRepayment.set('repaidDate', moment(repaidDate).endOf("day").toDate());
         stateRepayment.set("isVoucherId", true);
         // Repaid date picker
         $repaidDateObj.on("dp.change", function (e) {
-            stateRepayment.set('repaidDate', moment(e.date).toDate());
+            stateRepayment.set('repaidDate', moment(e.date).endOf("days").toDate());
             stateRepayment.set("isVoucherId", true);
         });
     }
@@ -247,7 +247,7 @@ let hooksObject = {
 
             doc.penaltyPaid = 0;
             let makeRepaymentWriteOff = MakeRepayment.writeOff({
-                repaidDate: doc.repaidDate,
+                repaidDate: moment(doc.repaidDate).endOf("day").toDate(),
                 amountPaid: doc.amountPaid,
                 loanAccDoc: loanAccDoc,
                 opts: writeOffDoc

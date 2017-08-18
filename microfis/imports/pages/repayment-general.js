@@ -156,7 +156,7 @@ formTmpl.onRendered(function () {
     let $repaidDateObj = $('[name="repaidDate"]');
     if ($repaidDateObj) {
         let repaidDate = moment($repaidDateObj.data("DateTimePicker").date()).toDate();
-        stateRepayment.set('repaidDate', repaidDate);
+        stateRepayment.set('repaidDate', moment(repaidDate).endOf("day").toDate());
         stateRepayment.set("isVoucherId", true);
         // Repaid date picker
 
@@ -282,7 +282,7 @@ let hooksObject = {
             let checkBeforePayment = checkRepayment && checkRepayment.scheduleDue.length > 0 && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;
             if (checkBeforePayment) {
                 let makeRepayment = MakeRepayment.general({
-                    repaidDate: doc.repaidDate,
+                    repaidDate: moment(doc.repaidDate).endOf("day").toDate(),
                     amountPaid: doc.amountPaid,
                     penaltyPaid: doc.penaltyPaid,
                     scheduleDue: checkRepayment.scheduleDue,

@@ -98,7 +98,7 @@ indexTmpl.onCreated(function () {
         loanAccDoc: null,
         scheduleDoc: null,
         lastTransactionDate: null,
-        repaidDate: moment().toDate(),
+        repaidDate: moment().endOf("day").toDate(),
         checkRepayment: null,
         disbursmentDate: null,
         isVoucherId: false
@@ -142,7 +142,7 @@ indexTmpl.onCreated(function () {
                         {label: 'WriteOff', value: 'WriteOff'}
                     ];
 
-                    if (result.feeAmount == 0) {
+                    if (result.feeAmount == 0 && stateRepayment.get("isChargFee") > 0 && stateRepayment.get('loanAccDoc').parentId == "0") {
                         paymentTypeOpt.set([
                             {label: '(Select One)', value: ''},
                             {label: 'Fee', value: 'Fee'}
