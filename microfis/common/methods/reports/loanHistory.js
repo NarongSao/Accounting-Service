@@ -277,7 +277,6 @@ export const loanHistoryReport = new ValidatedMethod({
                     </div>
                     
                     <br>
-                    
                             <div style="width: 100%">
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
