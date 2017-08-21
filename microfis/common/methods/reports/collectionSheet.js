@@ -46,8 +46,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
             /****** Header *****/
             let date = params.date;
-            let fDate = moment(date[0], 'DD/MM/YYYY').startOf("days").toDate();
-            let tDate = moment(date[1], 'DD/MM/YYYY').endOf("days").toDate();
+            let tDate = moment(date, 'DD/MM/YYYY').endOf("days").toDate();
 
 
             let exchangeData = Exchange.findOne({_id: params.exchangeId});
@@ -59,7 +58,7 @@ export const collectionSheetReport = new ValidatedMethod({
             header.currencyId = "All";
             header.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates);
 
-            header.date = moment(fDate).format("DD/MM/YYYY") + " - " + moment(tDate).format("DD/MM/YYYY");
+            header.date = moment(tDate).format("DD/MM/YYYY");
             header.productId = "All";
             header.locationId = "All";
 
@@ -194,8 +193,6 @@ export const collectionSheetReport = new ValidatedMethod({
                     return obj.name;
                 });
                 header.fundId = fundList;
-
-
             }
 
             if (params.classifyId && params.classifyId.includes("All") == false) {
@@ -219,7 +216,6 @@ export const collectionSheetReport = new ValidatedMethod({
             data.header = header;
 
             selector.disbursementDate = {
-                // $gte: fDate,
                 $lte: tDate
             };
 

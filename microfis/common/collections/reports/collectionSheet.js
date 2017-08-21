@@ -116,13 +116,15 @@ export const CollectionSheetSchema = new SimpleSchema({
         }
     },
     date: {
-        type: [Date],
-        label: 'Date',
+        type: Date,
+        label: "Date As",
+        defaultValue: moment().toDate(),
         autoform: {
-            type: "bootstrap-daterangepicker",
             afFieldInput: {
-                dateRangePickerOptions: function () {
-                    return dateRangePickerOptions;
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
                 }
             }
         }

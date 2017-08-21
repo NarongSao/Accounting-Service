@@ -233,28 +233,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                 </div>
                             </div>  
                             
-                            <div style="width: 100%">
-                                <div style="width: 60%; float: right">
-                                    <div style="width: 50%; float: left">
-                                        <ul class="list-unstyled">
-                                            <li><b>Kh Nick Name:</b> ${loanDoc[0].clientDoc.khNickname || ""}</li>
-                                        </ul>
-                                    </div>
-
-                                    <div style="width: 50%; float: right">
-                                        <ul class="list-unstyled">
-                                            <li class="pull-right"><b>Sex:</b> ${loanDoc[0].clientDoc.gender}</div></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div style="width: 40%;">
-                                    <ul class="list-unstyled">
-                                        <li><b>En Nick Name:</b> ${loanDoc[0].clientDoc.enNickname}</li>
-                                    </ul>
-                                </div>
-                            </div> 
-                            
-                            <div style="width: 100%">
+                             <div style="width: 100%">
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
                                         <ul class="list-unstyled">
@@ -270,10 +249,20 @@ export const loanHistoryReport = new ValidatedMethod({
                                 </div>
                                 <div style="width: 40%;">
                                     <ul class="list-unstyled">
-                                        <li><b>Nationality:</b></li>
+                                        <li><b>Sex:</b> ${loanDoc[0].clientDoc.gender}</div></li>
+                                        
                                     </ul>
                                 </div>
-                            </div>`;
+                            </div>
+                            
+                            <div style="width: 100%">
+                               <div style="width: 40%;">
+                                    <ul class="list-unstyled">
+                                        <li><b>Nationality:</b></li>
+                                    </ul>
+                               </div>
+                            </div> 
+                            `;
 
                 loanDoc.forEach(function (loanAccDoc) {
 
@@ -289,7 +278,6 @@ export const loanHistoryReport = new ValidatedMethod({
                     </div>
                     
                     <br>
-                    
                             <div style="width: 100%">
                                 <div style="width: 60%; float: right">
                                     <div style="width: 50%; float: left">
@@ -438,7 +426,7 @@ export const loanHistoryReport = new ValidatedMethod({
                                         <ul class="list-unstyled">
                                             <li><strong>Income Amount:</strong> </li>
                                         </ul>
-                                    </div>=
+                                    </div>
 
                                     <div style="width: 50%; float: right">
                                         <ul class="list-unstyled">
