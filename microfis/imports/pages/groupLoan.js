@@ -34,12 +34,18 @@ let indexTmpl = Template.Microfis_groupLoan,
     showTmpl = Template.Microfis_groupLoanShow;
 
 
+clientList = new ReactiveVar([]);
 var groupLoanDetailCollection = new Mongo.Collection(null);
 let code = new ReactiveVar("");
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('groupLoan');
+    Meteor.call("microfis_getClientWithLoanId", Session.get("currentBranch"), (err, clientDoc) => {
+        if (clientDoc) {
+            clientList.set(clientDoc);
+        }
+    })
 });
 
 indexTmpl.helpers({
@@ -184,7 +190,6 @@ AutoForm.hooks({
     , Microfis_groupLoanEdit: {
         before: {
             update: function (doc) {
-
                 let loanData = groupLoanDetailCollection.find().fetch();
 
                 if (loanData.length == 0) {
@@ -193,7 +198,7 @@ AutoForm.hooks({
                     return false;
                 }
 
-                
+
                 var loan = [];
                 loanData.forEach(function (obj) {
                     loan.push({id: obj.id})

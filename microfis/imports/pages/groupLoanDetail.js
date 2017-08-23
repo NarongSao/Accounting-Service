@@ -23,9 +23,11 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 import '../../../core/client/components/add-new-button.js';
 
+let stateAccountName = new ReactiveVar();
 
 // Collection
 import {GroupLoan} from '../../common/collections/groupLoan';
+import {Client} from '../../common/collections/client';
 
 
 // Page
@@ -67,6 +69,7 @@ groupLoanDetailTPL.onRendered(function () {
                 clientAccOptTmp.set(result);
             }
         })
+
     })
 })
 
@@ -77,11 +80,28 @@ groupLoanDetailTPL.helpers({
     loan () {
         let i = 1;
         let groupLoan = groupLoanDetailCollection.find().fetch();
-        groupLoan.forEach(function (c) {
-            c.index = i;
-            i++;
+        if (groupLoan.length > 0) {
+            groupLoan.forEach(function (c) {
+                function getClientByLoanId(clientDoc) {
+                    if (clientDoc) {
+                        if (clientDoc.loanDoc) {
+                            return clientDoc.loanDoc._id == c.id;
+                        }
+                        return "";
+                    }
+                }
 
-        })
+                let clientL = clientList.get();
+                if (clientL) {
+                    let clDoc = clientL.find(getClientByLoanId);
+                    if (clDoc) {
+                        c.id = c.id + " | " + clDoc.khSurname + " " + clDoc.khGivenName;
+                    }
+                }
+                c.index = i;
+                i++;
+            })
+        }
         return groupLoan;
     },
     schema(){
@@ -94,9 +114,10 @@ groupLoanDetailTPL.helpers({
 
 groupLoanDetailTPL.events({
     'click .addItem': function (e, t) {
-
         let loan = {};
         loan.id = t.$('[name="loanAccount"]').val();
+        loan.name = t.$('[name="loanAccount"] option:selected').text();
+
         if (loan.id == "") {
             alertify.warning("Need to Choose!!!");
             return false;
@@ -115,7 +136,6 @@ groupLoanDetailTPL.events({
 
     },
     'click .removeItem': function (e, t) {
-        debugger;
         let self = this;
         groupLoanDetailCollection.remove(self._id);
         let tmpCollection = groupLoanDetailCollection.find().fetch().map(function (obj) {
@@ -125,10 +145,14 @@ groupLoanDetailTPL.events({
         let newArrayClientOpt = clientAccOptTmp.get().filter(function (obj) {
             return tmpCollection.indexOf(obj.value) <= -1;
         });
-
         clientAccOpt.set(newArrayClientOpt);
     }
 });
+
+
+
+
+
 
 
 

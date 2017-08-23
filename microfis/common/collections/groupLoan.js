@@ -52,7 +52,7 @@ GroupLoan.schema = new SimpleSchema({
     },
     'loan.$.id': {
         type: String,
-        label: "Loan Account"
+        label: "Loan Id"
     },
     'loan.$.status': {
         type: Boolean,

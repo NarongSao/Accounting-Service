@@ -304,6 +304,14 @@ LoanAcc.generalSchema = new SimpleSchema({
         type: Number,
         optional: true,
         defaultValue: 0
+    },
+    groupId: {
+        type: String,
+        optional: true
+    },
+    numberLoanAccInGroup: {
+        type: Number,
+        optional: true
     }
 });
 
