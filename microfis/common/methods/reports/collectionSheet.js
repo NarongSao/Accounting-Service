@@ -4,6 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import {moment} from  'meteor/momentjs:moment';
+import BigNumber from 'bignumber.js';
 
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
@@ -92,6 +93,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                     <th>Sum Due Int</th>
                                     <th>Sum Due Fee</th>
                                     <th>Total Sum Due</th>
+                                    <th>Closing Balance</th>
                                     <th>Tel</th>
                                 </tr>
                             </thead>
@@ -368,6 +370,23 @@ export const collectionSheetReport = new ValidatedMethod({
                     });
 
 
+                    //Check Closing
+                    let totalSavingBal = new BigNumber(0);
+                    Meteor.call('microfis_getLastSavingTransaction', loanAccDoc.savingAccId, function (err, dataSavingBal) {
+                        if (dataSavingBal) {
+                            totalSavingBal += totalSavingBal.plus(dataSavingBal.details.principalBal).plus(dataSavingBal.details.interestBal);
+                        }
+                    });
+                    let totalClosing = new BigNumber(0);
+                    if (result && result.totalScheduleDue) {
+                        totalClosing = totalClosing.plus(result.totalScheduleDue.totalPrincipalInterestDue).plus(result.totalScheduleDue.penaltyDue);
+                    }
+                    if (result && result.closing) {
+                        totalClosing = totalClosing.plus(result.closing.totalDue).minus(totalSavingBal);
+                    }
+                    //=================
+
+
                     if (result.totalScheduleDue.dueDate.from) {
                         if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
                             result.totalScheduleDue.dueDate.from = null;
@@ -425,6 +444,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing)}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;
@@ -493,6 +513,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
                             <td></td>
+                            <td></td>
 
                         </tr>
                         <tr>
@@ -501,6 +522,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
+                            <td></td>
                             <td></td>
 
                         </tr>
@@ -511,6 +533,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
                             <td></td>
+                            <td></td>
 
                         </tr>
                         <tr>
@@ -520,10 +543,9 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
                             <td></td>
-
-                        </tr>
-                        
-                        
+                            <td></td>
+                        </tr>   
+                    
                         </tbody>
                       </table>`;
 

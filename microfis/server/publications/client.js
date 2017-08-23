@@ -24,7 +24,6 @@ Meteor.publish('microfis.client', function microfisClient(selector = {}, options
 
 Meteor.publish('microfis.clientById', function microfisClientById(id) {
     this.unblock();
-    Meteor._sleepForMs(100);
 
     new SimpleSchema({
         id: {type: String}

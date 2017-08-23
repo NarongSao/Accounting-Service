@@ -36,11 +36,26 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             data: 'loan', title: 'Loan Account',
             render: function (val, type, doc) {
 
+
+                let clientL = clientList.get();
+
                 var str = "";
                 if (val) {
                     val.forEach(function (obj) {
                         if (obj) {
-                            str += obj.id + "<br>";
+                            function getClientByLoanId(clientDoc) {
+                                if (clientDoc) {
+                                    if (clientDoc.loanDoc) {
+                                        return clientDoc.loanDoc._id == obj.id;
+                                    }
+                                    return "";
+                                }
+                            }
+
+                            let clDoc = clientL.find(getClientByLoanId);
+                            if (clDoc) {
+                                str += obj.id + " | " + clDoc.khSurname + " " + clDoc.khGivenName + "<br>";
+                            }
                         }
                     });
                 }

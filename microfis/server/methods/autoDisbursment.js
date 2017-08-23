@@ -25,7 +25,7 @@ Meteor.methods({
                 doc.disbursementDate = moment(result.DisDate, "DD/MM/YYYY").toDate();
                 doc.accountType = result.AccType;
                 doc.currencyId = result.Currency;
-                doc.firstRepaymentDate = moment(result.FirstRepaymentDate, "DD/MM/YYYY").toDate();
+                doc.firstRepaymentDate = moment(result.FirstRepaymentDate, "DD/MM/YYYY").add(1, "day").toDate();
                 doc.interestRate = parseFloat(result.InterestRate);
                 doc.loanAmount = parseFloat(result.LoanOutPrin);
                 doc.locationId = result.AddressCode;
@@ -124,7 +124,7 @@ Meteor.methods({
                 Meteor.call("insertCO", doc.creditOfficerName, doc.branchId, (err, coId) => {
                     if (coId) {
                         loanAccDoc.creditOfficerId = coId;
-                        Meteor.call("insertClient", clientDoc, (err, clientDocId) => {
+                        Meteor.call("insertClient", clientDoc, (error, clientDocId) => {
                             if (clientDocId) {
                                 savingDoc.clientId = clientDocId;
                                 Meteor.call("insertSaving", savingDoc, (err, savingDocId) => {
@@ -195,16 +195,23 @@ Meteor.methods({
                                 })
 
 
+                            } else {
+                                console.log(error)
+                                throw new Meteor.Error("Stop 1");
                             }
                         })
                     } else {
+
                         console.log(err)
+                        throw new Meteor.Error("Stop 2");
                     }
                 })
 
-            } catch (err) {
+            } catch (erro) {
 
-                console.log(err.message)
+                console.log(erro.message)
+                throw new Meteor.Error("Stop 3");
+
             }
         })
 
