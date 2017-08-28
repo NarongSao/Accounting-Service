@@ -43,7 +43,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <!--<a href="#" id="exportToExcel">download</a>-->
+                        <a href="#" id="exportToExcel">Export Excel</a>
                         {{> formFooterWithButtonReport}}
                     </div>
                     <!-- /.box-footer-->
@@ -74,7 +74,8 @@
                                     <div class="rpt-title-2x"><u>របាយការណ៍ប្រមូលប្រាក់</u></div>
                                     <div>
                                         <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
-                                        <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
+                                        <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}
+                                        , {{branch.telephone}}
                                     </div>
                                 </div>
                             {{/with}}
@@ -93,7 +94,8 @@
 
                                         <div style="width: 50%; float: right">
                                             <ul class="list-unstyled">
-                                                <li class="pull-right"><strong>Fund:</strong> {{fundId}}</li>
+                                                <li class="pull-right"><strong>Fund:</strong> {{fundId}}
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -111,13 +113,15 @@
                                     <div style="width: 60%;float: right">
                                         <div style="width: 50%; float: left">
                                             <ul class="list-unstyled">
-                                                <li><strong>Credit Officer:</strong> {{creditOfficerId}}</li>
+                                                <li><strong>Credit Officer:</strong> {{creditOfficerId}}
+                                                </li>
                                             </ul>
                                         </div>
 
                                         <div style="width: 50%; float: right">
                                             <ul class="list-unstyled">
-                                                <li class="pull-right"><strong>Product:</strong> {{productId}}</li>
+                                                <li class="pull-right">
+                                                    <strong>Product:</strong> {{productId}}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -139,7 +143,9 @@
 
                                         <div style="width: 50%; float: right">
                                             <ul class="list-unstyled">
-                                                <li class="pull-right"><strong>Location:</strong> {{locationId}}</li>
+                                                <li class="pull-right">
+                                                    <strong>Location:</strong> {{locationId}}
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -154,7 +160,8 @@
                                     <div style="width: 60%;float: right">
                                         <div style="width: 50%; float: left">
                                             <ul class="list-unstyled">
-                                                <li><strong>Repay Frequency:</strong> {{repayFrequency}}</li>
+                                                <li><strong>Repay Frequency:</strong> {{repayFrequency}}
+                                                </li>
                                             </ul>
                                         </div>
 

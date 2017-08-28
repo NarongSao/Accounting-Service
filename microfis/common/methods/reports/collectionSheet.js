@@ -68,14 +68,21 @@ export const collectionSheetReport = new ValidatedMethod({
             header.paymentMethod = "All";
             header.repayFrequency = "All";
 
+
+            /*<tr style="border: 0px !important;">
+             <th colspan="17" style="border: 0px !important; text-align: center" class="rpt-title-3x rpt-kh-muol">${data.title.company.khName}</th>
+             </tr>
+             <tr style="border: 0px !important;">
+             <th colspan="17" style="border: 0px !important; text-align: center">Monthly savings</th>
+             </tr>*/
+
             /****** Content *****/
-
-
             let baseCurrency = Setting.findOne().baseCurrency;
-
             let content = "";
             content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
                             <thead class="sub-header diplay-on-print-header-loan">
+                               
+                           
                                 <tr> 
                                     <th>No</th>
                                     <th>LA Code</th>

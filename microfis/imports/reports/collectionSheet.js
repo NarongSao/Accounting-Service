@@ -141,10 +141,7 @@ indexTmpl.events({
         alertify.Microfis_collectionSheetReport(fa('', ''), renderTemplate(tmplPrintData)).maximize();
     },
     'click .btn-print'(event, instance){
-
         $('#print-data').printThis();
-
-
     },
     'click #exportToExcel'(e, t){
         fnExcelReport();
@@ -192,37 +189,66 @@ let hooksObject = {
 AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
 
 
+/*function fnExcelReport() {
+ var uri = 'data:application/vnd.ms-excel;base64,'
+ ,
+ template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+ , base64 = function (s) {
+ return window.btoa(unescape(encodeURIComponent(s)))
+ }
+ , format = function (s, c) {
+ return s.replace(/{(\w+)}/g, function (m, p) {
+ return c[p];
+ })
+ }
+ return function (table, name) {
+ if (!table.nodeType) table = document.getElementById(table)
+ var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+ window.location.href = uri + base64(format(template, ctx))
+ }
+ }*/
+
+
+/*function fnExcelReport() {
+
+ var tab_text = `<html xmlns:x="urn:schemas-microsoft-com:office:excel">`;
+ tab_text = tab_text + '<head><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+ // <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
+ //<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
+
+ // tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
+
+ tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+ tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head>';
+
+ tab_text = tab_text + $('#print-data').html();
+ tab_text = tab_text + '</body></html>';
+
+
+ var data_type = 'data:application/vnd.ms-excel;';
+
+ var ua = window.navigator.userAgent;
+ var msie = ua.indexOf("MSIE ");
+
+ if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+ if (window.navigator.msSaveBlob) {
+ var blob = new Blob([tab_text], {
+ // type: "application/csv;charset=utf-8;"
+ type: "text/plain;charset=utf-8;"
+ });
+ navigator.msSaveBlob(blob, 'Test file.xls');
+ }
+ } else {
+ $('#exportToExcel').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+ $('#exportToExcel').attr('download', 'Test file.xls');
+ }
+ }*/
+
 function fnExcelReport() {
+    var FileSaver = require('file-saver');
+    var tab_text = `<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"/>`;
+    tab_text += $('#print-data').html();
 
-    var tab_text = `<html xmlns:x="urn:schemas-microsoft-com:office:excel">`;
-    tab_text = tab_text + '<head><meta charset="utf-8" /><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
-
-    // tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
-
-    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
-    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head>';
-
-    tab_text = tab_text + $('#print-data').html();
-    tab_text = tab_text + '</body></html>';
-
-
-
-    var data_type = 'data:application/vnd.ms-excel';
-
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE ");
-
-    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
-        if (window.navigator.msSaveBlob) {
-            var blob = new Blob([tab_text], {
-                type: "application/csv;charset=utf-8;"
-            });
-            navigator.msSaveBlob(blob, 'Test file.xls');
-        }
-    } else {
-        $('#exportToExcel').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
-        $('#exportToExcel').attr('download', 'Test file.xls');
-    }
-
-
+    var blob = new Blob([tab_text], {type: "application/vnd.ms-excel;charset=utf-8"});
+    FileSaver.saveAs(blob, "hello world.xlsx");
 }
