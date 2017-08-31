@@ -19,6 +19,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Method
 import {collectionSheetReport} from '../../common/methods/reports/collectionSheet.js';
+import {GenerateFile} from '../libs/saveExcelFIle';
 import {SelectOptMethods} from '../../common/methods/select-opts.js';
 
 // Schema
@@ -54,6 +55,20 @@ indexTmpl.onCreated(function () {
                     console.log(err.message);
                 }
             );
+
+
+            /*Meteor.call("collectionSheetExcelReport", params, function (err, result) {
+             debugger;
+             console.log(result);
+             if (result) {
+             GenerateFile.saveAs(result, "collectionSheetReport");
+             } else {
+             console.log(err.message);
+
+             }
+             });*/
+
+
         }
 
     });
