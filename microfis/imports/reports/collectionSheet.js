@@ -19,6 +19,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Method
 import {collectionSheetReport} from '../../common/methods/reports/collectionSheet.js';
+import {GenerateFile} from '../libs/saveExcelFIle';
 import {SelectOptMethods} from '../../common/methods/select-opts.js';
 
 // Schema
@@ -54,6 +55,20 @@ indexTmpl.onCreated(function () {
                     console.log(err.message);
                 }
             );
+
+
+            /*Meteor.call("collectionSheetExcelReport", params, function (err, result) {
+             debugger;
+             console.log(result);
+             if (result) {
+             GenerateFile.saveAs(result, "collectionSheetReport");
+             } else {
+             console.log(err.message);
+
+             }
+             });*/
+
+
         }
 
     });
@@ -244,11 +259,12 @@ AutoForm.addHooks('Microfis_collectionSheetReport', hooksObject);
  }
  }*/
 
-function fnExcelReport() {
+function fnExcelReport(data) {
     var FileSaver = require('file-saver');
     var tab_text = `<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"/>`;
     tab_text += $('#print-data').html();
 
+
     var blob = new Blob([tab_text], {type: "application/vnd.ms-excel;charset=utf-8"});
-    FileSaver.saveAs(blob, "hello world.xlsx");
+    FileSaver.saveAs(blob, "dd.xlsx");
 }

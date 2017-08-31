@@ -5,6 +5,8 @@ import BigNumber from 'bignumber.js';
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc';
+import {Product} from '../../common/collections/product';
+import {Fee} from '../../common/collections/fee';
 import {Client} from '../../common/collections/client';
 import {ProductStatus} from '../../common/collections/productStatus';
 import {Repayment} from '../../common/collections/repayment.js';
@@ -24,11 +26,43 @@ import {checkSavingTransaction} from '../../common/methods/check-saving-transact
 
 // Before insert
 Repayment.before.insert(function (userId, doc) {
+
+    if (doc.type == "Fee") {
+
+        let loanDoc = LoanAcc.findOne({_id: doc.loanAccId});
+        let productDoc = Product.findOne({_id: loanDoc.productId});
+        let amount = 0;
+        let data = Fee.find({_id: {$in: productDoc.feeId}}).fetch();
+
+        data.forEach(function (obj) {
+            if (obj.calculateType == "P") {
+                amount += (obj.amount / 100) * loanDoc.loanAmount;
+            } else {
+                if (loanDoc.currencyId == "KHR") {
+                    amount += obj.amount * productDoc.exchange.KHR;
+
+                } else if (loanDoc.currencyId == "THB") {
+                    amount += obj.amount * productDoc.exchange.THB;
+
+                } else {
+                    amount += obj.amount;
+                }
+            }
+        })
+
+        if (loanDoc.feeAmount == 0 && amount > 0 && loanDoc.parentId == "0") {
+        } else {
+            throw new Meteor.Error("You've already Paid Fee!!");
+        }
+    }
+
     let prefix = doc.loanAccId + '-';
     doc._id = idGenerator2.genWithPrefix(Repayment, {
         prefix: prefix,
         length: 6
     });
+
+
 });
 
 // After insert
