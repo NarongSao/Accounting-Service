@@ -54,6 +54,11 @@ Repayment.before.insert(function (userId, doc) {
         } else {
             throw new Meteor.Error("You've already Paid Fee!!");
         }
+    } else {
+        let clearDoc = ClearPrepay.findOne({branchId: doc.branchId}, {sort: {closeDate: -1}});
+        if (moment(doc.repaidDate).startOf("day").toDate().getTime() > moment(clearDoc.closeDate).startOf("day").toDate().getTime()) {
+            throw new Meteor.Error("You have to clear prepay before make repayment!!");
+        }
     }
 
     let prefix = doc.loanAccId + '-';
