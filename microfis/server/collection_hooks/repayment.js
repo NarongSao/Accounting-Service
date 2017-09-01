@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc';
 import {Product} from '../../common/collections/product';
+import {ClearPrepay} from '../../common/collections/clearPrepay';
 import {Fee} from '../../common/collections/fee';
 import {Client} from '../../common/collections/client';
 import {ProductStatus} from '../../common/collections/productStatus';
@@ -53,6 +54,11 @@ Repayment.before.insert(function (userId, doc) {
         if (loanDoc.feeAmount == 0 && amount > 0 && loanDoc.parentId == "0") {
         } else {
             throw new Meteor.Error("You've already Paid Fee!!");
+        }
+    } else {
+        let clearDoc = ClearPrepay.findOne({branchId: doc.branchId}, {sort: {closeDate: -1}});
+        if (moment(doc.repaidDate).startOf("day").toDate().getTime() > moment(clearDoc.closeDate).startOf("day").toDate().getTime()) {
+            throw new Meteor.Error("You have to clear prepay before make repayment!!");
         }
     }
 
