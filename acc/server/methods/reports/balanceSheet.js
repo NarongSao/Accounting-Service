@@ -334,7 +334,7 @@ Meteor.methods({
             let space = 0;
             result.sort(compare);
             result.forEach(function (o) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (o.accountTypeId == "10") {
 
                         space = 15;
@@ -1389,7 +1389,7 @@ Meteor.methods({
             let space = 0;
             result.sort(compare);
             result.forEach(function (o) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (o.accountTypeId == "10") {
                         totalOtherCurrentAsset += o.result;
 

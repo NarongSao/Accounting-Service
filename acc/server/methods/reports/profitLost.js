@@ -262,7 +262,7 @@ Meteor.methods({
             var resultIncomeFinal = [];
             resultIncome.sort(compare);
             resultIncome.map(function (obj) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (temporaryIncome !== obj.parent & isPushIncome == false) {
                         resultIncomeFinal.push({
                             name: dataIncome.name,
@@ -330,7 +330,7 @@ Meteor.methods({
             resultExpense.sort(compare);
 
             resultExpense.map(function (obj) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (temporaryExpense !== obj.parent & isPushExpense == false) {
                         resultEnpenseFinal.push({
                             name: dataExpense.name,
@@ -691,7 +691,7 @@ Meteor.methods({
             resultIncome.sort(compare);
 
             resultIncome.map(function (obj) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (temporaryIncome !== obj.parent & isPushIncome == false) {
                         resultIncomeFinal.push({
                             name: dataIncome.name,
@@ -777,7 +777,7 @@ Meteor.methods({
 
             resultExpense.sort(compare);
             resultExpense.map(function (obj) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (temporaryExpense !== obj.parent && isPushExpense == false) {
                         resultEnpenseFinal.push({
                             name: dataExpense.name,
