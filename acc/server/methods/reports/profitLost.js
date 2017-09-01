@@ -37,9 +37,9 @@ Meteor.methods({
             data.title = Company.findOne();
 
             /****** Header *****/
-            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
+            let exchangeData = Exchange.findOne({_id: params.exchangeDate});
 
-            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+            params.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
 
 
             data.header = params;
@@ -88,8 +88,8 @@ Meteor.methods({
             var grandTotalIncomeYearToDate = 0;
             var grandTotalExpenseYearToDate = 0;
 
-            var dataExpense={};
-            var dataIncome={};
+            var dataExpense = {};
+            var dataIncome = {};
 
             //To get Last Date of CLose Chart Account
             var selectorEnd = {};
@@ -119,7 +119,10 @@ Meteor.methods({
                     $gte: "40",
                     $lte: "59"
                 };
-                selectorEndDate.closeDate = {$gte: moment(endDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(endDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
+                selectorEndDate.closeDate = {
+                    $gte: moment(endDate.closeDate, "DD/MM/YYYY").startOf('days').toDate(),
+                    $lte: moment(endDate.closeDate, "DD/MM/YYYY").endOf('days').toDate()
+                };
             }
 
             // Selector Middle
@@ -150,7 +153,7 @@ Meteor.methods({
             };
 
             var contentProfit = Meteor.call("getProfitLostYearToDate", selector,
-                baseCurrency, exchangeDate, selectorMiddle, selectorEndDate,self.showNonActive);
+                baseCurrency, exchangeDate, selectorMiddle, selectorEndDate, self.showNonActive);
 
 
             var subTotalExpense = 0;
@@ -259,59 +262,60 @@ Meteor.methods({
             var resultIncomeFinal = [];
             resultIncome.sort(compare);
             resultIncome.map(function (obj) {
-                if (temporaryIncome !== obj.parent & isPushIncome == false) {
-                    resultIncomeFinal.push({
-                        name: dataIncome.name,
-                        account:dataIncome.account,
-                        code: SpaceChar.space(6 * dataIncome.level) +
-                        'Total : ' + dataIncome.code,
-                        result: subTotalIncome,
-                        resultYearToDate: subTotalIncomeYearToDate
-                    });
-                    isPushIncome = true;
-
-                }
-                if (obj.level > 0) {
-                    if (temporaryIncome !== obj.parent) {
-                        dataIncome = ChartAccount.findOne({
-                            _id: obj.parent
-                        });
+                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                    if (temporaryIncome !== obj.parent & isPushIncome == false) {
                         resultIncomeFinal.push({
                             name: dataIncome.name,
-                            account:dataIncome.account,
+                            account: dataIncome.account,
                             code: SpaceChar.space(6 * dataIncome.level) +
-                            dataIncome.code,
-                            result: "title",
-                            resultYearToDate: "title"
+                            'Total : ' + dataIncome.code,
+                            result: subTotalIncome,
+                            resultYearToDate: subTotalIncomeYearToDate
                         });
+                        isPushIncome = true;
 
-                        subTotalIncome = obj.result;
-                        subTotalIncomeYearToDate = obj.resultYearToDate;
-
-                    } else {
-                        subTotalIncomeYearToDate += obj.resultYearToDate;
-                        subTotalIncome += obj.result;
                     }
-                    isPushIncome = false;
-                }
-                temporaryIncome = obj.parent;
-                resultIncomeFinal.push({
-                    result: obj.result,
-                    account:obj.account,
-                    resultYearToDate: obj.resultYearToDate,
-                    name: obj.name,
-                    currency: obj.currency,
-                    code: SpaceChar.space(6 * obj.level) + obj.code,
-                    parent: obj.parent,
-                    level: obj.level
-                });
+                    if (obj.level > 0) {
+                        if (temporaryIncome !== obj.parent) {
+                            dataIncome = ChartAccount.findOne({
+                                _id: obj.parent
+                            });
+                            resultIncomeFinal.push({
+                                name: dataIncome.name,
+                                account: dataIncome.account,
+                                code: SpaceChar.space(6 * dataIncome.level) +
+                                dataIncome.code,
+                                result: "title",
+                                resultYearToDate: "title"
+                            });
 
+                            subTotalIncome = obj.result;
+                            subTotalIncomeYearToDate = obj.resultYearToDate;
+
+                        } else {
+                            subTotalIncomeYearToDate += obj.resultYearToDate;
+                            subTotalIncome += obj.result;
+                        }
+                        isPushIncome = false;
+                    }
+                    temporaryIncome = obj.parent;
+                    resultIncomeFinal.push({
+                        result: obj.result,
+                        account: obj.account,
+                        resultYearToDate: obj.resultYearToDate,
+                        name: obj.name,
+                        currency: obj.currency,
+                        code: SpaceChar.space(6 * obj.level) + obj.code,
+                        parent: obj.parent,
+                        level: obj.level
+                    });
+                }
             });
 
             if (isPushIncome == false) {
                 resultIncomeFinal.push({
                     name: dataIncome.name,
-                    account:dataIncome.account,
+                    account: dataIncome.account,
                     code: SpaceChar.space(6 * dataIncome.level) +
                     'Total : ' + dataIncome.code,
                     result: subTotalIncome,
@@ -326,59 +330,60 @@ Meteor.methods({
             resultExpense.sort(compare);
 
             resultExpense.map(function (obj) {
-                if (temporaryExpense !== obj.parent & isPushExpense == false) {
-                    resultEnpenseFinal.push({
-                        name: dataExpense.name,
-                        account:dataExpense.account,
-                        code: SpaceChar.space(6 * dataExpense.level) +
-                        'Total : ' + dataExpense.code,
-                        result: subTotalExpense,
-                        resultYearToDate: subTotalExpenseYearToDate
-                    });
-                    isPushExpense = true;
-
-                }
-                if (obj.level > 0) {
-                    if (temporaryExpense !== obj.parent) {
-                        dataExpense = ChartAccount.findOne({
-                            _id: obj.parent
-                        });
+                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                    if (temporaryExpense !== obj.parent & isPushExpense == false) {
                         resultEnpenseFinal.push({
                             name: dataExpense.name,
-                            account:dataExpense.account,
+                            account: dataExpense.account,
                             code: SpaceChar.space(6 * dataExpense.level) +
-                            dataExpense.code,
-                            result: "title",
-                            resultYearToDate: "title"
+                            'Total : ' + dataExpense.code,
+                            result: subTotalExpense,
+                            resultYearToDate: subTotalExpenseYearToDate
                         });
+                        isPushExpense = true;
 
-                        subTotalExpense = obj.result;
-                        subTotalExpenseYearToDate = obj.resultYearToDate;
-
-                    } else {
-                        subTotalExpenseYearToDate += obj.resultYearToDate;
-                        subTotalExpense += obj.result;
                     }
-                    isPushExpense = false;
-                }
-                temporaryExpense = obj.parent;
-                resultEnpenseFinal.push({
-                    result: obj.result,
-                    account:obj.account,
-                    resultYearToDate: obj.resultYearToDate,
-                    name: obj.name,
-                    currency: obj.currency,
-                    code: SpaceChar.space(6 * obj.level) + obj.code,
-                    parent: obj.parent,
-                    level: obj.level
-                });
+                    if (obj.level > 0) {
+                        if (temporaryExpense !== obj.parent) {
+                            dataExpense = ChartAccount.findOne({
+                                _id: obj.parent
+                            });
+                            resultEnpenseFinal.push({
+                                name: dataExpense.name,
+                                account: dataExpense.account,
+                                code: SpaceChar.space(6 * dataExpense.level) +
+                                dataExpense.code,
+                                result: "title",
+                                resultYearToDate: "title"
+                            });
 
+                            subTotalExpense = obj.result;
+                            subTotalExpenseYearToDate = obj.resultYearToDate;
+
+                        } else {
+                            subTotalExpenseYearToDate += obj.resultYearToDate;
+                            subTotalExpense += obj.result;
+                        }
+                        isPushExpense = false;
+                    }
+                    temporaryExpense = obj.parent;
+                    resultEnpenseFinal.push({
+                        result: obj.result,
+                        account: obj.account,
+                        resultYearToDate: obj.resultYearToDate,
+                        name: obj.name,
+                        currency: obj.currency,
+                        code: SpaceChar.space(6 * obj.level) + obj.code,
+                        parent: obj.parent,
+                        level: obj.level
+                    });
+                }
             });
 
             if (isPushExpense == false) {
                 resultEnpenseFinal.push({
                     name: dataExpense.name,
-                    account:dataExpense.account,
+                    account: dataExpense.account,
                     code: SpaceChar.space(6 * dataExpense.level) +
                     'Total : ' + dataExpense.code,
                     result: subTotalExpense,
@@ -429,9 +434,9 @@ Meteor.methods({
             data.title = Company.findOne();
 
             /****** Header *****/
-            let exchangeData=Exchange.findOne({_id: params.exchangeDate});
+            let exchangeData = Exchange.findOne({_id: params.exchangeDate});
 
-            params.exchangeData=moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
+            params.exchangeData = moment(exchangeData.exDate).format("DD/MM/YYYY") + ' | ' + JSON.stringify(exchangeData.rates)
 
 
             data.header = params;
@@ -472,8 +477,8 @@ Meteor.methods({
             var grandTotalIncomeYearToDate = 0;
             var grandTotalExpenseYearToDate = 0;
 
-            var dataExpense={};
-            var dataIncome={};
+            var dataExpense = {};
+            var dataIncome = {};
 
             //To get Last Date of CLose Chart Account
             var selectorEnd = {};
@@ -504,7 +509,10 @@ Meteor.methods({
                     $gte: "40",
                     $lte: "59"
                 };
-                selectorEndDate.closeDate ={$gte: moment(endDate.closeDate,"DD/MM/YYYY").startOf('days').toDate(), $lte: moment(endDate.closeDate,"DD/MM/YYYY").endOf('days').toDate()};
+                selectorEndDate.closeDate = {
+                    $gte: moment(endDate.closeDate, "DD/MM/YYYY").startOf('days').toDate(),
+                    $lte: moment(endDate.closeDate, "DD/MM/YYYY").endOf('days').toDate()
+                };
             }
 
             // Selector Middle
@@ -550,7 +558,7 @@ Meteor.methods({
             /*var contentProfit = Meteor.call("getProfitLost", selector,
              baseCurrency, exchangeDate);*/
             var contentProfit = Meteor.call("getProfitLostYearToDate", selector,
-                baseCurrency, exchangeDate, selectorMiddle, selectorEndDate,self.showNonActive);
+                baseCurrency, exchangeDate, selectorMiddle, selectorEndDate, self.showNonActive);
 
 
             var subTotalExpense = 0;
@@ -678,80 +686,80 @@ Meteor.methods({
                 return key;
             }, {});
 
-            
 
             var resultIncomeFinal = [];
             resultIncome.sort(compare);
 
             resultIncome.map(function (obj) {
-                if (temporaryIncome !== obj.parent & isPushIncome == false) {
-                    resultIncomeFinal.push({
-                        name: dataIncome.name,
-                        account:dataIncome.account,
-                        code: SpaceChar.space(6 * dataIncome.level) +
-                        'Total : ' + dataIncome.code,
-                        result: subTotalIncome,
-                        amountUsd: subTotalUSDIncome,
-                        amountRiel: subTotalRielIncome,
-                        amountThb: subTotalTHBIncome,
-                        resultYearToDate: subTotalIncomeYearToDate
-                    });
-                    isPushIncome = true;
-
-                }
-                if (obj.level > 0) {
-                    if (temporaryIncome !== obj.parent) {
-                        dataIncome = ChartAccount.findOne({
-                            _id: obj.parent
-                        });
+                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                    if (temporaryIncome !== obj.parent & isPushIncome == false) {
                         resultIncomeFinal.push({
                             name: dataIncome.name,
-                            account:dataIncome.account,
+                            account: dataIncome.account,
                             code: SpaceChar.space(6 * dataIncome.level) +
-                            dataIncome.code,
-                            result: "title",
-                            resultYearToDate: "title",
-                            amountUsd: "title",
-                            amountRiel: "title",
-                            amountThb: "title"
+                            'Total : ' + dataIncome.code,
+                            result: subTotalIncome,
+                            amountUsd: subTotalUSDIncome,
+                            amountRiel: subTotalRielIncome,
+                            amountThb: subTotalTHBIncome,
+                            resultYearToDate: subTotalIncomeYearToDate
                         });
+                        isPushIncome = true;
 
-                        subTotalIncome = obj.result;
-                        subTotalIncomeYearToDate = obj.resultYearToDate;
-                        subTotalUSDIncome = obj.amountUsd;
-                        subTotalRielIncome = obj.amountRiel;
-                        subTotalTHBIncome = obj.amountThb;
-
-                    } else {
-                        subTotalIncomeYearToDate += obj.resultYearToDate;
-                        subTotalIncome += obj.result;
-                        subTotalUSDIncome += obj.amountUsd;
-                        subTotalRielIncome += obj.amountRiel;
-                        subTotalTHBIncome += obj.amountThb;
                     }
-                    isPushIncome = false;
-                }
-                temporaryIncome = obj.parent;
-                resultIncomeFinal.push({
-                    result: obj.result,
-                    account:obj.account,
-                    resultYearToDate: obj.resultYearToDate,
-                    name: obj.name,
-                    currency: obj.currency,
-                    code: SpaceChar.space(6 * obj.level) + obj.code,
-                    amountUsd: obj.amountUsd,
-                    amountRiel: obj.amountRiel,
-                    amountThb: obj.amountThb,
-                    parent: obj.parent,
-                    level: obj.level
-                });
+                    if (obj.level > 0) {
+                        if (temporaryIncome !== obj.parent) {
+                            dataIncome = ChartAccount.findOne({
+                                _id: obj.parent
+                            });
+                            resultIncomeFinal.push({
+                                name: dataIncome.name,
+                                account: dataIncome.account,
+                                code: SpaceChar.space(6 * dataIncome.level) +
+                                dataIncome.code,
+                                result: "title",
+                                resultYearToDate: "title",
+                                amountUsd: "title",
+                                amountRiel: "title",
+                                amountThb: "title"
+                            });
 
+                            subTotalIncome = obj.result;
+                            subTotalIncomeYearToDate = obj.resultYearToDate;
+                            subTotalUSDIncome = obj.amountUsd;
+                            subTotalRielIncome = obj.amountRiel;
+                            subTotalTHBIncome = obj.amountThb;
+
+                        } else {
+                            subTotalIncomeYearToDate += obj.resultYearToDate;
+                            subTotalIncome += obj.result;
+                            subTotalUSDIncome += obj.amountUsd;
+                            subTotalRielIncome += obj.amountRiel;
+                            subTotalTHBIncome += obj.amountThb;
+                        }
+                        isPushIncome = false;
+                    }
+                    temporaryIncome = obj.parent;
+                    resultIncomeFinal.push({
+                        result: obj.result,
+                        account: obj.account,
+                        resultYearToDate: obj.resultYearToDate,
+                        name: obj.name,
+                        currency: obj.currency,
+                        code: SpaceChar.space(6 * obj.level) + obj.code,
+                        amountUsd: obj.amountUsd,
+                        amountRiel: obj.amountRiel,
+                        amountThb: obj.amountThb,
+                        parent: obj.parent,
+                        level: obj.level
+                    });
+                }
             });
 
             if (isPushIncome == false) {
                 resultIncomeFinal.push({
                     name: dataIncome.name,
-                    account:dataIncome.account,
+                    account: dataIncome.account,
                     code: SpaceChar.space(6 * dataIncome.level) +
                     'Total : ' + dataIncome.code,
                     result: subTotalIncome,
@@ -769,74 +777,75 @@ Meteor.methods({
 
             resultExpense.sort(compare);
             resultExpense.map(function (obj) {
-                if (temporaryExpense !== obj.parent && isPushExpense == false) {
-                    resultEnpenseFinal.push({
-                        name: dataExpense.name,
-                        account:dataExpense.account,
-                        code: SpaceChar.space(6 * dataExpense.level) +
-                        'Total : ' + dataExpense.code,
-                        result: subTotalExpense,
-                        amountUsd: subTotalUSDExpense,
-                        amountRiel: subTotalRielExpense,
-                        amountThb: subTotalTHBExpense,
-                        resultYearToDate: subTotalExpenseYearToDate
-                    });
-                    isPushExpense = true;
-
-                }
-                if (obj.level > 0) {
-                    if (temporaryExpense !== obj.parent) {
-                        dataExpense = ChartAccount.findOne({
-                            _id: obj.parent
-                        });
+                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(obj.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                    if (temporaryExpense !== obj.parent && isPushExpense == false) {
                         resultEnpenseFinal.push({
                             name: dataExpense.name,
-                            account:dataExpense.account,
+                            account: dataExpense.account,
                             code: SpaceChar.space(6 * dataExpense.level) +
-                            dataExpense.code,
-                            result: "title",
-                            resultYearToDate: "title",
-                            amountUsd: "title",
-                            amountRiel: "title",
-                            amountThb: "title"
+                            'Total : ' + dataExpense.code,
+                            result: subTotalExpense,
+                            amountUsd: subTotalUSDExpense,
+                            amountRiel: subTotalRielExpense,
+                            amountThb: subTotalTHBExpense,
+                            resultYearToDate: subTotalExpenseYearToDate
                         });
+                        isPushExpense = true;
 
-                        subTotalExpense = obj.result;
-                        subTotalExpenseYearToDate = obj.resultYearToDate;
-                        subTotalUSDExpense = obj.amountUsd;
-                        subTotalRielExpense = obj.amountRiel;
-                        subTotalTHBExpense = obj.amountThb;
-
-                    } else {
-                        subTotalExpenseYearToDate += obj.resultYearToDate;
-                        subTotalExpense += obj.result;
-                        subTotalUSDExpense += obj.amountUsd;
-                        subTotalRielExpense += obj.amountRiel;
-                        subTotalTHBExpense += obj.amountThb;
                     }
-                    isPushExpense = false;
-                }
-                temporaryExpense = obj.parent;
-                resultEnpenseFinal.push({
-                    result: obj.result,
-                    account:obj.account,
-                    resultYearToDate: obj.resultYearToDate,
-                    name: obj.name,
-                    currency: obj.currency,
-                    code: SpaceChar.space(6 * obj.level) + obj.code,
-                    amountUsd: obj.amountUsd,
-                    amountRiel: obj.amountRiel,
-                    amountThb: obj.amountThb,
-                    parent: obj.parent,
-                    level: obj.level
-                });
+                    if (obj.level > 0) {
+                        if (temporaryExpense !== obj.parent) {
+                            dataExpense = ChartAccount.findOne({
+                                _id: obj.parent
+                            });
+                            resultEnpenseFinal.push({
+                                name: dataExpense.name,
+                                account: dataExpense.account,
+                                code: SpaceChar.space(6 * dataExpense.level) +
+                                dataExpense.code,
+                                result: "title",
+                                resultYearToDate: "title",
+                                amountUsd: "title",
+                                amountRiel: "title",
+                                amountThb: "title"
+                            });
 
+                            subTotalExpense = obj.result;
+                            subTotalExpenseYearToDate = obj.resultYearToDate;
+                            subTotalUSDExpense = obj.amountUsd;
+                            subTotalRielExpense = obj.amountRiel;
+                            subTotalTHBExpense = obj.amountThb;
+
+                        } else {
+                            subTotalExpenseYearToDate += obj.resultYearToDate;
+                            subTotalExpense += obj.result;
+                            subTotalUSDExpense += obj.amountUsd;
+                            subTotalRielExpense += obj.amountRiel;
+                            subTotalTHBExpense += obj.amountThb;
+                        }
+                        isPushExpense = false;
+                    }
+                    temporaryExpense = obj.parent;
+                    resultEnpenseFinal.push({
+                        result: obj.result,
+                        account: obj.account,
+                        resultYearToDate: obj.resultYearToDate,
+                        name: obj.name,
+                        currency: obj.currency,
+                        code: SpaceChar.space(6 * obj.level) + obj.code,
+                        amountUsd: obj.amountUsd,
+                        amountRiel: obj.amountRiel,
+                        amountThb: obj.amountThb,
+                        parent: obj.parent,
+                        level: obj.level
+                    });
+                }
             });
 
             if (isPushExpense == false) {
                 resultEnpenseFinal.push({
                     name: dataExpense.name,
-                    account:dataExpense.account,
+                    account: dataExpense.account,
                     code: SpaceChar.space(6 * dataExpense.level) +
                     'Total : ' + dataExpense.code,
                     result: subTotalExpense,
