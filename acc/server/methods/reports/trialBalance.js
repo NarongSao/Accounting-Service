@@ -128,7 +128,7 @@ Meteor.methods({
 
             let resultSummary = [];
             result.map(function (o) {
-                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                if (((self.showNonActive == "false" || self.showNonActive == false  || self.showNonActive == undefined) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
                     if (o.result > 0) {
                         grandTotalDr += math.round(o.result, 2);
                     } else {
