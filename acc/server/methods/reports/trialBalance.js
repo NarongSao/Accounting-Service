@@ -126,11 +126,15 @@ Meteor.methods({
             }, {});
 
 
+            let resultSummary = [];
             result.map(function (o) {
-                if (o.result > 0) {
-                    grandTotalDr += math.round(o.result, 2);
-                } else {
-                    grandTotalCr += math.round(o.result, 2);
+                if (((self.showNonActive == "false" || self.showNonActive == false) && math.round(o.result, 3) != 0) || self.showNonActive == "true" || self.showNonActive == true) {
+                    if (o.result > 0) {
+                        grandTotalDr += math.round(o.result, 2);
+                    } else {
+                        grandTotalCr += math.round(o.result, 2);
+                    }
+                    resultSummary.push(o);
                 }
             });
             data.grandTotalDr = grandTotalDr;
@@ -146,7 +150,7 @@ Meteor.methods({
             data.currencySelect = baseCurrency;
 
             if (result.length > 0) {
-                data.result = result;
+                data.result = resultSummary;
             }
             return data;
         }
@@ -280,6 +284,7 @@ Meteor.methods({
 
 
             result.map(function (o) {
+
                 if (o.result > 0) {
                     grandTotalDr += math.round(o.result, 2);
                 } else {
@@ -303,6 +308,7 @@ Meteor.methods({
                 } else {
                     grandTotalCrTHB += math.round(o.valBaht, 2);
                 }
+
             });
             data.grandTotalDr = grandTotalDr;
             data.grandTotalCr = -1 * grandTotalCr;
