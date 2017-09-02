@@ -56,7 +56,7 @@ Repayment.before.insert(function (userId, doc) {
         }
     } else {
         let clearDoc = ClearPrepay.findOne({branchId: doc.branchId}, {sort: {closeDate: -1}});
-        if (moment(doc.repaidDate).startOf("day").toDate().getTime() > moment(clearDoc.closeDate).startOf("day").toDate().getTime()) {
+        if (clearDoc == undefined || moment(doc.repaidDate).startOf("day").toDate().getTime() > moment(clearDoc.closeDate).startOf("day").toDate().getTime()) {
             throw new Meteor.Error("You have to clear prepay before make repayment!!");
         }
     }
