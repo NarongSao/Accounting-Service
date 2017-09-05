@@ -22,10 +22,12 @@ Meteor.methods({
                 doc.dob = moment(result.DOB, "DD/MM/YYYY").toDate();
                 doc.address = result.Address;
 
-                doc.disbursementDate = moment(result.DisDate, "DD/MM/YYYY").toDate();
+                // doc.disbursementDate = moment(result.DisDate, "DD/MM/YYYY").toDate();
+                doc.disbursementDate = moment(result.DisDate, "MM/DD/YYYY").toDate();
                 doc.accountType = result.AccType;
                 doc.currencyId = result.Currency;
-                doc.firstRepaymentDate = moment(result.FirstRepaymentDate, "DD/MM/YYYY").add(1, "day").toDate();
+                // doc.firstRepaymentDate = moment(result.FirstRepaymentDate, "DD/MM/YYYY").add(1, "day").toDate();
+                doc.firstRepaymentDate = moment(result.FirstRepaymentDate, "MM/DD/YYYY").add(1, "day").toDate();
                 doc.interestRate = parseFloat(result.InterestRate);
                 doc.loanAmount = parseFloat(result.LoanOutPrin);
                 doc.locationId = result.AddressCode;
@@ -33,12 +35,12 @@ Meteor.methods({
                 doc.creditOfficerName = result.CO;
 
                 doc.branchId = result.BranchId;
-                doc.productId = result.ProductId;
+                doc.productId = "0" + result.ProductId;
                 doc.dueDateOn = parseInt(result.DueDateOn);
                 doc.repaidFrequency = parseInt(result.RepaidFrequency);
 
-                doc.loanOutFee = parseInt(result.LoanOutFee);
-                doc.loanOutInt = parseInt(result.LoanOutInt);
+                doc.loanOutFee = parseFloat(result.LoanOutFee);
+                doc.loanOutInt = parseFloat(result.LoanOutInt);
 
 
                 console.log("Write Of Date : " + result.WriteOffDate);

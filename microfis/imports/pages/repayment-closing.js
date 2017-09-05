@@ -115,6 +115,15 @@ formTmpl.onCreated(function () {
                     if (data) {
                         stateRepayment.set('savingBalance', data);
                         totalSavingBal = totalSavingBal.plus(data.details.principalBal).plus(data.details.interestBal);
+                    } else {
+                        let d = {};
+                        let detail = {
+                            principalBal: 0,
+                            interestBal: 0
+                        };
+                        d.details = detail;
+                        console.log(d);
+                        stateRepayment.set('savingBalance', d);
                     }
                 });
 

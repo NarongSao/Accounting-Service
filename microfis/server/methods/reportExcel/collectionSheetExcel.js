@@ -381,7 +381,7 @@ Meteor.methods({
                 let totalSavingBal = new BigNumber(0);
                 Meteor.call('microfis_getLastSavingTransaction', loanAccDoc.savingAccId, function (err, dataSavingBal) {
                     if (dataSavingBal) {
-                        totalSavingBal += totalSavingBal.plus(dataSavingBal.details.principalBal).plus(dataSavingBal.details.interestBal);
+                        totalSavingBal = totalSavingBal.plus(dataSavingBal.details.principalBal).plus(dataSavingBal.details.interestBal);
                     }
                 });
                 let totalClosing = new BigNumber(0);

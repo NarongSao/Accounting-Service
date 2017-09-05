@@ -18,13 +18,14 @@ import {CreditOfficer} from '../../../common/collections/credit-officer.js';
 import {Product} from '../../../common/collections/product.js';
 import {Location} from '../../../common/collections/location.js';
 import {Fund} from '../../../common/collections/fund.js';
+import {GroupLoan} from '../../../common/collections/groupLoan';
 
 // Method
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepaymentRealTime} from '../check-repayment.js';
 
-export const collectionSheetReport = new ValidatedMethod({
-    name: 'microfis.collectionSheetReport',
+export const collectionSheetGroupReport = new ValidatedMethod({
+    name: 'microfis.collectionSheetGroupReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         params: {type: Object, optional: true, blackbox: true}
@@ -68,14 +69,21 @@ export const collectionSheetReport = new ValidatedMethod({
             header.paymentMethod = "All";
             header.repayFrequency = "All";
 
+
+            /*<tr style="border: 0px !important;">
+             <th colspan="17" style="border: 0px !important; text-align: center" class="rpt-title-3x rpt-kh-muol">${data.title.company.khName}</th>
+             </tr>
+             <tr style="border: 0px !important;">
+             <th colspan="17" style="border: 0px !important; text-align: center">Monthly savings</th>
+             </tr>*/
+
             /****** Content *****/
-
-
             let baseCurrency = Setting.findOne().baseCurrency;
-
             let content = "";
             content += `<table class="sub-table table table-striped  table-hover diplay-on-print-table-loan">
                             <thead class="sub-header diplay-on-print-header-loan">
+                               
+                           
                                 <tr> 
                                     <th>No</th>
                                     <th>LA Code</th>
@@ -93,6 +101,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                     <th>Sum Due Int</th>
                                     <th>Sum Due Fee</th>
                                     <th>Total Sum Due</th>
+                                    <th>Total Group</th>
                                     <th>Closing Balance</th>
                                     <th>Tel</th>
                                 </tr>
@@ -102,17 +111,23 @@ export const collectionSheetReport = new ValidatedMethod({
 
             //Param
             let selector = {};
+            let selectorGroup = {};
+            let selectorLoanDocGroup = {};
 
 
             if (params.coType == "Only") {
                 selector.changeCOId = "";
+                selectorLoanDocGroup["loanDoc.changeCOId"] = "";
             } else if (params.coType == "Transfer") {
                 selector.changeCOId = {$ne: ""};
+                selectorLoanDocGroup["loanDoc.changeCOId"] = {$ne: ""};
             }
 
 
             if (params.branchId && params.branchId.includes("All") == false) {
                 selector.branchId = {$in: params.branchId};
+                selectorGroup.branchId = {$in: params.branchId};
+                selectorLoanDocGroup["loanDoc.branchId"] = {$in: params.branchId};
                 let branchList = Branch.find({_id: {$in: params.branchId}}, {
                     fields: {
                         enName: 1,
@@ -126,6 +141,7 @@ export const collectionSheetReport = new ValidatedMethod({
             }
             if (params.creditOfficerId && params.creditOfficerId.includes("All") == false) {
                 selector.creditOfficerId = {$in: params.creditOfficerId};
+                selectorLoanDocGroup["loanDoc.creditOfficerId"] = {$in: params.creditOfficerId};
                 let creditOfficerList = CreditOfficer.find({_id: {$in: params.creditOfficerId}}, {
                     fields: {
                         enName: 1,
@@ -140,12 +156,14 @@ export const collectionSheetReport = new ValidatedMethod({
 
             if (params.paymentMethod && params.paymentMethod.includes("All") == false) {
                 selector.paymentMethod = {$in: params.paymentMethod};
+                selector.paymentMethod = {$in: params.paymentMethod};
                 header.paymentMethod = params.paymentMethod.toString();
 
             }
 
             if (params.currencyId && params.currencyId.includes("All") == false) {
                 selector.currencyId = {$in: params.currencyId};
+                selectorLoanDocGroup["loanDoc.currencyId"] = {$in: params.currencyId};
                 let currencyList = Currency.find({_id: {$in: params.currencyId}}, {
                     fields: {
                         _id: 1
@@ -158,6 +176,7 @@ export const collectionSheetReport = new ValidatedMethod({
             }
             if (params.productId && params.productId.includes("All") == false) {
                 selector.productId = {$in: params.productId};
+                selectorLoanDocGroup["loanDoc.productId"] = {$in: params.productId};
                 let productList = Product.find({_id: {$in: params.productId}}, {
                     fields: {
                         name: 1,
@@ -172,6 +191,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
             if (params.locationId && params.locationId.includes("All") == false) {
                 selector.locationId = {$in: params.locationId};
+                selectorLoanDocGroup["loanDoc.locationId"] = {$in: params.locationId};
                 let locationList = Location.find({_id: {$in: params.locationId}}, {
                     fields: {
                         name: 1,
@@ -186,6 +206,7 @@ export const collectionSheetReport = new ValidatedMethod({
 
             if (params.fundId && params.fundId.includes("All") == false) {
                 selector.fundId = {$in: params.fundId};
+                selectorLoanDocGroup["loanDoc.fundId"] = {$in: params.fundId};
                 let fundList = Fund.find({_id: {$in: params.fundId}}, {
                     fields: {
                         name: 1,
@@ -212,12 +233,17 @@ export const collectionSheetReport = new ValidatedMethod({
 
             if (params.repayFrequency > 0) {
                 selector.repaidFrequency = parseInt(params.repayFrequency);
+                selectorLoanDocGroup["loanDoc.repaidFrequency"] = parseInt(params.repayFrequency);
                 header.repayFrequency = params.repayFrequency;
             }
 
             data.header = header;
 
             selector.disbursementDate = {
+                $lte: tDate
+            };
+
+            selectorLoanDocGroup["loanDoc.disbursementDate"] = {
                 $lte: tDate
             };
 
@@ -228,8 +254,25 @@ export const collectionSheetReport = new ValidatedMethod({
                 {waivedDate: {$exists: true, $gte: tDate}}
             ];
 
-            //All Active Loan in check date
+            selectorLoanDocGroup['$or'] = [{"loanDoc.status": "Active"},
+                {"loanDoc.closeDate": {$exists: true, $gte: tDate}},
+                {"loanDoc.writeOffDate": {$exists: true, $gte: tDate}},
+                {"loanDoc.restructureDate": {$exists: true, $gte: tDate}},
+                {"loanDoc.waivedDate": {$exists: true, $gte: tDate}}
+            ];
 
+
+            let loanGroupList = GroupLoan.aggregate([
+                {$match: selectorGroup},
+                {
+                    $unwind: "$loan"
+                }
+            ]).map(function (obj) {
+                return obj.loan.id
+            })
+
+            selector._id = {$nin: loanGroupList};
+            //All Active Loan in check date
             let loanDoc = LoanAcc.aggregate([
                 {$match: selector},
                 {
@@ -309,6 +352,7 @@ export const collectionSheetReport = new ValidatedMethod({
                 },
                 {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}}
             ]);
+
 
             let i = 1;
 
@@ -444,6 +488,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(totalClosing)}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
@@ -454,6 +499,298 @@ export const collectionSheetReport = new ValidatedMethod({
                     }
                 })
             }
+
+            //Group Loan
+
+
+            let loanGroupData = GroupLoan.aggregate([
+                {$match: selectorGroup},
+                {$unwind: "$loan"}
+                ,
+                {
+                    $lookup: {
+                        from: "microfis_loanAcc",
+                        localField: "loan.id",
+                        foreignField: "_id",
+                        as: "loanDoc"
+                    }
+                },
+                {$unwind: {path: "$loanDoc", preserveNullAndEmptyArrays: true}},
+                {$match: selectorLoanDocGroup},
+
+                {
+                    $lookup: {
+                        from: "microfis_client",
+                        localField: "loanDoc.clientId",
+                        foreignField: "_id",
+                        as: "clientDoc"
+                    }
+                },
+                {$unwind: {path: "$clientDoc", preserveNullAndEmptyArrays: true}},
+                {
+                    $lookup: {
+                        from: "microfis_fund",
+                        localField: "loanDoc.fundId",
+                        foreignField: "_id",
+                        as: "fundDoc"
+                    }
+                },
+                {$unwind: {path: "$fundDoc", preserveNullAndEmptyArrays: true}},
+                {
+                    $lookup: {
+                        from: "microfis_creditOfficer",
+                        localField: "loanDoc.creditOfficerId",
+                        foreignField: "_id",
+                        as: "creditOfficerDoc"
+                    }
+                },
+                {$unwind: {path: "$creditOfficerDoc", preserveNullAndEmptyArrays: true}},
+                {
+                    $lookup: {
+                        from: "microfis_location",
+                        localField: "loanDoc.locationId",
+                        foreignField: "_id",
+                        as: "locationDoc"
+                    }
+                },
+                {$unwind: {path: "$locationDoc", preserveNullAndEmptyArrays: true}},
+
+                {
+                    $lookup: {
+                        from: "microfis_product",
+                        localField: "loanDoc.productId",
+                        foreignField: "_id",
+                        as: "productDoc"
+                    }
+                },
+                {$unwind: {path: "$productDoc", preserveNullAndEmptyArrays: true}},
+
+                {
+                    $lookup: {
+                        from: "microfis_fee",
+                        localField: "productDoc.feeId",
+                        foreignField: "_id",
+                        as: "feeDoc"
+                    }
+                },
+                {$unwind: {path: "$feeDoc", preserveNullAndEmptyArrays: true}},
+
+                {
+                    $lookup: {
+                        from: "microfis_penalty",
+                        localField: "productDoc.penaltyId",
+                        foreignField: "_id",
+                        as: "penaltyDoc"
+                    }
+                },
+                {$unwind: {path: "$penaltyDoc", preserveNullAndEmptyArrays: true}},
+
+                {
+                    $lookup: {
+                        from: "microfis_penaltyClosing",
+                        localField: "productDoc.penaltyClosingId",
+                        foreignField: "_id",
+                        as: "penaltyClosingDoc"
+                    }
+                },
+                {$unwind: {path: "$penaltyClosingDoc", preserveNullAndEmptyArrays: true}},
+
+                {
+                    $group: {
+                        _id: "$groupId",
+                        numberInGroup: {$sum: 1},
+                        detail: {$push: "$$ROOT"}
+                    }
+                }
+
+
+            ])
+
+
+            if (loanGroupData.length > 0) {
+                loanGroupData.forEach(function (loanGroup) {
+                    let totalAmountForGroup = new BigNumber(0);
+
+                    let groupArrayList = [];
+
+                    loanGroup.detail.forEach(function (loanAccGroup) {
+                        let loanAccDoc = loanAccGroup.loanDoc;
+                        loanAccDoc.clientDoc = loanAccGroup.clientDoc;
+                        loanAccDoc.fundDoc = loanAccGroup.fundDoc;
+                        loanAccDoc.creditOfficerDoc = loanAccGroup.creditOfficerDoc;
+                        loanAccDoc.locationDoc = loanAccGroup.locationDoc;
+                        loanAccDoc.productDoc = loanAccGroup.productDoc;
+                        loanAccDoc.feeDoc = loanAccGroup.feeDoc;
+                        loanAccDoc.penaltyDoc = loanAccGroup.penaltyDoc;
+                        loanAccDoc.penaltyClosingDoc = loanAccGroup.penaltyClosingDoc;
+
+
+                        let productStatusList;
+                        if (loanAccDoc.paymentMethod == "D") {
+                            if (loanAccDoc.term <= 365) {
+                                productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                            } else {
+                                productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                            }
+
+                        } else if (loanAccDoc.paymentMethod == "W") {
+                            if (loanAccDoc.term <= 52) {
+                                productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                            } else {
+                                productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                            }
+                        } else if (loanAccDoc.paymentMethod == "M") {
+                            if (loanAccDoc.term <= 12) {
+                                productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
+                            } else {
+                                productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                            }
+                        } else {
+                            productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
+                        }
+
+
+                        let result = checkRepaymentRealTime.run({
+                            loanAccId: loanAccDoc._id,
+                            checkDate: checkDate,
+                            opts: loanAccDoc
+                        });
+
+                        //Check Closing
+                        let totalSavingBal = new BigNumber(0);
+                        Meteor.call('microfis_getLastSavingTransaction', loanAccDoc.savingAccId, function (err, dataSavingBal) {
+                            if (dataSavingBal) {
+                                totalSavingBal = totalSavingBal.plus(dataSavingBal.details.principalBal).plus(dataSavingBal.details.interestBal);
+                            }
+                        });
+                        let totalClosing = new BigNumber(0);
+                        if (result && result.totalScheduleDue) {
+                            totalClosing = totalClosing.plus(result.totalScheduleDue.totalPrincipalInterestDue).plus(result.totalScheduleDue.penaltyDue);
+                        }
+                        if (result && result.closing) {
+                            totalClosing = totalClosing.plus(result.closing.totalDue).minus(totalSavingBal);
+                        }
+                        //=================
+
+
+                        if (result.totalScheduleDue.dueDate.from) {
+                            if (moment(result.totalScheduleDue.dueDate.from).toDate().getTime() >= moment(params.date, "DD/MM/YYYY").startOf("day").toDate().getTime()) {
+                                result.totalScheduleDue.dueDate.from = null;
+                            }
+                        }
+
+                        let checkClassify = true;
+                        if (params.classifyId && params.classifyId.includes("All") == false) {
+                            checkClassify = false;
+                        }
+
+                        let finProductStatus = function (obj) {
+                            return (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) >= obj.from && (result.totalScheduleDue.numOfDayLate < 0 ? 0 : result.totalScheduleDue.numOfDayLate) <= obj.to;
+                        }
+                        let proStatus = productStatusList.find(finProductStatus);
+
+
+                        totalAmountForGroup = totalAmountForGroup.plus(result.totalScheduleDue.totalPrincipalInterestDue);
+
+                        //check product status (Classify)
+                        if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
+                            if (result.totalScheduleDue.dueDate.to != null) {
+                                if (loanAccDoc.currencyId == "KHR") {
+                                    totalDuePrinKHR += result.totalScheduleDue.principalDue;
+                                    totalDueIntKHR += result.totalScheduleDue.interestDue;
+                                    totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
+
+                                } else if (loanAccDoc.currencyId == "USD") {
+                                    totalDuePrinUSD += result.totalScheduleDue.principalDue;
+                                    totalDueIntUSD += result.totalScheduleDue.interestDue;
+                                    totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
+                                } else if (loanAccDoc.currencyId == "THB") {
+                                    totalDuePrinTHB += result.totalScheduleDue.principalDue;
+                                    totalDueIntTHB += result.totalScheduleDue.interestDue;
+                                    totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
+                                }
+
+                                groupArrayList.unshift({
+                                    i: i,
+                                    id: loanAccDoc._id,
+                                    clientName: loanAccDoc.clientDoc.khSurname + " " + loanAccDoc.clientDoc.khGivenName,
+                                    productName: loanAccDoc.productDoc.name,
+                                    locationName: loanAccDoc.locationDoc.khName,
+
+                                    currencyId: loanAccDoc.currencyId,
+                                    accountType: loanAccDoc.accountType,
+                                    maturityDate: microfis_formatDate(loanAccDoc.maturityDate),
+
+
+                                    from: microfis_formatDate(result.totalScheduleDue.dueDate.from),
+                                    to: microfis_formatDate(result.totalScheduleDue.dueDate.to),
+                                    coName: loanAccDoc.creditOfficerDoc.khName,
+
+
+                                    principalDue: microfis_formatNumber(result.totalScheduleDue.principalDue),
+                                    interestDue: microfis_formatNumber(result.totalScheduleDue.interestDue),
+                                    feeOnPaymentDue: microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue),
+                                    totalPrincipalInterestDue: microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue),
+                                    totalAmountForGroup: microfis_formatNumber(totalAmountForGroup),
+                                    totalClosing: microfis_formatNumber(totalClosing),
+
+                                    telephone: loanAccDoc.clientDoc.telephone || ''
+                                })
+
+                                i++;
+                            }
+                        }
+
+                    })
+
+                    let jInc = 1;
+                    let numInGroup = groupArrayList.length;
+                    let iNo = 0;
+                    groupArrayList.forEach(function (obj) {
+                        if (jInc <= 1) {
+                            iNo = obj.i - numInGroup + 1;
+                        } else {
+                            iNo++;
+                        }
+
+                        content += `<tr>
+                                <td>${iNo}</td>
+                                <td>${obj.id}</td>
+                                <td> ${obj.clientName} </td>
+                                <td> ${obj.productName}</td>
+                                <td> ${obj.locationName}</td>
+
+                                <td> ${obj.currencyId}</td>
+                                <td> ${obj.accountType}</td>
+                                <td> ${obj.maturityDate}</td>
+                                
+
+                                <td> ${obj.from}</td>
+                                <td> ${obj.to}</td>
+                                <td> ${obj.coName}</td>
+
+                               
+                                <td class="numberAlign"> ${obj.principalDue}</td>
+                                <td class="numberAlign"> ${obj.interestDue}</td>
+                                <td class="numberAlign"> ${obj.feeOnPaymentDue}</td>
+                                <td class="numberAlign"> ${obj.totalPrincipalInterestDue}</td>`;
+
+                        if (jInc <= 1) {
+                            content += `<td rowspan="${numInGroup}" style="vertical-align:middle; text-align:center"> ${obj.totalAmountForGroup}</td>`;
+
+                        }
+
+
+                        content += `<td class="numberAlign"> ${obj.totalClosing}</td>
+                                    <td> ${obj.telephone || ''}</td>
+                              </tr>`;
+                        jInc++;
+
+                    })
+
+                })
+            }
+
 
             totalDuePrinBase = Meteor.call('microfis_exchange',
                     "KHR",
@@ -514,6 +851,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
                             <td></td>
                             <td></td>
+                            <td></td>
 
                         </tr>
                         <tr>
@@ -522,6 +860,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
+                            <td></td>
                             <td></td>
                             <td></td>
 
@@ -534,6 +873,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
                             <td></td>
                             <td></td>
+                            <td></td>
 
                         </tr>
                         <tr>
@@ -542,6 +882,7 @@ export const collectionSheetReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                         </tr>   
