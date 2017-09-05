@@ -104,6 +104,22 @@ MicrofisRoutes.route('/collectionSheet-report', {
         parent: 'microfis.home'
     }
 });
+// Collection Sheet Group
+import '../imports/reports/collectionSheetGroup';
+MicrofisRoutes.route('/collectionSheetGroup-report', {
+    name: 'microfis.collectionSheetGroupReport',
+    title: 'Collection Sheet Group Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_collectionSheetGroupReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Collection Sheet Group Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
 
 
 // Write Off
