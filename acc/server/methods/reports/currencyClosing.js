@@ -452,8 +452,8 @@ Meteor.methods({
 
                     if (foreinExchange > 0) {
                         foreignExDetail.push({
-                            account: accountDocDetail.code + " | " +
-                            accountDocDetail.name + " | " + "Other Asset",
+                            account: accountDocForeignExchangePositionDetail.code + " | " +
+                            accountDocForeignExchangePositionDetail.name + " | " + "Other Asset",
                             dr: foreinExchange,
                             cr: 0,
                             drcr: foreinExchange,
@@ -494,8 +494,8 @@ Meteor.methods({
                             accountDoc: foreinExchangeLossDoc
                         });
                         foreignExDetail.push({
-                            account: accountDocDetail.code + " | " +
-                            accountDocDetail.name + " | " + "Other Asset",
+                            account: accountDocForeignExchangePositionDetail.code + " | " +
+                            accountDocForeignExchangePositionDetail.name + " | " + "Other Asset",
                             dr: 0,
                             cr: -1 * foreinExchange,
                             drcr: foreinExchange,
