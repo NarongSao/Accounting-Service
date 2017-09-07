@@ -69,7 +69,7 @@ ClearPrepay.after.insert(function (userId, doc) {
                     }
                 }
             ]);
-            console.log(loanListEnd);
+
 
             loanListEnd.forEach(function (obj) {
                 let checkPayment = checkRepayment.run({loanAccId: obj._id.loanAccId, checkDate: tDate});

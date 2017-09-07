@@ -236,10 +236,10 @@ export const loanRepaymentReport = new ValidatedMethod({
                 }
 
                 if (params.status !== "All") {
-                    selectorRepayment.type = {$eq: params.status, $ne: "Fee"};
+                    selectorRepayment.type = {$eq: params.status, $nin: ["Fee","Write Off"]};
                     header.status = params.status;
                 } else {
-                    selectorRepayment.type = {$nin: ["Fee"]};
+                    selectorRepayment.type = {$nin: ["Fee","Write Off"]};
                 }
 
                 selectorRepayment.$or = [

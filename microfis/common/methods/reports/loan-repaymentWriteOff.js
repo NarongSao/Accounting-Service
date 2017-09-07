@@ -17,6 +17,7 @@ import {CreditOfficer} from '../../../common/collections/credit-officer.js';
 import {Product} from '../../../common/collections/product.js';
 import {Location} from '../../../common/collections/location.js';
 import {Fund} from '../../../common/collections/fund.js';
+import {Repayment} from '../../../common/collections/repayment';
 
 
 import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
@@ -25,8 +26,8 @@ import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import  {checkRepayment} from '../check-repayment.js';
 
-export const loanRepaymentFeeReport = new ValidatedMethod({
-    name: 'microfis.loanRepaymentFeeReport',
+export const loanRepaymentWriteOffReport = new ValidatedMethod({
+    name: 'microfis.loanRepaymentWriteOffReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         params: {type: Object, optional: true, blackbox: true}
@@ -82,6 +83,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                             <thead class="sub-header diplay-on-print-header-loan">
                                 <tr> 
                                     <th>No</th>
+                                    <th>Voucher</th>
                                     <th>LA Code</th>
                                     <th>Client Name</th>
                                     <th>Product Name</th>
@@ -95,7 +97,8 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                                     
                                     <th>Col Date</th>
                                     <th>Status</th>
-                                    <th>Col Fee</th>	
+                                 	
+                                    <th>Col WriteOff</th>	
                                 </tr>
                             </thead>
                             <tbody class="sub-body display-on-print-body-loan">`;
@@ -103,16 +106,17 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
 
             //Param
             let selector = {};
-
+            let selectorRepay = {};
 
             if (params.coType == "Only") {
-                selector.changeCOId = "";
+                selector["loanDoc.changeCOId"] = "";
             } else if (params.coType == "Transfer") {
-                selector.changeCOId = {$ne: ""};
+                selector["loanDoc.changeCOId"] = {$ne: ""};
             }
 
             if (params.branchId && params.branchId.includes("All") == false) {
-                selector.branchId = {$in: params.branchId};
+                selector["loanDoc.branchId"] = {$in: params.branchId};
+                selectorRepay.branchId = {$in: params.branchId};
                 let branchList = Branch.find({_id: {$in: params.branchId}}, {
                     fields: {
                         enName: 1,
@@ -122,10 +126,9 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                     return obj.enName;
                 });
                 header.branchId = branchList.toString();
-
             }
             if (params.creditOfficerId && params.creditOfficerId.includes("All") == false) {
-                selector.creditOfficerId = {$in: params.creditOfficerId};
+                selector["loanDoc.creditOfficerId"] = {$in: params.creditOfficerId};
                 let creditOfficerList = CreditOfficer.find({_id: {$in: params.creditOfficerId}}, {
                     fields: {
                         enName: 1,
@@ -139,13 +142,13 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             }
 
             if (params.paymentMethod && params.paymentMethod.includes("All") == false) {
-                selector.paymentMethod = {$in: params.paymentMethod};
+                selector["loanDoc.paymentMethod"] = {$in: params.paymentMethod};
                 header.paymentMethod = params.paymentMethod.toString();
 
             }
 
             if (params.currencyId && params.currencyId.includes("All") == false) {
-                selector.currencyId = {$in: params.currencyId};
+                selector["loanDoc.currencyId"] = {$in: params.currencyId};
                 let currencyList = Currency.find({_id: {$in: params.currencyId}}, {
                     fields: {
                         _id: 1
@@ -157,7 +160,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
 
             }
             if (params.productId && params.productId.includes("All") == false) {
-                selector.productId = {$in: params.productId};
+                selector["loanDoc.productId"] = {$in: params.productId};
                 let productList = Product.find({_id: {$in: params.productId}}, {
                     fields: {
                         name: 1,
@@ -171,7 +174,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             }
 
             if (params.locationId && params.locationId.includes("All") == false) {
-                selector.locationId = {$in: params.locationId};
+                selector["loanDoc.locationId"] = {$in: params.locationId};
                 let locationList = Location.find({_id: {$in: params.locationId}}, {
                     fields: {
                         name: 1,
@@ -185,7 +188,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             }
 
             if (params.fundId && params.fundId.includes("All") == false) {
-                selector.fundId = {$in: params.fundId};
+                selector["loanDoc.fundId"] = {$in: params.fundId};
                 let fundList = Fund.find({_id: {$in: params.fundId}}, {
                     fields: {
                         name: 1,
@@ -200,27 +203,43 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             }
 
             if (params.repaidFrequency !== "All") {
-                selector.repaidFrequency = parseInt(params.repaidFrequency);
+                selector["loanDoc.repaidFrequency"] = parseInt(params.repaidFrequency);
                 header.repaidFrequency = params.repaidFrequency;
             }
 
 
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
-            selector.disbursementDate = {$lte: dateParam};
-            selector['feeDate'] = {$exists: true, $gte: fDate, $lte: tDate};
+            selector["loanDoc.disbursementDate"] = {$lte: dateParam};
 
+
+            // selector['feeDate'] = {$exists: true, $gte: fDate, $lte: tDate};
+
+            selector["loanDoc.status"] = "Write Off";
 
             data.header = header;
+
+            selectorRepay.type = "Write Off";
+            selectorRepay.repaidDate = {$exists: true, $gte: fDate, $lte: tDate};
 
             //All Active Loan in check date
 
 
-            let loanDoc = LoanAcc.aggregate([
+            let loanDoc = Repayment.aggregate([
+                {$match: selectorRepay},
+                {
+                    $lookup: {
+                        from: "microfis_loanAcc",
+                        localField: "loanAccId",
+                        foreignField: "_id",
+                        as: "loanDoc"
+                    }
+                },
+                {$unwind: {path: "$loanDoc", preserveNullAndEmptyArrays: true}},
                 {$match: selector},
                 {
                     $lookup: {
                         from: "microfis_client",
-                        localField: "clientId",
+                        localField: "loanDoc.clientId",
                         foreignField: "_id",
                         as: "clientDoc"
                     }
@@ -229,7 +248,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                 {
                     $lookup: {
                         from: "microfis_fund",
-                        localField: "fundId",
+                        localField: "loanDoc.fundId",
                         foreignField: "_id",
                         as: "fundDoc"
                     }
@@ -238,7 +257,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                 {
                     $lookup: {
                         from: "microfis_creditOfficer",
-                        localField: "creditOfficerId",
+                        localField: "loanDoc.creditOfficerId",
                         foreignField: "_id",
                         as: "creditOfficerDoc"
                     }
@@ -247,7 +266,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                 {
                     $lookup: {
                         from: "microfis_location",
-                        localField: "locationId",
+                        localField: "loanDoc.locationId",
                         foreignField: "_id",
                         as: "locationDoc"
                     }
@@ -257,7 +276,7 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                 {
                     $lookup: {
                         from: "microfis_product",
-                        localField: "productId",
+                        localField: "loanDoc.productId",
                         foreignField: "_id",
                         as: "productDoc"
                     }
@@ -300,41 +319,45 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
             //Loop Active Loan in check date
 
 
-            let totalFeeKHR = 0;
-            let totalFeeUSD = 0;
-            let totalFeeTHB = 0;
-            let totalFeeBase = 0;
+            let totalWriteOffKHR = 0;
+            let totalWriteOffUSD = 0;
+            let totalWriteOffTHB = 0;
+
+            let totalWriteOffBase = 0;
             if (loanDoc.length > 0) {
                 loanDoc.forEach(function (loanAccDoc) {
 
 
                     if (loanAccDoc.currencyId == "KHR") {
-                        totalFeeKHR += loanAccDoc.feeAmount;
+                        totalWriteOffKHR += loanAccDoc.amountPaid;
 
                     } else if (loanAccDoc.currencyId == "USD") {
-                        totalFeeUSD += loanAccDoc.feeAmount;
+                        totalWriteOffUSD += loanAccDoc.amountPaid;
 
                     } else if (loanAccDoc.currencyId == "THB") {
-                        totalFeeTHB += loanAccDoc.feeAmount;
+                        totalWriteOffTHB += loanAccDoc.amountPaid;
 
                     }
+
                     content += `<tr>
                                 <td>${i}</td>
-                                <td>${loanAccDoc._id}</td>
+                                <td>${loanAccDoc.voucherId.substr(8, loanAccDoc.voucherId.length - 1)}</td>
+                                <td>${loanAccDoc.loanDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
                                 <td> ${loanAccDoc.productDoc.name}</td>
 
                                 <td> ${loanAccDoc.currencyId}</td>
-                                <td> ${loanAccDoc.accountType}</td>
-                                <td> ${microfis_formatDate(loanAccDoc.disbursementDate)}</td>
-                                <td> ${microfis_formatDate(loanAccDoc.maturityDate)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanAmount)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectInterest)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.projectFeeOnPayment)}</td>
+                                <td> ${loanAccDoc.loanDoc.accountType}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.loanDoc.disbursementDate)}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.loanDoc.maturityDate)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanDoc.loanAmount)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanDoc.projectInterest)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.loanDoc.projectFeeOnPayment)}</td>
                          
-                                <td> ${microfis_formatDate(loanAccDoc.feeDate)}</td>
-                                <td> Fee</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.feeAmount)}</td>
+                                <td> ${microfis_formatDate(loanAccDoc.repaidDate)}</td>
+                                <td> WriteOff</td>
+                        
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.amountPaid)}</td>
                                
                             </tr>`;
 
@@ -342,49 +365,48 @@ export const loanRepaymentFeeReport = new ValidatedMethod({
                 })
             }
 
-            totalFeeBase = Meteor.call('microfis_exchange',
+            totalWriteOffBase = Meteor.call('microfis_exchange',
                     "KHR",
                     baseCurrency,
-                    totalFeeKHR,
+                    totalWriteOffKHR,
                     params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
-                    totalFeeUSD,
+                    totalWriteOffUSD,
                     params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
-                    totalFeeTHB,
+                    totalWriteOffTHB,
                     params.exchangeId
                 );
             content += `<tr>
-                            <td colspan="13" align="right">Subtotal-KHR</td>
+                            <td colspan="14" align="right">Subtotal-KHR</td>
     
-                            <td>${microfis_formatNumber(totalFeeKHR)}</td>
+                            <td>${microfis_formatNumber(totalWriteOffKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-USD</td>
+                            <td colspan="14" align="right">Subtotal-USD</td>
                       
-                            <td>${microfis_formatNumber(totalFeeUSD)}</td>
+                            <td>${microfis_formatNumber(totalWriteOffUSD)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-THB</td>
+                            <td colspan="14" align="right">Subtotal-THB</td>
                          
-                            <td>${microfis_formatNumber(totalFeeTHB)}</td>
+                            <td>${microfis_formatNumber(totalWriteOffTHB)}</td>
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Total-${baseCurrency}</td>
+                            <td colspan="14" align="right">Total-${baseCurrency}</td>
                       
-                            <td>${microfis_formatNumber(totalFeeBase)}</td>
+                            <td>${microfis_formatNumber(totalWriteOffBase)}</td>
 
                         </tr>
-                        
-                        
+                                              
                         </tbody>
                       </table>`;
 

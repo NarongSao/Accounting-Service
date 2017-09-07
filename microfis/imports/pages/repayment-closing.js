@@ -122,7 +122,6 @@ formTmpl.onCreated(function () {
                             interestBal: 0
                         };
                         d.details = detail;
-                        console.log(d);
                         stateRepayment.set('savingBalance', d);
                     }
                 });
@@ -233,8 +232,7 @@ formTmpl.helpers({
             totalDue = totalDue.plus(checkRepayment.closing.totalDue).minus(data.details.principalBal).minus(data.details.interestBal);
         }
 
-        totalDue = totalDue.minus(waivedClosing.get());
-
+        totalDue = totalDue.minus(parseFloat(waivedClosing.get()));
         return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};
     },
     jsonViewData(data){
@@ -291,6 +289,7 @@ formTmpl.events({
     },
     'keyup [name="waivedForClosing"]'(e, t){
         waivedClosing.set(parseFloat($(e.currentTarget).val()));
+        Session.set('minAmountPaid', Session.get('minAmountPaid') - parseFloat($(e.currentTarget).val()));
     }
 })
 

@@ -289,6 +289,22 @@ MicrofisRoutes.route('/loanRepaymentFee-report', {
         parent: 'microfis.home'
     }
 });
+// Loan Repayment WriteOff
+import '../imports/reports/loan-repaymentWriteOff';
+MicrofisRoutes.route('/loanRepaymentWriteOff-report', {
+    name: 'microfis.loanRepaymentWriteOffReport',
+    title: 'Loan Repayment WriteOff Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentWriteOffReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Repayment WriteOff Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
 
 // Product Activity
 import '../imports/reports/productActivity.js';
