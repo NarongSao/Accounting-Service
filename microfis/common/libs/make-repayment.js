@@ -910,10 +910,23 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
     };
 
 
+    let amountPaidCal = amountPaid;
+    let principalPaidCal = amountPaidCal > principalUnpaid ? principalUnpaid : amountPaid;
+    amountPaidCal = amountPaid - principalUnpaid > 0 ? amountPaid - principalUnpaid : 0;
+    closing.interestReminderPenalty = amountPaidCal - closing.interestReminderPenalty > 0 ? closing.interestReminderPenalty : amountPaidCal;
+
+    amountPaidCal = amountPaidCal - closing.interestReminderPenalty > 0 ? amountPaidCal - closing.interestReminderPenalty : 0;
+
+
+    let interestCalTmp = new BigNumber(amountPaidCal).minus(totalScheduleDue.interestDue).minus(closing.interestAddition);
+    let interestCal = interestCalTmp > 0 ? new BigNumber(totalScheduleDue.interestDue).plus(closing.interestAddition) : new BigNumber(amountPaidCal);
+    amountPaidCal = amountPaidCal - totalScheduleDue.interestDue - closing.interestAddition > 0 ? amountPaidCal - totalScheduleDue.interestDue - closing.interestAddition : 0;
+    let feeOnPaymentCal = amountPaidCal > 0 ? amountPaidCal : 0;
+
     let tmpAmountPaid = {
-        principal: new BigNumber(principalUnpaid),
-        feeOnPayment: new BigNumber(amountPaid).minus(totalScheduleDue.interestDue).minus(closing.interestAddition).minus(principalUnpaid).minus(closing.interestReminderPenalty),
-        interest: new BigNumber(totalScheduleDue.interestDue).plus(closing.interestAddition)
+        principal: new BigNumber(principalPaidCal),
+        feeOnPayment: new BigNumber(feeOnPaymentCal),
+        interest: interestCal
     };
     let tmpPenaltyPaid = new BigNumber(penaltyPaid);
 

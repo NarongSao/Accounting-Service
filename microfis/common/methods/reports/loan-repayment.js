@@ -236,10 +236,10 @@ export const loanRepaymentReport = new ValidatedMethod({
                 }
 
                 if (params.status !== "All") {
-                    selectorRepayment.type = {$eq: params.status, $nin: ["Fee","Write Off"]};
+                    selectorRepayment.type = {$eq: params.status, $nin: ["Fee", "Write Off"]};
                     header.status = params.status;
                 } else {
-                    selectorRepayment.type = {$nin: ["Fee","Write Off"]};
+                    selectorRepayment.type = {$nin: ["Fee", "Write Off"]};
                 }
 
                 selectorRepayment.$or = [
@@ -601,8 +601,10 @@ export const loanRepaymentReport = new ValidatedMethod({
                             if (repaidListDoc.type == "Prepay") {
                                 overAmount = 0;
                             } else {
-                                overAmount = repaidListDoc.amountPaid - (repaidListDoc.principalPaid + repaidListDoc.interestPaid + repaidListDoc.feeOnPaymentPaid);
+                                overAmount = repaidListDoc.amountPaid + repaidListDoc.savingBalance - (repaidListDoc.principalPaid + repaidListDoc.interestPaid + repaidListDoc.feeOnPaymentPaid);
+                                repaidListDoc.clearPrepaid = repaidListDoc.savingBalance;
                             }
+
 
                             if (repaidListDoc.loanDoc.currencyId == "KHR") {
 

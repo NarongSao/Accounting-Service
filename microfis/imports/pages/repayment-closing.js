@@ -346,6 +346,7 @@ let hooksObject = {
             // Check to payment
             let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;
             if (checkBeforePayment) {
+
                 let makeRepayment = MakeRepayment.close({
                     repaidDate: moment(doc.repaidDate).endOf("day").toDate(),
                     amountPaid: totalPaidClosing,

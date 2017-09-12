@@ -441,7 +441,6 @@ export let checkRepayment = new ValidatedMethod({
                 totalDue: 0
             };
 
-
             // Cal addition
             if (totalSchedulePrevious && totalSchedulePrevious.dueDate.to) {
                 principalInstallment.numOfDayAddition = moment(checkDate).startOf('day').diff(moment(totalSchedulePrevious.dueDate.to).startOf('day'), 'days');

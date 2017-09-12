@@ -170,7 +170,7 @@ ClearPrepay.after.insert(function (userId, doc) {
                                             dataForAccount.branchId = savingTransaction.branchId;
                                             dataForAccount.voucherId = savingTransaction.voucherId.substring(8, 20);
                                             dataForAccount.currencyId = savingTransaction.currencyId;
-                                            dataForAccount.memo = "Loan Repayment End Of Process " + clientDoc.khSurname + " " + clientDoc.khGivenName;
+                                            dataForAccount.memo = "Clear Repayment End Of Process " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                                             dataForAccount.refId = doc._id;
                                             dataForAccount.refFrom = "Repayment End Of Process";
                                             dataForAccount.total = o.totalPrincipalInterestPaid;

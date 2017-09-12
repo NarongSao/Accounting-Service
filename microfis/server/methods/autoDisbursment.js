@@ -14,7 +14,7 @@ Meteor.methods({
             try {
                 //Doc Example
                 let doc = {};
-                console.log(i);
+
 
                 doc.khSurname = result.FirstName;
                 doc.khGivenName = result.LastName;
@@ -43,7 +43,7 @@ Meteor.methods({
                 doc.loanOutInt = parseFloat(result.LoanOutInt);
 
 
-                console.log("Write Of Date : " + result.WriteOffDate);
+
                 if (result.WriteOffDate) {
                     doc.writeOffDate = moment(result.WriteOffDate, "DD/MM/YYYY").toDate();
                 }
@@ -178,7 +178,7 @@ Meteor.methods({
 
                                         });
 
-                                        console.log("Loan Id : " + loanId);
+
                                         i++;
                                         if (loanId && doc.writeOffDate) {
 

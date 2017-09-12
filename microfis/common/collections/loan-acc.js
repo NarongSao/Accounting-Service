@@ -1087,7 +1087,7 @@ LoanAcc.reStructure = new SimpleSchema({
             let interestRate = state.get('interestRate'),
                 currencyId = AutoForm.getFieldValue('currencyId'),
                 exchange = state.get('exchange');
-            console.log(state.get('interestType'));
+
 
             if (interestRate && currencyId && state.get('interestType') == "A") {
                 if (currencyId == 'KHR') {

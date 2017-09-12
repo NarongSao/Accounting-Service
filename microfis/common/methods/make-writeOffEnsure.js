@@ -86,8 +86,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                     dataForAccount.memo = "Repayment Write Off " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                     dataForAccount.refId = loanAcc._id;
                     dataForAccount.refFrom = "Repayment Write Off";
-                    dataForAccount.total = opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest;
-
+                    dataForAccount.total = (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0);
                     let transaction = [];
 
                     let acc_lessReservesForSpecific = MapClosing.findOne({chartAccountCompare: "Less Reserves for Specific"});
@@ -99,27 +98,26 @@ export const makeWriteOffEnsure = new ValidatedMethod({
 
                     transaction.push({
                             account: acc_Cash.accountDoc.code + " | " + acc_Cash.accountDoc.name,
-                            dr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment,
+                            dr: (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0),
                             cr: 0,
-                            drcr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest + opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment
+                            drcr: (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0)
                         },
                         {
                             account: acc_lessReservesForSpecific.accountDoc.code + " | " + acc_lessReservesForSpecific.accountDoc.name,
                             dr: 0,
-                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount,
-                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount
+                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0,
+                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0
                         }, {
                             account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
                             dr: 0,
-                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest,
-                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest
+                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0,
+                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0
                         }, {
                             account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
                             dr: 0,
-                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment,
-                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment
+                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0,
+                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0
                         });
-
 
                     dataForAccount.transaction = transaction;
                     Meteor.call("api_journalInsert", dataForAccount, function (err, result) {

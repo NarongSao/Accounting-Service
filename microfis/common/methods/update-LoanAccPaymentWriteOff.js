@@ -22,7 +22,7 @@ export const updateLoanAccPaymentWrteOff = new ValidatedMethod({
                 let paymentArray = opts.paymentWriteOff;
                 let paymentWriteOff = [];
                 paymentArray.forEach(function (obj) {
-                    if (obj.rePaidDate.getTime() !== repaidDate.getTime()) {
+                    if (moment(obj.rePaidDate).startOf("day").toDate().getTime() !== moment(repaidDate).startOf("day").toDate().getTime()) {
                         paymentWriteOff.push(obj);
                     }
                 })

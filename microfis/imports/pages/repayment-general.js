@@ -247,6 +247,11 @@ let hooksObject = {
             let loanAccDoc = stateRepayment.get('loanAccDoc'),
                 checkRepayment = stateRepayment.get('checkRepayment');
 
+            if (checkRepayment.scheduleDue && checkRepayment.scheduleDue.length == 0) {
+                alertify.error("You must go to Prepay!!!!");
+                return false;
+            }
+
             var year = moment(doc.repaidDate).format("YYYY");
             doc.voucherId = doc.branchId + "-" + year + s.pad(doc.voucherId, 6, "0");
 
