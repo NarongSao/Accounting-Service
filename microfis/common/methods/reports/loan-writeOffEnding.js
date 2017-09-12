@@ -336,7 +336,7 @@ export const writeOffEndingReport = new ValidatedMethod({
             let totalDueCollIntBase = 0;
             let totalDueCollFeeOnPaymentBase = 0;
 
-            if (loanDoc.length > 0) {
+            if (loanDoc && loanDoc.length > 0) {
                 loanDoc.forEach(function (loanAccDoc) {
 
 
@@ -619,7 +619,10 @@ let microfis_formatDate = function (val) {
 }
 
 let microfis_formatNumber = function (val) {
-    return numeral(val).format("(0,00.00)");
+    if (val) {
+        return numeral(val).format("(0,00.00)");
+    }
+    return 0;
 }
 
 

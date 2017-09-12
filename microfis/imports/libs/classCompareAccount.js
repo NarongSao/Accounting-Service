@@ -198,7 +198,6 @@ export default class ClassCompareAccount {
             } else if (doc.paymentMethod == "W") {
                 if (doc.term <= 52) {
                     acc_interest = ClassCompareAccount.checkChartAccountCompareInterest("Less", doc.accountType, "Loss");
-
                 } else {
                     acc_interest = ClassCompareAccount.checkChartAccountCompareInterest("Over", doc.accountType, "Loss");
                 }
@@ -212,6 +211,8 @@ export default class ClassCompareAccount {
                 acc_interest = ClassCompareAccount.checkChartAccountCompareInterest("Over", doc.accountType, "Loss");
             }
         }
+        console.log(acc_interest);
+
         return acc_interest;
     }
 
@@ -426,7 +427,6 @@ export default class ClassCompareAccount {
             }
 
         };
-
         return MapClosing.findOne({chartAccountCompare: type[lessOrOver][prop][loanType]});
     }
 }

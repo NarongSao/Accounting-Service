@@ -827,7 +827,7 @@ Meteor.methods({
 
         data.content = content;
         // return data
-        console.log(report);
+
         return report;
     }
 })

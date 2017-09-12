@@ -232,13 +232,13 @@ function _makeSchedule(doc) {
         projectFeeOnPayment += value.feeOnPaymentDue;
 
         if (key == schedule.length - 1) {
-            maturityDate = moment(value.dueDate).startOf("day").toDate();
+            maturityDate = value.dueDate;
         }
 
         // Save to repayment schedule collection
 
 
-        value.scheduleDate = moment(doc.disbursementDate, "DD/MM/YYYY").startOf("day").toDate();
+        value.scheduleDate = doc.disbursementDate;
         value.loanAccId = doc._id;
         value.savingAccId = doc.savingAccId;
         value.branchId = doc.branchId;
