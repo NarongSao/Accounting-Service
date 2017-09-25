@@ -616,7 +616,6 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 totalColPenKHR += penaltyPaid;
                                 totalClearPrepaidKHR += repaidListDoc.clearPrepaid;
 
-
                             } else if (repaidListDoc.loanDoc.currencyId == "USD") {
                                 totalColPrinUSD += principalPaid;
                                 totalColIntUSD += interestPaid;

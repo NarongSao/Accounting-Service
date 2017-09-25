@@ -6,7 +6,7 @@ import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import moment from 'moment';
 import math from 'mathjs';
-
+import BigNumber from 'bignumber.js';
 // Lib
 import {roundCurrency} from './round-currency.js';
 
@@ -142,3 +142,6 @@ Calculate.feeOnPayment = new ValidatedMethod({
         return feeOnPayment;
     }
 });
+
+
+BigNumber.config({ERRORS: false});

@@ -44,5 +44,3 @@ Module.Microfis = {
         ]
     }
 };
-
-

@@ -282,7 +282,6 @@ indexTmpl.helpers({
         return reactiveTableData;
     },
     isFee(){
-
         let isFee = false;
         let isOther = true;
 

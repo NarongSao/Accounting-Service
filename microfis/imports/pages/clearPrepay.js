@@ -80,8 +80,8 @@ newTmpl.helpers({
 repaymentClearTmpl.helpers({
     tabularTable() {
         let selector = {
-            repaidDate: {$gt: moment(FlowRouter.getParam('closeDate'), "DD/MM/YYYY").toDate()},
-            // loanAccId: {$in: FlowRouter.getParam('loanAccList')},
+            repaidDate: {$gte: moment(FlowRouter.getParam('closeDate'), "DD/MM/YYYY").toDate()},
+            loanAccId: {$in: FlowRouter.getParam('loanAccIdList').split(",")},
             branchId: Session.get("currentBranch")
         };
         return {
@@ -94,7 +94,6 @@ repaymentClearTmpl.helpers({
 
 indexTmpl.events({
     'click .clearPrepay': function (e, t) {
-
         Session.set('isSave', undefined);
         Session.set('isSuccess', undefined);
 
@@ -156,19 +155,23 @@ indexTmpl.events({
                         });
                 }
             }
-
-
         });
     },
+
     'dblclick tbody > tr': function (event) {
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(event.currentTarget).data();
-        debugger;
-        let params = {
-            closeDate: moment(rowData.closeDate).format("DD/MM/YYYY"),
-            loanAccList: ["test"],
-        };
-        FlowRouter.go('microfis.repaymentClear', params);
+        Meteor.call("microfis_getloanAccIdList", rowData.detailPaid, rowData.closeDate, function (err, result) {
+            if (result.length == 0) {
+                alertify.success("Don't Have Repayment Clear Transaction");
+                return false;
+            }
+            let params = {
+                closeDate: moment(rowData.closeDate).format("DD/MM/YYYY"),
+                loanAccIdList: result
+            };
+            FlowRouter.go('microfis.repaymentClear', params);
+        })
     }
 });
 
