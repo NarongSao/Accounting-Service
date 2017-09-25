@@ -51,6 +51,7 @@ Tracker.autorun(function () {
         if (Session.get('isSuccess')) {
             setTimeout(function () {
                 swal.close();
+                microfis_checkRepaymentExistOfClearPrepay
             }, 500)
             Session.set('isSuccess', undefined);
         }
@@ -102,65 +103,71 @@ indexTmpl.events({
     'click .remove': function (e, t) {
         var id = this._id;
         let self = this;
-
-
-        Meteor.call("microfis_getLastClearPrepay", self.branchId, function (err, result) {
-
-            if (result) {
-                stateClearPrepay.set("closeDate", result.closeDate);
+        Meteor.call("microfis_checkRepaymentExistOfClearPrepay", self.detailPaid, self.closeDate, function (err, result) {
+            if (result != undefined) {
+                alertify.warning("Exist Repayment!!!");
+                return false;
             }
-            //Integrate to Account=============================================================================================================================
-            let settingDoc = Setting.findOne();
-            if (settingDoc.integrate == true) {
-                let selector = {};
-                selector.branchId = self.branchId;
-                Meteor.call('getDateEndOfProcess', selector, function (err, lastDateFromAccount) {
 
-                    if (lastDateFromAccount == undefined || lastDateFromAccount.closeDate.getTime() < moment(self.closeDate).toDate().getTime()) {
+            Meteor.call("microfis_getLastClearPrepay", self.branchId, function (err, result) {
 
-                        if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
-                            alertify.error("Not the Last End OF Process!!!");
-                        } else {
-                            alertify.confirm("Are you sure to delete ?")
-                                .set({
-                                    onok: function (closeEvent) {
-                                        Meteor.call('microfis_removeClearPrepay', id, function (err, result) {
-                                            if (!err) {
-                                                alertify.success('Success');
-                                            }
-                                        });
-                                    },
-                                    title: fa("remove", "End of Process")
-                                });
-                        }
-                    } else {
-                        alertify.error("You already End OF Process in Accounting System!!!");
-                    }
-                })
-                //=============================================================================================================================
-            } else {
-                if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
-                    alertify.error("Not the Last End OF Process!!!");
-                } else {
-                    alertify.confirm("Are you sure to delete ?")
-                        .set({
-                            onok: function (closeEvent) {
-                                Meteor.call('microfis_removeClearPrepay', id, function (err, result) {
-                                    if (!err) {
-                                        alertify.success('Success');
-                                    }
-                                });
-                            },
-                            title: fa("remove", "End of Process")
-                        });
+                if (result) {
+                    stateClearPrepay.set("closeDate", result.closeDate);
                 }
-            }
-        });
+                //Integrate to Account=============================================================================================================================
+                let settingDoc = Setting.findOne();
+                if (settingDoc.integrate == true) {
+                    let selector = {};
+                    selector.branchId = self.branchId;
+                    Meteor.call('getDateEndOfProcess', selector, function (err, lastDateFromAccount) {
+
+                        if (lastDateFromAccount == undefined || lastDateFromAccount.closeDate.getTime() < moment(self.closeDate).toDate().getTime()) {
+
+                            if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
+                                alertify.error("Not the Last End OF Process!!!");
+                            } else {
+                                alertify.confirm("Are you sure to delete ?")
+                                    .set({
+                                        onok: function (closeEvent) {
+                                            Meteor.call('microfis_removeClearPrepay', id, function (err, result) {
+                                                if (!err) {
+                                                    alertify.success('Success');
+                                                }
+                                            });
+                                        },
+                                        title: fa("remove", "End of Process")
+                                    });
+                            }
+                        } else {
+                            alertify.error("You already End OF Process in Accounting System!!!");
+                        }
+                    })
+                    //=============================================================================================================================
+                } else {
+                    if (moment(result.closeDate).toDate().getTime() > moment(self.closeDate).toDate().getTime()) {
+                        alertify.error("Not the Last End OF Process!!!");
+                    } else {
+                        alertify.confirm("Are you sure to delete ?")
+                            .set({
+                                onok: function (closeEvent) {
+                                    Meteor.call('microfis_removeClearPrepay', id, function (err, result) {
+                                        if (!err) {
+                                            alertify.success('Success');
+                                        }
+                                    });
+                                },
+                                title: fa("remove", "End of Process")
+                            });
+                    }
+                }
+            });
+
+        })
     },
 
     'dblclick tbody > tr': function (event) {
-        var dataTable = $(event.target).closest('table').DataTable();
-        var rowData = dataTable.row(event.currentTarget).data();
+        let dataTable = $(event.target).closest('table').DataTable();
+        let rowData = dataTable.row(event.currentTarget).data();
         Meteor.call("microfis_getloanAccIdList", rowData.detailPaid, rowData.closeDate, function (err, result) {
             if (result.length == 0) {
                 alertify.success("Don't Have Repayment Clear Transaction");

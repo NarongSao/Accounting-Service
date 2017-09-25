@@ -11,14 +11,34 @@ Meteor.methods({
                 return obj.repaymentId;
             })
         }
-        console.log(closeDate);
         loanIdList = Repayment.find({
             _id: {$in: repaymentIdList},
             //repaidDate: {$gte: moment(closeDate).startOf("day").toDate()}
         }).map(function (obj) {
             return obj.loanAccId;
         })
-        console.log(loanIdList);
         return loanIdList;
+    },
+    microfis_checkRepaymentExistOfClearPrepay: function (detailPaid, closeDate) {
+        let repaymentIdList = [];
+        let loanIdList = [];
+
+        if (detailPaid.length > 0) {
+            repaymentIdList = detailPaid.map(function (obj) {
+                return obj.repaymentId;
+            })
+        }
+        loanIdList = Repayment.find({
+            _id: {$in: repaymentIdList}
+        }).map(function (obj) {
+            return obj.loanAccId;
+        })
+
+        let repaidList = Repayment.find({
+            loanAccId: {$in: loanIdList},
+            repaidDate: {$gte: moment(closeDate).startOf("day").toDate()}
+        }).fetch();
+
+        return repaidList.length;
     }
 })
