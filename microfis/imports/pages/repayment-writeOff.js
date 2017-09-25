@@ -260,7 +260,8 @@ let hooksObject = {
                 makeWriteOffEnsure.callPromise({
                     loanAccId: loanAccDoc._id,
                     opts: repaymentWriteOffObj,
-                    isEnsure: false
+                    isEnsure: false,
+                    voucherId: doc.voucherId.substring(8, 20)
                 }).then(function (result) {
                     if (result) {
                         lookupLoanAcc.callPromise({

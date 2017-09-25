@@ -22,6 +22,7 @@ import '../../../core/client/components/add-new-button.js';
 
 // Tabular
 import {ClearPrepayTabular} from '../../common/tabulars/clearPrepay.js';
+import {RepaymentTabular} from '../../common/tabulars/repayment.js';
 
 // Collection
 import {ClearPrepay} from '../../common/collections/clearPrepay.js';
@@ -33,6 +34,7 @@ import './clearPrepay.html';
 // Declare template
 let indexTmpl = Template.Microfis_clearPrepay,
     actionTmpl = Template.Microfis_clearPrepayAction,
+    repaymentClearTmpl = Template.Microfis_repaymentClear,
     newTmpl = Template.Microfis_clearPrepayInsert;
 
 let stateClearPrepay = new ReactiveObj();
@@ -74,6 +76,20 @@ newTmpl.helpers({
         return ClearPrepay;
     }
 });
+
+repaymentClearTmpl.helpers({
+    tabularTable() {
+        let selector = {
+            repaidDate: {$gt: moment(FlowRouter.getParam('closeDate'), "DD/MM/YYYY").toDate()},
+            // loanAccId: {$in: FlowRouter.getParam('loanAccList')},
+            branchId: Session.get("currentBranch")
+        };
+        return {
+            RepaymentTabular: RepaymentTabular,
+            selector: selector
+        };
+    }
+})
 
 
 indexTmpl.events({
@@ -143,8 +159,16 @@ indexTmpl.events({
 
 
         });
-
-
+    },
+    'dblclick tbody > tr': function (event) {
+        var dataTable = $(event.target).closest('table').DataTable();
+        var rowData = dataTable.row(event.currentTarget).data();
+        debugger;
+        let params = {
+            closeDate: moment(rowData.closeDate).format("DD/MM/YYYY"),
+            loanAccList: ["test"],
+        };
+        FlowRouter.go('microfis.repaymentClear', params);
     }
 });
 

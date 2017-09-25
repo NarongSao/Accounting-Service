@@ -76,6 +76,10 @@ state = new ReactiveObj({
 
 });
 
+stateFilter = new ReactiveObj({
+    dateFilter: "",
+})
+
 
 //Track
 Tracker.autorun(function () {
@@ -119,6 +123,9 @@ Tracker.autorun(function () {
 indexTpl.onCreated(function () {
     createNewAlertify(['journal']);
     stateFixAsset.set('isFixAsset', false);
+
+    configDateFilter();
+
 });
 
 //Render
@@ -1101,4 +1108,16 @@ function removeCollectionNull() {
     fixAssetDepCollection.remove({});
     journalDetailCollection.remove({});
     journalDetailPaymentReceiveCollection.remove({});
+}
+
+
+var configDateFilter = function () {
+    var dateForFilter = $('[name="dateFilter"]');
+    // DateTimePicker.date(dateForFilter);
+    // dateForFilter.data("DateTimePicker");
+    dateForFilter.datetimepicker();
+
+    dateForFilter.on('dp.change', function (e) {
+        stateFilter.set('dateFilter', moment(e.date).format('YYYY-MM-DD'));
+    })
 }
