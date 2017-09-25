@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc';
 import {Product} from '../../common/collections/product';
+import {ClearPrepay} from '../../common/collections/clearPrepay';
 import {Fee} from '../../common/collections/fee';
 import {Client} from '../../common/collections/client';
 import {ProductStatus} from '../../common/collections/productStatus';
