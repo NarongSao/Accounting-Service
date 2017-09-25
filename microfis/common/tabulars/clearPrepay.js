@@ -39,7 +39,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         }
 
     ],
-    extraFields: ['branchId'],
+    extraFields: ['branchId', "detailPaid"],
     order: [[2, 'desc']],
 });
 

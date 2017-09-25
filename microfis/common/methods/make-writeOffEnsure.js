@@ -17,9 +17,13 @@ export const makeWriteOffEnsure = new ValidatedMethod({
     validate: new SimpleSchema({
         loanAccId: {type: String},
         opts: {type: Object, optional: true, blackbox: true},
-        isEnsure: {type: Boolean}
+        isEnsure: {type: Boolean},
+        voucherId: {
+            type: String,
+            optional: true
+        }
     }).validator(),
-    run({loanAccId, opts, isEnsure}) {
+    run({loanAccId, opts, isEnsure, voucherId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(100);
 
@@ -81,7 +85,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
 
                     dataForAccount.journalDate = opts.paymentWriteOff[opts.paymentWriteOff.length - 1].rePaidDate;
                     dataForAccount.branchId = loanAcc.branchId;
-                    dataForAccount.voucherId = "";
+                    dataForAccount.voucherId = voucherId;
                     dataForAccount.currencyId = loanAcc.currencyId;
                     dataForAccount.memo = "Repayment Write Off " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                     dataForAccount.refId = loanAcc._id;

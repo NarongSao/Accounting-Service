@@ -468,3 +468,19 @@ MicrofisRoutes.route('/clearPrepay', {
     }
 });
 
+
+// Repayment Clear
+MicrofisRoutes.route('/repaymentClear/:closeDate/:loanAccList/', {
+    name: 'microfis.repaymentClear',
+    title: 'Repayment Clear',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentClear');
+    },
+    breadcrumb: {
+        //queryParams: ['show', 'color'],
+        title: 'Repayment Clear',
+        // icon: 'sitemap',
+        parent: 'microfis.clearPrepay'
+    }
+});
+

@@ -407,3 +407,20 @@ MicrofisRoutes.route('/clearPrepayment-report', {
         parent: 'microfis.home'
     }
 });
+
+// Need To Clear Prepayment
+import '../imports/reports/needToClearPrepayment';
+MicrofisRoutes.route('/needToClearPrepayment-report', {
+    name: 'microfis.needToClearPrepaymentReport',
+    title: 'Pre Clear Prepayment Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_needToClearPrepaymentReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Pre Clear Prepayment Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

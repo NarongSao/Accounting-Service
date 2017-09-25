@@ -211,7 +211,7 @@ export default class ClassCompareAccount {
                 acc_interest = ClassCompareAccount.checkChartAccountCompareInterest("Over", doc.accountType, "Loss");
             }
         }
-        console.log(acc_interest);
+
 
         return acc_interest;
     }
