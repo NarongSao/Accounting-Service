@@ -44,7 +44,7 @@ ClearPrepay.after.insert(function (userId, doc) {
         }, {sort: {closeDate: -1}});
 
 
-        let lastClearPrepay = lastClearPrepayList == undefined ? doc.closeDate : lastClearPrepayList.closeDate;
+        let lastClearPrepay = lastClearPrepayList.closeDate == undefined ? doc.closeDate : lastClearPrepayList.closeDate;
         while (lastClearPrepay.getTime() <= moment(doc.closeDate).endOf("days").toDate().getTime()) {
 
             let tDate = moment(lastClearPrepay).endOf('day').toDate();
