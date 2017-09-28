@@ -151,6 +151,17 @@ Repayment.schema = new SimpleSchema({
         type: Date,
         label: 'End date',
         optional: true
+    },
+    endDateList: {
+        type: [Object],
+        label: 'Clear date',
+        optional: true,
+        defaultValue: []
+    },
+    "endDateList.$.clearDate": {
+        type: Date,
+        label: 'Clear date',
+        optional: true
     }
 });
 

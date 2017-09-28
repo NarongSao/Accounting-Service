@@ -104,6 +104,7 @@ ClearPrepay.after.insert(function (userId, doc) {
                                 totalScheduleDue: checkPayment.totalScheduleDue
                             });
 
+                            let paymentIdList = [];
 
                             //Make Payment To Update Scedule
                             if (makeRepayment) {
@@ -125,6 +126,8 @@ ClearPrepay.after.insert(function (userId, doc) {
 
                                         o.repaymentId = savingTransaction.paymentId;
                                         o.endId = doc._id;
+
+                                        paymentIdList.push(savingTransaction.paymentId);
 
 
                                         let prepaidDoc = RepaymentSchedule.findOne({_id: o.scheduleId});
@@ -156,6 +159,19 @@ ClearPrepay.after.insert(function (userId, doc) {
 
                                         o.isFullPay = isFullPay;
                                         detailPaid.push(o);
+
+
+                                        let repaymentList = RepaymentSchedule.aggregate([
+                                            {$match: {_id: o.scheduleId, repaymentDocRealTime: {$ne: undefined}}},
+                                            {$unwind: "$repaymentDocRealTime.detail"}
+                                        ]).map(function (obj) {
+                                            if (obj.repaymentDocRealTime.detail.repaymentId) {
+                                                return obj.repaymentDocRealTime.detail.repaymentId;
+                                            }
+                                        });
+
+                                        paymentIdList = paymentIdList.concat(repaymentList);
+
 
                                         //    Integrated to Account========================================================================================================================
 
@@ -270,16 +286,21 @@ ClearPrepay.after.insert(function (userId, doc) {
                                 });
                             }
 
-                            Repayment.direct.update({_id: savingTransaction.paymentId}, {
-                                $set: {
-                                    endId: doc._id,
-                                    endDate: tDate
+                            Repayment.direct.update({_id: {$in: paymentIdList}}, {
+                                    $set: {
+                                        endId: doc._id,
+                                        endDate: tDate
+                                    },
+                                    $push: {
+                                        endDateList: {clearDate: tDate}
+                                    }
+                                }, {multi: true},
+                                function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
                                 }
-                            }, function (err) {
-                                if (err) {
-                                    console.log(err);
-                                }
-                            });
+                            );
 
                         }
                     }
@@ -288,7 +309,7 @@ ClearPrepay.after.insert(function (userId, doc) {
 
             })
 
-            ClearPrepay.direct.update({_id: doc._id}, {$set: {detailPaid: detailPaid}}, function (err) {
+            ClearPrepay.direct.update({_id: doc._id}, {$set: {detailPaid: detailPaid}}, {multi: true}, function (err) {
                 if (err) {
                     console.log(err);
                 }
@@ -318,7 +339,13 @@ ClearPrepay.after.remove(function (userId, doc) {
                     $set: {isPay: false, isFullPay: o.isFullPay}
                 });
 
-                Repayment.direct.update({endId: doc._id}, {$set: {endId: "0", endDate: ""}}, function (err) {
+                Repayment.direct.update({endId: doc._id}, {
+                    $set: {
+                        endId: "0",
+                        endDate: "",
+                        endDateList: []
+                    }
+                }, {multi: true}, function (err) {
                     if (err) {
                         console.log(err);
                     }

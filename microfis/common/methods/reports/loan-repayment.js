@@ -253,7 +253,11 @@ export const loanRepaymentReport = new ValidatedMethod({
                             $gte: fDate,
                             $lte: tDate
                         }
-                    }];
+                    },
+                    {
+                        endDateList: {$elemMatch: {clearDate: {$gte: fDate, $lte: tDate}}}
+                    }
+                ];
 
 
                 data.header = header;

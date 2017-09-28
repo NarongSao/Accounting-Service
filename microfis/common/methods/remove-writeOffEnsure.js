@@ -34,7 +34,7 @@ export const removeWriteOffEnsure = new ValidatedMethod({
 
                 let isUpdate = LoanAcc.direct.update({_id: loanAccId}, {
                     $unset: opts
-                });
+                },{multi: true});
 
                 if (isUpdate) {
                     return updateLoanAccStatus.callPromise({

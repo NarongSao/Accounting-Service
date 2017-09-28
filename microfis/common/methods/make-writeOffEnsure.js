@@ -133,7 +133,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
             }
             return LoanAcc.direct.update({_id: loanAccId}, {
                 $set: opts
-            });
+            },{multi: true});
 
         }
     }

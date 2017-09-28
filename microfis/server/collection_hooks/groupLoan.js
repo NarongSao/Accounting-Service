@@ -21,34 +21,34 @@ GroupLoan.before.insert(function (userId, doc) {
 
 GroupLoan.after.insert(function (userId, doc) {
     doc.loan.forEach(function (obj) {
-        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: true}});
+        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: true}},{multi: true});
     })
 
 
-    Group.direct.update({_id: doc.groupId}, {$set: {status: true}});
+    Group.direct.update({_id: doc.groupId}, {$set: {status: true}},{multi: true});
 
 })
 
 GroupLoan.after.remove(function (userId, doc) {
     doc.loan.forEach(function (obj) {
-        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: false}});
+        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: false}},{multi: true});
     })
-    Group.direct.update({_id: doc.groupId}, {$set: {status: false}});
+    Group.direct.update({_id: doc.groupId}, {$set: {status: false}},{multi: true});
 })
 
 
 GroupLoan.after.update(function (userId, doc) {
     let data = this.previous;
     data.loan.forEach(function (obj) {
-        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: false}});
+        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: false}},{multi: true});
     })
 
     doc.loan.forEach(function (obj) {
-        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: true}});
+        LoanAcc.direct.update({_id: obj.id}, {$set: {isAddToGroup: true}},{multi: true});
     })
 
 
-    Group.direct.update({_id: doc.groupId}, {$set: {status: true}});
+    Group.direct.update({_id: doc.groupId}, {$set: {status: true}},{multi: true});
 
 })
 

@@ -40,7 +40,7 @@ export const makeReSchedule = new ValidatedMethod({
                     status: "Restructure",
                     restructureDate: opts.disbursementDate
                 }
-            });
+            },{multi: true});
 
             return id;
 

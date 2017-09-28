@@ -46,9 +46,9 @@ LoanAcc.after.insert(function (userId, doc) {
     });
 
     if (doc.status != "Restructure") {
-        Client.direct.update({_id: doc.clientId}, {$inc: {cycle: 1}});
+        Client.direct.update({_id: doc.clientId}, {$inc: {cycle: 1}},{multi: true});
     }
-    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}});
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}},{multi: true});
 
 
     /*Integrated to Account*/
@@ -129,8 +129,8 @@ LoanAcc.after.update(function (userId, doc, fieldNames, modifier, options) {
 
     let loanDoc = this.previous;
 
-    SavingAcc.direct.update({_id: loanDoc.savingAccId}, {$inc: {savingLoanNumber: -1}})
-    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}})
+    SavingAcc.direct.update({_id: loanDoc.savingAccId}, {$inc: {savingLoanNumber: -1}},{multi: true})
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: 1}},{multi: true})
 
 
     /*Integrated to Account*/
@@ -185,14 +185,14 @@ LoanAcc.after.remove(function (userId, doc) {
     if (doc.parentId != 0) {
         let parentDoc = LoanAcc.findOne({_id: doc.parentId});
         if (parentDoc && parentDoc.status == "Restructure") {
-            LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}});
+            LoanAcc.direct.update({_id: doc.parentId}, {$set: {status: "Active"}, $unset: {restructureDate: ""}},{multi: true});
         }
     }
 
     if (doc.status != "Restructure") {
-        Client.direct.update({_id: doc.clientId}, {$inc: {cycle: -1}});
+        Client.direct.update({_id: doc.clientId}, {$inc: {cycle: -1}},{multi: true});
     }
-    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: -1}})
+    SavingAcc.direct.update({_id: doc.savingAccId}, {$inc: {savingLoanNumber: -1}},{multi: true})
 
 
     /*Integrated to Account*/
@@ -253,7 +253,7 @@ function _makeSchedule(doc) {
             projectInterest: projectInterest,
             projectFeeOnPayment: projectFeeOnPayment
         }
-    });
+    },{multi: true});
 }
 
 
@@ -274,7 +274,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Less than or Equal One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPSL") {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Less than or Equal One Year"});
@@ -283,7 +283,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Less than or Equal One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Less than or Equal One Year"});
             }
 
 
@@ -300,7 +300,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Over One Year"});
 
             } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Over One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Over One Year"});
 
             } else if (doc.accountType == "RPSL") {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Over One Year"});
@@ -309,7 +309,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Over One Year"});
 
             } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Over One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Over One Year"});
             }
         }
 
@@ -327,7 +327,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Less than or Equal One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPSL") {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Less than or Equal One Year"});
@@ -336,7 +336,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Less than or Equal One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Less than or Equal One Year"});
             }
         } else {
             if (doc.accountType == "IL") {
@@ -351,7 +351,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Over One Year"});
 
             } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Over One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Over One Year"});
 
             } else if (doc.accountType == "RPSL") {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Over One Year"});
@@ -360,7 +360,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Over One Year"});
 
             } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Over One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Over One Year"});
             }
         }
     } else if (doc.paymentMethod == "M") {
@@ -377,7 +377,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Less than or Equal One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPSL") {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Less than or Equal One Year"});
@@ -386,7 +386,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Less than or Equal One Year"});
 
             } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Less than or Equal One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Less than or Equal One Year"});
             }
         } else {
             if (doc.accountType == "IL") {
@@ -401,7 +401,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Over One Year"});
 
             } else if (doc.accountType == "RPAL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Over One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Over One Year"});
 
             } else if (doc.accountType == "RPSL") {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Over One Year"});
@@ -410,7 +410,7 @@ let checkPrincipal = function (doc) {
                 acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Over One Year"});
 
             } else if (doc.accountType == "RPEL") {
-                acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Over One Year"});
+                acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Over One Year"});
             }
         }
     } else {
@@ -426,7 +426,7 @@ let checkPrincipal = function (doc) {
             acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Other Over One Year"});
 
         } else if (doc.accountType == "RPAL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party External Auditors Over One Year"});
+            acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party External Auditors Over One Year"});
 
         } else if (doc.accountType == "RPSL") {
             acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Shareholder Over One Year"});
@@ -435,7 +435,7 @@ let checkPrincipal = function (doc) {
             acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Manager Over One Year"});
 
         } else if (doc.accountType == "RPEL") {
-            acc_principal = MapClosing.findOne({chartAccountCompare: "	Standard Loan Related Party Employees Over One Year"});
+            acc_principal = MapClosing.findOne({chartAccountCompare: "Standard Loan Related Party Employees Over One Year"});
         }
     }
     return acc_principal;
