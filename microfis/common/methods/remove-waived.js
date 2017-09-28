@@ -32,7 +32,7 @@ export const removeWaived = new ValidatedMethod({
 
                 let isUpdate = LoanAcc.direct.update({_id: loanAccId}, {
                     $unset: opts
-                });
+                },{multi: true});
 
                 if (isUpdate) {
                     return updateLoanAccStatusWaived.callPromise({
@@ -71,28 +71,28 @@ export const updateLoanAccStatusWaived = new ValidatedMethod({
 
                         LoanAcc.direct.update({_id: loanAccId}, {
                             $set: {status: "Write Off"}
-                        });
+                        },{multi: true});
 
                     } else {
 
                         LoanAcc.direct.update({_id: loanAccId}, {
                             $set: {status: "Restructure"}
-                        });
+                        },{multi: true});
                     }
                 } else {
 
                     LoanAcc.direct.update({_id: loanAccId}, {
                         $set: {status: "Write Off"}
-                    });
+                    },{multi: true});
                 }
             } else if (doc.restructureDate != null) {
                 LoanAcc.direct.update({_id: loanAccId}, {
                     $set: {status: "Restructure"}
-                });
+                },{multi: true});
             } else {
                 LoanAcc.direct.update({_id: loanAccId}, {
                     $set: {status: "Active"}
-                });
+                },{multi: true});
             }
         }
 

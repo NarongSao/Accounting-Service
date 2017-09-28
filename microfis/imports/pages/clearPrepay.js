@@ -104,7 +104,7 @@ indexTmpl.events({
         var id = this._id;
         let self = this;
         Meteor.call("microfis_checkRepaymentExistOfClearPrepay", self.detailPaid, self.closeDate, function (err, result) {
-            if (result != undefined) {
+            if (result != undefined && result > 0) {
                 alertify.warning("Exist Repayment!!!");
                 return false;
             }
@@ -206,6 +206,7 @@ newTmpl.events({
             }
         })
     }
+
 })
 
 newTmpl.onDestroyed(function () {

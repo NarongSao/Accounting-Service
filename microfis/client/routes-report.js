@@ -289,6 +289,23 @@ MicrofisRoutes.route('/loanRepaymentFee-report', {
         parent: 'microfis.home'
     }
 });
+
+// Loan Repayment Waive Closing
+import '../imports/reports/loan-repaymentWaiveClosing';
+MicrofisRoutes.route('/loanRepaymentWaiveClosing-report', {
+    name: 'microfis.loanRepaymentWaiveClosingReport',
+    title: 'Loan Repayment Waive Closing Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentWaiveClosingReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Loan Repayment WaiveClosing Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
 // Loan Repayment WriteOff
 import '../imports/reports/loan-repaymentWriteOff';
 MicrofisRoutes.route('/loanRepaymentWriteOff-report', {
@@ -407,6 +424,7 @@ MicrofisRoutes.route('/clearPrepayment-report', {
         parent: 'microfis.home'
     }
 });
+
 
 // Need To Clear Prepayment
 import '../imports/reports/needToClearPrepayment';

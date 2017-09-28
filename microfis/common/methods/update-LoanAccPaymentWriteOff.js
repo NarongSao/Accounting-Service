@@ -27,7 +27,7 @@ export const updateLoanAccPaymentWrteOff = new ValidatedMethod({
                     }
                 })
                 updatePaymentArray.paymentWriteOff = paymentWriteOff;
-                return LoanAcc.direct.update({_id: loanAccId}, {$set: updatePaymentArray});
+                return LoanAcc.direct.update({_id: loanAccId}, {$set: updatePaymentArray},{multi: true});
             }
         }
     }

@@ -15,6 +15,7 @@ import {Calculate} from './calculate.js';
 //Collection
 
 import {SavingTransaction} from '../collections/saving-transaction.js'
+import {RepaymentSchedule} from '../collections/repayment-schedule'
 
 export let MakeRepayment = {};
 
@@ -177,6 +178,9 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
                 totalAmountBal: totalSchedulePaid.totalAmountBal.plus(totalAmountBal)
             };
 
+
+
+
             // Update repaidDoc
             let detailPaid = {
                 scheduleId: o._id,
@@ -209,6 +213,7 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
                 totalAmountBal: totalAmountBal.toNumber(),
                 status: status
             };
+
 
             schedulePaid.push(detailPaid);
 
