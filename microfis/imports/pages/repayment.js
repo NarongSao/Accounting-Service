@@ -584,7 +584,7 @@ indexTmpl.events({
                 );
 
 
-            } else {
+            } else {detailDoc.totalSchedulePaid.totalPrincipalInterestDue
                 alertify.error("Already End Of Process!!!");
             }
         })

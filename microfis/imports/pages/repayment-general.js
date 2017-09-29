@@ -297,6 +297,12 @@ let hooksObject = {
 
                 doc.totalPaid = doc.amountPaid + doc.penaltyPaid;
 
+                if (makeRepayment.totalSchedulePaid.totalPrincipalInterestDue <= 0) {
+                    alertify.error("Amount Due is 0; You must close Browser and Paid Again!!");
+                    return false;
+                }
+
+
                 doc.detailDoc = makeRepayment;
                 doc.detailDoc.scheduleDue = checkRepayment.scheduleDue;
                 doc.detailDoc.totalScheduleDue = checkRepayment.totalScheduleDue;

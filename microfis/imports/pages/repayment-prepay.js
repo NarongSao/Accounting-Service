@@ -295,6 +295,14 @@ let hooksObject = {
                     amountPaid: doc.amountPaid,
                     scheduleNext: checkRepayment.scheduleNext
                 });
+
+
+                if (makeRepayment.totalSchedulePaid.totalPrincipalInterestDue <= 0) {
+                    alertify.error("Amount Due is 0; You must close Browser and Paid Again!!");
+                    return false;
+                }
+
+
                 AutoForm.resetForm("Microfis_repaymentGeneralForm");
 
 
