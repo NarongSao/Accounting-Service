@@ -49,10 +49,6 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                     let acc_lessReservesForSpecific = MapClosing.findOne({chartAccountCompare: "Less Reserves for Specific"});
                     let acc_principal = ClassCompareAccount.checkPrincipal(loanAcc, "004");
 
-                    /*let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
-                     let acc_interest = ClassCompareAccount.checkInterest(loanAcc, "008");*/
-
-
                     transaction.push(
                         {
                             account: acc_lessReservesForSpecific.accountDoc.code + " | " + acc_lessReservesForSpecific.accountDoc.name,
@@ -93,13 +89,8 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                     dataForAccount.total = (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0);
                     let transaction = [];
 
-                    let acc_lessReservesForSpecific = MapClosing.findOne({chartAccountCompare: "Less Reserves for Specific"});
-                    // let acc_principal = ClassCompareAccount.checkPrincipal(loanAcc, "004");
-                    let acc_interest = ClassCompareAccount.checkInterest(loanAcc, "008");
-                    let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
+                    let acc_recoveryOnLoansPreviouslyChargedOff = MapClosing.findOne({chartAccountCompare: "Recovery on Loans Previously Charged – Off"});
                     let acc_Cash = MapClosing.findOne({chartAccountCompare: "Cash"});
-
-
                     transaction.push({
                             account: acc_Cash.accountDoc.code + " | " + acc_Cash.accountDoc.name,
                             dr: (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0),
@@ -107,20 +98,10 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                             drcr: (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0)
                         },
                         {
-                            account: acc_lessReservesForSpecific.accountDoc.code + " | " + acc_lessReservesForSpecific.accountDoc.name,
+                            account: acc_recoveryOnLoansPreviouslyChargedOff.accountDoc.code + " | " + acc_recoveryOnLoansPreviouslyChargedOff.accountDoc.name,
                             dr: 0,
-                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0,
-                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0
-                        }, {
-                            account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
-                            dr: 0,
-                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0,
-                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0
-                        }, {
-                            account: acc_feeOnPayment.accountDoc.code + " | " + acc_feeOnPayment.accountDoc.name,
-                            dr: 0,
-                            cr: opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0,
-                            drcr: -opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0
+                            cr: (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0),
+                            drcr: -(opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0)
                         });
 
                     dataForAccount.transaction = transaction;
@@ -133,7 +114,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
             }
             return LoanAcc.direct.update({_id: loanAccId}, {
                 $set: opts
-            },{multi: true});
+            }, {multi: true});
 
         }
     }

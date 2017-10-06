@@ -29,12 +29,12 @@ ClearPrepay.before.insert(function (userId, doc) {
     doc.month = moment(doc.closeDate, "DD/MM/YYYY").format("MM");
     doc.day = moment(doc.closeDate, "DD/MM/YYYY").format("DD");
     doc.year = moment(doc.closeDate, "DD/MM/YYYY").format("YYYY");
+    doc.status = false;
 
 });
 
 ClearPrepay.after.insert(function (userId, doc) {
     Meteor.defer(function () {
-
         let detailPaid = [];
         let settingDoc = Setting.findOne();
 
@@ -318,6 +318,12 @@ ClearPrepay.after.insert(function (userId, doc) {
             //Increment Date
             lastClearPrepay = moment(lastClearPrepay).add(1, "days").toDate();
         }
+        ClearPrepay.direct.update({_id: doc._id}, {$set: {status: true}}, {multi: true}, function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+
     })
 })
 

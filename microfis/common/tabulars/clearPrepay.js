@@ -36,7 +36,18 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                     return userName.username;
                 }
             }
-        }
+        },
+        {
+            data: 'status', title: 'Status',
+            render: function (val, type, doc) {
+                if (val == true) {
+                    return `<button type="button" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-ok"></span></button>`
+                } else {
+                    return `<button class="btn btn-lg btn-warning"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</button>`
+                }
+            }
+        },
+
 
     ],
     extraFields: ['branchId', "detailPaid"],

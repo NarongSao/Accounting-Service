@@ -297,7 +297,6 @@ export const clientBalanceReport = new ValidatedMethod({
             let i = 1;
 
             let checkDate = date;
-
             //Loop Active Loan in check date
 
 
@@ -313,36 +312,38 @@ export const clientBalanceReport = new ValidatedMethod({
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
 
-
             if (loanDoc.length > 0) {
                 loanDoc.forEach(function (loanAccDoc) {
 
 
-                    let savingDoc = SavingTransaction.findOne({savingAccId: loanAccDoc.savingAccId}, {
+                    let savingDoc = SavingTransaction.findOne({
+                        savingAccId: loanAccDoc.savingAccId,
+                        transactionDate: {$lte: date}
+                    }, {
                         sort: {
                             transactionDate: -1,
                             _id: -1
                         }
                     });
 
+                    if (savingDoc && (savingDoc.details.interestBal + savingDoc.details.principalBal > 0)) {
+                        if (savingDoc) {
+                            if (loanAccDoc.currencyId == "KHR") {
+                                totalDuePrinKHR += savingDoc.details.principalBal;
+                                totalDueIntKHR += savingDoc.details.interestBal;
 
-                    if (savingDoc) {
-                        if (loanAccDoc.currencyId == "KHR") {
-                            totalDuePrinKHR += savingDoc.details.principalBal;
-                            totalDueIntKHR += savingDoc.details.interestBal;
 
+                            } else if (loanAccDoc.currencyId == "USD") {
+                                totalDuePrinUSD += savingDoc.details.principalBal;
+                                totalDueIntUSD += savingDoc.details.interestBal;
 
-                        } else if (loanAccDoc.currencyId == "USD") {
-                            totalDuePrinUSD += savingDoc.details.principalBal;
-                            totalDueIntUSD += savingDoc.details.interestBal;
+                            } else if (loanAccDoc.currencyId == "THB") {
+                                totalDuePrinTHB += savingDoc.details.principalBal;
+                                totalDueIntTHB += savingDoc.details.interestBal;
 
-                        } else if (loanAccDoc.currencyId == "THB") {
-                            totalDuePrinTHB += savingDoc.details.principalBal;
-                            totalDueIntTHB += savingDoc.details.interestBal;
+                            }
 
-                        }
-
-                        content += `<tr>
+                            content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
                                 <td> ${loanAccDoc.clientDoc.khSurname}  ${loanAccDoc.clientDoc.khGivenName} </td>
@@ -363,7 +364,8 @@ export const clientBalanceReport = new ValidatedMethod({
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;
-                        i++;
+                            i++;
+                        }
                     }
                 })
             }

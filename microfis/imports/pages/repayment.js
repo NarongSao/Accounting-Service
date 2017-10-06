@@ -400,7 +400,7 @@ indexTmpl.events({
 
 
         Meteor.call('microfis_getLastEndOfProcess', self.branchId, function (err, endOfProcess) {
-            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.repaidDate.getTime()) {
+            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.repaidDate.getTime() || self.type == "Write Off") {
                 if (self.endId == "0") {
                     getLastRepayment.callPromise({
                         loanAccId: loanAccDoc._id
@@ -428,6 +428,7 @@ indexTmpl.events({
                                         // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
                                         displayError(options.errorMsg, options.i18n);
                                     } else {
+
 
                                         updateLoanAccPaymentWrteOff.callPromise({
                                             loanAccId: loanAccDoc._id,
@@ -585,7 +586,8 @@ indexTmpl.events({
                 );
 
 
-            } else {detailDoc.totalSchedulePaid.totalPrincipalInterestDue
+            } else {
+                detailDoc.totalSchedulePaid.totalPrincipalInterestDue
                 alertify.error("Already End Of Process!!!");
             }
         })

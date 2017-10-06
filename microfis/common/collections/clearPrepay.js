@@ -42,6 +42,12 @@ ClearPrepay.schema = new SimpleSchema({
         type: [Object],
         optional: true,
         blackbox: true
+    },
+    status: {
+        type: Boolean,
+        optional: true,
+        defaultValue: false
+
     }
 });
 
