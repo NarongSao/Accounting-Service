@@ -98,6 +98,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                                     <th>Pro Int</th>
                                     <th>Pro Operation Fee</th>
                                         <th>Col Date</th>
+                                        <th>Clear Date</th>
                                         <th>Status</th>	
                                         <th>Address</th>	
                                     <th>Col Prin</th>
@@ -322,6 +323,15 @@ export const loanRepaymentReport = new ValidatedMethod({
                             $unwind: {path: '$scheduleDoc', preserveNullAndEmptyArrays: true}
                         },
                         {
+                            $lookup: {
+                                from: "microfis_repaymentSchedule",
+                                localField: "_id",
+                                foreignField: "repaymentDocRealTime.detail.repaymentId",
+                                as: "scheduleDocRealTime"
+                            }
+                        },
+
+                        {
                             $project: {
                                 scheduleDoc: {
                                     $filter: {
@@ -355,7 +365,9 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 savingBalance: 1,
                                 type: 1,
                                 voucherId: 1,
-                                waivedForClosing: 1
+                                waivedForClosing: 1,
+                                clearDate: {$arrayElemAt: ["$scheduleDocRealTime", 0]}
+
                             }
                         },
                         {
@@ -439,7 +451,8 @@ export const loanRepaymentReport = new ValidatedMethod({
                                                     }
                                                 ]
                                             },
-                                            "$clearPrepaid",
+                                            {$sum: ["$scheduleDoc.principalPaid", "$scheduleDoc.feeOnPaymentPaid", "$scheduleDoc.interestPaid"]},
+                                            // "$clearPrepaid",
                                             0
                                         ]
                                     }
@@ -483,8 +496,10 @@ export const loanRepaymentReport = new ValidatedMethod({
                                 ,
                                 waivedForClosing: {
                                     $last: "$waivedForClosing"
+                                },
+                                clearDate: {
+                                    $last: "$clearDate.dueDate" || ""
                                 }
-
                             }
                         },
                         {
@@ -655,6 +670,8 @@ export const loanRepaymentReport = new ValidatedMethod({
                  <td class="numberAlign"> ${microfis_formatNumber(repaidListDoc.loanDoc.projectFeeOnPayment)}</td>
 
                  <td> ${microfis_formatDate(repaidListDoc.repaidDate)}</td>
+                 <td> ${microfis_formatDate(repaidListDoc.clearDate)}</td>
+                 
                  <td> ${repaidListDoc.type}</td>
                  <td> ${locationName}</td>
                  <td class="numberAlign"> ${microfis_formatNumber(principalPaid)}</td>
@@ -799,7 +816,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                         params.exchangeId
                     );
                 content += `<tr>
-                            <td colspan="15" align="right">Subtotal-KHR</td>
+                            <td colspan="16" align="right">Subtotal-KHR</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentKHR)}</td>
@@ -809,7 +826,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalColPenKHR)}</td>
                         </tr>
                         <tr>
-                            <td colspan="15" align="right">Subtotal-USD</td>
+                            <td colspan="16" align="right">Subtotal-USD</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentUSD)}</td>
@@ -821,7 +838,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="15" align="right">Subtotal-THB</td>
+                            <td colspan="16" align="right">Subtotal-THB</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentTHB)}</td>
@@ -833,7 +850,7 @@ export const loanRepaymentReport = new ValidatedMethod({
 
                         </tr>
                         <tr>
-                            <td colspan="15" align="right">Total-${baseCurrency}</td>
+                            <td colspan="16" align="right">Total-${baseCurrency}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalColFeeOnPaymentBase)}</td>
@@ -844,8 +861,7 @@ export const loanRepaymentReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalColPenBase)}</td>
 
                         </tr>
-                        
-                        
+                
                         </tbody>
                       </table>`;
 

@@ -279,6 +279,7 @@ let hooksObject = {
             } else {
                 return false;
             }
+
             doc.totalPaid = doc.amountPaid;
             doc.type = 'Write Off';
             this.result(doc);

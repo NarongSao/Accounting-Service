@@ -69,6 +69,9 @@ Meteor.startup(function () {
             }, {
                 "_id": "145",
                 "chartAccountCompare": "Less Reserves for General"
+            }, {
+                "_id": "146",
+                "chartAccountCompare": "Recovery on Loans Previously Charged – Off"
             }
 
             //Standard

@@ -56,9 +56,11 @@ Repayment.before.insert(function (userId, doc) {
             throw new Meteor.Error("You've already Paid Fee!!");
         }
     } else {
-        let clearDoc = ClearPrepay.findOne({branchId: doc.branchId}, {sort: {closeDate: -1}});
-        if (clearDoc == undefined || moment(doc.repaidDate).startOf("day").toDate().getTime() > moment(clearDoc.closeDate).startOf("day").toDate().getTime()) {
-            throw new Meteor.Error("You have to clear prepay before make repayment!!");
+        if (doc.type != "Write Off") {
+            let clearDoc = ClearPrepay.findOne({branchId: doc.branchId}, {sort: {closeDate: -1}});
+            if (clearDoc == undefined || moment(doc.repaidDate).startOf("day").toDate().getTime() > moment(clearDoc.closeDate).startOf("day").toDate().getTime()) {
+                throw new Meteor.Error("You have to clear prepay before make repayment!!");
+            }
         }
     }
 
@@ -69,7 +71,8 @@ Repayment.before.insert(function (userId, doc) {
     });
 
 
-});
+})
+;
 
 // After insert
 Repayment.after.insert(function (userId, doc) {
@@ -345,7 +348,7 @@ Repayment.after.insert(function (userId, doc) {
                             dataForAccount.memo = "Loan Repayment Closing " + clientDoc.khSurname + " " + clientDoc.khGivenName;
                             dataForAccount.refId = doc._id;
                             dataForAccount.refFrom = "Repayment Closing";
-                            dataForAccount.total = doc.totalPaid;
+                            dataForAccount.total = doc.totalPaid + doc.savingBalance;
 
                             let transaction = [];
 
@@ -383,13 +386,6 @@ Repayment.after.insert(function (userId, doc) {
                                     cr: doc.detailDoc.totalSchedulePaid.interestPaid /*+ doc.detailDoc.closing.interestAddition*/,
                                     drcr: -(doc.detailDoc.totalSchedulePaid.interestPaid /*+ doc.detailDoc.closing.interestAddition*/)
                                 },
-
-                                /*{
-                                 account: acc_otherInterestIncome.accountDoc.code + " | " + acc_otherInterestIncome.accountDoc.name,
-                                 dr: 0,
-                                 cr: doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition),
-                                 drcr: -(doc.totalPaid + doc.savingBalance - (doc.detailDoc.totalSchedulePaid.principalPaid + doc.detailDoc.totalSchedulePaid.interestPaid + doc.detailDoc.totalSchedulePaid.penaltyPaid + doc.detailDoc.totalSchedulePaid.feeOnPaymentPaid + doc.detailDoc.closing.interestAddition))
-                                 }, */
                                 {
                                     account: acc_penalty.accountDoc.code + " | " + acc_penalty.accountDoc.name,
                                     dr: 0,
@@ -409,7 +405,6 @@ Repayment.after.insert(function (userId, doc) {
                                 }
                             })
                         }
-
                     }
                     //    ==================================================================================================================================================
                 }
@@ -691,7 +686,7 @@ Repayment.after.insert(function (userId, doc) {
                                             $set: {
                                                 refId: doc._id
                                             }
-                                        },{multi: true}
+                                        }, {multi: true}
                                     )
                                 }
                             }
@@ -713,7 +708,7 @@ Repayment.after.insert(function (userId, doc) {
                             waivedForClosing: doc.waivedForClosing,
                             status: "Close"
                         }
-                    },{multi: true}, function (err) {
+                    }, {multi: true}, function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -854,14 +849,14 @@ Repayment.after.insert(function (userId, doc) {
                     feeAmount: doc.amountPaid,
                     feeDate: doc.repaidDate
                 }
-            },{multi: true}, function (err) {
+            }, {multi: true}, function (err) {
                 if (err) {
                     console.log(err);
                 }
             });
         }
 
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}},{multi: true}, function (err) {
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: 1}}, {multi: true}, function (err) {
             if (err) {
                 console.log(err);
             }
@@ -1038,22 +1033,22 @@ Repayment.after.remove(function (userId, doc) {
                             $unset: {
                                 closeDate: ''
                             }
-                        },{multi: true}
+                        }, {multi: true}
                     );
 
                     if (loanAcc.writeOffDate != undefined) {
-                        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Write Off'}},{multi: true});
+                        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Write Off'}}, {multi: true});
                     } else if (loanAcc.restructureDate != undefined) {
-                        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Restructure'}},{multi: true});
+                        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: 'Restructure'}}, {multi: true});
                     } else {
-                        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: "Active"}},{multi: true});
+                        LoanAcc.direct.update({_id: doc.loanAccId}, {$set: {status: "Active"}}, {multi: true});
                     }
                 }
             });
         } else {
             LoanAcc.direct.update({_id: doc.loanAccId}, {
                     $set: {feeAmount: 0}, $unset: {feeDate: ""}
-                },{multi: true},
+                }, {multi: true},
                 function (err) {
                     if (err) {
                         console.log(err);
@@ -1062,10 +1057,10 @@ Repayment.after.remove(function (userId, doc) {
             );
         }
 
-        LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}},{multi: true});
+        LoanAcc.direct.update({_id: doc.loanAccId}, {$inc: {paymentNumber: -1}}, {multi: true});
         SavingTransaction.remove({paymentId: doc._id});
         let countSaving = SavingTransaction.find({savingAccId: doc.savingAccId}).count();
-        SavingAcc.direct.update({_id: doc.savingAccId}, {$set: {savingNumber: countSaving}},{multi: true});
+        SavingAcc.direct.update({_id: doc.savingAccId}, {$set: {savingNumber: countSaving}}, {multi: true});
     })
 
 });
@@ -1111,7 +1106,7 @@ function _makeScheduleForPrincipalInstallment(doc) {
     });
 
     // Update tenor, maturityDate on loan acc
-    LoanAcc.direct.update({_id: doc._id}, {$set: {maturityDate: maturityDate, tenor: tenor}},{multi: true});
+    LoanAcc.direct.update({_id: doc._id}, {$set: {maturityDate: maturityDate, tenor: tenor}}, {multi: true});
 }
 
 

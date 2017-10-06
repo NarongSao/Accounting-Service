@@ -179,8 +179,6 @@ MakeRepayment.general = function ({repaidDate, amountPaid, penaltyPaid, schedule
             };
 
 
-
-
             // Update repaidDoc
             let detailPaid = {
                 scheduleId: o._id,
@@ -1112,16 +1110,14 @@ MakeRepayment.close = function ({repaidDate, amountPaid, penaltyPaid, scheduleDu
 
 
         // Check principal paid
-        /*if (tmpAmountPaid.principal.lessThanOrEqualTo(currentDue.principal)) {
-         principalPaid = tmpAmountPaid.principal;
-         tmpAmountPaid.principal = new BigNumber(0);
-         } else {
-         principalPaid = new BigNumber(currentDue.principal);
-         tmpAmountPaid.principal = tmpAmountPaid.principal.minus(principalPaid);
-         }*/
-        principalPaid = new BigNumber(currentDue.principal);
-
-
+        if (tmpAmountPaid.principal.lessThanOrEqualTo(currentDue.principal)) {
+            principalPaid = tmpAmountPaid.principal;
+            tmpAmountPaid.principal = new BigNumber(0);
+        } else {
+            principalPaid = new BigNumber(currentDue.principal);
+            tmpAmountPaid.principal = tmpAmountPaid.principal.minus(principalPaid);
+        }
+        
         // Push data
         let totalPrincipalInterestPaid = principalPaid.plus(interestPaid).plus(feeOnPaymentPaid),
             totalAmountPaid = totalPrincipalInterestPaid,
