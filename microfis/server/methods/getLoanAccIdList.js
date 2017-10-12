@@ -6,7 +6,7 @@ Meteor.methods({
         let repaymentIdList = [];
         let loanIdList = [];
 
-        if (detailPaid.length > 0) {
+        if (detailPaid && detailPaid.length > 0) {
             repaymentIdList = detailPaid.map(function (obj) {
                 return obj.repaymentId;
             })
@@ -18,12 +18,13 @@ Meteor.methods({
             return obj.loanAccId;
         })
         return loanIdList;
+
     },
     microfis_checkRepaymentExistOfClearPrepay: function (detailPaid, closeDate) {
         let repaymentIdList = [];
         let loanIdList = [];
 
-        if (detailPaid.length > 0) {
+        if (detailPaid && detailPaid.length > 0) {
             repaymentIdList = detailPaid.map(function (obj) {
                 return obj.repaymentId;
             })

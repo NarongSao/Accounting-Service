@@ -101,7 +101,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
                             account: acc_recoveryOnLoansPreviouslyChargedOff.accountDoc.code + " | " + acc_recoveryOnLoansPreviouslyChargedOff.accountDoc.name,
                             dr: 0,
                             cr: (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0),
-                            drcr: -(opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0)
+                            drcr: -((opts.paymentWriteOff[opts.paymentWriteOff.length - 1].amount || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].interest || 0) + (opts.paymentWriteOff[opts.paymentWriteOff.length - 1].feeOnPayment || 0))
                         });
 
                     dataForAccount.transaction = transaction;

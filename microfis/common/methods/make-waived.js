@@ -13,7 +13,6 @@ import {ProductStatus} from '../../common/collections/productStatus';
 import {checkRepayment} from '../../common/methods/check-repayment.js';
 
 import ClassCompareAccount from "../../imports/libs/classCompareAccount";
-
 export const makeWaived = new ValidatedMethod({
     name: 'microfis.makeWaived',
     mixins: [CallPromiseMixin],
@@ -24,7 +23,7 @@ export const makeWaived = new ValidatedMethod({
     run({loanAccId, opts}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(100);
-
+            
             let settingDoc = Setting.findOne();
             if (settingDoc.integrate == true) {
 
@@ -51,7 +50,6 @@ export const makeWaived = new ValidatedMethod({
                     } else {
                         productStatusList = ProductStatus.find({type: "Over One Year"}).fetch();
                     }
-
                 } else if (loanAcc.paymentMethod == "W") {
                     if (loanAcc.term <= 52) {
                         productStatusList = ProductStatus.find({type: "Less Or Equal One Year"}).fetch();
@@ -73,24 +71,24 @@ export const makeWaived = new ValidatedMethod({
                 }
 
                 let proStatus = productStatusList.find(finProductStatus);
-
                 let acc_waivedForDeathExpense = MapClosing.findOne({chartAccountCompare: "Waived For Death"});
                 let acc_principal = ClassCompareAccount.checkPrincipal(loanAcc, proStatus._id);
-                let acc_interest = ClassCompareAccount.checkInterest(loanAcc, proStatus._id);
-                let acc_adminFee = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
+                /*let acc_interest = ClassCompareAccount.checkInterest(loanAcc, proStatus._id);
+                let acc_adminFee = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});*/
 
                 transaction.push({
                         account: acc_waivedForDeathExpense.accountDoc.code + " | " + acc_waivedForDeathExpense.accountDoc.name,
-                        dr: opts['waived.amount'] + opts['waived.interest'] + opts['waived.feeOnPayment'],
+                        dr: opts['waived.amount'] ,
                         cr: 0,
-                        drcr: opts['waived.amount'] + opts['waived.interest'] + opts['waived.feeOnPayment']
+                        drcr: opts['waived.amount']
 
                     }, {
                         account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
                         dr: 0,
                         cr: opts['waived.amount'],
                         drcr: -opts['waived.amount']
-                    },
+                    }
+                    /*,
                     {
                         account: acc_interest.accountDoc.code + " | " + acc_interest.accountDoc.name,
                         dr: 0,
@@ -102,7 +100,7 @@ export const makeWaived = new ValidatedMethod({
                         dr: 0,
                         cr: opts['waived.feeOnPayment'],
                         drcr: -opts['waived.feeOnPayment']
-                    }
+                    }*/
                 );
 
 
