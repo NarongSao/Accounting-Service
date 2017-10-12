@@ -597,7 +597,11 @@ export const loanRepaymentReport = new ValidatedMethod({
 
 
                         let finProductStatus = function (obj) {
-                            return (repaidListDoc.detailDoc && repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate < 0 ? 0 : repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate) >= obj.from && (repaidListDoc.detailDoc && repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate < 0 ? 0 : repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate) <= obj.to;
+                            if (repaidListDoc.type != "Reschedule") {
+                                return (repaidListDoc.detailDoc && repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate < 0 ? 0 : repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate) >= obj.from && (repaidListDoc.detailDoc && repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate < 0 ? 0 : repaidListDoc.detailDoc.schedulePaid[0].numOfDayLate) <= obj.to;
+                            } else {
+                                return 0 >= obj.from && 0 < obj.to;
+                            }
                         }
                         let proStatus = productStatusList.find(finProductStatus);
 
