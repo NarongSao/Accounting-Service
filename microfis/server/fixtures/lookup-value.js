@@ -105,7 +105,7 @@ Meteor.startup(function () {
                 options: [
                     {label: 'Student', value: 'ST', order: 0},
                     {label: 'Agriculture', value: 'AG', order: 1},
-                    {label: 'Business', value: 'Business', order: 2},
+                    {label: 'Trade and Commerce', value: 'Trade and Commerce', order: 2},
                     {label: 'Service', value: 'Service', order: 3},
                     {label: 'Construction', value: 'Construction', order: 4},
                     {label: 'Family', value: 'Family', order: 5},
