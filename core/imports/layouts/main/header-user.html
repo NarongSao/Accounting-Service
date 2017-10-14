@@ -1,6 +1,45 @@
 <!--Header User-->
 <template name="_HeaderUserLayout">
     <!-- User Account: style can be found in dropdown.less -->
+    {{#if isNotification}}
+        <li class="dropdown tasks-menu">
+            <a href="#" class="dropdown-toggle notPaid" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-flag-o"></i>
+                <span class="label label-danger">{{notRepaidNumber}}</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="header">You have Problem With Payment {{notRepaidNumber}}</li>
+
+                {{#if isLoading}}
+                    <li>
+                        <!-- inner menu: contains the actual data -->
+                        <ul class="menu">
+                            {{#each notPaidList}}
+                                <li>
+                                    <a href="#">
+
+                                        <div class="pull-right">{{customerDoc._id}}
+                                            :{{customerDoc.khSurname}} {{customerDoc.khGivenName}}</div>
+                                        <div>
+                                            {{formatDate repaidDate}}
+                                        </div>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </li>
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+                <li class="footer">
+                    <a href="#">Client List</a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
     <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <img src="/packages/theara_admin-lte/lib/img/avatar5.png" class="user-image"
