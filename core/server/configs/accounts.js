@@ -7,3 +7,10 @@ Accounts.onCreateUser(function (options, user) {
     
     return user;
 });
+
+
+/*Accounts.config({
+    loginExpirationInDays: 0.0208
+});*/
+
+
