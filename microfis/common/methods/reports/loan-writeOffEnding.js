@@ -91,7 +91,11 @@ export const writeOffEndingReport = new ValidatedMethod({
                                     
                                     <th>Coll-Prin</th>
                                     <th>Coll-Int</th>
-                                    <th>Coll-Operation-Fee</th>
+                                    <th>Coll-Operation-Fee</th>   
+                                    
+                                    <th>Prin Bal</th>
+                                    <th>Int Bal</th>
+                                    <th>Operation-Fee Bal</th>
                                     <th>Total Coll</th>
                                     <th>Tel</th>
                                 </tr>
@@ -430,6 +434,10 @@ export const writeOffEndingReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(collInt)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(collFeeOnPayment)}</td>
                                 
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.writeOff.amount-collPrin)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.writeOff.interest-collInt)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(loanAccDoc.writeOff.feeOnPayment-collFeeOnPayment)}</td>
+                                
                                 
                                 <td class="numberAlign"> ${microfis_formatNumber(collFeeOnPayment + collInt + collPrin)}</td>
                                 
@@ -553,6 +561,10 @@ export const writeOffEndingReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollIntKHR)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollFeeOnPaymentKHR)}</td>
                             
+                             <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR-totalDueCollPrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR-totalDueCollIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR-totalDueCollFeeOnPaymentKHR)}</td>
+                            
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollPrinKHR + totalDueCollIntKHR + totalDueCollFeeOnPaymentKHR)}</td>
                             <td></td>
 
@@ -565,7 +577,11 @@ export const writeOffEndingReport = new ValidatedMethod({
                             
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollPrinUSD)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueCollFeeOnPaymentUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueCollFeeOnPaymentUSD)}</td> 
+                                           
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD-totalDueCollPrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD-totalDueCollIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD-totalDueCollFeeOnPaymentUSD)}</td>
                             
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollPrinUSD + totalDueCollIntUSD + totalDueCollFeeOnPaymentUSD)}</td>
                             <td></td>
@@ -581,6 +597,10 @@ export const writeOffEndingReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollIntTHB)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollFeeOnPaymentTHB)}</td>
                             
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB-totalDueCollPrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB-totalDueCollIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB-totalDueCollFeeOnPaymentTHB)}</td>
+                            
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollPrinTHB + totalDueCollIntTHB + totalDueCollFeeOnPaymentTHB)}</td>
                             <td></td>
 
@@ -593,7 +613,11 @@ export const writeOffEndingReport = new ValidatedMethod({
                              
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueCollFeeOnPaymentBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueCollFeeOnPaymentBase)}</td>   
+                                 
+                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase-totalDueCollPrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueIntBase-totalDueCollIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase-totalDueCollFeeOnPaymentBase)}</td>
                             
                             <td class="numberAlign">${microfis_formatNumber(totalDueCollPrinBase + totalDueCollIntBase + totalDueCollFeeOnPaymentBase)}</td>
                             <td></td>

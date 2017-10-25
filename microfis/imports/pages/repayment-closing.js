@@ -91,6 +91,7 @@ formTmpl.onCreated(function () {
                     case 'KHR':
                         minMaxAmount = 100;
                         break;
+                        acc / journal
                     case 'USD':
                         minMaxAmount = 0.01;
                         break;
@@ -233,7 +234,7 @@ formTmpl.helpers({
         }
 
         totalDue = totalDue.minus(parseFloat(waivedClosing.get()));
-        return {totalDue: totalDue.toNumber(), totalPenalty: totalPenalty.toNumber()};
+        return {totalDue: totalDue.toNumber() >= 0 ? totalDue.toNumber() : 0, totalPenalty: totalPenalty.toNumber()};
     },
     jsonViewData(data){
         if (data) {
@@ -342,9 +343,19 @@ let hooksObject = {
                 return false;
             }
 
-            let totalPaidClosing = doc.savingBalance + doc.amountPaid;
+
+            let totalDue = new BigNumber(0);
+            if (checkRepayment && checkRepayment.totalScheduleDue) {
+                totalDue = totalDue.plus(checkRepayment.totalScheduleDue.totalPrincipalInterestDue);
+            }
+
+            if (checkRepayment && checkRepayment.closing) {
+                totalDue = totalDue.plus(checkRepayment.closing.totalDue);
+            }
+
+            let totalPaidClosing = doc.savingBalance + doc.amountPaid >= totalDue.toNumber() ? totalDue.toNumber() : doc.savingBalance + doc.amountPaid;
             // Check to payment
-            let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid > 0 && doc.penaltyPaid >= 0;
+            let checkBeforePayment = checkRepayment && doc.repaidDate && doc.amountPaid >= 0 && doc.penaltyPaid >= 0;
             if (checkBeforePayment) {
 
                 let makeRepayment = MakeRepayment.close({
@@ -364,8 +375,7 @@ let hooksObject = {
                     alertify.error("Amount Due is 0; You must close Browser and Paid Again!!");
                     return false;
                 }
-
-
+                doc.savingBalance=doc.savingBalance >= totalDue.toNumber() ? totalDue.toNumber() : doc.savingBalance;
                 doc.totalPaid = doc.amountPaid + doc.penaltyPaid;
 
                 doc.detailDoc = makeRepayment;
