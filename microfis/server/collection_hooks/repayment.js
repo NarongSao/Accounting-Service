@@ -236,7 +236,7 @@ Repayment.after.insert(function (userId, doc) {
                                 savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
                             } else if (doc.type == "Close") {
                                 // savingLoanWithdrawal.amount = doc.detailDoc.closing.totalDue + doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.closing.totalDue + doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
-                                savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid+ doc.detailDoc.closing.interestReminderPenalty  <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid+ doc.detailDoc.closing.interestReminderPenalty : savingWithdrawal.principalOpening;
+                                savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid + doc.detailDoc.closing.interestReminderPenalty <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid + doc.detailDoc.closing.interestReminderPenalty : savingWithdrawal.principalOpening;
                             }
 
                             // Cal principal, interest bal
@@ -286,7 +286,7 @@ Repayment.after.insert(function (userId, doc) {
 
                             let acc_cash = MapClosing.findOne({chartAccountCompare: "Cash"});
                             let acc_penalty = MapClosing.findOne({chartAccountCompare: "Penalty"});
-                            let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Odataperation"});
+                            let acc_feeOnPayment = MapClosing.findOne({chartAccountCompare: "Fee On Operation"});
                             let acc_unEarnIncome = MapClosing.findOne({chartAccountCompare: "Unearn Income"});
                             let acc_principal = checkPrincipal(loanAcc, loanType);
                             let acc_interest = checkInterest(loanAcc, loanType);
