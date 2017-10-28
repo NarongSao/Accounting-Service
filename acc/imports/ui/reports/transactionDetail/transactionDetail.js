@@ -64,7 +64,6 @@ reportTpl.helpers({
         let param = FlowRouter.current().query;
 
         if (param.accountType != undefined) {
-
             Session.set('accountTypeIdSession', param.accountType);
             if (!(param.accountType instanceof Array)) {
 
