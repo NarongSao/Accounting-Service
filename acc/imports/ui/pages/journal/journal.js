@@ -77,7 +77,8 @@ state = new ReactiveObj({
 });
 
 stateFilter = new ReactiveObj({
-    dateFilter: "",
+    dateFilter: moment().endOf("day").toDate(),
+    filterType: "(Select All)",
 })
 
 
@@ -124,11 +125,14 @@ indexTpl.onCreated(function () {
     createNewAlertify(['journal']);
     stateFixAsset.set('isFixAsset', false);
 
-    configDateFilter();
 
 });
 
 //Render
+indexTpl.onRendered(function () {
+    configDateFilter();
+})
+
 
 insertTpl.onRendered(function () {
     disableDate();
@@ -137,6 +141,7 @@ insertTpl.onRendered(function () {
     Meteor.setTimeout(function () {
         Session.set('currencyId', Session.get('baseCurrencySetupDefault'));
         Session.set('dobSelect', moment().toDate());
+
     }, 100);
 });
 updateTpl.onRendered(function () {
@@ -150,7 +155,22 @@ updateTpl.onRendered(function () {
 
 indexTpl.helpers({
     selector: function () {
-        return {branchId: Session.get("currentBranch")};
+        if (stateFilter.get("filterRefFrom") == "(Select All)") {
+            return {branchId: Session.get("currentBranch"), journalDate: {$lte: stateFilter.get("dateFilter")}};
+        } else if (stateFilter.get("filterRefFrom") == "Normal") {
+            console.log(stateFilter.get("filterRefFrom"));
+            return {
+                branchId: Session.get("currentBranch"),
+                refId: {$exists: false},
+                journalDate: {$lte: stateFilter.get("dateFilter")}
+            };
+        } else {
+            return {
+                branchId: Session.get("currentBranch"),
+                refFrom: stateFilter.get("filterRefFrom"),
+                journalDate: {$lte: stateFilter.get("dateFilter")}
+            };
+        }
     },
     tabularTable(){
         return JournalTabular;
@@ -184,6 +204,23 @@ insertTpl.helpers({
     },
     baseCurrencySetupDefault(){
         return Session.get('baseCurrencySetupDefault');
+    },
+    isDisableDate(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableJournalDate;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
+    },
+
+    isDisableVoucher(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableVoucher;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
     }
 });
 updateTpl.helpers({
@@ -214,6 +251,23 @@ updateTpl.helpers({
     },
     journalDetailCollection: function () {
         return journalDetailCollection;
+    },
+    isDisableDate(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableJournalDate;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
+    },
+
+    isDisableVoucher(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableVoucher;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
     }
 });
 
@@ -471,6 +525,12 @@ indexTpl.events({
             alertify.journal(fa("eye", "Journal"), renderTemplate(showTpl, data).html);
         })
         $.unblockUI();
+    },
+    'change #filterByRefFrom'(e, t){
+
+        stateFilter.set("filterRefFrom", e.currentTarget.value);
+
+
     }
 });
 insertTpl.events({
@@ -942,6 +1002,23 @@ insertPaymentTpl.helpers({
     },
     baseCurrencySetupDefault(){
         return Session.get('baseCurrencySetupDefault');
+    },
+    isDisableDate(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableJournalDate;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
+    },
+
+    isDisableVoucher(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableVoucher;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
     }
 });
 
@@ -983,6 +1060,22 @@ insertReceiveTpl.helpers({
     },
     baseCurrencySetupDefault(){
         return Session.get('baseCurrencySetupDefault');
+    },
+    isDisableDate(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableJournalDate;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
+    },
+    isDisableVoucher(){
+        let isDisable = false;
+        let settingDoc = Setting.findOne().isDisableVoucher;
+        if (settingDoc != undefined) {
+            isDisable = settingDoc;
+        }
+        return isDisable;
     }
 });
 
@@ -1112,12 +1205,13 @@ function removeCollectionNull() {
 
 
 var configDateFilter = function () {
+    debugger;
     var dateForFilter = $('[name="dateFilter"]');
     // DateTimePicker.date(dateForFilter);
     // dateForFilter.data("DateTimePicker");
     dateForFilter.datetimepicker();
 
     dateForFilter.on('dp.change', function (e) {
-        stateFilter.set('dateFilter', moment(e.date).format('YYYY-MM-DD'));
+        stateFilter.set('dateFilter', moment(e.date).endOf("day").toDate());
     })
 }

@@ -120,6 +120,17 @@ Setting.schema = new SimpleSchema({
                 return list;
             }
         }
+    },
+
+    isDisableJournalDate: {
+        type: Boolean,
+        label: __('core.setting.isDisableJournalDateLbl'),
+        defaultValue: false
+    },
+    isDisableVoucher: {
+        type: Boolean,
+        label: __('core.setting.isDisableVoucherLbl'),
+        defaultValue: false
     }
 });
 
