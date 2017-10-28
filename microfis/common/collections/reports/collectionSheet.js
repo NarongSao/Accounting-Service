@@ -162,5 +162,17 @@ export const CollectionSheetSchema = new SimpleSchema({
                 return repayFrequency;
             }
         }
-    }
+    }/*,
+    accountType:{
+        type: String,
+        label: 'Account type',
+        autoform: {
+            type: 'select2',
+            afFieldInput: {
+                options: function () {
+                    return SelectOpts.accountType(false);
+                }
+            }
+        }
+    }*/
 });

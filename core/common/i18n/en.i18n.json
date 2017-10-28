@@ -92,7 +92,9 @@
       "headOfficeLbl": "Head office",
       "baseCurrencyLbl": "Base currency",
       "languageLbl": "Language",
-      "integrateLbl": "Integrate System"
+      "integrateLbl": "Integrate System",
+      "isDisableJournalDateLbl": "Disable Journal Date",
+      "isDisableVoucherLbl": "Disable Voucher"
     },
     "user": {
       "title": "User",

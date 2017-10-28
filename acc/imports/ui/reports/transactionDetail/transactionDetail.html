@@ -268,6 +268,7 @@
                             <tr>
                                 <th width="40px">No</th>
                                 <th>Date</th>
+                                <th>BranchId</th>
                                 <th>Invoice</th>
                                 <th>Memo</th>
                                 <th>Split Account</th>
@@ -284,7 +285,6 @@
                                         <td colspan="8" align="left">
                                             <b>{{name}}</b>
                                         </td>
-
                                     </tr>
                                 {{else}}
                                     {{#if isFooter}}
@@ -313,6 +313,9 @@
                                             </td>
                                             <td>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;{{formatDate journalDate}}
+                                            </td>
+                                            <td>
+                                                {{branchId}}
                                             </td>
                                             <td align="center" class="voucher-id">
                                                 {{voucherId}}
