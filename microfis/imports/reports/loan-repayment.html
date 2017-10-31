@@ -24,7 +24,14 @@
                             <div class="col-md-4">
                                 {{> afQuickField name="branchId"}}
                                 {{> afQuickField name="creditOfficerId"}}
-                                {{> afQuickField name="coType"}}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{> afQuickField name="coType"}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{> afQuickField name="accountType"}}
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         {{> afQuickField name="repayFrequency"}}
@@ -32,7 +39,6 @@
                                     </div>
                                     <div class="col-md-6">
                                         {{> afQuickField name="status"}}
-
                                     </div>
                                 </div>
 

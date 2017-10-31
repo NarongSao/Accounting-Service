@@ -222,8 +222,11 @@ export const collectionSheetReport = new ValidatedMethod({
                 header.repayFrequency = params.repayFrequency;
             }
 
-            data.header = header;
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector.accountType =  params.accountType;
+            }
 
+            data.header = header;
             selector.disbursementDate = {
                 $lte: tDate
             };

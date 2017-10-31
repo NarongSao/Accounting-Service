@@ -230,6 +230,11 @@ export const clearPrepaymentReport = new ValidatedMethod({
 
                 }
 
+
+                if (params.accountType && params.accountType.includes("All") == false) {
+                    selector["loanDoc.accountType"] =  params.accountType;
+                }
+
                 selectorRepayment['repaymentDoc.detail.endId'] = {$exists: true};
                 selectorRepayment['repaymentDoc.detail.repaidDate'] = {$gte: fDate, $lte: tDate};
 

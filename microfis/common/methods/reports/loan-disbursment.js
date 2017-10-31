@@ -204,6 +204,10 @@ export const loanDisbursmentReport = new ValidatedMethod({
 
             }
 
+
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector.accountType =  params.accountType;
+            }
             if (params.cycle > 0) {
                 selector.cycle = params.cycle;
                 header.cycle = params.cycle;

@@ -215,6 +215,11 @@ export const loanRepaymentWriteOffReport = new ValidatedMethod({
                 selector["loanDoc.disbursementDate"] = {$lte: dateParam};
 
 
+                if (params.accountType && params.accountType.includes("All") == false) {
+                    selector["loanDoc.accountType"] =  params.accountType;
+                }
+
+
                 // selector['feeDate'] = {$exists: true, $gte: fDate, $lte: tDate};
 
                 selector["loanDoc.status"] = "Write Off";

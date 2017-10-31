@@ -221,6 +221,11 @@ export const loanArrearsReport = new ValidatedMethod({
             }
 
 
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector.accountType =  params.accountType;
+            }
+
+
             if (params.repayFrequency > 0) {
                 selector.repaidFrequency = parseInt(params.repayFrequency);
                 header.repayFrequency = params.repayFrequency;

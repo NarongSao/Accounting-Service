@@ -201,6 +201,10 @@ export const loanOutstandingReport = new ValidatedMethod({
 
 
             }
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector.accountType =  params.accountType;
+
+            }
 
 
             if (params.classifyId && params.classifyId.includes("All") == false) {

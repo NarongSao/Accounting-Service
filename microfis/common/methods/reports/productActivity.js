@@ -210,6 +210,11 @@ export const productActivityReport = new ValidatedMethod({
             }
 
 
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector.accountType =  params.accountType;
+            }
+
+
             if (params.repaidFrequency !== "All") {
                 selector.repaidFrequency = parseInt(params.repaidFrequency);
                 header.repaidFrequency = params.repaidFrequency;

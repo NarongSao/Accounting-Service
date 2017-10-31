@@ -231,11 +231,17 @@ export const collectionSheetGroupReport = new ValidatedMethod({
 
             }
 
+
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector.accountType =  params.accountType;
+            }
+
             if (params.repayFrequency > 0) {
                 selector.repaidFrequency = parseInt(params.repayFrequency);
                 selectorLoanDocGroup["loanDoc.repaidFrequency"] = parseInt(params.repayFrequency);
                 header.repayFrequency = params.repayFrequency;
             }
+
 
             data.header = header;
 
@@ -260,6 +266,10 @@ export const collectionSheetGroupReport = new ValidatedMethod({
                 {"loanDoc.restructureDate": {$exists: true, $gte: tDate}},
                 {"loanDoc.waivedDate": {$exists: true, $gte: tDate}}
             ];
+
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selectorLoanDocGroup.accountType =  params.accountType;
+            }
 
 
             let loanGroupList = GroupLoan.aggregate([
