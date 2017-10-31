@@ -221,6 +221,11 @@ export const loanRepaymentReport = new ValidatedMethod({
                     header.repayFrequency = params.repayFrequency;
                 }
 
+
+                if (params.accountType && params.accountType.includes("All") == false) {
+                    selector["loanDoc.accountType"] = params.accountType;
+                }
+
                 let selectorRepayment = {};
                 if (params.branchId && params.branchId.includes("All") == false) {
                     selectorRepayment.branchId = {$in: params.branchId};

@@ -229,6 +229,12 @@ export const needToClearPrepaymentReport = new ValidatedMethod({
                     header.branchId = branchList.toString();
 
                 }
+
+
+                if (params.accountType && params.accountType.includes("All") == false) {
+                    selector["loanDoc.accountType"] =  params.accountType;
+                }
+
                 /*selectorRepayment['repaymentDocRealTimeRealTime.detail.endId'] = {$exists: true};
                  selectorRepayment['repaymentDocRealTimeRealTime.detail.repaidDate'] = {$gte: fDate, $lte: tDate};*/
 

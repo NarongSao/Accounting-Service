@@ -205,6 +205,11 @@ export const loanRepaymentWaiveClosingReport = new ValidatedMethod({
                 header.repaidFrequency = params.repaidFrequency;
             }
 
+            if (params.accountType && params.accountType.includes("All") == false) {
+                selector["loanDoc.accountType"] =  params.accountType;
+
+            }
+
 
             let dateParam = moment(params.date, "DD/MM/YYYY").endOf("day").toDate();
 

@@ -163,5 +163,16 @@ export const WriteOffEndingSchema = new SimpleSchema({
                 return repayFrequency;
             }
         }
+    },
+    accountType:{
+        type: String,
+        label: "Account Type",
+        defaultValue: "All",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOptsReport.accountTypeReport();
+            }
+        }
     }
 });

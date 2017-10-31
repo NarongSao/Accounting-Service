@@ -158,5 +158,16 @@ export const LoanClosingSchema = new SimpleSchema({
                 return repayFrequency;
             }
         }
+    },
+    accountType:{
+        type: String,
+        label: "Account Type",
+        defaultValue: "All",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOptsReport.accountTypeReport();
+            }
+        }
     }
 });

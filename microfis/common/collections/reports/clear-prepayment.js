@@ -196,5 +196,16 @@ export const ClearPrepaymentSchema = new SimpleSchema({
          return customFieldList;
          }
          }*/
+    },
+    accountType:{
+        type: String,
+        label: "Account Type",
+        defaultValue: "All",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOptsReport.accountTypeReport();
+            }
+        }
     }
 });
