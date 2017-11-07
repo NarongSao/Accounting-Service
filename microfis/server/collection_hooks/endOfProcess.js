@@ -33,6 +33,9 @@ EndOfProcess.before.insert(function (userId, doc) {
 });
 
 EndOfProcess.after.insert(function (userId, doc) {
+    let countEndOfProcess=0;
+    let numOfEndOfProcess=0;
+
     Meteor.defer(function () {
         let settingDoc = Setting.findOne();
         let lastEndOfProcessList = EndOfProcess.find({
@@ -43,7 +46,7 @@ EndOfProcess.after.insert(function (userId, doc) {
         let i = 0;
         let lastEndOfProcess = lastEndOfProcessList[0].closeDate == undefined ? doc.closeDate : moment(lastEndOfProcessList[0].closeDate).add(1, "days").toDate();
         while (lastEndOfProcess.getTime() <= moment(doc.closeDate).endOf("days").toDate().getTime()) {
-
+            numOfEndOfProcess++;
             let tDate = moment(lastEndOfProcess).endOf('day').toDate();
 
 
@@ -51,7 +54,7 @@ EndOfProcess.after.insert(function (userId, doc) {
             //    Integrated to Account========================================================================================================================
 
 
-            Meteor.defer(function () {
+             Meteor.defer(function () {
                 if (settingDoc.integrate == true) {
                     let selector = {};
                     selector.disbursementDate = {$lte: tDate};
@@ -119,7 +122,6 @@ EndOfProcess.after.insert(function (userId, doc) {
 
                                 let acc_principalBefore = ClassCompareAccount.checkPrincipal(obj, proStatusBefore._id);
                                 let acc_principal = ClassCompareAccount.checkPrincipal(obj, proStatus._id);
-
 
                                 if (obj.currencyId == "USD") {
                                     totalUSD += checkPayment.balanceUnPaid;
@@ -229,8 +231,17 @@ EndOfProcess.after.insert(function (userId, doc) {
                         })
                     }
                     // console.log(moment(tDate).format("DD/MM/YYYY"));
+                    countEndOfProcess++;
+
+                    if(countEndOfProcess==numOfEndOfProcess){
+                        EndOfProcess.direct.update({_id: doc._id}, {$set: {status: true}}, {multi: true}, function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
                 }
-            })
+             })
 
             //Increment Date
             lastEndOfProcess = moment(lastEndOfProcess).add(1, "days").toDate();
@@ -239,11 +250,7 @@ EndOfProcess.after.insert(function (userId, doc) {
         }
         // console.log("End Of Process " + moment(doc.closeDate).format("DD/MM/YYYY"));
 
-        EndOfProcess.direct.update({_id: doc._id}, {$set: {status: true}}, {multi: true}, function (err) {
-            if (err) {
-                console.log(err);
-            }
-        });
+
     })
 })
 
