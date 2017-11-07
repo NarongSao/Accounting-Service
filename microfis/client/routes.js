@@ -484,3 +484,24 @@ MicrofisRoutes.route('/repaymentClear/:closeDate/:loanAccIdList/', {
     }
 });
 
+
+
+/*POS*/
+
+
+// Repayment Clear
+import '../imports/pages/purchase';
+MicrofisRoutes.route('/purchase', {
+    name: 'microfis.purchase',
+    title: 'Purchase',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_purchase');
+    },
+    breadcrumb: {
+        //queryParams: ['show', 'color'],
+        title: 'Purchase',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+

@@ -69,6 +69,26 @@
         </li>
     {{/if}}
 
+
+    <!--POS-->
+    {{#if isInRole 'data-insert,data-update,data-remove' 'Microfis'}}
+        <li class="treeview active">
+            <a href="#">
+                <i class="fa fa-cogs"></i>
+                <span>POS</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            <ul class="treeview-menu" style="display: none">
+                <li class="{{isActiveRoute name='microfis.purchase'}}">
+                    <a href="{{pathFor 'microfis.purchase'}}">
+                        <i class="fa fa-circle-o"></i> <span>Purchase</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/if}}
+
     <!--Settings-->
     {{#if isInRole 'data-insert,data-update,data-remove' 'Microfis'}}
         <li class="treeview active">
