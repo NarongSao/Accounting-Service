@@ -466,17 +466,20 @@ export let checkRepayment = new ValidatedMethod({
             let feeOnPaymentUnPaid = 0;
             let penaltyTotal = 0;
 
-
             scheduleDoc.forEach(function (obj) {
 
 
                 balanceUnPaid += obj.principalDue;
                 interestUnPaid += obj.interestDue;
                 feeOnPaymentUnPaid += obj.feeOnPaymentDue;
-                if (obj.repaymentDoc) {
-                    balanceUnPaid -= obj.repaymentDoc.totalPrincipalPaid;
-                    interestUnPaid -= obj.repaymentDoc.totalInterestPaid;
-                    feeOnPaymentUnPaid -= obj.repaymentDoc.totalFeeOnPaymentPaid;
+                if (obj.repaymentDoc ) {
+                    obj.repaymentDoc.detail.forEach(function (newDoc) {
+                        if (newDoc.repaidDate.getTime() <= moment(checkDate).endOf("day").toDate().getTime()){
+                            balanceUnPaid -= newDoc.principalPaid;
+                            interestUnPaid -= newDoc.interestPaid;
+                            feeOnPaymentUnPaid -= newDoc.feeOnPaymentPaid;
+                        }
+                    })
                     penaltyTotal += obj.repaymentDoc.totalPenaltyPaid;
                 }
             })

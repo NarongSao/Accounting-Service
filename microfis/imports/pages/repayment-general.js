@@ -64,7 +64,6 @@ formTmpl.onCreated(function () {
         // Session.set('maxAmountPaid', minMaxAmount);
         Session.set('maxPenaltyPaid', minMaxAmount);
 
-
         // Track autorun
         this.autorun(function () {
             let repaidDate = stateRepayment.get('repaidDate');

@@ -36,11 +36,12 @@ Journal.before.insert(function (userId, doc) {
 
         }
     });
+
     doc.transaction = transaction;
     var lenArray = doc.transaction.length;
     var date = moment(doc.journalDate, "DD/MM/YYYY").format("YYMM");
     var prefix = doc.branchId + "-" + date;
-    doc._id = idGenerator.genWithPrefix(Journal, prefix, 6);
+    // doc._id = idGenerator.genWithPrefix(Journal, prefix, 6);
 
     doc.splitAccount = lenArray > 2 ? doc._id : 0;
 
