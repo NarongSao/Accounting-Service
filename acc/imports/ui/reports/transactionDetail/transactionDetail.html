@@ -105,6 +105,8 @@
                     <tr>
                         <th width="40px">No</th>
                         <th>Date</th>
+                        <th>BranchId</th>
+
                         <th>Invoice</th>
                         <th>Memo</th>
                         <th>Split Account</th>
@@ -118,7 +120,7 @@
                     {{#each content}}
                         {{#if isHeader}}
                             <tr style="background-color:#EFFFEF;">
-                                <td colspan="8" align="left">
+                                <td colspan="9" align="left">
                                     <b>{{name}}</b>
                                 </td>
 
@@ -126,7 +128,7 @@
                         {{else}}
                             {{#if isFooter}}
                                 <tr style="background-color:#EFFFEF;">
-                                    <td colspan="5" align="left">
+                                    <td colspan="6" align="left">
                                         <b>{{name}}</b>
                                     </td>
                                     <td align="right">
@@ -150,6 +152,9 @@
                                     </td>
                                     <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;{{formatDate journalDate}}
+                                    </td>
+                                    <td>
+                                        {{branchId}}
                                     </td>
                                     <td align="center" class="voucher-id">
                                         {{voucherId}}
