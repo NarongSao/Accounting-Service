@@ -12,7 +12,7 @@ module.exports = {
 
   meteor: {
     // TODO: change app name and path
-    name: 'microfis-samrith',
+    name: 'microfis-samrith-Test',
     path: '../microfis',
 
     servers: {
@@ -26,8 +26,9 @@ module.exports = {
     env: {
       // TODO: Change to your app's url
       // If you are using ssl, it needs to start with https://
-      ROOT_URL: 'http://172.104.62.141',
-      MONGO_URL: 'mongodb://localhost/samrith-db'
+        PORT: "9999",
+      ROOT_URL: 'http://172.104.62.141:9999',
+      MONGO_URL: 'mongodb://localhost/samrithTest001-db'
     },
 
 
@@ -43,7 +44,7 @@ module.exports = {
 
     // Show progress bar while uploading bundle to server
     // You might need to disable it on CI servers
-    enableUploadProgressBar: false
+    enableUploadProgressBar: true
   },
 
   mongo: {
