@@ -38,3 +38,26 @@ import './footer.js';
 
 // Page
 import './index.html';
+
+/*
+let timer;
+Template.MainLayout.onRendered(function() {
+    timer = setTimeout(function(){
+        Meteor.logout(function(err){
+            FlowRouter.go('/');
+        });
+    },60000*30);
+});
+
+Template.MainLayout.events({
+    'mousemove, mousedown, touchstart, keypress': function() {
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            Meteor.logout(function(err){
+                FlowRouter.go('/');
+            });
+        },60000*30);
+    }
+});
+*/
+

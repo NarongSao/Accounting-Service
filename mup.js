@@ -12,7 +12,7 @@ module.exports = {
 
   meteor: {
     // TODO: change app name and path
-    name: 'microfis-samrith',
+    name: 'samrith-online',
     path: '../microfis',
 
     servers: {
@@ -26,8 +26,9 @@ module.exports = {
     env: {
       // TODO: Change to your app's url
       // If you are using ssl, it needs to start with https://
+
       ROOT_URL: 'http://172.104.62.141',
-      MONGO_URL: 'mongodb://localhost/samrith-db'
+      MONGO_URL: 'mongodb://localhost/samrith-online'
     },
 
 
