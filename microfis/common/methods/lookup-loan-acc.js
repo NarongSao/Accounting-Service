@@ -17,7 +17,7 @@ export const lookupLoanAcc = new ValidatedMethod({
     }).validator(),
     run({_id}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(100);
+            this.unblock();
             let data = LoanAcc.aggregate([
                 {$match: {_id: _id}},
                 {

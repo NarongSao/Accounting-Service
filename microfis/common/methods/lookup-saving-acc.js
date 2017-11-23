@@ -17,7 +17,7 @@ export const lookupSavingAcc = new ValidatedMethod({
     }).validator(),
     run({savingAccId}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(100);
+            this.unblock();
 
             let data = SavingAcc.aggregate([
                 {$match: {_id: savingAccId}},

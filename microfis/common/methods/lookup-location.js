@@ -15,7 +15,7 @@ export const lookupLocation = new ValidatedMethod({
     }).validator(),
     run({locationId}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
+            this.unblock();
 
             let data = Location.aggregate([
                 {

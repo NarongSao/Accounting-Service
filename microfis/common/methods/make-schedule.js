@@ -31,7 +31,7 @@ MakeSchedule.declinig = new ValidatedMethod({
     }).validator(),
     run({loanAccId, options}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
+            this.unblock();
 
             // Get loan acc
             let setting = Setting.findOne(),
