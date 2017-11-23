@@ -7,7 +7,6 @@ import {SelectOpts} from '../../imports/libs/select-opts.js';
 export const Category = new Mongo.Collection("microfis_category");
 
 Category.schema = new SimpleSchema({
-
     name: {
         type: String,
         label: 'Name',
@@ -22,3 +21,5 @@ Category.schema = new SimpleSchema({
         type: String
     }
 });
+
+Category.attachSchema(Category.schema);

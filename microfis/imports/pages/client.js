@@ -102,7 +102,7 @@ indexTmpl.helpers({
                             }
                         }
 
-                        return null;
+                        return null;category
                     }
                 },
                 {

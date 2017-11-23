@@ -9,7 +9,7 @@ export const Purchase = new Mongo.Collection("microfis_purchase");
 Purchase.schema = new SimpleSchema({
     purchaseDate: {
         type: Date,
-        label: 'Sale Date',
+        label: 'Purchase Date',
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
@@ -29,19 +29,26 @@ Purchase.schema = new SimpleSchema({
             type: 'select2',
             afFieldInput: {
                 options: function () {
-                    return SelectOpts.transactionType();
+                    // return SelectOpts.transactionType();
                 }
             }
         }
     },
-    venderId: {
+    vendorId: {
         type: String,
-        label: 'Vender',
-        max: 250
+        label: 'Vendor',
+        autoform: {
+            type: 'select2',
+            afFieldInput: {
+                options: function () {
+                    // return SelectOpts.vendor();
+                }
+            }
+        }
     },
     itemName: {
         type: String,
-        label: 'Name',
+        label: 'Item Name',
         max: 250
     },
     category: {
@@ -51,7 +58,7 @@ Purchase.schema = new SimpleSchema({
             type: 'select2',
             afFieldInput: {
                 options: function () {
-                    return SelectOpts.category();
+                    // return SelectOpts.category();
                 }
             }
         }
@@ -63,7 +70,7 @@ Purchase.schema = new SimpleSchema({
             type: 'select2',
             afFieldInput: {
                 options: function () {
-                    return SelectOpts.group();
+                    // return SelectOpts.groupCategory();
                 }
             }
         }
@@ -76,7 +83,7 @@ Purchase.schema = new SimpleSchema({
     price: {
         type: Number,
         decimal: true,
-        label: 'Name'
+        label: 'Price'
     },
     status: {
         type: String,
@@ -92,3 +99,4 @@ Purchase.schema = new SimpleSchema({
         type: String
     }
 });
+Purchase.attachSchema(Purchase.schema);

@@ -1,0 +1,74 @@
+<!--Index-->
+<template name="Microfis_groupCategory">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        {{> tabular table=tabularTable  class="table table-striped table-bordered table-condensed table-hover-pointer"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Microfis_groupCategoryAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Insert-->
+<template name="Microfis_groupCategoryNew">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_groupCategoryNew" type="insert"}}
+            <div class="row">
+                <div class="col-md-12">
+
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="description"}}
+                    {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Update-->
+<template name="Microfis_groupCategoryEdit">
+    <div class="box-body">
+        {{#autoForm collection=collection id="Microfis_groupCategoryEdit" doc=this type="update"}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="description"}}
+                    {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+
+
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Microfis_groupCategoryShow">
+    <div class="box-body">
+        <dl class="dl-horizontal">
+            <dt>Id</dt>
+            <dd>{{_id}}</dd>
+            <dt>Name</dt>
+            <dd>{{name}}</dd>
+            <dt>Description</dt>
+        </dl>
+    </div>
+</template>

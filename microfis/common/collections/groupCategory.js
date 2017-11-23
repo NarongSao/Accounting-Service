@@ -21,3 +21,5 @@ GroupCategory.schema = new SimpleSchema({
         type: String
     }
 });
+
+GroupCategory.attachSchema(GroupCategory.schema);

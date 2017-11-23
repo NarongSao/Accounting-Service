@@ -489,7 +489,7 @@ MicrofisRoutes.route('/repaymentClear/:closeDate/:loanAccIdList/', {
 /*POS*/
 
 
-// Repayment Clear
+// Purchase
 import '../imports/pages/purchase';
 MicrofisRoutes.route('/purchase', {
     name: 'microfis.purchase',
@@ -500,6 +500,58 @@ MicrofisRoutes.route('/purchase', {
     breadcrumb: {
         //queryParams: ['show', 'color'],
         title: 'Purchase',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
+
+
+// Category
+import '../imports/pages/category';
+MicrofisRoutes.route('/category', {
+    name: 'microfis.category',
+    title: 'Category',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_category');
+    },
+    breadcrumb: {
+        //queryParams: ['show', 'color'],
+        title: 'Category',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
+
+// Group Category
+import '../imports/pages/groupCategory';
+MicrofisRoutes.route('/groupCategory', {
+    name: 'microfis.groupCategory',
+    title: 'Category',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_groupCategory');
+    },
+    breadcrumb: {
+        //queryParams: ['show', 'color'],
+        title: 'Group Category',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
+
+// Vendor
+import '../imports/pages/vendor';
+MicrofisRoutes.route('/vendor', {
+    name: 'microfis.vendor',
+    title: 'Vendor',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_vendor');
+    },
+    breadcrumb: {
+        //queryParams: ['show', 'color'],
+        title: 'Vendor',
         // icon: 'sitemap',
         parent: 'microfis.home'
     }

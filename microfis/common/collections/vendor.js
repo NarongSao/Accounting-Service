@@ -34,3 +34,4 @@ Vendor.schema = new SimpleSchema({
         max: 250
     }
 });
+Vendor.attachSchema(Vendor.schema);

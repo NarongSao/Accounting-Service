@@ -64,3 +64,6 @@ Sale.schema = new SimpleSchema({
     }
 });
 
+Sale.attachSchema(Sale.schema);
+
+
