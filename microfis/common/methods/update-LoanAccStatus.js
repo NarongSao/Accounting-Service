@@ -15,7 +15,7 @@ export const updateLoanAccStatus = new ValidatedMethod({
     }).validator(),
     run({loanAccId, opts}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(100);
+            this.unblock();
 
 
             let doc = LoanAcc.findOne({_id: loanAccId});

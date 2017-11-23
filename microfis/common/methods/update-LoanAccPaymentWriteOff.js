@@ -16,6 +16,7 @@ export const updateLoanAccPaymentWrteOff = new ValidatedMethod({
     }).validator(),
     run({loanAccId, opts, repaidDate}) {
         if (!this.isSimulation) {
+            this.unblock();
             if (opts.status == 'Write Off') {
 
                 let updatePaymentArray = {};

@@ -39,7 +39,7 @@ export let checkWriteOff = new ValidatedMethod({
     }).validator(),
     run({loanAccId, checkDate, opts}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
+            this.unblock();
 
 
             let loanAccDoc = lookupLoanAcc.call({_id: loanAccId});

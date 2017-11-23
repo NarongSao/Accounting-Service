@@ -14,6 +14,7 @@ export const lookupProduct = new ValidatedMethod({
     }).validator(),
     run({_id}) {
         if (!this.isSimulation) {
+            this.unblock();
             let data = Product.aggregate([
                 {$match: {_id: _id}},
                 {

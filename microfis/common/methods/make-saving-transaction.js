@@ -43,7 +43,6 @@ export let makeSavingTransaction = new ValidatedMethod({
     }).validator(),
     run({savingAccId, checkDate, opts}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(100);
 
             // Get saving acc and last transaction
             let savingAccDoc = lookupSavingAcc.call({savingAccId: savingAccId}),

@@ -574,7 +574,6 @@ export let checkRepaymentRealTime = new ValidatedMethod({
     }).validator(),
     run({loanAccId, checkDate, opts}) {
         if (!this.isSimulation) {
-
             // Get loan acc and schedule
             let lastScheduleDateTemp = RepaymentSchedule.findOne({
                 loanAccId: loanAccId,
