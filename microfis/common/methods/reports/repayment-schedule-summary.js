@@ -23,7 +23,7 @@ export const repaymentScheduleSummaryReport = new ValidatedMethod({
     }).validator(),
     run({loanAccId}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
+            this.unblock();
 
             let data = {
                 title: {},

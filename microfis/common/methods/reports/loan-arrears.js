@@ -33,7 +33,7 @@ export const loanArrearsReport = new ValidatedMethod({
     }).validator(),
     run({params}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
+            this.unblock();
 
             let data = {
                 title: {},

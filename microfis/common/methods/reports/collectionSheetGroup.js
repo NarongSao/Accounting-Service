@@ -32,7 +32,8 @@ export const collectionSheetGroupReport = new ValidatedMethod({
     }).validator(),
     run({params}) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(200);
+            // Meteor._sleepForMs(200);
+            this.unblock();
 
             let data = {
                 title: {},

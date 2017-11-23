@@ -14,6 +14,7 @@ import {Client} from '../../common/collections/client';
 import {SavingTransaction} from '../../common/collections/saving-transaction.js';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
 import {checkRepayment} from '../../common/methods/check-repayment.js';
+import {checkRepaymentProvision} from '../../common/methods/check-repayment.js';
 import {checkSavingTransaction} from '../../common/methods/check-saving-transaction.js';
 import {MakeRepayment} from '../../common/libs/make-repayment.js';
 import {Setting} from '../../../core/common/collections/setting';
@@ -33,8 +34,8 @@ EndOfProcess.before.insert(function (userId, doc) {
 });
 
 EndOfProcess.after.insert(function (userId, doc) {
-    let countEndOfProcess=0;
-    let numOfEndOfProcess=0;
+    let countEndOfProcess = 0;
+    let numOfEndOfProcess = 0;
 
     Meteor.defer(function () {
         let settingDoc = Setting.findOne();
@@ -48,20 +49,21 @@ EndOfProcess.after.insert(function (userId, doc) {
         while (lastEndOfProcess.getTime() <= moment(doc.closeDate).endOf("days").toDate().getTime()) {
             numOfEndOfProcess++;
             let tDate = moment(lastEndOfProcess).endOf('day').toDate();
+            let tDateStart = moment(lastEndOfProcess).startOf('day').toDate();
 
 
             //    Adjust Principal Balance
             //    Integrated to Account========================================================================================================================
 
 
-             Meteor.defer(function () {
+            Meteor.defer(function () {
                 if (settingDoc.integrate == true) {
                     let selector = {};
                     selector.disbursementDate = {$lte: tDate};
                     selector['$or'] = [{status: "Active"},
-                        {closeDate: {$exists: true, $gt: tDate}},
-                        {writeOffDate: {$exists: true, $gt: tDate}},
-                        {restructureDate: {$exists: true, $gt: tDate}}
+                        {closeDate: {$exists: true, $gte: tDateStart}},
+                        {writeOffDate: {$exists: true, $gte: tDateStart}},
+                        {restructureDate: {$exists: true, $gte: tDateStart}}
                     ];
                     selector.branchId = doc.branchId;
 
@@ -77,12 +79,14 @@ EndOfProcess.after.insert(function (userId, doc) {
 
 
                     loanAccPrincipalList.forEach(function (obj) {
+
                         if (obj) {
                             let checkPyamentBefore = checkRepayment.run({
                                 loanAccId: obj._id,
                                 checkDate: moment(tDate).add(-1, "days").toDate()
                             });
-                            let checkPayment = checkRepayment.run({loanAccId: obj._id, checkDate: tDate});
+                            let checkPayment = checkRepaymentProvision.run({loanAccId: obj._id, checkDate: tDate});
+
                             let productStatusList;
                             if (obj.paymentMethod == "D") {
                                 if (obj.term <= 365) {
@@ -119,7 +123,6 @@ EndOfProcess.after.insert(function (userId, doc) {
                             let proStatusBefore = productStatusList.find(findProductStatusBefore);
 
                             if (proStatus._id != proStatusBefore._id) {
-
                                 let acc_principalBefore = ClassCompareAccount.checkPrincipal(obj, proStatusBefore._id);
                                 let acc_principal = ClassCompareAccount.checkPrincipal(obj, proStatus._id);
 
@@ -138,6 +141,7 @@ EndOfProcess.after.insert(function (userId, doc) {
                                         drcr: -checkPayment.balanceUnPaid
                                     });
                                 } else if (obj.currencyId == "KHR") {
+
                                     totalKHR += checkPayment.balanceUnPaid;
                                     transactionKHR.push({
                                         account: acc_principal.accountDoc.code + " | " + acc_principal.accountDoc.name,
@@ -233,7 +237,7 @@ EndOfProcess.after.insert(function (userId, doc) {
                     // console.log(moment(tDate).format("DD/MM/YYYY"));
                     countEndOfProcess++;
 
-                    if(countEndOfProcess==numOfEndOfProcess){
+                    if (countEndOfProcess == numOfEndOfProcess) {
                         EndOfProcess.direct.update({_id: doc._id}, {$set: {status: true}}, {multi: true}, function (err) {
                             if (err) {
                                 console.log(err);
@@ -241,7 +245,7 @@ EndOfProcess.after.insert(function (userId, doc) {
                         });
                     }
                 }
-             })
+            })
 
             //Increment Date
             lastEndOfProcess = moment(lastEndOfProcess).add(1, "days").toDate();
