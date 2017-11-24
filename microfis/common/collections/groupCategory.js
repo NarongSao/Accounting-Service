@@ -19,6 +19,10 @@ GroupCategory.schema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    numberUse: {
+        type: Number,
+        defaultValue: 0
     }
 });
 

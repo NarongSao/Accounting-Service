@@ -27,7 +27,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'description', title: 'Description'}
 
     ],
-    extraFields: []
+    extraFields: ["numberUse"]
 });
 
 export const GroupCategoryTabular = new Tabular.Table(tabularData);

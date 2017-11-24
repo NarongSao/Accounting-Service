@@ -22,15 +22,23 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
     collection: Purchase,
     columns: [
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Microfis_purchaseAction},
-        {data: '_id', title: 'ID'},
-        {data: 'purchaseDate', title: 'Purchase Date'},
+        {data: 'purchaseDate', title: 'Purchase Date',
+            render: function (val, type, doc) {
+                return moment(val).format('DD/MM/YYYY');
+            }
+        },
         {data: 'transactionType', title: 'Transaction Type'},
-        {data: 'venderId', title: 'Vender'},
+        // {data: 'vendorId', title: 'Vendor'},
         {data: 'itemName', title: 'Item Name'},
-        {data: 'category', title: 'Category'},
-        {data: 'group', title: 'Group'},
+        // {data: 'category', title: 'Category'},
+        // {data: 'group', title: 'Group'},
         {data: 'cost', title: 'Cost'},
-        {data: 'price', title: 'Price'}
-    ]
+        {data: 'price', title: 'Price'},
+        {data: 'status', title: 'Status',
+            render: function (val, type, doc) {
+                return `<span class="badge bg-green">${val}</span>`;
+            }}
+    ],
+    extraFields:["_id","vendorId","category","group"]
 });
 export const PurchaseTabular = new Tabular.Table(tabularData);

@@ -16,6 +16,9 @@ import {Client} from '../../../microfis/common/collections/client';
 import {Fee} from '../../../microfis/common/collections/fee';
 import {Group} from '../../../microfis/common/collections/group';
 import {LoanAcc} from '../../../microfis/common/collections/loan-acc';
+import {Vendor} from '../../../microfis/common/collections/vendor';
+import {Category} from '../../../microfis/common/collections/category';
+import {GroupCategory} from '../../../microfis/common/collections/groupCategory';
 
 import {ExchangeNBC} from '../../../acc/imports/api/collections/exchangeNBC';
 import {LookupValue} from '../../common/collections/lookup-value.js';
@@ -367,9 +370,37 @@ export const SelectOpts = {
                 });
                 return list;
             }
+        },
+        vendorOption(){
+            Meteor.subscribe('microfis.vendor');
+            let list=[];
+            list.push({label:"Select One",value: ""});
+            Vendor.find().forEach(function (obj) {
+                list.push({label:obj.name, value: obj._id});
+            });
+            return list;
+        },
+        categoryOption(){
+            Meteor.subscribe('microfis.category');
+            let list=[];
+            list.push({label:"Select One",value: ""});
+            Category.find().forEach(function (obj) {
+                list.push({label:obj.name, value: obj._id});
+            });
+            return list;
+        },
+        groupCategory(){
+            Meteor.subscribe('microfis.groupCategory');
+            let list=[];
+            list.push({label:"Select One",value: ""});
+            GroupCategory.find().forEach(function (obj) {
+                list.push({label:obj.name, value: obj._id});
+            });
+            return list;
+
         }
-    }
-;
+
+    };
 
 
 export const SelectOptsReport = {
@@ -581,6 +612,7 @@ export const SelectOptsReport = {
         list.push({value: 'RPAL', label: 'Related Party External Auditors Loan'});
         return list;
     }
+
 };
 
 

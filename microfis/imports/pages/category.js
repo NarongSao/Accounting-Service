@@ -54,11 +54,15 @@ indexTmpl.events({
         alertify.category(fa('pencil', 'Category'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Category,
-            {_id: this._id},
-            {title: 'Category', itemTitle: this._id}
-        );
+        if(this.numberUse>0){
+            alertify.error("Can remove");
+        }else {
+            destroyAction(
+                Category,
+                {_id: this._id},
+             {title: 'Category', itemTitle: this._id}
+            );
+        }
     },
     'click .js-display' (event, instance) {
         alertify.categoryShow(fa('eye', 'Category'), renderTemplate(showTmpl, this));

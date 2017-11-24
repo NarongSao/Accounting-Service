@@ -54,11 +54,15 @@ indexTmpl.events({
         alertify.groupCategory(fa('pencil', 'GroupCategory'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            GroupCategory,
-            {_id: this._id},
-            {title: 'GroupCategory', itemTitle: this._id}
-        );
+        if(this.numberUse>0){
+            alertify.error("Can remove");
+        }else {
+            destroyAction(
+                GroupCategory,
+                {_id: this._id},
+                {title: 'GroupCategory', itemTitle: this._id}
+            );
+        }
     },
     'click .js-display' (event, instance) {
         alertify.groupCategoryShow(fa('eye', 'GroupCategory'), renderTemplate(showTmpl, this));

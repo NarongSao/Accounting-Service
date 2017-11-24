@@ -28,9 +28,8 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'email', title: 'Email'},
         {data: 'tel', title: 'Telephone'},
         {data: 'description', title: 'Description'}
-
     ],
-    extraFields: []
+    extraFields: ["numberUse"]
 });
 
 export const VendorTabular = new Tabular.Table(tabularData);

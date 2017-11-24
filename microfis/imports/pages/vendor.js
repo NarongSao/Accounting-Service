@@ -54,11 +54,16 @@ indexTmpl.events({
         alertify.vendor(fa('pencil', 'Vendor'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Vendor,
-            {_id: this._id},
-            {title: 'Vendor', itemTitle: this._id}
-        );
+        if(this.numberUse>0){
+            alertify.error("Can remove");
+        }else {
+            destroyAction(
+                Vendor,
+                {_id: this._id},
+                {title: 'Vendor', itemTitle: this._id}
+            );
+        }
+
     },
     'click .js-display' (event, instance) {
         alertify.vendorShow(fa('eye', 'Vendor'), renderTemplate(showTmpl, this));

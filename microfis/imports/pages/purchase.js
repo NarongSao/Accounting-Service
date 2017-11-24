@@ -51,14 +51,22 @@ indexTmpl.events({
         alertify.purchase(fa('plus', 'purchase'), renderTemplate(newTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.purchase(fa('pencil', 'purchase'), renderTemplate(editTmpl, this));
+        if(this.status==false){
+             alertify.purchase(fa('pencil', 'purchase'), renderTemplate(editTmpl, this));
+        }else {
+            alertify.error("Can't Update");
+        }
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            purchase,
-            {_id: this._id},
-            {title: 'purchase', itemTitle: this._id}
-        );
+        if(this.status==false){
+            destroyAction(
+              Purchase,
+              {_id: this._id},
+               {title: 'purchase', itemTitle: this._id}
+          );
+        }else {
+            alertify.error("Can't remove");
+        }
     },
     'click .js-display' (event, instance) {
         alertify.purchaseShow(fa('eye', 'purchase'), renderTemplate(showTmpl, this));

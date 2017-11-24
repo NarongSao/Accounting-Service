@@ -20,16 +20,20 @@ Purchase.schema = new SimpleSchema({
                 }
             }
         }
-
     },
     transactionType: {
         type: String,
         label: 'Transaction Type',
         autoform: {
             type: 'select2',
+            defaultValue: "cash",
             afFieldInput: {
                 options: function () {
                     // return SelectOpts.transactionType();
+                    let list=[];
+                    list.push({label:"Credit", value:"credit"});
+                    list.push({label:"Cash", value:"cash"});
+                    return list;
                 }
             }
         }
@@ -41,7 +45,7 @@ Purchase.schema = new SimpleSchema({
             type: 'select2',
             afFieldInput: {
                 options: function () {
-                    // return SelectOpts.vendor();
+                    return SelectOpts.vendorOption();
                 }
             }
         }
@@ -58,7 +62,7 @@ Purchase.schema = new SimpleSchema({
             type: 'select2',
             afFieldInput: {
                 options: function () {
-                    // return SelectOpts.category();
+                    return SelectOpts.categoryOption();
                 }
             }
         }
@@ -70,7 +74,7 @@ Purchase.schema = new SimpleSchema({
             type: 'select2',
             afFieldInput: {
                 options: function () {
-                    // return SelectOpts.groupCategory();
+                     return SelectOpts.groupCategory();
                 }
             }
         }
@@ -86,8 +90,9 @@ Purchase.schema = new SimpleSchema({
         label: 'Price'
     },
     status: {
-        type: String,
+        type: Boolean,
         label: 'Status',
+        defaultValue:false,
         max: 250
     },
     closedDate: {

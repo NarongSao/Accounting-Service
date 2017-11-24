@@ -32,6 +32,10 @@ Vendor.schema = new SimpleSchema({
         type: String,
         label: 'Tel',
         max: 250
+    },
+    numberUse: {
+        type: Number,
+        defaultValue: 0
     }
 });
 Vendor.attachSchema(Vendor.schema);
