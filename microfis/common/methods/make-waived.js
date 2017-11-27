@@ -22,7 +22,7 @@ export const makeWaived = new ValidatedMethod({
     }).validator(),
     run({loanAccId, opts}) {
         if (!this.isSimulation) {
-            this.unblock();
+
             
             let settingDoc = Setting.findOne();
             if (settingDoc.integrate == true) {
