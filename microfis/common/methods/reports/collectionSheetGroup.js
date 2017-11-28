@@ -500,7 +500,7 @@ export const collectionSheetGroupReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing.toNumber())}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;
@@ -743,7 +743,7 @@ export const collectionSheetGroupReport = new ValidatedMethod({
                                     feeOnPaymentDue: microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue),
                                     totalPrincipalInterestDue: microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue),
                                     totalAmountForGroup: microfis_formatNumber(totalAmountForGroup),
-                                    totalClosing: microfis_formatNumber(totalClosing),
+                                    totalClosing: microfis_formatNumber(totalClosing.toNumber()),
 
                                     telephone: loanAccDoc.clientDoc.telephone || ''
                                 })
