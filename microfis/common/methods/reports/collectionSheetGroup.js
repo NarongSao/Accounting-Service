@@ -500,7 +500,7 @@ export const collectionSheetGroupReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing.toNumber())}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;

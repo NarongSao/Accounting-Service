@@ -413,7 +413,6 @@ export const collectionSheetReport = new ValidatedMethod({
                     }
                     let proStatus = productStatusList.find(finProductStatus);
 
-
                     //check product status (Classify)
                     if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
                         if (result.totalScheduleDue.dueDate.to != null) {
@@ -431,7 +430,6 @@ export const collectionSheetReport = new ValidatedMethod({
                                 totalDueIntTHB += result.totalScheduleDue.interestDue;
                                 totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
                             }
-
 
                             content += `<tr>
                                 <td>${i}</td>
@@ -454,7 +452,7 @@ export const collectionSheetReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.feeOnPaymentDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.totalPrincipalInterestDue)}</td>
-                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing)}</td>
+                                <td class="numberAlign"> ${microfis_formatNumber(totalClosing.toNumber())}</td>
                                 
                                 <td> ${loanAccDoc.clientDoc.telephone || ''}</td>
                               </tr>`;
