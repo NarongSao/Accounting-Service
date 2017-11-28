@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 import math from 'mathjs';
 import {LoanAcc} from '../../../microfis/common/collections/loan-acc';
+import {Purchase} from '../../../microfis/common/collections/purchase';
 
 
 Meteor.methods({
@@ -95,6 +96,13 @@ Meteor.methods({
             });
         })
         return arr;
-    }
+    },
+    microfis_purchaseOpt:function (branchId) {
+        let list=[];
+        Purchase.find({branchId:branchId,status: false}).fetch().forEach(function (obj) {
+            list.push({value: obj._id,label: obj.itemName + " | "+obj.price});
+        })
 
+        return list;
+    }
 })

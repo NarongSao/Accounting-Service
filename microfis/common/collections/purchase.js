@@ -92,8 +92,7 @@ Purchase.schema = new SimpleSchema({
     status: {
         type: Boolean,
         label: 'Status',
-        defaultValue:false,
-        max: 250
+        defaultValue:false
     },
     closedDate: {
         type: Date,

@@ -26,38 +26,54 @@ Sale.schema = new SimpleSchema({
         label: 'Transaction Type',
         autoform: {
             type: 'select2',
+            defaultValue: "credit",
             afFieldInput: {
                 options: function () {
-                    return SelectOpts.transactionType();
+                    let list=[];
+                    list.push({label:"Credit", value:"credit"});
+                    list.push({label:"Cash", value:"cash"});
+                    return list;
                 }
             }
         }
     },
     customerId: {
         type: String,
-        label: 'Customer',
-        max: 250
+        label: 'Customer'
     },
     purchaseId: {
         type: String,
-        label: 'Purchase Id',
-        max: 250
+        label: 'Item'
     },
     price: {
         type: Number,
+        label: 'Price' ,
         decimal: true,
-        label: 'Price',
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Debit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
     },
     paid: {
-
         type: Number,
+        label: 'Paid',
         decimal: true,
-        label: 'Paid'
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Debit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
     },
     remaining: {
         type: Number,
         decimal: true,
-        label: 'Remain'
+        label: 'Remain',
+        defaultValue: 0
     },
     branchId: {
         type: String

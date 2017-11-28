@@ -36,7 +36,11 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'price', title: 'Price'},
         {data: 'status', title: 'Status',
             render: function (val, type, doc) {
-                return `<span class="badge bg-green">${val}</span>`;
+                if(val==true){
+                    return `<span class="badge bg-green">${val}</span>`;
+                }else {
+                    return `<span class="badge bg-grey">${val}</span>`;
+                }
             }}
     ],
     extraFields:["_id","vendorId","category","group"]

@@ -1,0 +1,112 @@
+<!--Index-->
+<template name="Microfis_sale">
+    <!--<div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>-->
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        {{> tabular table=tabularTable  class="table table-striped table-bordered table-condensed table-hover-pointer"}}
+
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Microfis_saleAction">
+    {{#columnAction align="right"}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Insert-->
+<template name="Microfis_saleNew">
+    <div class="box-body">
+        <div class="box-header with-border" style="text-align:center">
+            <h3 class="box-title" style="display: inline">
+                <!--Client Info-->
+                <div class="text-bold">
+                        {{#with customerDoc}}
+                            <a href="#" class="js-display-disbursement">
+                                {{_id}} : {{khSurname}} {{khGivenName}}</a>
+                        {{/with}}
+                </div>
+            </h3>
+        </div>
+        {{#autoForm collection=collection id="Microfis_saleNew" type="insert"}}
+        <div class="row">
+            <div class="col-md-12">
+                {{> afQuickField name="saleDate"}}
+                {{> afQuickField name="transactionType"}}
+                {{> afQuickField name="customerId" type="hidden" value=customerDoc._id}}
+                {{> afQuickField name="purchaseId" options=purchaseOption}}
+                {{> afQuickField name="price" value=price}}
+                {{> afQuickField name="paid"}}
+                {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+            </div>
+        </div>
+
+        {{> formFooterWithButton}}
+    {{/autoForm}}
+</div>
+</template>
+
+<!--Update-->
+<template name="Microfis_saleEdit">
+    <div class="box-body">
+        <div class="box-header with-border" style="text-align:center">
+            <h3 class="box-title" style="display: inline">
+                <!--Client Info-->
+                <div class="text-bold">
+                    {{#with customerDoc}}
+                        <a href="#" class="js-display-disbursement">
+                            {{_id}} : {{khSurname}} {{khGivenName}}</a>
+                    {{/with}}
+                </div>
+            </h3>
+        </div>
+        {{#autoForm collection=collection id="Microfis_saleEdit" doc=this type="update"}}
+        <div class="row">
+            <div class="col-md-12">
+                {{> afQuickField name="saleDate"}}
+                {{> afQuickField name="transactionType"}}
+                {{> afQuickField name="customerId" type="hidden"}}
+                {{> afQuickField name="purchaseId" options=purchaseOption}}
+                {{> afQuickField name="price" value=price}}
+                {{> afQuickField name="paid"}}
+                {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+            </div>
+        </div>
+
+        {{> formFooterWithButton}}
+    {{/autoForm}}
+</div>
+</template>
+
+<!--Show-->
+<template name="Microfis_saleShow">
+    <div class="box-body">
+    <dl class="dl-horizontal">
+        <dt>Id</dt>
+        <dd>{{_id}}</dd>
+        <dt>Date</dt>
+        <dd>{{moFormat saleDate "DD/MM/YYYY"}}</dd>
+        <dt>Short Name</dt>
+        <dd>{{shortName}}</dd>
+        <dt>Register Date</dt>
+        <dd>{{moFormat registerDate "DD/MM/YYYY"}}</dd>
+        <dt>Address</dt>
+        <dd>{{address}}</dd>
+        <dt>Telephone</dt>
+        <dd>{{telephone}}</dd>
+        <dt>Email</dt>
+        <dd>{{email}}</dd>
+        <dt>Website</dt>
+        <dd>{{website}}</dd>
+    </dl>
+</div>
+</template>

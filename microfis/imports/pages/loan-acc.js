@@ -36,6 +36,7 @@ import {LoanAccTabular} from '../../common/tabulars/loan-acc.js';
 // Page
 import './loan-acc.html';
 import './saving-acc.html';
+import './sale';
 import './reStructure.js';
 
 // Declare template
@@ -44,7 +45,12 @@ let indexTmpl = Template.Microfis_loanAcc,
     productFormTmpl = Template.Microfis_loanAccProductForm,
     formTmpl = Template.Microfis_loanAccForm,
     savingAddOnTpl = Template.Microfis_savingAddOnAgent,
-    showTmpl = Template.Microfis_loanAccShow;
+    showTmpl = Template.Microfis_loanAccShow,
+
+    saleTml=Template.Microfis_saleNew;
+
+
+
 
 let state = new ReactiveObj({
     disbursmentDate: moment().toDate()
@@ -59,6 +65,7 @@ let isPreloader = true;
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('loanAccProduct');
+    createNewAlertify('saleForm');
     createNewAlertify('loanAcc', {size: 'lg'});
     createNewAlertify('loanAccShow');
     createNewAlertify('savingAccProduct');
@@ -98,6 +105,10 @@ indexTmpl.events({
         state.set("disbursmentDate", moment().toDate());
 
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
+    },
+    'click .js-create-sale' (event, instance) {
+        let clientId=FlowRouter.getParam('clientId')
+        alertify.saleForm(fa('plus', 'Sale'), renderTemplate(saleTml,{customerId: clientId}));
     },
     'click .js-update' (event, instance) {
 
@@ -233,7 +244,6 @@ AutoForm.hooks({
 formTmpl.onCreated(function () {
     this.autorun(() => {
         let currentData = Template.currentData();
-
         if (currentData) {
             this.subscribe('microfis.loanAccById', currentData.loanAccId);
         }
@@ -436,7 +446,7 @@ let hooksObject = {
         if (formType == "insert" && result.status != "Restructure") {
             stateClient.set("cycle", stateClient.get('cycle') + 1);
         }
-
+        alertify.saleForm().close();
         alertify.loanAcc().close();
         alertify.loanAccProduct().close();
         displaySuccess();

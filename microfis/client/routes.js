@@ -557,3 +557,19 @@ MicrofisRoutes.route('/vendor', {
     }
 });
 
+// Vendor
+import '../imports/pages/sale';
+MicrofisRoutes.route('/sale', {
+    name: 'microfis.sale',
+    title: 'Sale',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_sale');
+    },
+    breadcrumb: {
+        //queryParams: ['show', 'color'],
+        title: 'Sale',
+        // icon: 'sitemap',
+        parent: 'microfis.home'
+    }
+});
+
