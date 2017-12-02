@@ -9,6 +9,7 @@ import  {MakeSchedule} from '../../common/methods/make-schedule.js';
 
 // Collection
 import {LoanAcc} from '../../common/collections/loan-acc.js';
+import {Sale} from '../../common/collections/sale';
 import {SavingAcc} from '../../common/collections/saving-acc.js';
 import {Client} from '../../common/collections/client.js';
 import {RepaymentSchedule} from '../../common/collections/repayment-schedule.js';
@@ -37,10 +38,19 @@ LoanAcc.before.insert(function (userId, doc) {
         doc.installmentAllowClosing = penaltyClosingDoc.installmentTermLessThan;
     }
 
+    console.log(doc.purchaseId);
+    Sale.direct.update({purchaseId: doc.purchaseId},{$set: {loanAccId: doc._id}});
+    let saleDoc=Sale.findOne({purchaseId: doc.purchaseId});
+    if(saleDoc){
+        doc.saleId=saleDoc._id;
+    }
+
 });
 
 // After insert (repayment schedule)
 LoanAcc.after.insert(function (userId, doc) {
+
+
     Meteor.defer(function () {
         _makeSchedule(doc);
     });
@@ -204,6 +214,9 @@ LoanAcc.after.remove(function (userId, doc) {
                 console.log(err.message);
             }
         })
+    }
+    if(doc.saleId){
+        Sale.remove({_id: doc.saleId});
     }
 
 

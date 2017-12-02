@@ -442,3 +442,55 @@ MicrofisRoutes.route('/needToClearPrepayment-report', {
         parent: 'microfis.home'
     }
 });
+
+
+// Purchase
+import '../imports/reports/purchase';
+MicrofisRoutes.route('/purchase-report', {
+    name: 'microfis.purchaseReport',
+    title: 'Purchase Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_purchaseReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Purchase Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Sale
+import '../imports/reports/sale';
+MicrofisRoutes.route('/sale-report', {
+    name: 'microfis.saleReport',
+    title: 'Sale Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_saleReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Sale Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
+
+// Inventory
+import '../imports/reports/inventory';
+MicrofisRoutes.route('/inventory-report', {
+    name: 'microfis.inventoryReport',
+    title: 'Inventory Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_inventoryReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Inventory Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

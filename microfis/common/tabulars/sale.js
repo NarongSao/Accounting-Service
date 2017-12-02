@@ -30,11 +30,21 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'transactionType', title: 'Transaction Type'},
         /*{data: 'customerId', title: 'Customer Id'},
         {data: 'purchaseId', title: 'Purchase Id'},*/
-        {data: 'price', title: 'Price'},
-        {data: 'paid', title: 'Paid'},
-        {data: 'remaining', title: 'Remain'},
+        {data: 'price', title: 'Price',
+            render:function (val,type,doc) {
+                return numeral(val).format("(0,00.00)")
+            }
+        },
+        {data: 'paid', title: 'Paid',
+            render:function (val,type,doc) {
+                return numeral(val).format("(0,00.00)")
+            }},
+        {data: 'remaining', title: 'Remain',
+            render:function (val,type,doc) {
+                return numeral(val).format("(0,00.00)")
+            }},
 
     ],
-    extraFields:["_id","purchaseId","customerId"]
+    extraFields:["_id","purchaseId","customerId","loanAccId"]
 });
 export const SaleTabular = new Tabular.Table(tabularData);

@@ -64,12 +64,15 @@ indexTmpl.events({
         alertify.sale(fa('plus', 'Sale'), renderTemplate(editTmpl,this));
     },*/
     'click .js-destroy' (event, instance) {
-
+        if(this.loanAccId){
+            displayError("You need to delete from Loan Account");
+        }else {
             destroyAction(
               Sale,
               {_id: this._id},
                {title: 'sale', itemTitle: this._id}
             );
+        }
     },
     'click .js-display' (event, instance) {
         alertify.saleShow(fa('eye', 'sale'), renderTemplate(showTmpl, this));
@@ -153,16 +156,12 @@ let hooksObject = {
         insert: function (doc) {
             debugger;
             if(doc.transactionType=="credit"){
-                alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
+                alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl,{purchaseId: doc.purchaseId}));
             }
             return doc;
-
         }
     },
     onSuccess (formType, result) {
-        // if (formType == 'update') {
-            alertify.sale().close();
-        // }
         displaySuccess();
     },
     onError (formType, error) {

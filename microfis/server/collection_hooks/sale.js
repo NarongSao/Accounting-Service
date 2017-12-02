@@ -8,7 +8,7 @@ import {Purchase} from '../../common/collections/purchase';
 
 Sale.before.insert(function (userId, doc) {
         doc.remaining=doc.price-doc.paid;
-    Purchase.direct.update({_id: doc.purchaseId},{$set: {status: true}});
+    Purchase.direct.update({_id: doc.purchaseId},{$set: {status: true,closeDate: doc.saleDate}});
 
 });
 
@@ -17,13 +17,11 @@ Sale.before.update(function (userId, doc, fieldNames, modifier, options) {
 
     let salePrevious = this.previous;
 
-    Purchase.direct.update({_id: salePrevious.purchaseId},{$set: {status: false}});
-        Purchase.direct.update({_id: modifier.$set.purchaseId},{$set: {status: true}});
+    Purchase.direct.update({_id: salePrevious.purchaseId},{$set: {status: false,closeDate: ""}});
+        Purchase.direct.update({_id: modifier.$set.purchaseId},{$set: {status: true,closeDate: modifier.$set.saleDate}});
 
 });
 
-
-
 Sale.after.remove(function (userId, doc) {
-    Purchase.direct.update({_id: doc.purchaseId},{$set: {status: false}});
+    Purchase.direct.update({_id: doc.purchaseId},{$set: {status: false,closeDate: ""}});
 })

@@ -32,8 +32,14 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: 'itemName', title: 'Item Name'},
         // {data: 'category', title: 'Category'},
         // {data: 'group', title: 'Group'},
-        {data: 'cost', title: 'Cost'},
-        {data: 'price', title: 'Price'},
+        {data: 'cost', title: 'Cost',
+            render:function (val,type,doc) {
+                return numeral(val).format("(0,00.00)")
+            }},
+        {data: 'price', title: 'Price',
+            render:function (val,type,doc) {
+                return numeral(val).format("(0,00.00)")
+            }},
         {data: 'status', title: 'Status',
             render: function (val, type, doc) {
                 if(val==true){

@@ -1,0 +1,137 @@
+<!--Form-->
+<template name="Microfis_saleReport">
+    <div class="box-body">
+        {{#autoForm schema=schema id="Microfis_saleReport"  target="normal" resetOnSuccess=false}}
+            <div class="animated fadeIn">
+                <div class="box box-primary direct-chat direct-chat-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="font-family: 'Khmer OS Battambang'">ចុចទីនេះដើម្បីបង្ហាញ ឬ លាក់
+                            <span
+                                    class="font-head-panel-en">Form</span></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+
+                        <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
+                            <div class="col-md-4">
+                                {{> afQuickField name="branchId"}}
+                                {{> afQuickField name="categoryId"}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="vendorId"}}
+                                {{> afQuickField name="groupId"}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="date"}}
+                                {{> afQuickField name="transactionType"}}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <!--<a href="#" id="exportToExcel">download</a>-->
+                        {{> formFooterWithButtonReport}}
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+
+            </div>
+        {{/autoForm}}
+        {{> Microfis_saleReportPrintData}}
+    </div>
+
+
+</template>
+<template name="Microfis_saleReportPrintData">
+    <div class="horizontal-scroll">
+        <!--#print-data-->
+        <div id="print-data">
+            <div class="sub-div display-on-print-div-landscape-loan">
+                {{#if rptInit}}
+                    {{#if rptData}}
+                        {{#with rptData}}
+
+                            <!--Title-->
+                            {{#with title}}
+                                <div class="rpt-title">
+                                    <div class="rpt-title-3x rpt-kh-muol">{{company.khName}}</div>
+                                    <div class="rpt-title-2x">{{company.enName}}</div>
+                                    <!--<div>សាខា: {{branch.khName}}</div>-->
+                                    <div class="rpt-title-2x"><u>របាយការណ៍ លក់</u></div>
+                                    <div>
+                                        <strong>អាសយដ្ឋាន:</strong> {{branch.khAddress}},
+                                        <strong>ទូរស័ព្ទ:</strong> {{company.telephone}}, {{branch.telephone}}
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Header-->
+                            {{#with header}}
+
+                                <div style="width: 100%">
+
+                                    <div style="width: 60%; float: right">
+                                        <div style="width: 50%; float: left">
+                                            <ul class="list-unstyled">
+                                                <li><strong>Vendor:</strong> {{vendorId}}</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="width: 50%; float: right">
+                                            <ul class="list-unstyled">
+                                                <li class="pull-right"><strong>Category:</strong> {{categoryId}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div style="width: 40%;">
+                                            <ul class="list-unstyled">
+                                                <li><strong>Branch:</strong> {{branchId}}</li>
+                                            </ul>
+                                    </div>
+
+
+                                </div>
+                                <div style="width: 100%">
+
+                                    <div style="width: 60%;float: right">
+                                        <div style="width: 50%; float: left">
+                                            <ul class="list-unstyled">
+                                                <li><strong>Date:</strong> {{date}}</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="width: 50%; float: right">
+                                            <ul class="list-unstyled">
+                                                <li class="pull-right"><strong>Group:</strong> {{groupId}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            {{/with}}
+
+                            <!--Content-->
+                            {{{content}}}
+
+                        {{/with}}
+                        {{> ReportSignFooter}}
+                    {{else}}
+                        <div class="text-center">
+                            {{> iconLoading size="fa-5x"}}
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <!--/#print-data-->
+</template>

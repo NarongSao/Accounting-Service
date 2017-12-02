@@ -611,8 +611,45 @@ export const SelectOptsReport = {
         list.push({value: 'RPEL', label: 'Related Party Employees Loan'});
         list.push({value: 'RPAL', label: 'Related Party External Auditors Loan'});
         return list;
-    }
+    },
+    vendorReport:function () {
+        Meteor.subscribe('microfis.vendor');
 
+        let list = [{
+            label: "(Select All)",
+            value: "All"
+        }]
+        Vendor.find().forEach(function (obj) {
+            list.push({label: obj.name,value: obj._id});
+        })
+        return list;
+    },
+    categoryReport:function () {
+        Meteor.subscribe('microfis.category');
+
+        let list = [{
+            label: "(Select All)",
+            value: "All"
+        }]
+
+
+        Category.find().forEach(function (obj) {
+            list.push({label: obj.name,value: obj._id});
+        })
+        return list;
+    },
+    groupReport:function () {
+        Meteor.subscribe('microfis.groupCategory');
+
+        let list = [{
+            label: "(Select All)",
+            value: "All"
+        }]
+        GroupCategory.find().forEach(function (obj) {
+            list.push({label: obj.name,value: obj._id});
+        })
+        return list;
+    }
 };
 
 

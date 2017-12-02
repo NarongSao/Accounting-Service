@@ -83,7 +83,7 @@ export const loanArrearsReport = new ValidatedMethod({
                                     <th>Product Name</th>
                                     <th>CRC</th>
                                     <th>Type</th>
-                                    <th>Dis Date</th>
+                                    <th>Dis Date</th>Purchase.find(selector)
                                     <th>Mat Date</th>
                                     <th>Loan Amount</th>
                                     <th>Pro Int</th>

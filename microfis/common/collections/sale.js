@@ -77,6 +77,10 @@ Sale.schema = new SimpleSchema({
     },
     branchId: {
         type: String
+    },
+    loanAccid:{
+        type: String,
+        optional:true
     }
 });
 

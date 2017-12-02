@@ -301,7 +301,36 @@
 
             </ul>
         </li>
-    {{/if}}
+        {{/if}}
+            <!--Report-->
+        {{#if isInRole 'reporter' 'Microfis'}}
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-file-o"></i>
+                        <span>REPORT POS</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+
+                    <ul class="treeview-menu" style="display: none">
+                        <li class="{{isActiveRoute name='microfis.purchaseReport'}}">
+                            <a href="{{pathFor 'microfis.purchaseReport'}}">
+                                <i class="fa fa-circle-o"></i> <span>Purchase Report</span>
+                            </a>
+                        </li>
+                        <li class="{{isActiveRoute name='microfis.saleReport'}}">
+                            <a href="{{pathFor 'microfis.saleReport'}}">
+                                <i class="fa fa-circle-o"></i> <span>Sale Report</span>
+                            </a>
+                        </li>
+                        <li class="{{isActiveRoute name='microfis.inventoryReport'}}">
+                            <a href="{{pathFor 'microfis.inventoryReport'}}">
+                                <i class="fa fa-circle-o"></i> <span>Inventory Report</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+        {{/if}}
 
     <!--Settings-->
     {{#if isInRole 'setting' 'Microfis'}}

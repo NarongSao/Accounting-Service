@@ -50,7 +50,7 @@ let indexTmpl = Template.Microfis_loanAcc,
     saleTml=Template.Microfis_saleNew;
 
 
-
+let purchaseId=new ReactiveVar("");
 
 let state = new ReactiveObj({
     disbursmentDate: moment().toDate()
@@ -102,6 +102,7 @@ Tracker.autorun(function () {
 
 indexTmpl.events({
     'click .js-create-loan-acc' (event, instance) {
+        purchaseId.set("");
         state.set("disbursmentDate", moment().toDate());
 
         alertify.loanAccProduct(fa('plus', 'Loan Account Product'), renderTemplate(productFormTmpl));
@@ -111,7 +112,9 @@ indexTmpl.events({
         alertify.saleForm(fa('plus', 'Sale'), renderTemplate(saleTml,{customerId: clientId}));
     },
     'click .js-update' (event, instance) {
-
+        if(this.saleId){
+            displayError("Can't update ,you need to remove this account and create new one!!!!");
+        }else {
 
         $.blockUI({overlayCSS: {backgroundColor: '#fff', opacity: 0.1, cursor: 'wait'}});
 
@@ -143,10 +146,11 @@ indexTmpl.events({
                 }, 300)
             });
         }
+
+        }
     },
 
     'click .js-destroy' (event, instance) {
-
 
         if (this.paymentNumber > 0 || ["Active", "Check"].includes(this.status) == false) {
             alertify.error("Can't remove this account!!!");
@@ -216,6 +220,13 @@ productFormTmpl.events({
         alertify.loanAccProduct().close();
     }
 });
+
+productFormTmpl.onCreated(function () {
+    let currentPurchase=Template.currentData();
+    if(currentPurchase){
+        purchaseId.set(currentPurchase.purchaseId);
+    }
+})
 
 productFormTmpl.onDestroyed(function () {
     Session.set('productDoc', null);
@@ -434,11 +445,13 @@ formTmpl.events({
 let hooksObject = {
     before: {
         insert: function (doc) {
-
+            debugger;
+            if(purchaseId.get()){
+                 doc.purchaseId=purchaseId.get();
+            }
             doc.disbursementDate = moment(doc.disbursementDate).startOf("day").add(12, "hours").toDate();
             doc.firstRepaymentDate = moment(doc.firstRepaymentDate).startOf("day").add(12, "hours").toDate();
             return doc;
-
         }
     },
 

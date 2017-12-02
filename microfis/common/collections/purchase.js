@@ -82,12 +82,26 @@ Purchase.schema = new SimpleSchema({
     cost: {
         type: Number,
         decimal: true,
-        label: 'Cost'
+        label: 'Cost',
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Debit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
     },
     price: {
         type: Number,
         decimal: true,
-        label: 'Price'
+        label: 'Price',
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Debit",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
     },
     status: {
         type: Boolean,
