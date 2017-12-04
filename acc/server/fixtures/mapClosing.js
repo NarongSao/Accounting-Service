@@ -518,6 +518,9 @@ Meteor.startup(function () {
             }, {
                 "_id": "139",
                 "chartAccountCompare": "Interest Income Loss Loan Related Party External Auditors Over One Year"
+            }, {
+                "_id": "147",
+                "chartAccountCompare": "Inventory"
             }
 
 

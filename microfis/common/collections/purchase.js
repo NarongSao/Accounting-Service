@@ -21,7 +21,7 @@ Purchase.schema = new SimpleSchema({
             }
         }
     },
-    transactionType: {
+   /* transactionType: {
         type: String,
         label: 'Transaction Type',
         autoform: {
@@ -37,7 +37,7 @@ Purchase.schema = new SimpleSchema({
                 }
             }
         }
-    },
+    },*/
     vendorId: {
         type: String,
         label: 'Vendor',

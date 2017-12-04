@@ -27,7 +27,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return moment(val).format('DD/MM/YYYY');
             }
         },
-        {data: 'transactionType', title: 'Transaction Type'},
+        //{data: 'transactionType', title: 'Transaction Type'},
         // {data: 'vendorId', title: 'Vendor'},
         {data: 'itemName', title: 'Item Name'},
         // {data: 'category', title: 'Category'},
