@@ -521,6 +521,12 @@ Meteor.startup(function () {
             }, {
                 "_id": "147",
                 "chartAccountCompare": "Inventory"
+            }, {
+                "_id": "148",
+                "chartAccountCompare": "Sale Income"
+            }, {
+                "_id": "149",
+                "chartAccountCompare": "COGS"
             }
 
 

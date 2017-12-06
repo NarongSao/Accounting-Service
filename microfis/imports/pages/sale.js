@@ -38,6 +38,7 @@ let indexTmpl = Template.Microfis_sale,
 
 let purchaseOpt=new ReactiveVar([]);
 let price=new ReactiveVar(0);
+let paid=new ReactiveVar(0);
 let customerId=new ReactiveVar();
 // Index
 indexTmpl.onCreated(function () {
@@ -94,6 +95,9 @@ newTmpl.helpers({
     },
     price(){
         return price.get();
+    },
+    remaining(){
+        return price.get()-paid.get();
     }
 });
 
@@ -110,6 +114,9 @@ newTmpl.events({
         let priceArr=pricelabel.split(" | ");
         price.set(parseFloat(priceArr[1]));
 
+    },
+    "keyup [name='paid']"(e,t){
+        paid.set(e.currentTarget.value);
     }
 })
 

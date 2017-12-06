@@ -528,7 +528,7 @@ MicrofisRoutes.route('/category', {
 import '../imports/pages/groupCategory';
 MicrofisRoutes.route('/groupCategory', {
     name: 'microfis.groupCategory',
-    title: 'Category',
+    title: 'Group',
     action: function (params, queryParams) {
         Layout.main('Microfis_groupCategory');
     },

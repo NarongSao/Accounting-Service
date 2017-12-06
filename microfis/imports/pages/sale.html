@@ -46,10 +46,10 @@
                 {{> afQuickField name="purchaseId" options=purchaseOption}}
                 {{> afQuickField name="price" value=price}}
                 {{> afQuickField name="paid"}}
+                {{> afQuickField name="remaining" value=remaining readonly=true}}
                 {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
             </div>
         </div>
-
         {{> formFooterWithButton}}
     {{/autoForm}}
 </div>
@@ -78,6 +78,7 @@
                 {{> afQuickField name="purchaseId" options=purchaseOption}}
                 {{> afQuickField name="price" value=price}}
                 {{> afQuickField name="paid"}}
+                {{> afQuickField name="remaining"}}
                 {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
             </div>
         </div>

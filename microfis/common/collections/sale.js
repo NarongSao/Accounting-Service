@@ -51,7 +51,7 @@ Sale.schema = new SimpleSchema({
         decimal: true,
         autoform: {
             type: 'inputmask',
-            placeholder: "Debit",
+            placeholder: "Price",
             inputmaskOptions: function () {
                 return inputmaskOptions.decimal();
             }
@@ -63,7 +63,7 @@ Sale.schema = new SimpleSchema({
         decimal: true,
         autoform: {
             type: 'inputmask',
-            placeholder: "Debit",
+            placeholder: "Paid",
             inputmaskOptions: function () {
                 return inputmaskOptions.decimal();
             }
@@ -73,7 +73,14 @@ Sale.schema = new SimpleSchema({
         type: Number,
         decimal: true,
         label: 'Remain',
-        defaultValue: 0
+        defaultValue: 0,
+        autoform: {
+            type: 'inputmask',
+            placeholder: "Price",
+            inputmaskOptions: function () {
+                return inputmaskOptions.decimal();
+            }
+        }
     },
     branchId: {
         type: String
