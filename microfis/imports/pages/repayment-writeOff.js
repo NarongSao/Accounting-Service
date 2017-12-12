@@ -223,7 +223,6 @@ formTmpl.onDestroyed(function () {
 let hooksObject = {
     before: {
         insert: function (doc) {
-
             let writeOffDoc = stateRepayment.get('checkWriteOff');
             let loanAccDoc = stateRepayment.get('loanAccDoc');
 
@@ -242,6 +241,11 @@ let hooksObject = {
 
             if (loanAccDoc.status == "Close") {
                 alertify.warning("You already Close");
+                return false;
+            }
+
+            if(writeOffDoc.outStanding.total<doc.amountPaid){
+                alertify.error("Can't Paid amount over write off amount");
                 return false;
             }
 

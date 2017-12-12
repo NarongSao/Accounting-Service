@@ -43,10 +43,11 @@ export const SelectOpts = {
         },
         product: function () {
             Meteor.subscribe('microfis.product');
-            var list = [];
+            let list = [];
             list.push({label: "(Select One)", value: ""});
             Product.find()
                 .forEach(function (obj) {
+                    if(moment().startOf("day").toDate().getTime()<=obj.endDate.getTime())
                         list.push({
                             label: obj._id + " | " + obj.name + " ( " + obj.shortName + " )", value: obj._id
                         });

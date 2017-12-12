@@ -392,14 +392,13 @@ indexTmpl.events({
          {title: 'Repayment', itemTitle: this._id}
          );*/
 
-
         let self = this;
         let loanAccDoc = stateRepayment.get('loanAccDoc');
         stateRepayment.set("repaidDate", self.repaidDate);
 
-
         Meteor.call('microfis_getLastEndOfProcess', self.branchId, function (err, endOfProcess) {
-            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.repaidDate.getTime() || self.type == "Write Off") {
+            // if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.repaidDate.getTime() || self.type == "Write Off") {
+            if (endOfProcess == undefined || endOfProcess.closeDate.getTime() < self.repaidDate.getTime()) {
                 if (self.endId == "0") {
                     getLastRepayment.callPromise({
                         loanAccId: loanAccDoc._id

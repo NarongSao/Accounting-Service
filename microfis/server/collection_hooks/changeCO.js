@@ -21,6 +21,7 @@ ChangeCO.before.insert(function (userId, doc) {
     doc.location.forEach(function (obj) {
         locationList.push(obj.locationId);
     })
+    console.log(doc);
     LoanAcc.direct.update({
         locationId: {$in: locationList}, creditOfficerId: doc.fromCO,
         status: {$ne: "Close"}
