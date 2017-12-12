@@ -45,6 +45,29 @@ indexTmpl.helpers({
     }
 });
 
+indexTmpl.events({
+    "click .resetData"(e,t){
+        if (Meteor.user() && Meteor.user().username != 'super') {
+            alertify.warning("You Don't Have Permission");
+            return false;
+        }else {
+            alertify.confirm("Are you sure to delete?")
+                .set({
+                    onok: function (closeEvent) {
+                        Meteor.call("resetDataAcc",function (err,result) {
+                            if(!err){
+                                alertify.success("Remove Success!!");
+                            }
+
+                        })
+                    },
+                    title: fa("remove", "Reset Data")
+                });
+
+        }
+    }
+})
+
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {

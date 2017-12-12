@@ -76,7 +76,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         }
     ],
-    extraFields: ['disbursementId', 'amountType', "loanAccId", "endId"],
+    extraFields: ['disbursementId', 'amountType', "loanAccId", "endId","branchId"],
 });
 
 export const RepaymentTabular = new Tabular.Table(tabularData);
