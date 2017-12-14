@@ -17,7 +17,7 @@ export const lookupProduct = new ValidatedMethod({
             this.unblock();
             let data = Product.aggregate([
                 {$match: {_id: _id}},
-                {
+                /*{
                     $lookup: {
                         from: "microfis_fee",
                         localField: "feeId",
@@ -25,7 +25,7 @@ export const lookupProduct = new ValidatedMethod({
                         as: "feeDoc"
                     }
                 },
-                {$unwind: "$feeDoc"},
+                {$unwind: "$feeDoc"},*/
                 {
                     $lookup: {
                         from: "microfis_penalty",
@@ -45,7 +45,6 @@ export const lookupProduct = new ValidatedMethod({
                 },
                 {$unwind: "$penaltyClosingDoc"}
             ]);
-
             return data[0];
         }
     }

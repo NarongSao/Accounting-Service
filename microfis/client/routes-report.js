@@ -442,3 +442,19 @@ MicrofisRoutes.route('/needToClearPrepayment-report', {
         parent: 'microfis.home'
     }
 });
+// Audit
+import '../imports/reports/audit';
+MicrofisRoutes.route('/audit-report', {
+    name: 'microfis.auditReport',
+    title: 'Audit Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_auditReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Audit Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

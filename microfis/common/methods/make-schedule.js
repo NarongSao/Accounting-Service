@@ -420,7 +420,7 @@ MakeSchedule.flat = new ValidatedMethod({
 
 
             if (loanAccDoc.currencyId == "USD") {
-                principalInstallmentAmountPerLine = math.round(principalInstallmentAmountPerLine);
+                principalInstallmentAmountPerLine = math.round(principalInstallmentAmountPerLine,2);
             }
 
 
