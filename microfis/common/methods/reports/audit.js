@@ -403,34 +403,65 @@ export const auditReport = new ValidatedMethod({
 
             let totalDuePrinKHR = 0;
             let totalDueIntKHR = 0;
-            let totalDueFeeOnPaymentKHR = 0;
             let totalLoanOutPrinKHR = 0;
             let totalLoanOutIntKHR = 0;
-            let totalLoanOutFeeOnPaymentKHR = 0;
+            let totalPeriodPrinKHR = 0;
+            let totalPeriodIntKHR = 0;
+            let totalToDatePrinKHR = 0;
+            let totalToDateIntKHR = 0;
+            let totalOverDuePrinKHR = 0;
+            let totalOverDueIntKHR = 0;
+            let totalOSPrinKHR = 0;
+            let totalOSIntKHR = 0;
+            let totalAIRPeriodKHR = 0;
+            let totalAIROSKHR = 0;
 
 
             let totalDuePrinUSD = 0;
             let totalDueIntUSD = 0;
-            let totalDueFeeOnPaymentUSD = 0;
             let totalLoanOutPrinUSD = 0;
             let totalLoanOutIntUSD = 0;
-            let totalLoanOutFeeOnPaymentUSD = 0;
-
+            let totalPeriodPrinUSD= 0;
+            let totalPeriodIntUSD = 0;
+            let totalToDatePrinUSD = 0;
+            let totalToDateIntUSD = 0;
+            let totalOverDuePrinUSD = 0;
+            let totalOverDueIntUSD = 0;
+            let totalOSPrinUSD = 0;
+            let totalOSIntUSD = 0;
+            let totalAIRPeriodUSD = 0;
+            let totalAIROSUSD = 0;
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
-            let totalDueFeeOnPaymentTHB = 0;
             let totalLoanOutPrinTHB = 0;
             let totalLoanOutIntTHB = 0;
-            let totalLoanOutFeeOnPaymentTHB = 0;
+            let totalPeriodPrinTHB= 0;
+            let totalPeriodIntTHB = 0;
+            let totalToDatePrinTHB = 0;
+            let totalToDateIntTHB = 0;
+            let totalOverDuePrinTHB= 0;
+            let totalOverDueIntTHB = 0;
+            let totalOSPrinTHB = 0;
+            let totalOSIntTHB = 0;
+            let totalAIRPeriodTHB = 0;
+            let totalAIROSTHB = 0;
 
 
             let totalDuePrinBase = 0;
             let totalDueIntBase = 0;
-            let totalDueFeeOnPaymentBase = 0;
             let totalLoanOutPrinBase = 0;
             let totalLoanOutIntBase = 0;
-            let totalLoanOutFeeOnPaymentBase = 0;
+            let totalPeriodPrinBase = 0;
+            let totalPeriodIntBase = 0;
+            let totalToDatePrinBase = 0;
+            let totalToDateIntBase = 0;
+            let totalOverDuePrinBase = 0;
+            let totalOverDueIntBase = 0;
+            let totalOSPrinBase = 0;
+            let totalOSIntBase = 0;
+            let totalAIRPeriodBase= 0;
+            let totalAIROSBase = 0;
 
             if (loanDoc.length > 0) {
                 loanDoc.forEach(function (loanAccDoc) {
@@ -487,24 +518,59 @@ export const auditReport = new ValidatedMethod({
                         if (loanAccDoc.currencyId == "KHR") {
                             totalDuePrinKHR += result.totalScheduleDue.principalDue;
                             totalDueIntKHR += result.totalScheduleDue.interestDue;
-                            totalDueFeeOnPaymentKHR += result.totalScheduleDue.feeOnPaymentDue;
                             totalLoanOutPrinKHR += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
                             totalLoanOutIntKHR += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
-                            totalLoanOutFeeOnPaymentKHR += result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue;
+
+                            totalPeriodPrinKHR += loanAccDoc.projectInterest-result.totalScheduleNext.interestDue-result.totalScheduleDue.interestDue;
+                            totalPeriodIntKHR += loanAccDoc.loanAmount-result.totalScheduleNext.principalDue-result.totalScheduleDue.principalDue;
+                            totalToDatePrinKHR += result.totalScheduleDue.principalDue;
+                            totalToDateIntKHR += result.totalScheduleDue.interestDue;
+                            totalOverDuePrinKHR += proStatus._id !="001" && proStatus._id !="005" ? result.totalScheduleDue.principalDue: 0  ;
+                            totalOverDueIntKHR += proStatus._id !="001" && proStatus._id !="005" ? result.totalScheduleDue.interestDue : 0  ;
+                            totalOSPrinKHR += result.totalScheduleDue.principalDue + result.totalScheduleNext.principalDue;
+                            totalOSIntKHR += result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue;
+                            totalAIRPeriodKHR += 0;
+                            totalAIROSKHR += 0;
+
+
+
+
                         } else if (loanAccDoc.currencyId == "USD") {
                             totalDuePrinUSD += result.totalScheduleDue.principalDue;
                             totalDueIntUSD += result.totalScheduleDue.interestDue;
-                            totalDueFeeOnPaymentUSD += result.totalScheduleDue.feeOnPaymentDue;
                             totalLoanOutPrinUSD += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
                             totalLoanOutIntUSD += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
-                            totalLoanOutFeeOnPaymentUSD += result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue;
+
+                            totalPeriodPrinUSD+= loanAccDoc.projectInterest-result.totalScheduleNext.interestDue-result.totalScheduleDue.interestDue;
+                            totalPeriodIntUSD += loanAccDoc.loanAmount-result.totalScheduleNext.principalDue-result.totalScheduleDue.principalDue;
+                            totalToDatePrinUSD+= result.totalScheduleDue.principalDue;
+                            totalToDateIntUSD += result.totalScheduleDue.interestDue;
+                            totalOverDuePrinUSD += proStatus._id !="001" && proStatus._id !="005" ? result.totalScheduleDue.principalDue : 0  ;
+                            totalOverDueIntUSD += proStatus._id !="001" && proStatus._id !="005" ? result.totalScheduleDue.interestDue : 0  ;
+                            totalOSPrinUSD += result.totalScheduleDue.principalDue + result.totalScheduleNext.principalDue;
+                            totalOSIntUSD += result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue;
+                            totalAIRPeriodUSD+= 0;
+                            totalAIROSUSD += 0;
+
+
                         } else if (loanAccDoc.currencyId == "THB") {
                             totalDuePrinTHB += result.totalScheduleDue.principalDue;
                             totalDueIntTHB += result.totalScheduleDue.interestDue;
-                            totalDueFeeOnPaymentTHB += result.totalScheduleDue.feeOnPaymentDue;
                             totalLoanOutPrinTHB += result.totalScheduleNext.principalDue + result.totalScheduleDue.principalDue;
                             totalLoanOutIntTHB += result.totalScheduleNext.interestDue + result.totalScheduleDue.interestDue;
-                            totalLoanOutFeeOnPaymentTHB += result.totalScheduleNext.feeOnPaymentDue + result.totalScheduleDue.feeOnPaymentDue;
+
+
+                            totalPeriodPrinTHB  += loanAccDoc.projectInterest-result.totalScheduleNext.interestDue-result.totalScheduleDue.interestDue;
+                            totalPeriodIntTHB  += loanAccDoc.loanAmount-result.totalScheduleNext.principalDue-result.totalScheduleDue.principalDue;
+                            totalToDatePrinTHB  += result.totalScheduleDue.principalDue;
+                            totalToDateIntTHB  += result.totalScheduleDue.interestDue;
+                            totalOverDuePrinTHB  += proStatus._id !="001" && proStatus._id !="005" ? result.totalScheduleDue.principalDue : 0  ;
+                            totalOverDueIntTHB  += proStatus._id !="001" && proStatus._id !="005" ? result.totalScheduleDue.interestDue : 0  ;
+                            totalOSPrinTHB  += result.totalScheduleDue.principalDue + result.totalScheduleNext.principalDue;
+                            totalOSIntTHB  += result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue;
+                            totalAIRPeriodTHB += 0;
+                            totalAIROSTHB  += 0;
+
                         }
                         content += `<tr>
                                 <td>${i}</td>
@@ -529,12 +595,12 @@ export const auditReport = new ValidatedMethod({
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.principalDue)}</td>
                                 <td class="numberAlign"> ${microfis_formatNumber(result.totalScheduleDue.interestDue + result.totalScheduleDue.principalDue)}</td>
-                                <td></td>
-                                <td></td>
+                                <td>${proStatus._id !="001" && proStatus._id !="005" ? microfis_formatNumber(result.totalScheduleDue.principalDue) : 0  }</td>
+                                <td>${proStatus._id !="001" && proStatus._id !="005" ? microfis_formatNumber(result.totalScheduleDue.interestDue) : 0  }</td>
                  
                                 <td> ${result.totalScheduleDue.numOfDayLate}</td>
                                 <td> ${proStatus.name}</td>
-                                 <td></td>
+                                <td>${proStatus._id !="001" && proStatus._id !="005" ? microfis_formatNumber(result.totalScheduleDue.principalDue + result.totalScheduleDue.interestDue) : 0  }</td>
                                 <td>${microfis_formatNumber(result.totalScheduleDue.principalDue + result.totalScheduleNext.principalDue)}</td>   
                                 <td>${microfis_formatNumber(result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue)}</td>                                    
                                                              
@@ -586,22 +652,7 @@ export const auditReport = new ValidatedMethod({
                     totalDueIntTHB,
                     params.exchangeId);
 
-            totalDueFeeOnPaymentBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalDueFeeOnPaymentKHR,
-                    params.exchangeId
-                )
-                + Meteor.call('microfis_exchange',
-                    "USD",
-                    baseCurrency,
-                    totalDueFeeOnPaymentUSD,
-                    params.exchangeId)
-                + Meteor.call('microfis_exchange',
-                    "THB",
-                    baseCurrency,
-                    totalDueFeeOnPaymentTHB,
-                    params.exchangeId);
+
 
             totalLoanOutPrinBase = Meteor.call('microfis_exchange',
                     "KHR",
@@ -640,68 +691,257 @@ export const auditReport = new ValidatedMethod({
                     params.exchangeId
                 );
 
-            totalLoanOutFeeOnPaymentBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalLoanOutFeeOnPaymentKHR,
-                    params.exchangeId
+
+
+            totalPeriodPrinBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
                     baseCurrency,
-                    totalLoanOutFeeOnPaymentUSD,
-                    params.exchangeId
-                )
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
                 + Meteor.call('microfis_exchange',
                     "THB",
                     baseCurrency,
-                    totalLoanOutFeeOnPaymentTHB,
-                    params.exchangeId
-                );
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalPeriodIntBase =Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalToDatePrinBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalToDateIntBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalOverDuePrinBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalOverDueIntBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalOSPrinBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalOSIntBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalAIRPeriodBase= Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+            totalAIROSBase = Meteor.call('microfis_exchange',
+                "KHR",
+                baseCurrency,
+                totalPeriodPrinKHR,
+                params.exchangeId
+                )
+                + Meteor.call('microfis_exchange',
+                    "USD",
+                    baseCurrency,
+                    totalPeriodPrinUSD,
+                    params.exchangeId)
+                + Meteor.call('microfis_exchange',
+                    "THB",
+                    baseCurrency,
+                    totalPeriodPrinTHB,
+                    params.exchangeId);
+
+
             content += `<tr>
-                            <td colspan="13" align="right">Subtotal-KHR</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinKHR + totalDueIntKHR + totalDueFeeOnPaymentKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntKHR)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentKHR)}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="13" align="right">Subtotal-USD</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinUSD + totalDueIntUSD + totalDueFeeOnPaymentUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntUSD)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentUSD)}</td>
+                            <td colspan="15" align="right">Subtotal-KHR</td>
+                   
+                            
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinKHR+totalPeriodIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDateIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinKHR+totalToDateIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDuePrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntKHR)}</td>
+                            <td colspan="2"></td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntKHR+totalOverDuePrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSPrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntKHR+totalOSPrinKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIRPeriodKHR)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIROSKHR)}</td>
+                            <td colspan="5"></td>
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Subtotal-THB</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinTHB + totalDueIntTHB + totalDueFeeOnPaymentTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntTHB)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentTHB)}</td>
+                            <td colspan="15" align="right">Subtotal-USD</td>
+            
+
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinUSD+totalPeriodIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDateIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinUSD+totalToDateIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDuePrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntUSD)}</td>
+                            <td colspan="2"></td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntUSD+totalOverDuePrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSPrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntUSD+totalOSPrinUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIRPeriodUSD)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIROSUSD)}</td>
+                            <td colspan="5"></td>
 
                         </tr>
                         <tr>
-                            <td colspan="13" align="right">Total-${baseCurrency}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDueFeeOnPaymentBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalDuePrinBase + totalDueIntBase + totalDueFeeOnPaymentBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutPrinBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutIntBase)}</td>
-                            <td class="numberAlign">${microfis_formatNumber(totalLoanOutFeeOnPaymentBase)}</td>
+                            <td colspan="15" align="right">Subtotal-THB</td>
+     
+                            
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinTHB+totalPeriodIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDateIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinTHB+totalToDateIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDuePrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntTHB)}</td>
+                            <td colspan="2"></td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntTHB+totalOverDuePrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSPrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntTHB+totalOSPrinTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIRPeriodTHB)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIROSTHB)}</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="15" align="right">Total-${baseCurrency}</td>
+               
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalPeriodPrinBase+totalPeriodIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDateIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalToDatePrinBase+totalToDateIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDuePrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntBase)}</td>
+                            <td colspan="2"></td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOverDueIntBase+totalOverDuePrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSPrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalOSIntBase+totalOSPrinBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIRPeriodBase)}</td>
+                            <td class="numberAlign">${microfis_formatNumber(totalAIROSBase)}</td>
+                            <td colspan="5"></td>
 
                         </tr>
-                        
+                       
                         
                         </tbody>
                       </table>`;
