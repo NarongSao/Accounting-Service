@@ -45,6 +45,15 @@
         vertical-align: middle !important;
     }
 
+    .font-header{
+        font-size: 15px !important;
+        line-height: 30px !important;
+    }
+
+    .darkrendamount{
+        color: darkred !important;
+    }
+
     .diplay-on-print-header-loan > tr > th {
         font-weight: bold;
         background-color: lightgray !important;
@@ -75,7 +84,18 @@
         padding: 0px;
         width: 1020px;
     }
+   .display-on-print-div-loan-3 {
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        font-size: 11px !important;
+        color: #000000;
+        margin: 0px auto;
+        padding: 0px;
+        width: 510px;
+    }
 
+    .non-border{
+        border: unset !important;
+    }
     .display-on-print-div-landscape-loan-2 {
         font-family: Arial, Verdana, Geneva, sans-serif;
         /*font-size: 9px;*/
@@ -100,12 +120,33 @@
         border: 1px solid black !important;
     }
 
+    .diplay-on-print-table-loan-3 {
+        width: 100%;
+        margin-top: 30px;
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        color: #000000;
+        font-size: 11px !important;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
     .diplay-on-print-header-loan-2 {
         margin: 0px auto;
         width: 100%;
         padding: 0px;
         font-family: Arial, Verdana, Geneva, sans-serif;
         font-size: 14px !important;
+        color: #000000;
+        border-collapse: collapse;
+        padding: 0px !important;
+        vertical-align: middle !important;
+    }
+    .diplay-on-print-header-loan-3 {
+        margin: 0px auto;
+        width: 100%;
+        padding: 0px;
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        font-size: 11px !important;
         color: #000000;
         border-collapse: collapse;
         padding: 0px !important;
@@ -119,6 +160,14 @@
         text-align: center !important;
         vertical-align: top;
     }
+    .diplay-on-print-header-loan-3 > tr > th {
+        font-weight: bold;
+        background-color:  unset !important;
+        -webkit-print-color-adjust: exact;
+        text-align: center !important;
+        vertical-align: top;
+        font-size: 11px !important;
+    }
 
     .display-on-print-body-loan-2 {
         border-collapse: collapse;
@@ -127,10 +176,29 @@
         margin-top: 30px;
         padding: 0px !important;
     }
+    .display-on-print-body-loan-3 {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 11px !important;
+        margin-top: 30px;
+        padding: 0px !important;
+    }
 
     .display-on-print-div-loan-2 > .table > thead > tr > th, .display-on-print-div-loan-2 > .table > tbody > tr > th, .display-on-print-div-loan-2 > .table > tfoot > tr > th, .display-on-print-div-loan-2 > .table > thead > tr > td, .display-on-print-div-loan-2 > .table > tbody > tr > td, .display-on-print-div-loan-2 > .table > tfoot > tr > td {
         border: 1px solid black !important;
         padding: 3px !important;
+    }
+    .display-on-print-div-loan-3 > .table > tbody > tr > th, .display-on-print-div-loan-3 > .table > tfoot > tr > th, .display-on-print-div-loan-3 > .table > thead > tr > td, .display-on-print-div-loan-3 > .table > tbody > tr > td, .display-on-print-div-loan-3 > .table > tfoot > tr > td {
+        border: 1px solid black;
+        padding: 3px !important;
+    }
+
+    .display-on-print-div-loan-3 > .table > thead > tr > td{
+        text-align: center;
+    }
+
+    .display-on-print-div-loan-3 > .table > thead > tr > th{
+        border: unset !important;
     }
 
     /*Default 2*/
@@ -166,6 +234,16 @@
         border-collapse: collapse;
         border: 1px solid black !important;
     }
+    .diplay-on-print-table-3 {
+        width: 100%;
+        margin-top: 30px;
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        color: #000000;
+        font-size: 12px !important;
+        border-collapse: collapse;
+        line-height: 30px !important;
+        /*border: 1px solid black;*/
+    }
 
     .diplay-on-print-header-2 {
         margin: 0px auto;
@@ -173,6 +251,15 @@
         padding: 0px;
         font-family: Arial, Verdana, Geneva, sans-serif;
         font-size: 20px !important;
+        color: #000000;
+        border-collapse: collapse;
+    }
+    .diplay-on-print-header-3 {
+        margin: 0px auto;
+        width: 100%;
+        padding: 0px;
+        font-family: Arial, Verdana, Geneva, sans-serif;
+        font-size: 11px !important;
         color: #000000;
         border-collapse: collapse;
     }
@@ -186,6 +273,17 @@
 
     }
 
+    .diplay-on-print-header-3 > tr > th {
+        font-weight: bold;
+        -webkit-print-color-adjust: exact;
+        text-align: center !important;
+        font-size: 11px !important;
+        border: unset !important;
+        background-color:  unset !important;
+
+
+    }
+
     .display-on-print-body-2 {
         border-collapse: collapse;
         width: 100%;
@@ -194,9 +292,32 @@
 
     }
 
+    .display-on-print-body-3 {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 30px;
+        font-size: 11px !important;
+
+    }
+
     .display-on-print-div-2 > .table > thead > tr > th, .display-on-print-div-2 > .table > tbody > tr > th, .display-on-print-div-2 > .table > tfoot > tr > th, .display-on-print-div-2 > .table > thead > tr > td, .display-on-print-div-2 > .table > tbody > tr > td, .display-on-print-div-2 > .table > tfoot > tr > td {
         border: 1px solid black !important;
         font-size: 20px !important;
+    }
+
+    .display-on-print-div-3 > .table > tbody > tr > th, .display-on-print-div-3 > .table > tfoot > tr > th, .display-on-print-div-3 > .table > thead > tr > td, .display-on-print-div-3 > .table > tbody > tr > td, .display-on-print-div-3 > .table > tfoot > tr > td {
+        border: 1px solid black;
+        font-size: 11px !important;
+    }
+
+    .display-on-print-div-3 > .table > thead > tr > th{
+        border: unset !important;
+        background-color:  unset !important;
+
+    }
+
+    .display-on-print-div-3 > .table > thead > tr > td {
+        text-align: center !important;
     }
 
     footer {
@@ -212,6 +333,38 @@
         margin-bottom: 5px;
     }
 
+    .break-page{
+        page-break-before: always !important;
+        page-break-inside: avoid;
+        height: 100%;
+    }
+    .display-on-print-div-loan-3{
+        page-break-after: always
+    }
+
+    .wantHide{
+        display: unset !important;
+    }
+
+    #contentPageNumber{
+        /*display: table  !important;*/
+    }
+    #footer-page {
+        display: table-footer-group;
+    }
+    #footer-page:after {
+        counter-increment: page !important;
+        content:"Page " counter(page) !important;
+        position: fixed;
+        bottom: 0px !important;
+        left: 50% !important;
+        white-space: nowrap;
+        z-index: 20px;
+        -moz-border-radius: 5px;
+        -moz-box-shadow: 0px 0px 4px #222;
+        background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+        background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    }
 }
 
 .sub-div {
@@ -248,8 +401,19 @@
     border: 1px solid black !important;
 }
 
-.display-on-print-div-loan-2 > .table > thead > tr > th, .display-on-print-div-loan-2 > .table > tbody > tr > th, .display-on-print-div-loan-2 > .table > tfoot > tr > th, .display-on-print-div-loan-2 > .table > thead > tr > td, .display-on-print-div-loan-2 > .table > tbody > tr > td, .display-on-print-div-loan-2 > .table > tfoot > tr > td {
+.display-on-print-div-loan-2 > .table > thead > tr > th,.display-on-print-div-loan-3 > .table > thead > tr > th, .display-on-print-div-loan-2 > .table > tbody > tr > th, .display-on-print-div-loan-2 > .table > tfoot > tr > th, .display-on-print-div-loan-2 > .table > thead > tr > td, .display-on-print-div-loan-2 > .table > tbody > tr > td, .display-on-print-div-loan-2 > .table > tfoot > tr > td {
     border: 1px solid black !important;
+}
+.display-on-print-div-loan-3 > .table > tbody > tr > th, .display-on-print-div-loan-3 > .table > tfoot > tr > th, .display-on-print-div-loan-3 > .table > thead > tr > td, .display-on-print-div-loan-3 > .table > tbody > tr > td, .display-on-print-div-loan-3 > .table > tfoot > tr > td {
+    border: 1px solid black ;
+}
+
+.display-on-print-div-loan-3 > .table > thead > tr > th{
+    border: 0px !important;
+}
+
+.display-on-print-div-loan-3 > .table > thead > tr > td{
+    text-align: center !important;
 }
 
 .display-on-print-div-landscape-loan-2 > .table > thead > tr > th, .display-on-print-div-landscape-loan-2 > .table > tbody > tr > th, .display-on-print-div-landscape-loan-2 > .table > tfoot > tr > th, .display-on-print-div-landscape-loan-2 > .table > thead > tr > td, .display-on-print-div-landscape-loan-2 > .table > tbody > tr > td, .display-on-print-div-landscape-loan-2 > .table > tfoot > tr > td {
@@ -283,5 +447,56 @@
 .marigin-header {
     margin-bottom: 5px;
 }
+.break-page{
+    page-break-before: always !important;
+    page-break-inside: avoid;
+}
+/*#content {
+    display: table;
+}
 
+#pageFooter {
+    display: table-footer-group;
+}
+
+#pageFooter:after {
+    counter-increment: page;
+    content: counter(page);
+}
+#pageFooter:after {
+    counter-increment: page;
+    content:"Page " counter(page);
+    right: 0;
+    top: 100%;
+    white-space: nowrap;
+    z-index: 20px;
+    -moz-border-radius: 5px;
+    -moz-box-shadow: 0px 0px 4px #222;
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+}*/
+
+#contentPageNumber{
+    /*display: table;*/
+}
+#footer-page {
+    display: table-footer-group;
+}
+#footer-page:after {
+    counter-increment: page;
+    content:"Page " counter(page);
+    position: fixed;
+    bottom: 0px !important;
+    left: 50% !important;
+    white-space: nowrap;
+    z-index: 20px;
+    -moz-border-radius: 5px;
+    -moz-box-shadow: 0px 0px 4px #222;
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+}
+
+.wantHide{
+    display: none;
+}
 

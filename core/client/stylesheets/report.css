@@ -264,3 +264,24 @@
     width: 100%;
     font-weight: bold;
 }
+
+/*@font-face {
+    font-family: 'Tacteing';
+    src: url('./../../../public/font/TACTENG_0.TTF');
+    src: url('./../../../public/font/TACTENG_0.TTF') format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}*/
+
+@font-face {
+    font-family: 'Tacteing';
+    src: url('./../../../public/font/TACTENG_0.eot');
+    src: local('☺'),
+    url('/font/TACTENG_0.otf') format('opentype'),
+    url('/font/TACTENG_0.woff') format('woff'),
+    url('/font/TACTENG_0.ttf') format('truetype'),
+    url('/font/TACTENG_0.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+

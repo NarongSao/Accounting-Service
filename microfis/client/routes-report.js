@@ -39,6 +39,22 @@ MicrofisRoutes.route('/repayment-schedule-report', {
         parent: 'microfis.home'
     }
 });
+// Repayment schedule Mini
+import '../imports/reports/repayment-schedule-mini';
+MicrofisRoutes.route('/repayment-schedule-mini-report', {
+    name: 'microfis.repaymentScheduleMiniReport',
+    title: 'Repayment Schedule Mini Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_repaymentScheduleMiniReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Repayment Schedule Mini Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});
 
 // Repayment schedule Form1
 import '../imports/reports/repayment-schedule-form1';
