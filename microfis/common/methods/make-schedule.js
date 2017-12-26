@@ -31,7 +31,6 @@ MakeSchedule.declinig = new ValidatedMethod({
     }).validator(),
     run({loanAccId, options}) {
         if (!this.isSimulation) {
-            this.unblock();
 
             // Get loan acc
             let setting = Setting.findOne(),

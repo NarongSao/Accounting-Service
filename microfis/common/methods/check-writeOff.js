@@ -39,7 +39,6 @@ export let checkWriteOff = new ValidatedMethod({
     }).validator(),
     run({loanAccId, checkDate, opts}) {
         if (!this.isSimulation) {
-            this.unblock();
 
 
             let loanAccDoc = lookupLoanAcc.call({_id: loanAccId});

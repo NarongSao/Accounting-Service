@@ -37,7 +37,6 @@ export let checkSavingTransaction = new ValidatedMethod({
     }).validator(),
     run({savingAccId, checkDate, opts}) {
         if (!this.isSimulation) {
-            this.unblock();
 
             // Get saving acc and last transaction
             let savingAccDoc = lookupSavingAcc.call({savingAccId: savingAccId}),

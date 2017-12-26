@@ -34,7 +34,7 @@ export const loanRepaymentWaiveClosingReport = new ValidatedMethod({
     }).validator(),
     run({params}) {
         if (!this.isSimulation) {
-            this.unblock();
+
 
             let data = {
                 title: {},
