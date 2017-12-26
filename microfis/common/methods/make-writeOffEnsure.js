@@ -25,7 +25,7 @@ export const makeWriteOffEnsure = new ValidatedMethod({
     }).validator(),
     run({loanAccId, opts, isEnsure, voucherId}) {
         if (!this.isSimulation) {
-            this.unblock();
+         
 
             if (isEnsure == true) {
                 let settingDoc = Setting.findOne();
