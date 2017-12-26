@@ -262,7 +262,8 @@ export const SelectOpts = {
                 label: obj.chartAccountCompare,
                 value: Spacebars.SafeString(SpaceChar.space(obj.accountDoc.level * 6) + obj.accountDoc.code).string + " | " + obj.accountDoc.name
             })
-        })
+        });
+
         return list;
     }
     , branchForUser: function (selectOne, userId) {

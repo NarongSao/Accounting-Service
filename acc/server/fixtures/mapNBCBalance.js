@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
-import {MapNBCBalance} from '../../imports/api/collections/mapNBCBalance';
+import {MapNBCBalance} from '../../imports/api/collections/mapNBCBalance.js';
 Meteor.startup(function () {
     if (MapNBCBalance.find().count() == 0) {
 

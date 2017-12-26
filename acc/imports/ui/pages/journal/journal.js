@@ -576,7 +576,8 @@ AutoForm.hooks({
     acc_journalInsertPayment: {
         before: {
             insert: function (doc) {
-                let paymentMethod = $('#paymentReceiveMethod').val();
+                let paymentMethod = $('#paymentReceiveMethod:checked').val();
+
                 if (paymentMethod != "") {
                     var currentBranch = Session.get("currentBranch");
                     doc.branchId = Session.get("currentBranch");
@@ -608,6 +609,10 @@ AutoForm.hooks({
                     doc.voucherId = currentBranch + "-" + year + s.pad(doc.voucherId, 6, "0");
                     doc.total = total;
                     return doc;
+                } else {
+                    alertify.error('Payment method is required');
+
+                    return false;
                 }
             }
         },
@@ -633,7 +638,8 @@ AutoForm.hooks({
     acc_journalInsertReceive: {
         before: {
             insert: function (doc) {
-                let paymentMethod = $('#paymentReceiveMethod').val();
+                let paymentMethod = $('#paymentReceiveMethod:checked').val();
+
                 if (paymentMethod != "") {
                     var currentBranch = Session.get("currentBranch");
                     doc.branchId = Session.get("currentBranch");
@@ -665,6 +671,10 @@ AutoForm.hooks({
                     doc.voucherId = currentBranch + "-" + year + s.pad(doc.voucherId, 6, "0");
                     doc.total = total;
                     return doc;
+                } else {
+                    alertify.error('Payment method is required');
+
+                    return false;
                 }
             }
         },
@@ -976,7 +986,7 @@ insertPaymentTpl.events({
         stateFixAsset.set("isFixAsset", elem.checked);
     },
     'change #paymentReceiveMethod'(){
-        if ($("#paymentReceiveMethod").val() != "") {
+        if ($("#paymentReceiveMethod:checked").val() != "") {
             state.set('cssClassForSubmit', '');
         } else {
             state.set('cssClassForSubmit', 'disabled');
@@ -1007,7 +1017,7 @@ insertReceiveTpl.events({
         stateFixAsset.set("isFixAsset", elem.checked);
     },
     'change #paymentReceiveMethod'(){
-        if ($("#paymentReceiveMethod").val() != "") {
+        if ($("#paymentReceiveMethod:checked").val() != "") {
             state.set('cssClassForSubmit', '');
         } else {
             state.set('cssClassForSubmit', 'disabled');

@@ -144,6 +144,7 @@ AutoForm.hooks({
     acc_journalDetailPaymentReceiveUpdate: {
         onSubmit: function (insertDoc, updateDoc, currentDoc) {
             event.preventDefault();
+
             updateDoc.$set.account = Session.get('accountUpdate');
             journalDetailPaymentReceiveCollection.update(
                 {_id: currentDoc._id},

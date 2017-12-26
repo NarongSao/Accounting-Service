@@ -28,6 +28,8 @@ Repayment.before.insert(function (userId, doc) {
 
 // After insert
 Repayment.after.insert(function (userId, doc) {
+    console.log("S");
+    console.log(doc.type);
     if (doc.type != "Fee") {
         Meteor.defer(function () {
 
@@ -127,7 +129,8 @@ Repayment.after.insert(function (userId, doc) {
                         savingLoanWithdrawal.memo = doc.note;
                         savingLoanWithdrawal.currencyId = doc.currencyId;
 
-
+                        console.log(doc.detailDoc.closing.totalDue);
+                        console.log(doc.detailDoc.totalSchedulePaid.totalAmountPaid);
                         if (doc.type == "General") {
                             savingLoanWithdrawal.amount = doc.detailDoc.totalSchedulePaid.totalAmountPaid <= savingWithdrawal.principalOpening ? doc.detailDoc.totalSchedulePaid.totalAmountPaid : savingWithdrawal.principalOpening;
                         } else if (doc.type = "Close") {
