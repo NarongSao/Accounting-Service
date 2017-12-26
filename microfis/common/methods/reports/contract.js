@@ -17,8 +17,8 @@ import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.
 import  {lookupLoanAcc} from '../lookup-loan-acc.js';
 import LocationClass from "../../../imports/libs/getLocation";
 
-export const repaymentScheduleReport = new ValidatedMethod({
-    name: 'microfis.repaymentScheduleReport',
+export const contractReport = new ValidatedMethod({
+    name: 'microfis.contractReport',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
         loanAccId: {type: String}
@@ -52,7 +52,7 @@ export const repaymentScheduleReport = new ValidatedMethod({
             data.header = loanAccDoc;
 
             let saleDoc=Sale.findOne({loanAccId: loanAccId});
-            if(saleDoc != undefined){
+            if(saleDoc){
                 let purchseDoc=Purchase.findOne({_id: saleDoc.purchaseId});
                 data.header.purchseDoc=purchseDoc;
             }else {
@@ -60,8 +60,6 @@ export const repaymentScheduleReport = new ValidatedMethod({
                     itemName: ""
                 };
             }
-
-            console.log(data);
             /****** Content *****/
             let content = RepaymentSchedule.aggregate(
                 [
@@ -79,6 +77,7 @@ export const repaymentScheduleReport = new ValidatedMethod({
                         }
                     }
                 ]);
+
 
             data.content = content[0];
 

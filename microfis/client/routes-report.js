@@ -526,3 +526,19 @@ MicrofisRoutes.route('/audit-report', {
         parent: 'microfis.home'
     }
 });
+// Contract
+import '../imports/reports/contract';
+MicrofisRoutes.route('/contract-report', {
+    name: 'microfis.contractReport',
+    title: 'Contract Report',
+    action: function (params, queryParams) {
+        Layout.main('Microfis_contractReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Contract Report',
+        icon: 'fa-circle-o',
+        parent: 'microfis.home'
+    }
+});

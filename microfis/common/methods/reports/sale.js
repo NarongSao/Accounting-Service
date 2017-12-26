@@ -106,10 +106,11 @@ export const saleReport = new ValidatedMethod({
             }
 
             if (params.categoryId && params.categoryId.includes("All") == false) {
-                selector["purchaseDoc.categoryId"] = {$in: params.categoryId};
+                selector["purchaseDoc.category"] = {$in: params.categoryId};
                 let categoryList = Category.find({_id: {$in: params.categoryId}}, {
                     fields: {
-                        _id: 1
+                        _id: 1,
+                        name:1
                     }
                 }).fetch().map(function (obj) {
                     return obj.name;
@@ -122,7 +123,7 @@ export const saleReport = new ValidatedMethod({
                 selector["purchaseDoc.transactionType"]= {$in: params.transactionType};
             }
             if (params.groupId && params.groupId.includes("All") == false) {
-                selector["purchaseDoc.groupId"] = {$in: params.groupId};
+                selector["purchaseDoc.group"] = {$in: params.groupId};
                 let groupList = GroupCategory.find({_id: {$in: params.groupId}}, {
                     fields: {
                         name: 1,

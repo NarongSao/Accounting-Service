@@ -1,0 +1,160 @@
+<!--Form-->
+<template name="Microfis_contractReport">
+    <div class="box-body">
+        {{#autoForm schema=schema id="Microfis_contractReport"  target="normal" resetOnSuccess=false}}
+            <div class="animated fadeIn">
+                <div class="box box-primary direct-chat direct-chat-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="font-family: 'Khmer OS Battambang'">ចុចទីនេះដើម្បីបង្ហាញ ឬ លាក់
+                            <span
+                                    class="font-head-panel-en">Form</span></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="row " style="background: rgb(227, 234, 243); padding: 10px; margin: 0;">
+                            <div class="col-md-6">
+                                {{> afQuickField name="clientId"}}
+                            </div>
+                            <div class="col-md-6">
+                                {{> afQuickField name="loanAccId"}}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        {{> formFooterWithButtonReport}}
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+            </div>
+        {{/autoForm}}
+        {{> Microfis_contractReportPrintData}}
+    </div>
+</template>
+
+
+<template name="Microfis_contractReportPrintData">
+    <div class="horizontal-scroll">
+        <!--#print-data-->
+        <div id="print-data">
+            <div class="sub-div display-on-print-div-loan-3" id="contentPageNumber content">
+                {{#if rptInit}}
+                    {{#if rptData}}
+                        {{#with rptData}}
+                            <!--Header-->
+                        <!--<div  class="wantHide">
+                            <div id="footer-page">
+                            </div>
+                        </div>-->
+                            {{#with header}}
+                                <div style="width: 100%;line-height: 30px" class="break-page font-header">
+                                    <div style="width: 50%; float: left">
+                                        <div class="marigin-header">
+                                            ឈ្មោះអ្នកខ្ចី: <b
+                                                style="font-family: 'Khmer OS Muol'"> {{clientDoc.khSurname}} {{clientDoc.khGivenName}}</b>
+                                        </div>
+
+                                        <div class="marigin-header">
+                                            ទូរស័ព្ទ: {{creditOfficerDoc.telephone}}</div>
+
+                                        <div class="marigin-header">អាសយដ្ឋាន: {{locationName}}
+                                        </div>
+
+                                        <br><br><br><br><br><br><br><br><br><br><br><br>
+                                        <div style="width: 100%; text-align: center"><b>អគ្គនាយក</b></div>
+                                    </div>
+
+                                    <div style="width: 45%; float: right">
+                                        <div class="marigin-header">ឡូត៍លេខ: {{purchseDoc.itemName}}
+                                        </div>
+                                        <div class="marigin-header">ចំនួនឡូត៍:​ 1
+                                        </div>
+                                        <div class="marigin-header">
+                                            <span>តម្លៃ</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : <b>{{numFormat loanAmount
+                                                                      "0,0.00"}} {{currencyId}}</b>
+                                        </div>
+                                        <div class="marigin-header">
+                                            ចំនួនប្រាក់ខ្ចី : <b style="color: darkred" class="darkrendamount">{{numFormat loanAmount
+                                                                                          "0,0.00"}} {{currencyId}}</b>
+                                        </div>
+                                        <br>
+                                        <br>
+                                            <div class="marigin-header">
+                                                ថ្ងៃ ខែ ឆ្នាំកក់ប្រាក់ : {{moFormat disbursementDate "DD/MM/YYYY"}}
+                                            </div>
+                                            <div class="marigin-header">
+                                                <span>ថ្ងៃ ខែ ឆ្នាំបង់ផ្តាច់</span>&nbsp; : {{moFormat maturityDate "DD/MM/YYYY"}}
+                                            </div>
+                                            <div class="marigin-header">បង់រំលេាះរយៈពេល : {{term}} ខែ
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <div class="marigin-header">ថ្ងៃទី {{moFormat disbursementDate "DD"}} ខែ​​ {{moFormat disbursementDate "MM"}} ឆ្នាំ {{moFormat disbursementDate "YYYY"}}
+                                            </div>
+                                        <br><br><br>
+                                        <div style="width: 100%; text-align: center"><b>អតិថិជន</b></div>
+                                    </div>
+
+                                </div>
+
+                            {{/with}}
+                            <!--Content-->
+                            <table class="sub-table table table-striped  table-hover diplay-on-print-table-3" style="page-break-inside:auto">
+                                <thead class="sub-header diplay-on-print-header-3">
+                                <tr class="non-border">
+                                    <th  class="non-border" colspan="9" style="border: 0px !important; font-size: 15px !important; font-family: 'Khmer OS Fasthand' !important;">តារាងបង់ប្រាក់
+                                        <p style="font-family: 'Tacteing'; font-size: 50px; line-height: 20px !important;">6</p>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td width="50px">លើក<br>ទី</td>
+                                    <td>កាលបរិច្ឆេទ<br>បង់ប្រាក់</td>
+                                    <td>កាលបរិច្ឆេទ<br>មកបង់</td>
+                                    <td>ប្រាក់ដើម<br>ដែលជំពាក់</td>
+                                    <td>ប្រាក់<br>ត្រូវបង់</td>
+                                    <td>ហត្ថលេខា<br>អ្នកប្រគល់ប្រាក់</td>
+                                    <td>ហត្ថលេខា<br>អ្នកទទួលប្រាក់</td>
+                                </tr>
+
+                                </thead>
+
+                                <tbody class="sub-body display-on-print-body-3">
+                                {{#each content.data}}
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-square-o"></i>
+                                            {{#if allowClosing}}
+                                                <u>{{installment}}</u>
+                                            {{else}}
+                                                {{installment}}
+                                            {{/if}}
+                                        </td>
+                                        <td>{{khDayForDueDate dueDate}}-{{moFormat dueDate "DD/MM/YYYY"}}</td>
+                                        <td></td>
+                                        <td class="numberAlign">{{numFormat balance "0,0.00"}}</td>
+                                        <td class="numberAlign">{{numFormat totalDue "0,0.00"}}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                {{/each}}
+
+                                </tbody>
+                            </table>
+                        {{/with}}
+                    {{else}}
+                        <div class="text-center">
+                            {{> iconLoading size="fa-5x"}}
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <!--/#print-data-->
+</template>
