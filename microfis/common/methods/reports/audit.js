@@ -4,7 +4,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {CallPromiseMixin} from 'meteor/didericis:callpromise-mixin';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import {moment} from  'meteor/momentjs:moment';
-
+import {round2} from 'meteor/theara:round2';
 // Collection
 import {Company} from '../../../../core/common/collections/company.js';
 import {Branch} from '../../../../core/common/collections/branch.js';
@@ -344,7 +344,7 @@ export const auditReport = new ValidatedMethod({
                     }
                 },
                 {$unwind: {path: "$communeDoc", preserveNullAndEmptyArrays: true}},
-               {
+                {
                     $lookup: {
                         from: "microfis_location",
                         localField: "communeDoc.parent",
@@ -416,6 +416,9 @@ export const auditReport = new ValidatedMethod({
             let totalAIRPeriodKHR = 0;
             let totalAIROSKHR = 0;
 
+            let aIRPeriod = 0;
+            let aIROS= 0;
+
 
             let totalDuePrinUSD = 0;
             let totalDueIntUSD = 0;
@@ -431,6 +434,7 @@ export const auditReport = new ValidatedMethod({
             let totalOSIntUSD = 0;
             let totalAIRPeriodUSD = 0;
             let totalAIROSUSD = 0;
+
 
             let totalDuePrinTHB = 0;
             let totalDueIntTHB = 0;
@@ -463,14 +467,29 @@ export const auditReport = new ValidatedMethod({
             let totalAIRPeriodBase= 0;
             let totalAIROSBase = 0;
 
+
             if (loanDoc.length > 0) {
                 loanDoc.forEach(function (loanAccDoc) {
-
                     let result = checkRepayment.run({
                         loanAccId: loanAccDoc._id,
                         checkDate: checkDate,
                         opts: loanAccDoc
                     });
+
+                    // Check currency
+                    let _round = {
+                        type: 'general',
+                        precision: -2 // KHR
+                    };
+                    switch (loanAccDoc.currencyId) {
+                        case 'USD':
+                            _round.precision = 2;
+                            break;
+                        case 'THB':
+                            _round.precision = 0;
+                            break;
+                    }
+
                     let productStatusList;
                     let groupName="";
                     if(loanAccDoc.accountType=="GL"){
@@ -515,6 +534,10 @@ export const auditReport = new ValidatedMethod({
                     let proStatus = productStatusList.find(finProductStatus);
                     //check product status (Classify)
                     if (params.classifyId.includes(proStatus._id) == true || checkClassify == true) {
+
+                        let arrDayThisPeriod= moment(params.date).startOf('day').diff(loanAccDoc.disbursementDate, 'days');
+                        let arrDayOS= moment(params.date).startOf('day').diff(result.totalSchedulePrevious.dueDate.to!=null? result.totalSchedulePrevious.dueDate.to : loanAccDoc.disbursementDate , 'days');
+
                         if (loanAccDoc.currencyId == "KHR") {
                             totalDuePrinKHR += result.totalScheduleDue.principalDue;
                             totalDueIntKHR += result.totalScheduleDue.interestDue;
@@ -535,6 +558,68 @@ export const auditReport = new ValidatedMethod({
 
 
 
+                            //AIR
+                            if(loanAccDoc.paymentMethod=="D"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodKHR+=round2(loanAccDoc.loanAmount * loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2(result.totalScheduleDue.principalDue * loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodKHR+=round2(loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2(loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+                                }
+
+                            }else if(loanAccDoc.paymentMethod=="W"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodKHR+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(7*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(7*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(7*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(7*100)) * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodKHR+=round2((loanAccDoc.interestRate/7) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2((loanAccDoc.interestRate/7) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/7) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/7) * arrDayOS, _round.precision, _round.type);
+
+                                }
+                            }else if(loanAccDoc.paymentMethod=="M"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodKHR+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(30*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(30*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(30*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(30*100)) * arrDayOS, _round.precision, _round.type);
+
+                                }else {
+                                    totalAIRPeriodKHR+=round2((loanAccDoc.interestRate/30) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2((loanAccDoc.interestRate/30) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/30) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/30) * arrDayOS, _round.precision, _round.type);
+                                }
+                            }else if(loanAccDoc.paymentMethod=="Y"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodKHR+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(365*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(365*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(365*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(365*100)) * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodKHR+=round2((loanAccDoc.interestRate/365) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSKHR+=round2((loanAccDoc.interestRate/365) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/365) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/365) * arrDayOS, _round.precision, _round.type);
+                                }
+                            }
+
                         } else if (loanAccDoc.currencyId == "USD") {
                             totalDuePrinUSD += result.totalScheduleDue.principalDue;
                             totalDueIntUSD += result.totalScheduleDue.interestDue;
@@ -551,6 +636,69 @@ export const auditReport = new ValidatedMethod({
                             totalOSIntUSD += result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue;
                             totalAIRPeriodUSD+= 0;
                             totalAIROSUSD += 0;
+
+
+                            //AIR
+                            if(loanAccDoc.paymentMethod=="D"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodUSD+=round2(loanAccDoc.loanAmount * loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2(result.totalScheduleDue.principalDue * loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodUSD+=round2(loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2(loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+                                }
+
+                            }else if(loanAccDoc.paymentMethod=="W"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodUSD+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(7*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(7*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(7*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(7*100)) * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodUSD+=round2((loanAccDoc.interestRate/7) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2((loanAccDoc.interestRate/7) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/7) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/7) * arrDayOS, _round.precision, _round.type);
+
+                                }
+                            }else if(loanAccDoc.paymentMethod=="M"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodUSD+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(30*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(30*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(30*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(30*100)) * arrDayOS, _round.precision, _round.type);
+
+                                }else {
+                                    totalAIRPeriodUSD+=round2((loanAccDoc.interestRate/30) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2((loanAccDoc.interestRate/30) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/30) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/30) * arrDayOS, _round.precision, _round.type);
+                                }
+                            }else if(loanAccDoc.paymentMethod=="Y"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodUSD+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(365*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(365*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(365*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(365*100)) * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodUSD+=round2((loanAccDoc.interestRate/365) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSUSD+=round2((loanAccDoc.interestRate/365) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/365) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/365) * arrDayOS, _round.precision, _round.type);
+                                }
+                            }
 
 
                         } else if (loanAccDoc.currencyId == "THB") {
@@ -571,7 +719,72 @@ export const auditReport = new ValidatedMethod({
                             totalAIRPeriodTHB += 0;
                             totalAIROSTHB  += 0;
 
+
+                            //AIR
+                            if(loanAccDoc.paymentMethod=="D"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodTHB+=round2(loanAccDoc.loanAmount * loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2(result.totalScheduleDue.principalDue * loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodTHB+=round2(loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2(loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.interestRate * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(loanAccDoc.interestRate * arrDayOS, _round.precision, _round.type);
+                                }
+
+                            }else if(loanAccDoc.paymentMethod=="W"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodTHB+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(7*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(7*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(7*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(7*100)) * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodTHB+=round2((loanAccDoc.interestRate/7) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2((loanAccDoc.interestRate/7) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/7) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/7) * arrDayOS, _round.precision, _round.type);
+
+                                }
+                            }else if(loanAccDoc.paymentMethod=="M"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodTHB+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(30*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(30*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(30*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(30*100)) * arrDayOS, _round.precision, _round.type);
+
+                                }else {
+                                    totalAIRPeriodTHB+=round2((loanAccDoc.interestRate/30) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2((loanAccDoc.interestRate/30) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/30) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/30) * arrDayOS, _round.precision, _round.type);
+                                }
+                            }else if(loanAccDoc.paymentMethod=="Y"){
+                                if(loanAccDoc.productDoc.interestType=="P"){
+                                    totalAIRPeriodTHB+=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(365*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(365*100)) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2(loanAccDoc.loanAmount * (loanAccDoc.interestRate/(365*100)) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2(result.totalScheduleDue.principalDue * (loanAccDoc.interestRate/(365*100)) * arrDayOS, _round.precision, _round.type);
+                                }else {
+                                    totalAIRPeriodTHB+=round2((loanAccDoc.interestRate/365) * arrDayThisPeriod, _round.precision, _round.type);
+                                    totalAIROSTHB+=round2((loanAccDoc.interestRate/365) * arrDayOS, _round.precision, _round.type);
+
+                                    aIRPeriod=round2((loanAccDoc.interestRate/365) * arrDayThisPeriod, _round.precision, _round.type);
+                                    aIROS=round2((loanAccDoc.interestRate/365) * arrDayOS, _round.precision, _round.type);
+                                }
+                            }
+
                         }
+
+
                         content += `<tr>
                                 <td>${i}</td>
                                 <td>${loanAccDoc._id}</td>
@@ -605,8 +818,8 @@ export const auditReport = new ValidatedMethod({
                                 <td>${microfis_formatNumber(result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue)}</td>                                    
                                                              
                                 <td>${microfis_formatNumber(result.totalScheduleDue.principalDue + result.totalScheduleNext.principalDue+result.totalScheduleDue.interestDue + result.totalScheduleNext.interestDue)}</td>                                    
-                                <td></td>
-                                <td></td>
+                                <td>${microfis_formatNumber(aIRPeriod)}</td>
+                                <td>${microfis_formatNumber(aIROS)}</td>
                                 <td> ${loanAccDoc.currencyId}</td>
                               
                                 <td class="numberAlign"> ${loanAccDoc.branchId}</td>
@@ -620,10 +833,10 @@ export const auditReport = new ValidatedMethod({
             }
 
             totalDuePrinBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalDuePrinKHR,
-                    params.exchangeId
+                "KHR",
+                baseCurrency,
+                totalDuePrinKHR,
+                params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
@@ -636,10 +849,10 @@ export const auditReport = new ValidatedMethod({
                     totalDuePrinTHB,
                     params.exchangeId);
             totalDueIntBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalDueIntKHR,
-                    params.exchangeId
+                "KHR",
+                baseCurrency,
+                totalDueIntKHR,
+                params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
@@ -655,10 +868,10 @@ export const auditReport = new ValidatedMethod({
 
 
             totalLoanOutPrinBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalLoanOutPrinKHR,
-                    params.exchangeId
+                "KHR",
+                baseCurrency,
+                totalLoanOutPrinKHR,
+                params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
@@ -673,10 +886,10 @@ export const auditReport = new ValidatedMethod({
                     params.exchangeId
                 );
             totalLoanOutIntBase = Meteor.call('microfis_exchange',
-                    "KHR",
-                    baseCurrency,
-                    totalLoanOutIntKHR,
-                    params.exchangeId
+                "KHR",
+                baseCurrency,
+                totalLoanOutIntKHR,
+                params.exchangeId
                 )
                 + Meteor.call('microfis_exchange',
                     "USD",
@@ -936,6 +1149,7 @@ export const auditReport = new ValidatedMethod({
                             <td class="numberAlign">${microfis_formatNumber(totalOSPrinBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalOSIntBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalOSIntBase+totalOSPrinBase)}</td>
+                            
                             <td class="numberAlign">${microfis_formatNumber(totalAIRPeriodBase)}</td>
                             <td class="numberAlign">${microfis_formatNumber(totalAIROSBase)}</td>
                             <td colspan="5"></td>
