@@ -9,6 +9,8 @@ import {moment} from  'meteor/momentjs:moment';
 import {Company} from '../../../../core/common/collections/company.js';
 import {Branch} from '../../../../core/common/collections/branch.js';
 import {LoanAcc} from '../../../common/collections/loan-acc.js';
+import {Sale} from '../../../common/collections/sale';
+import {Purchase} from '../../../common/collections/purchase';
 import {RepaymentSchedule} from '../../../common/collections/repayment-schedule.js';
 
 // Method
@@ -49,7 +51,13 @@ export const repaymentScheduleReport = new ValidatedMethod({
 
             data.header = loanAccDoc;
 
-
+            let saleDoc=Sale.findOne({loanAccId: loanAccId});
+            if(saleDoc){
+                let purchseDoc=Purchase.findOne({_id: saleDoc.purchaseId});
+                data.header.purchseDoc=purchseDoc;
+            }else {
+                data.header.purchseDoc.itemName="";
+            }
             /****** Content *****/
             let content = RepaymentSchedule.aggregate(
                 [

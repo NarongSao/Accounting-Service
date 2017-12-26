@@ -57,6 +57,11 @@ Sale.schema = new SimpleSchema({
             }
         }
     },
+    priceInKH: {
+        type: String,
+        optional:true,
+        label: "Price In Khmer"
+    },
     paid: {
         type: Number,
         label: 'Paid',
@@ -68,6 +73,11 @@ Sale.schema = new SimpleSchema({
                 return inputmaskOptions.decimal();
             }
         }
+    },
+    paidInKH: {
+        type: String,
+        optional:true,
+        label: "Paid In Khmer"
     },
     remaining: {
         type: Number,
@@ -82,12 +92,29 @@ Sale.schema = new SimpleSchema({
             }
         }
     },
+    remainingInKH: {
+        type: String,
+        optional:true,
+        label: "Remaining In Khmer"
+    },
     branchId: {
         type: String
     },
-    loanAccid:{
+    loanAccId:{
         type: String,
         optional:true
+    },
+    description:{
+        type: String,
+        autoform: {
+        afFieldInput: {
+            type: 'summernote',
+            class: 'editor',
+            settings:{
+                height:320
+            }
+        }
+    }
     }
 });
 

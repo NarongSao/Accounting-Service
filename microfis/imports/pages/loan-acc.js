@@ -65,7 +65,7 @@ let isPreloader = true;
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('loanAccProduct');
-    createNewAlertify('saleForm');
+    createNewAlertify('saleForm', {size: 'lg'});
     createNewAlertify('loanAcc', {size: 'lg'});
     createNewAlertify('loanAccShow');
     createNewAlertify('savingAccProduct');

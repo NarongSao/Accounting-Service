@@ -39,15 +39,42 @@
         </div>
         {{#autoForm collection=collection id="Microfis_saleNew" type="insert"}}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 {{> afQuickField name="saleDate"}}
                 {{> afQuickField name="transactionType"}}
                 {{> afQuickField name="customerId" type="hidden" value=customerDoc._id}}
                 {{> afQuickField name="purchaseId" options=purchaseOption}}
-                {{> afQuickField name="price" value=price}}
-                {{> afQuickField name="paid"}}
-                {{> afQuickField name="remaining" value=remaining readonly=true}}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="price" value=price}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="priceInKH"}}
+                        </div>
+
+                    </div>
+
+                <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="paid"}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="paidInKH" value=priceInKH}}
+                        </div>
+                    </div>
+                <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="remaining" value=remaining readonly=true}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="remainingInKH"}}
+                        </div>
+
+                    </div>
                 {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name="description"}}
             </div>
         </div>
         {{> formFooterWithButton}}
@@ -71,15 +98,42 @@
         </div>
         {{#autoForm collection=collection id="Microfis_saleEdit" doc=this type="update"}}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 {{> afQuickField name="saleDate"}}
                 {{> afQuickField name="transactionType"}}
                 {{> afQuickField name="customerId" type="hidden"}}
                 {{> afQuickField name="purchaseId" options=purchaseOption}}
-                {{> afQuickField name="price" value=price}}
-                {{> afQuickField name="paid"}}
-                {{> afQuickField name="remaining"}}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="price" value=price}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="priceInKH"}}
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="paid"}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="paidInKH"}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="remaining" value=remaining readonly=true}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="remainingInKH"}}
+                    </div>
+
+                </div>
                 {{> afQuickField name="branchId" type="hidden" value=currentBranch}}
+            </div>
+            <div class="col-md-6">
+                {{> afQuickField name="description"}}
             </div>
         </div>
 
