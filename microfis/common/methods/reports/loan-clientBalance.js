@@ -323,7 +323,7 @@ export const clientBalanceReport = new ValidatedMethod({
 
                     let savingDoc = SavingTransaction.findOne({
                         savingAccId: loanAccDoc.savingAccId,
-                        transactionDate: {$lte: date}
+                        transactionDate: {$lte: moment(date).endOf("day").toDate()}
                     }, {
                         sort: {
                             transactionDate: -1,
