@@ -45,7 +45,8 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('sale', {size: 'sm'});
     createNewAlertify('loanAccProduct', {size: 'sm'});
-    createNewAlertify('');
+    createNewAlertify('saleShow');
+
 });
 
 indexTmpl.helpers({
