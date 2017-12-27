@@ -40,9 +40,10 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return null;
             }
         },
+        {data: 'idType', title: 'Id Type'},
+        {data: 'idNumber', title: 'Id Number'},
         {data: 'cycle', title: 'Cycle'}
-    ],
-    extraFields: ['idType']
+    ]
 });
 
 export const
