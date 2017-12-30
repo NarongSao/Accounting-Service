@@ -6,6 +6,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 // Lib
 import {SelectOpts} from '../../imports/libs/select-opts.js';
 import {SelectOptMethods} from '../methods/select-opts.js';
+import math from "mathjs";
 
 export const Repayment = new Mongo.Collection("microfis_repayment");
 
@@ -162,6 +163,31 @@ Repayment.schema = new SimpleSchema({
         type: Date,
         label: 'Clear date',
         optional: true
+    },
+    interestType: {
+        type: String,
+        label: 'Interest Type',
+        autoform: {
+            type: "select2",
+            defaultValue:"P",
+            afFieldInput: {
+                options: function () {
+                    return [
+                        {label: "Not Choose",value: ""},
+                        {label: "P",value: "P"},
+                        {label: "A",value: "A"}
+                        ]
+                }
+            }
+        },
+        optional:true
+
+    },
+    interestRate: {
+        type: Number,
+        label: 'Interest Rate',
+        decimal: true,
+        optional:true
     }
 });
 

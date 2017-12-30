@@ -1076,6 +1076,11 @@ function _makeScheduleForPrincipalInstallment(doc) {
     options.term = doc.detailDoc.scheduleNext.length;
     options.firstRepaymentDate = null;
 
+    if(doc.interestType!="" && doc.interestRate!=""){
+        options.interestType=doc.interestType;
+        options.interestRate=doc.interestRate;
+    }
+
     let i = 0;
     doc.detailDoc.scheduleNext.forEach(function (obj) {
         if (obj.allowClosing == true) {

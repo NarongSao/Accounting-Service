@@ -52,7 +52,10 @@ MakeSchedule.declinig = new ValidatedMethod({
                 loanAccDoc.term = options.term;
                 loanAccDoc.firstRepaymentDate = options.firstRepaymentDate;
                 loanAccDoc.installmentAllowClosing = options.installmentAllowClosing;
-
+                if(options.interestType!="" && options.interestRate!=""){
+                    loanAccDoc.interestType = options.interestType;
+                    loanAccDoc.interestRate = options.interestRate;
+                }
             }
             // if (loanAccDoc.disbursementDate) {
             //     loanAccDoc.disbursementDate = moment(loanAccDoc.disbursementDate).toDate();
