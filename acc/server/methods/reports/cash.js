@@ -258,6 +258,7 @@ Meteor.methods({
                         {
                             $sort: {
                                 "_id.code": 1,
+                                "_id.journalDate": 1,
                                 "_id.voucherId": 1
                             }
                         }

@@ -33,11 +33,9 @@ export const repaymentScheduleSummaryReport = new ValidatedMethod({
             };
 
             let loanAccDoc = lookupLoanAcc.call({_id: loanAccId});
-
             /****** Title *****/
-            data.title.company = Company.findOne();
-            data.title.branch = Branch.findOne(loanAccDoc.branchId);
-
+            data.company = Company.findOne();
+            data.branch = Branch.findOne(loanAccDoc.branchId);
             /****** Header *****/
             if (loanAccDoc.principalInstallment.calculateType == "P") {
                 loanAccDoc.isPercentage = true;

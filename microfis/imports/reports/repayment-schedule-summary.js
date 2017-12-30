@@ -45,11 +45,10 @@ indexTmpl.onCreated(function () {
         if (formDataState.get()) {
             rptInitState.set(true);
             rptDataState.set(null);
-
             let params = {
                 loanAccId: formDataState.get().loanAccId
             };
-
+            
             repaymentScheduleSummaryReport.callPromise(params)
                 .then((result) => {
                     rptDataState.set(result);
