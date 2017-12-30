@@ -21,6 +21,7 @@ Sale.after.insert(function (userId,doc) {
     let settingDoc = Setting.findOne();
     if (settingDoc.integrate == true) {
         let clientDoc = Client.findOne({_id: doc.customerId});
+        let purchaseDOc=Purchase.findOne({_id: doc.purchaseId});
         let dataForAccount = {};
 
         dataForAccount.journalDate = doc.saleDate;
@@ -30,7 +31,7 @@ Sale.after.insert(function (userId,doc) {
         dataForAccount.memo = "Sale To " + clientDoc.khSurname + " " +clientDoc.khGivenName;
         dataForAccount.refId = doc._id;
         dataForAccount.refFrom = "Sale";
-        dataForAccount.total = doc.paid;
+        dataForAccount.total = doc.price+purchaseDOc.cost;
 
         let transaction = [];
 
@@ -42,26 +43,26 @@ Sale.after.insert(function (userId,doc) {
 
         transaction.push({
             account: acc_cash.accountDoc.code + " | " + acc_cash.accountDoc.name,
-            dr: doc.paid,
-            cr: 0,
-            drcr: doc.paid
-
-        }, {
-            account: acc_saleIncome.accountDoc.code + " | " + acc_saleIncome.accountDoc.name,
-            dr: 0,
-            cr: doc.paid,
-            drcr: -doc.paid
-        }, {
-            account: acc_cogs.accountDoc.code + " | " + acc_cogs.accountDoc.name,
             dr: doc.price,
             cr: 0,
             drcr: doc.price
 
         }, {
-            account: acc_inventory.accountDoc.code + " | " + acc_inventory.accountDoc.name,
+            account: acc_saleIncome.accountDoc.code + " | " + acc_saleIncome.accountDoc.name,
             dr: 0,
             cr: doc.price,
             drcr: -doc.price
+        }, {
+            account: acc_cogs.accountDoc.code + " | " + acc_cogs.accountDoc.name,
+            dr: purchaseDOc.cost,
+            cr: 0,
+            drcr: purchaseDOc.cost
+
+        }, {
+            account: acc_inventory.accountDoc.code + " | " + acc_inventory.accountDoc.name,
+            dr: 0,
+            cr: purchaseDOc.cost,
+            drcr: -purchaseDOc.cost
         });
 
         dataForAccount.transaction = transaction;
